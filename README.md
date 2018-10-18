@@ -1,4 +1,4 @@
-# Key Provisioning for Group Communica ion using ACE
+# Key Provisioning for Group Communication using ACE
 
 This is the working area for the individual Internet-Draft, "Key Provisioning for Group Communica ion using ACE".
 
