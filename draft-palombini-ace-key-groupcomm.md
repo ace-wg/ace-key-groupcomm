@@ -88,11 +88,21 @@ Readers are expected to be familiar with the terms and concepts described in  {{
 ~~~~~~~~~~~
 {: #fig-roles title="Key Distribution Participants" artwork-align="center"}
 
+<!-- Peter 30-07: Figure 1 is not referenced in the text. I suggest a slightly different figure where dispatcher and KDC are endpoints of the RS, and for multicast the communication is directly between Client and group members without passing through the RS.
+
+Marco: I am not sure the change is consistent, since the KDC is an AS in pub-sub, i.e. not an RS or part of an RS. Also, in group OSCORE the KDC is the RS, not part of it.
+
+Marco: We have extended the definition of Dispatches, clarifying the two main cases involving either a Broker (ACE RS) or a bus (multicast delivery). Does this help?
+-->
+
 Participants:
 
 * Client (C): Node that wants to join the group communication. It can request write and/or read rights.
-* Authorization Server (AS): Same as AS in the ACE Framework; it contains policies, and knows if a node is allowed to join the group with write and/or read rights. 
-* Key Distribution Center (KDC): Maintains the keying material to protect group communications, and provides it to clients authorized to join the group. During the first part of the exchange, it corresponds to the RS in the ACE Framework.
+
+* Authorization Server (AS): Same as AS in the ACE Framework; it enforces access policies, and knows if a node is allowed to join the group with write and/or read rights. 
+
+* Key Distribution Center (KDC): Maintains the keying material to protect group communications, and provides it to clients authorized to join the group. During the first part of the exchange ({{sec-auth}}), it takes the role of the RS in the ACE Framework. During the second part ({{key-distr}}), which is not based on the ACE Framework, it distributes the keying material. In addition, it provides the latest keying material to group members when requested. If required by the application, the KDC renews and re-distributes the keying material in the group when membership changes.
+
 * Dispatcher: this is the entity the Client wants to securely communicate with and is responsible for distribution of group messages. It can be an existing node, such as the Broker in a pub-sub setting (in which case the Dispatcher is also a RS), or it can be implicit, as in the multicast communication setting, where the message distribution is done by transmitting to a multicast IP address, and entrusting message delivery to the transport channel.
 
 <!-- Marco 22-02: A KDC can be responsible for more groups, while every group is associated to only one KDC.
@@ -123,7 +133,7 @@ C                 AS               KDC           Dispatcher
 ~~~~~~~~~~~
 {: #fig-flow title="Key Distribution Message Flow" artwork-align="center"}
 
-# Addition to the Group
+# Addition to the Group {#sec-auth}
 
 This section describes in detail the message formats exchanged by the participants when a node requests access to the group. The first part of the exchange is based on ACE {{I-D.ietf-ace-oauth-authz}}, where the KDC takes the role of RS.
 
@@ -210,7 +220,7 @@ The Client sends a CoAP POST request including the access token to the KDC, as s
 
 Note that this step could be merged with the following message from the Client to the KDC, namely Key Distribution Request.
 
-# Key Distribution
+# Key Distribution {#key-distr}
 
 This section defines how the keying material used for group communication is distributed from the KDC to the Client, when joining the group as a new member.
 
