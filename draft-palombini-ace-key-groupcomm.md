@@ -322,9 +322,9 @@ Marco: Isn't it ok as we are doing with the COSE Key in Section 4.2? Then it wor
 ## Key Distribution Request {#ssec-key-distribution-request}
 
 The Client sends a Key Distribution request to the KDC.
-This corresponds to a CoAP POST request to the endpoint in the KDC associated to the group (which is associated in the KDC to the 'scope' value of the Authorization Request/Response). The payload of this request is a CBOR Map which MAY contain the following fields, which, if included, MUST have the corresponding values:
+This corresponds to a CoAP POST request to the endpoint in the KDC associated to the group to join. The endpoint is associated in the KDC to the 'scope' value of the Authorization Request/Response. The payload of this request is a CBOR Map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
-* scope, with value the specific resource or topic identifier and role(s) that the Client is authorized to access, encoded as in {{ssec-authorization-request}}.
+* scope, with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and role(s), encoded as in {{ssec-authorization-request}}.
 
 <!--
   Jim 14-06: We need an API for distributing all public keys or a specific public key to an endpoint already member of the group. In the first case, the query information can be the identifier of the group/topic. In the second case, the query information can be the endpoint ID associated to the key to be retrieved, as considered as key identifier. This particular details such as "Group ID" and "Sender ID" are specified in the main group OSCORE document as a particular instance of this generic model.
@@ -374,7 +374,7 @@ The parameter 'exp' identifies the expiration time in seconds after which the CO
 ~~~~~~~~~~~
 {: #table-additional-param title="COSE Key Common Header Parameter 'exp'" artwork-align="center"}
 
-Additionally, the Key Distribution Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
+Optionally, the Key Distribution Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
 * pub\_keys, may only be present if get\_pub\_keys was present in the Key Distribution Request; this parameter is a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group.
 
