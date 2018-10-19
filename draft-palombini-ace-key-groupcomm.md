@@ -418,7 +418,10 @@ To request a re-distribution of keying material, the Client sends a shortened Ke
 
 In some cases, it is not necessary to include the scope parameter, for instance if the KDC maintains a list of active group members for each managed group, and the Client is member of only one group. The Client MUST include the scope parameter if it is a member of multiple groups under the same KDC.
 
+
 ## Key Re-Distribution Response
+
+The KDC receiving a Key Re-Distribution Request MUST check that it is storing a valid access token from that client for that scope. TODO: defines error response if it does not have it / is not valid.
 
 The KDC replies to the Client with a Key Distribution Response containing the 'key' parameter, and optionally 'group_policies' and 'mgt_key_material', as specified in {{ssec-key-distribution-response}}. Note that this response might simply re-provide the same keying material currently owned by the Client, if it has not been renewed.
 
