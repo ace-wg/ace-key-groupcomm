@@ -150,9 +150,30 @@ All further communications between the Client and the KDC MUST be secured with t
 
 All further communications between a Client and the other group members MUST be secured using the keying material provided in {{key-distr}}.
 
-# Addition to the Group {#sec-auth}
+# Authorization to Join a Group {#sec-auth}
 
-This section describes in detail the message formats exchanged by the participants when a node requests access to the group. The first part of the exchange is based on ACE {{I-D.ietf-ace-oauth-authz}}, where the KDC takes the role of RS.
+This section describes in detail the message formats exchanged by the participants when a node requests access to the group. The first part of the exchange is based on ACE {{I-D.ietf-ace-oauth-authz}}.
+
+As defined in {{I-D.ietf-ace-oauth-authz}}, the Client requests to the AS authorization to join the group through the KDC (see {{ssec-authorization-request}}). If the request is approved and authorization is granted, the AS provides the Client with a proof-of-possession access token and parameters to securely communicate with the KDC (see {{ssec-authorization-response}}). Communications between the Client and the AS MUST be secured, and depends on the profile of ACE used.
+
+{{fig-group-member-registration}} gives an overview of the exchange described.
+
+~~~~~~~~~~~
+Client                                         AS  KDC
+|                                               |   |
+|---- Authorization Request: POST /token ------>|   |
+|                                               |   |
+|<--- Authorization Response: 2.01 (Created) ---|   |
+|                                               |   |
+|----- POST Token: POST /authz-info --------------->|
+|                                                   |
+~~~~~~~~~~~
+{: #fig-group-member-registration title="Message Flow of Join Authorization" artwork-align="center"}
+
+<!-- Peter 30-07: It would be nice if here the use of DTLS (or not) and the content format is specified: application/cbor or application/Cose+cbor
+
+[MT] This should be out of scope, as actually per the specific ACE profile in use.
+-->
 
 ## Authorization Request {#ssec-authorization-request}
 
