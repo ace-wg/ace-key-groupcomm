@@ -111,7 +111,7 @@ FP: Proposal: let's add this sentence later. There is some considerations to be 
 
 This document specifies the message flows and formats for:
 
-* Authorizing a new node to join the group ({{sec-addition}}), and providing it with the group keying material to communicate with the other group members ({{sec-key-distribution}}).
+* Authorizing a new node to join the group ({{sec-auth}}), and providing it with the group keying material to communicate with the other group members ({{key-distr}}).
 
 * Removal of a current member from the group ({{sec-node-removal}}).
 
@@ -323,7 +323,7 @@ Specific profiles need to specify how exactly the keying material is used to pro
 
 TBD: define for verification failure
 
-# Remove a Node from the Group
+# Remove a Node from the Group {#sec-node-removal}
 
 This section describes at a high level how a node can be removed from the group.
 

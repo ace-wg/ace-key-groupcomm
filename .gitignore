@@ -1,4 +1,5 @@
-*.DS_Store*.redxml
+*.DS_Store
+*.redxml
 *.html
 *.pdf
 *.swp
@@ -17,3 +18,5 @@ venv/
 venv/*
 lib
 draft-palombini-ace-key-groupcomm.xml
+draft-palombini-ace-key-groupcomm.html
+draft-palombini-ace-key-groupcomm.txt
