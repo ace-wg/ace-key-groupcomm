@@ -449,18 +449,36 @@ Note that, after having left the group, a node may wish to join it again. Then, 
 
 A node stops using the group keying material upon its expiration, according to the 'exp' parameter specified in the retained COSE Key. Then, if it wants to continue participating in the group communication, the node has to request new updated keying material to the KDC.
 
-The Client may perform the same request to the KDC also upon receiving messages from other group members without being able to correctly decrypt them. This may be due to a previous update of the group keying material (rekeying) triggered by the KDC, that the Client was not able to participate to.
+The Client may perform the same request to the KDC also upon receiving messages from other group members without being able to correctly decrypt them. This may be due to a previous update of the group keying material (rekeying) triggered by the KDC, that the Client was not able to receive or decrypt.
+
+
+<!-- Jim 13-07: Comment somewhere about getting strike zones setup correctly for a newly seen sender of messages. Ptr to OSCORE?
+
+Marco: Just expanded the second paragraph in Section 6.
+
+If this is about details on deriving Recipient Contexts, that's OSCORE specific and should not be here.
+
+If this is about retrieving the public key of a newly joined sender, that's actually a general requirement and is not strictly related to OSCORE.
+
+Is there any other convenient OSCORE thing which is reusable here and we are missing?
+-->
+
 
 Note that policies can be set up so that the Client sends a request to the KDC only after a given number of unsuccessfully decrypted incoming messages.
 
 ## Key Re-Distribution Request
 
-To request a re-distribution of keying material, the Client sends a shortened Key Distribution request to the KDC ({{ssec-key-distribution-request}}), formatted as follows. The payload MAY contain only the following field:
+To request a re-distribution of keying material, the Client sends a shortened Key Distribution Request to the KDC ({{ssec-key-distribution-request}}), formatted as follows. The payload MUST contain only the following field:
 
-* scope, which contains only the identifier of the specific group or topic, encoded as in {{ssec-authorization-request}}. That is, the role field is not present.
+* 'scope', which contains only the identifier of the specific group or topic, encoded as in {{ssec-authorization-request}}. That is, the role field is not present.
 
-In some cases, it is not necessary to include the scope parameter, for instance if the KDC maintains a list of active group members for each managed group, and the Client is member of only one group. The Client MUST include the scope parameter if it is a member of multiple groups under the same KDC.
+<!-- In some cases, it is not necessary to include the scope parameter, for instance if the KDC maintains a list of active group members for each managed group, and the Client is member of only one group. The Client MUST include the scope parameter if it is a member of multiple groups under the same KDC.
 
+
+ Peter 30-07: "In some cases ... same KDC". Suggest to remove. In a fast changing environment, this may lead to many error messages if not wrong behavior; Imagine group GA is the only group. C is member of GA. GA is removed and GB is entered as the only group. C wants to leave/join GA, and accesses GB.
+
+Marco: It makes sense, should we then just make 'scope' mandatory?
+-->
 
 ## Key Re-Distribution Response
 
