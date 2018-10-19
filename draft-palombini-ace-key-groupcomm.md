@@ -420,7 +420,7 @@ TBD: define for verification failure
 
 This section describes at a high level how a node can be removed from the group.
 
-If the application requires forward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members but the leaving node, using the format defined in {{ssec-key-distribution-response}}.
+If the application requires forward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members but the leaving node, using the content format defined in {{ssec-key-distribution-response}}.
 
 ## Expired Authorization
 
