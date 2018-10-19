@@ -109,29 +109,46 @@ The following participants (see {{fig-roles}}) take part in the authorization an
 FP: Proposal: let's add this sentence later. There is some considerations to be done about using a "cluster of KDC", but I don't want to overcomplicate v-00. Security considerations?
 -->
 
-This document specifies the message flows and formats for adding a node to a group, as well as for the distribution of keying material to joining nodes. Also, it briefly mentions the node's removal from a group and the consequent rekeying process.
+This document specifies the message flows and formats for:
 
-The high level overview of the message flow for a node joining a group communication setting is shown in {{fig-flow}}.
+* Authorizing a new node to join the group ({{sec-addition}}), and providing it with the group keying material to communicate with the other group members ({{sec-key-distribution}}).
+
+* Removal of a current member from the group ({{sec-node-removal}}).
+
+* Retrieving keying material as a current group member ({{sec-expiration}} and {{sec-key-retrieval}}).
+
+* Renewing and re-distributing the group keying material (rekeying) upon a membership change in the group (TODO: add sections ref).
+
+{{fig-flow}} provides a high level overview of the message flow for a node joining a group communication setting.
 
 ~~~~~~~~~~~
-C                 AS               KDC           Dispatcher
-|                 |                 |                 | \
-|  authorization  |                 |                 | |
-|-----request---->|                 |                 | | defined in 
-|                 |                 |                 | | the ACE
-|  authorization  |                 |                 | | framework
-|<----response----|                 |                 | |
-|                 |                 |                 | |
-|--------token post---------------->|                 | /
-|                 |                 |                 |
-|----key distribution request------>|                 |
-|                 |                 |                 |
-|<---key distribution response------|                 |
-|                 |                 |                 |
-|<=============protected communication===============>| 
-|                 |                 |                 |
+C                              AS     KDC   Dispatcher          Group
+|                              |       |        |               Member
+|                              |       |        | \               |
+|     Authorization Request    |       |        | | Defined       |
+|----------------------------->|       |        | | in the ACE    |
+|                              |       |        | | framework     |
+|     Authorization Response   |       |        | |               |
+|<-----------------------------|       |        | |               |
+|                              |       |        | |               |
+|--------- Token Post ---------------->|        | /               |
+|                                      |        |                 |
+|---- Key Distribution Request ------->|        |                 |
+|                                      |        |                 |
+|<--- Key Distribution Response ------ | --- Group Rekeying ----->|
+|                                               |                 |
+|<================== Protected communication ===|================>|
+|                                               |                 |
 ~~~~~~~~~~~
-{: #fig-flow title="Key Distribution Message Flow" artwork-align="center"}
+{: #fig-flow title="Message Flow Upon New Node's Joining" artwork-align="center"}
+
+The exchange of Authorization Request and Authorization Response between Client and AS MUST be secured, as specified by the ACE profile used between Client and KDC.
+
+The exchange of Key Distribution Request and Key Distribution Response between Client and KDC MUST be secured, as a result of the ACE profile used between Client and KDC. 
+
+All further communications between the Client and the KDC MUST be secured with the same security mechanism used for the Key Distribution exchange.
+
+All further communications between a Client and the other group members MUST be secured using the keying material provided in {{key-distr}}.
 
 # Addition to the Group {#sec-auth}
 
