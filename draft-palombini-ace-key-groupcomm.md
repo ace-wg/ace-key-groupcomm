@@ -264,11 +264,41 @@ Note that this step could be merged with the following message from the Client t
 
 This section defines how the keying material used for group communication is distributed from the KDC to the Client, when joining the group as a new member.
 
-The same set of message can also used for the following cases, when the Client is already a group member:
+If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel using ACE. The exchange of Key Distribution Request-Response as well as further pairwise communications between the Client and the KDC MUST occur over that secure channel.
+
+During this exchange, the Client sends a request to the AS, specifying the group it wishes to join (see {{ssec-key-distribution-request}}). Then, the KDC verifies the access token and that the Client is authorized to join that group; if so, it provides the Client with the keying material to securely communicate with the member of the group (see {{ssec-key-distribution-response}}).
+
+{{fig-key-distr-join}} gives an overview of the exchange described.
+
+~~~~~~~~~~~
+Client                                          KDC
+|                                                |
+|-- Key Distribution Request: POST /group-id --> |
+|                                                |
+|<- Key Distribution Response: 2.01 (Created) ---|
+|                                                |
+~~~~~~~~~~~
+{: #fig-key-distr-join title="Message Flow of Key Distribution to a New Group Member" artwork-align="center"}
+
+<!-- Jim 13-07: Should one talk about the ability to use OBSERVE as part of
+key distribution?
+
+Marco: It was just briefly mentioned before and not really elaborated. Although it would work, it seems not useful to have it together with a proper rekeying scheme where the KDC takes the initiative anyway. This would result in much more network traffic and epoch-synchronization.
+-->
+
+<!-- Jim 13-07: Section 4.x - I am having a hard time trying to figure out the difference between a group and a topic.  The text does not always seem to distinguish these well.
+
+Marco: We could just go for "group", as a collection of devices sharing the same keyign material (i.e. a security group). Then a group can be mapped to a topic of common interest for its members, such as in a pub-sub environment.
+-->
+
+The same set of message can also be used for the following cases, when the Client is already a group member:
 
 * The Client wishes to (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed rekeying. This is further discussed in {{sec-expiration}}.
 
 * The Client wishes to (re-)get the public keys of other group members, e.g. if it is aware of new nodes joining the group after itself. This is further discussed in {{sec-key-retrieval}}.
+
+Additionally, the format of the payload of the Key Distribution Response ({{ssec-key-distribution-response}}) can also be reused for messages sent by the KDC to re-new the keying material in case of a new node joining the group, or of member leaving the group. The mechanism to send such messages could be e.g. multicast for re-keying in case of a new node joining or unicast in case of a node leaving the group.
+
 
 <!--
   Jim 14-06: Discuss that a Key Distribution Request/Response can be performed exactly in the same way also by an already member of the group. Mention the cases when this happens, e.g. believed lost of synchronization with the current group security context, crash and reboot and so on, so forced re-synchronization with the correct current security context.
@@ -277,6 +307,16 @@ The same set of message can also used for the following cases, when the Client i
     - join new nodes
     - member for rekeying (triggered by KDC)
     - member after they forgot (crash)
+-->
+
+<!-- Jim 13-07: Section 4.x  - cnf - text does not allow for key identifier
+
+Marco: In Section 4.2, we are indicating the key identifier in the optional 'kid' parameter of the COSE Key.
+-->
+
+<!-- Jim 13-07: Section X.X - Define a new cnf method to hold the OSCORE context parameters - should it be a normal COSE_Key or something new just to makes sure that it is different.
+
+Marco: Isn't it ok as we are doing with the COSE Key in Section 4.2? Then it works quite fine in ace-oscoap-joining when considering the particular joining of OSCORE groups.
 -->
 
 ## Key Distribution Request {#ssec-key-distribution-request}
