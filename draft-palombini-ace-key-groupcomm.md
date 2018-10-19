@@ -326,7 +326,7 @@ Note that proof-of-possession to bind the access token to the Client is performe
 The Client sends a Key Distribution request to the KDC.
 This corresponds to a CoAP POST request to the endpoint in the KDC associated to the group to join. The endpoint is associated in the KDC to the 'scope' value of the Authorization Request/Response. The payload of this request is a CBOR Map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
-* scope, with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and role(s), encoded as in {{ssec-authorization-request}}.
+* 'scope', with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and role(s), encoded as in {{ssec-authorization-request}}.
 
 <!--
   Jim 14-06: We need an API for distributing all public keys or a specific public key to an endpoint already member of the group. In the first case, the query information can be the identifier of the group/topic. In the second case, the query information can be the endpoint ID associated to the key to be retrieved, as considered as key identifier. This particular details such as "Group ID" and "Sender ID" are specified in the main group OSCORE document as a particular instance of this generic model.
@@ -334,28 +334,28 @@ This corresponds to a CoAP POST request to the endpoint in the KDC associated to
   TODO: define format get_pub_keys: []
 -->
 
-* get_pub_keys, if the Client wishes to receive the public keys of the other nodes in the group from the KDC. The value is an empty CBOR Array. This parameter may be present if the KDC stores the public keys of the nodes in the group and distributes them to the Client; it is useless to have here if the set of public keys of the members of the group is known in another way, e.g. it was supplied by the AS.
+* 'get_pub_keys', if the Client wishes to receive the public keys of the other nodes in the group from the KDC. The value is an empty CBOR Array. This parameter may be present if the KDC stores the public keys of the nodes in the group and distributes them to the Client; it is useless to have here if the set of public keys of the members of the group is known in another way, e.g. it was supplied by the AS.
 
-* client_cred, with value the public key or certificate of the Client. If the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, this field contains the public key of the Client.
+* 'client_cred', with value the public key or certificate of the Client. If the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, this field contains the public key of the Client.
 
-* pub_keys_repos, can be present if a certificate is present in the client_cred field, with value a list of public key repositories storing the certificate of the Client.
+* 'pub_keys_repos', can be present if a certificate is present in the client_cred field, with value a list of public key repositories storing the certificate of the Client.
 
 ## Key Distribution Response {#ssec-key-distribution-response}
 
 The KDC verifies the access token and, if verification succeeds, sends a Key Distribution success Response to the Client. This corresponds to a 2.01 Created message. The payload of this response is a CBOR Map which MUST contain the following fields:
 
-* key, used to send the keying material to the Client, as a COSE_Key ({{RFC8152}}) containing the following parameters:
-  - kty, as defined in {{RFC8152}}.
-  - k, as defined in {{RFC8152}}.
-  - exp (optionally), as defined below. This parameter is RECOMMENDED to be included in the COSE_Key. If omitted, the authorization server SHOULD provide the expiration time via other means or document the default value.
-  - alg (optionally), as defined in {{RFC8152}}.
-  - kid (optionally), as defined in {{RFC8152}}.
-  - base iv (optionally), as defined in {{RFC8152}}.
-  - clientID (optionally), as defined in {{I-D.ietf-ace-oscore-profile}}.
-  - serverID (optionally), as defined in {{I-D.ietf-ace-oscore-profile}}.
-  - kdf (optionally), as defined in {{I-D.ietf-ace-oscore-profile}}.
-  - slt (optionally), as defined in {{I-D.ietf-ace-oscore-profile}}.
-  - cs_alg (optionally), containing the algorithm value to countersign the message, taken from Table 5 and 6 of {{RFC8152}}.
+* 'key', used to send the keying material to the Client, as a COSE_Key ({{RFC8152}}) containing the following parameters:
+  - 'kty', as defined in {{RFC8152}}.
+  - 'k', as defined in {{RFC8152}}.
+  - 'exp' (optionally), as defined below. This parameter is RECOMMENDED to be included in the COSE_Key. If omitted, the authorization server SHOULD provide the expiration time via other means or document the default value.
+  - 'alg' (optionally), as defined in {{RFC8152}}.
+  - 'kid' (optionally), as defined in {{RFC8152}}.
+  - 'base iv' (optionally), as defined in {{RFC8152}}.
+  - 'clientID' (optionally), as defined in {{I-D.ietf-ace-oscore-profile}}.
+  - 'serverID' (optionally), as defined in {{I-D.ietf-ace-oscore-profile}}.
+  - 'kdf' (optionally), as defined in {{I-D.ietf-ace-oscore-profile}}.
+  - 'slt' (optionally), as defined in {{I-D.ietf-ace-oscore-profile}}.
+  - 'cs_alg' (optionally), containing the algorithm value to countersign the message, taken from Table 5 and 6 of {{RFC8152}}.
 
 <!--
 TODO: Add exp in COSE_Key = same as exp in token but for the key
@@ -378,11 +378,11 @@ The parameter 'exp' identifies the expiration time in seconds after which the CO
 
 Optionally, the Key Distribution Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* pub\_keys, may only be present if get\_pub\_keys was present in the Key Distribution Request; this parameter is a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group.
+* 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request; this parameter is a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group.
 
 * group_policies, with value a list of parameters indicating how the group handles specific management aspects. This includes, for instance, approaches to achieve synchronization of sequence numbers among group members. The exact format of this parameter is specific to the profile.
 
-* mgt_key_material, with value the administrative keying material to participate in the revocation and renewal of group keying (rekeying) performed by the KDC. The exact format and content depend on the specific rekeying algorithm used in the group, which may be specified in the profile.
+* 'mgt_key_material', with value the administrative keying material to participate in the revocation and renewal of group keying (rekeying) performed by the KDC. The exact format and content depend on the specific rekeying algorithm used in the group, which may be specified in the profile.
 
 Specific profiles need to specify how exactly the keying material is used to protect the group communication.
 
