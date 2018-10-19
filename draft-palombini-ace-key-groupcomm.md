@@ -334,13 +334,36 @@ This corresponds to a CoAP POST request to the endpoint in the KDC associated to
   TODO: define format get_pub_keys: []
 -->
 
-* 'get_pub_keys', if the Client wishes to receive the public keys of the other nodes in the group from the KDC. The value is an empty CBOR Array. This parameter may be present if the KDC stores the public keys of the nodes in the group and distributes them to the Client; it is useless to have here if the set of public keys of the members of the group is known in another way, e.g. it was supplied by the AS.
+* 'get_pub_keys', if the Client wishes to receive the public keys of the other nodes in the group from the KDC. The value is an empty CBOR Array. This parameter may be present if the KDC stores the public keys of the nodes in the group and distributes them to the Client; it is useless to have here if the set of public keys of the members of the group is known in another way, e.g. it was provided by the AS.
+
+<!-- Peter 30-07: get_pub_keys: Instead of empty CBOR array, an empty payload is also possible?
+
+Marco: As a parameter, it must have a type anyway and we said it should be a CBOR array consistently with the usage of this parameter in the following sections.
+-->
 
 * 'client_cred', with value the public key or certificate of the Client. If the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, this field contains the public key of the Client.
 
 * 'pub_keys_repos', can be present if a certificate is present in the client_cred field, with value a list of public key repositories storing the certificate of the Client.
 
+
 ## Key Distribution Response {#ssec-key-distribution-response}
+
+<!-- Jim 13-07: Section X.X - Define a new cnf method to hold the OSCORE context parameters - should it be a normal COSE_Key or something new just to makes sure that it is different.
+
+Marco: Isn't it ok as we are doing with the COSE Key here in Section 4.2? Then it works quite fine in ace-oscoap-joining when considering the particular joining of OSCORE groups. Also, OSCORE is ongly a particular case, while this document is general. Also, this phase where keying material is provisinoed is not even ACE anymore, so there is no need to really stick to a 'cnf' parameter.
+-->
+
+<!-- Jim 13-07: Question - does somebody talk about doing key derivation for a new kid showing up and by the way where is the gid
+
+Marco: This seems very much related to Group OSCORE, rather than general message format. In fact, it's in oscore-groupcomm that we describe how a new Recipient Context is derived on demand when "a new kid shows up".
+
+Similarly for the Gid, this document keeps a high livel perspective. It's in ace-oscoap-join that we say how the current Group ID is provided to a joining node in the 'serverID' parameter of the COSE Key in the Join Response.
+-->
+
+<!-- Jim 13-07: Seciton 4.2 - if you are using profile, then you should return it.
+
+Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows what kind of response to expect, since it is contacted a specific resource on the KDC in the first place.
+-->
 
 The KDC verifies the access token and, if verification succeeds, sends a Key Distribution success Response to the Client. This corresponds to a 2.01 Created message. The payload of this response is a CBOR Map which MUST contain the following fields:
 
@@ -380,29 +403,47 @@ Optionally, the Key Distribution Response MAY contain the following parameters, 
 
 * 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request; this parameter is a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group.
 
-* group_policies, with value a list of parameters indicating how the group handles specific management aspects. This includes, for instance, approaches to achieve synchronization of sequence numbers among group members. The exact format of this parameter is specific to the profile.
+* 'group_policies', with value a list of parameters indicating how the group handles specific management aspects. This includes, for instance, approaches to achieve synchronization of sequence numbers among group members. The exact format of this parameter is specific to the profile.
 
 * 'mgt_key_material', with value the administrative keying material to participate in the revocation and renewal of group keying (rekeying) performed by the KDC. The exact format and content depend on the specific rekeying algorithm used in the group, which may be specified in the profile.
+
+<!-- Peter 30-07: The parameters group_policies and mgt_key_material are not specified in pubsub-profile draft. Do you ever use them?
+
+Marco: We already use them in the joining draft. Aren't they anyway relevant in the pubsub profile too?
+-->
 
 Specific profiles need to specify how exactly the keying material is used to protect the group communication.
 
 TBD: define for verification failure
 
-# Remove a Node from the Group {#sec-node-removal}
+# Removal of a Node from the Group {#sec-node-removal}
 
 This section describes at a high level how a node can be removed from the group.
 
-## Not authorized anymore
+If the application requires forward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members but the leaving node, using the format defined in {{ssec-key-distribution-response}}.
+
+## Expired Authorization
 
 If the node is not authorized anymore, the AS can directly communicate that to the KDC. Alternatively, the access token might have expired. If Token introspection is provided by the AS, the KDC can use it as per Section 5.7 of {{I-D.ietf-ace-oauth-authz}}, in order to verify that the access token is still valid.
 
-Either case, once aware that a node is not authorized anymore, the KDC has to generate and distribute the new keying material to all authorized members of the group, as well as to remove the unauthorized node from the list of members (if the KDC keeps track of that). The KDC relies on the specific rekeying algorithm used in the group, such as e.g. {{RFC2093}}, {{RFC2094}} or {{RFC2627}}, and the related management key material.
+Either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of members, if the KDC keeps track of that.
 
 ## Request to Leave the Group
 
-A node can actively request to leave the group. In this case, the Client can send a request to the KDC to exit the group. The KDC can then generate and distribute the new keying material to all authorized members of the group, as well as remove the leaving node from the list of members (if the KDC keeps track of that).
+A node can actively request to leave the group. In this case, the Client can send a request formatted as follows to the KDC, to abandon the group.
 
-Note that, as long as the node is authorized to join the group, i.e. it has a valid access token, it can re-request to join the group directly to the KDC without needing to retrieve a new access token. This means that the KDC needs to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
+TBD: Format of the message to leave the group
+
+<!-- Jim 13-07: Section 5.2 - What is the message to leave - can I leave one scope but not another?  Can I just give up a role?
+
+Marco: We should define an actual message, like the ones for retrieving updating keying material in Section 6. It can be like the one in Section 6.1, only with the second part of 'scope' present and encoded as an empty CBOR array.
+
+Marco: 'scope' encodes one group and some roles. So a node is supposed to leave that group altogether, with all its roles. If the node wants to stay in the group with less roles, it is just fine that is stops playing the roles it is not interested in anymore.
+-->
+
+The KDC should then remove the leaving node from the list of members, if the KDC keeps track of that.
+
+Note that, after having left the group, a node may wish to join it again. Then, as long as the node is still authorized to join the group, i.e. it has a still valid access token, it can re-request to join the group directly to the KDC without needing to retrieve a new access token from the AS. This means that the KDC needs to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
 
 # Retrieval of Updated Keying Material {#sec-expiration}
 
