@@ -490,22 +490,37 @@ The KDC replies to the Client with a Key Distribution Response containing the 'k
 
 In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to request public keys of either all group members or a specified subset, using the messages defined below.
 
+{{fig-public-key-req-resp}} gives an overview of the exchange described.
+
+~~~~~~~~~~~
+Client                                       KDC
+   |                                          |
+   |-- Public Key Request: POST /group-id --> |
+   |                                          |
+   |<- Public Key Response: 2.01 (Created) ---|
+   |                                          |
+~~~~~~~~~~~
+{: #fig-public-key-req-resp title="Message Flow of Public Key Request-Response" artwork-align="center"}
+
 Note that these messages can be combined with the Key Re-Distribution messages in {{sec-expiration}}, to request at the same time the keying material and the public keys. In this case, either a new endpoint at the KDC may be used, or additional information needs to be sent in the request payload, to distinguish these combined messages from the Public Key messages described below, since they would be identical otherwise.
 
 ## Public Key Request
 
-To request public keys, the Client sends a shortened Key Distribution request to the KDC ({{ssec-key-distribution-request}}), formatted as follows. The payload of this request MUST contain the following field:
+To request public keys, the Client sends a shortened Key Distribution Request to the KDC ({{ssec-key-distribution-request}}), formatted as follows. The payload of this request MUST contain the following fields:
 
-* get_pub_keys, which has for value a CBOR array including either:
+* 'get_pub_keys', which has for value a CBOR array including either:
   - no elements, i.e. an empty array, in order to request the public key of all current group members; or
   - N elements, each of which is the identifier of a group member, in order to request the public key of the specified nodes.
 
-Additionally, this request MAY contain the following parameter, which, if included, MUST have the corresponding value:
+* 'scope', which contains only the identifier of the specific group or topic, encoded as in {{ssec-authorization-request}}. That is, the role field is not present.
 
-* scope, which contains only the identifier of the specific group or topic, encoded as in {{ssec-authorization-request}}. That is, the role field is not present.
+<!-- In some cases, it is not necessary to include the scope parameter, for instance if the KDC maintains a list of active group members for each managed group, and the Client is member of only one group. The Client MUST include the scope parameter if it is a member of multiple groups under the same KDC.
 
-  In some cases, it is not necessary to include the scope parameter, for instance if the KDC maintains a list of active group members for each managed group, and if the specified identifiers allow to retrieve public keys with no ambiguity. The Client MUST include the scope parameter if it is a member of multiple groups under the same KDC.
 
+ Peter 30-07: "In some cases ... same KDC". Suggest to remove. In a fast changing environment, this may lead to many error messages if not wrong behavior; Imagine group GA is the only group. C is member of GA. GA is removed and GB is entered as the only group. C wants to leave/join GA, and accesses GB.
+
+Marco: It makes sense, should we then just make 'scope' mandatory?
+-->
 
 If the KDC can not unambiguously identify the nodes specified in the 'get_pub_keys' parameter, it MUST reply with an error message. In this case, the Client can issue a new Public Key Request specifying the group in the 'scope' parameter.
 
@@ -515,7 +530,7 @@ TODO: define error
 
 The KDC replies to the Client with a Key Distribution Response containing only the 'pub_keys' parameter, as specified in {{ssec-key-distribution-response}}. The payload of this response contains the following field:
 
-* pub_keys, which contains either:
+* 'pub_keys', which contains either:
 
   - the public keys of all the members of the group, if the 'get_pub_keys' parameter of the Public Key request was an empty array; or
 
@@ -545,7 +560,7 @@ The following registration is required for the COSE Key Common Parameter Registr
 # Acknowledgments
 {: numbered="no"}
 
-The following individuals were helpful in shaping this document: Ben Kaduk, John Mattsson, Jim Schaad, Ludwig Seitz and Göran Selander.
+The following individuals were helpful in shaping this document: Ben Kaduk, John Mattsson, Jim Schaad, Ludwig Seitz, Göran Selander and Peter van der Stok.
 
 The work on this document has been partly supported by the EIT-Digital High Impact Initiative ACTIVE.
 
