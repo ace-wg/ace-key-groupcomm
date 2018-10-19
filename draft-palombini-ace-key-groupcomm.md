@@ -167,27 +167,27 @@ Marco: In principle yes, if you consider a logical audience as the GM/Broker at 
 Should we discuss this in the draft?
 -->
 
-## Authorization Response
+## Authorization Response {#ssec-authorization-response}
 
-The Authorization Response sent from the AS to the Client (as defined in {{I-D.ietf-ace-oauth-authz}}, Section 5.6.2, MUST contain the following parameters:
+The Authorization Response sent from the AS to the Client is as defined in Section 5.6.2 of {{I-D.ietf-ace-oauth-authz}} and MUST contain the following parameters:
 
-* access_token, containing all the parameters defined below (including the same 'scope' as in this message, if present, or the 'scope' of the Authorization Request otherwise), and additionally other optional parameters the profile requires.
+* 'access_token', containing the proof-of-possession access token. 
 
-* cnf if symmetric keys are used, not present if asymmetric keys are used, contains the symmetric pop key that the Client is supposed to use with the KDC.
+* 'cnf' if symmetric keys are used, not present if asymmetric keys are used. This parameter is defined in Section 3.2 of {{I-D.ietf-ace-oauth-params}} and contains the symmetric pop key that the Client is supposed to use with the KDC.
 
-* rs_cnf if asymmetric keys are used, contains information about the public key of the KDC. Not present if symmetric keys are used.
+* 'rs_cnf' if asymmetric keys are used, not present if symmetric keys are used. This parameter is as defined in Section 3.2 of {{I-D.ietf-ace-oauth-params}} and contains information about the public key of the KDC.
 
-* exp, contains the lifetime in seconds of the access token. This parameter MAY be omitted if the application defines how the expiration time is communicated to the Client via other means, or if it establishes a default value.
+* 'exp', contains the lifetime in seconds of the access token. This parameter MAY be omitted if the application defines how the expiration time is communicated to the Client via other means, or if it establishes a default value.
 
 Additionally, the Authorization Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* scope, which mirrors the 'scope' parameter in the Authorization Request {{authorization-request}}. Its value is a CBOR array encoded as a byte string, containing:
+* 'scope', which mirrors the 'scope' parameter in the Authorization Request (see {{ssec-authorization-request}}). Its value is a CBOR array encoded as a byte string, containing:
 
-  - as first element, the identifier of the specific group or topic the Client is authorized to access.
+  - As first element, the identifier of the specific group or topic the Client is authorized to access.
 
-  - optionally, as second element, the role (or CBOR array of roles) the Client is authorized to take in the group.
+  - Optionally, as second element, the role (or CBOR array of roles) the Client is authorized to take in the group.
 
-  How exactly the group or topic identifier and the roles are encoded is application specific.
+  The encoding of the group or topic identifier and of the role identifiers is application specific.
 
 * Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary.
 
@@ -198,11 +198,13 @@ Additionally, the Authorization Response MAY contain the following parameters, w
 
 -->
 
-When receiving an Authorization Request from a Client that was previously authorized, and which still owns a valid non expired Access Token, the AS can simply reply with an Authorization Response including a new Access Token.
+The access token MUST contain all the parameters defined above (including the same 'scope' as in this message, if present, or the 'scope' of the Authorization Request otherwise), and additionally other optional parameters the profile requires.
+
+When receiving an Authorization Request from a Client that was previously authorized, and which still owns a valid non expired access token, the AS can simply reply with an Authorization Response including a new access token.
 
 ## Token Post
 
-The Client sends a CoAP POST request including the Access Token to the KDC, as specified in section 5.8.1 of {{I-D.ietf-ace-oauth-authz}}. If the specific profile defines it, the Client MAY use a different endpoint at the KDC to post the Access Token to. After successful verification, the Client is authorized to receive the group keying material from the KDC and join the group.
+The Client sends a CoAP POST request including the access token to the KDC, as specified in section 5.8.1 of {{I-D.ietf-ace-oauth-authz}}. If the specific profile defines it, the Client MAY use a different endpoint at the KDC to post the access token to. After successful verification, the Client is authorized to receive the group keying material from the KDC and join the group.
 
 Note that this step could be merged with the following message from the Client to the KDC, namely Key Distribution Request.
 
@@ -230,7 +232,7 @@ The same types of messages can also be used for the following cases, when the Cl
 The Client sends a Key Distribution request to the KDC.
 This corresponds to a CoAP POST request to the endpoint in the KDC associated to the group (which is associated in the KDC to the 'scope' value of the Authorization Request/Response). The payload of this request is a CBOR Map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
-* scope, with value the specific resource or topic identifier and role(s) that the Client is authorized to access, encoded as in {{authorization-request}}.
+* scope, with value the specific resource or topic identifier and role(s) that the Client is authorized to access, encoded as in {{ssec-authorization-request}}.
 
 <!--
   Jim 14-06: We need an API for distributing all public keys or a specific public key to an endpoint already member of the group. In the first case, the query information can be the identifier of the group/topic. In the second case, the query information can be the endpoint ID associated to the key to be retrieved, as considered as key identifier. This particular details such as "Group ID" and "Sender ID" are specified in the main group OSCORE document as a particular instance of this generic model.
@@ -246,7 +248,7 @@ This corresponds to a CoAP POST request to the endpoint in the KDC associated to
 
 ## Key Distribution Response {#ssec-key-distribution-response}
 
-The KDC verifies the Access Token and, if verification succeeds, sends a Key Distribution success Response to the Client. This corresponds to a 2.01 Created message. The payload of this response is a CBOR Map which MUST contain the following fields:
+The KDC verifies the access token and, if verification succeeds, sends a Key Distribution success Response to the Client. This corresponds to a 2.01 Created message. The payload of this response is a CBOR Map which MUST contain the following fields:
 
 * key, used to send the keying material to the Client, as a COSE_Key ({{RFC8152}}) containing the following parameters:
   - kty, as defined in {{RFC8152}}.
@@ -298,7 +300,7 @@ This section describes at a high level how a node can be removed from the group.
 
 ## Not authorized anymore
 
-If the node is not authorized anymore, the AS can directly communicate that to the KDC. Alternatively, the Access Token might have expired. If Token introspection is provided by the AS, the KDC can use it as per Section 5.7 of {{I-D.ietf-ace-oauth-authz}}, in order to verify that the Access Token is still valid.
+If the node is not authorized anymore, the AS can directly communicate that to the KDC. Alternatively, the access token might have expired. If Token introspection is provided by the AS, the KDC can use it as per Section 5.7 of {{I-D.ietf-ace-oauth-authz}}, in order to verify that the access token is still valid.
 
 Either case, once aware that a node is not authorized anymore, the KDC has to generate and distribute the new keying material to all authorized members of the group, as well as to remove the unauthorized node from the list of members (if the KDC keeps track of that). The KDC relies on the specific rekeying algorithm used in the group, such as e.g. {{RFC2093}}, {{RFC2094}} or {{RFC2627}}, and the related management key material.
 
@@ -306,7 +308,7 @@ Either case, once aware that a node is not authorized anymore, the KDC has to ge
 
 A node can actively request to leave the group. In this case, the Client can send a request to the KDC to exit the group. The KDC can then generate and distribute the new keying material to all authorized members of the group, as well as remove the leaving node from the list of members (if the KDC keeps track of that).
 
-Note that, as long as the node is authorized to join the group, i.e. it has a valid Access Token, it can re-request to join the group directly to the KDC without needing to retrieve a new Access Token. This means that the KDC needs to keep track of nodes with valid Access Tokens, before deleting all information about the leaving node.
+Note that, as long as the node is authorized to join the group, i.e. it has a valid access token, it can re-request to join the group directly to the KDC without needing to retrieve a new access token. This means that the KDC needs to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
 
 # Retrieval of Updated Keying Material {#sec-expiration}
 
@@ -320,7 +322,7 @@ Note that policies can be set up so that the Client sends a request to the KDC o
 
 To request a re-distribution of keying material, the Client sends a shortened Key Distribution request to the KDC ({{ssec-key-distribution-request}}), formatted as follows. The payload MAY contain only the following field:
 
-* scope, which contains only the identifier of the specific group or topic, encoded as in {{authorization-request}}. That is, the role field is not present.
+* scope, which contains only the identifier of the specific group or topic, encoded as in {{ssec-authorization-request}}. That is, the role field is not present.
 
 In some cases, it is not necessary to include the scope parameter, for instance if the KDC maintains a list of active group members for each managed group, and the Client is member of only one group. The Client MUST include the scope parameter if it is a member of multiple groups under the same KDC.
 
@@ -344,7 +346,7 @@ To request public keys, the Client sends a shortened Key Distribution request to
 
 Additionally, this request MAY contain the following parameter, which, if included, MUST have the corresponding value:
 
-* scope, which contains only the identifier of the specific group or topic, encoded as in {{authorization-request}}. That is, the role field is not present.
+* scope, which contains only the identifier of the specific group or topic, encoded as in {{ssec-authorization-request}}. That is, the role field is not present.
 
   In some cases, it is not necessary to include the scope parameter, for instance if the KDC maintains a list of active group members for each managed group, and if the specified identifiers allow to retrieve public keys with no ambiguity. The Client MUST include the scope parameter if it is a member of multiple groups under the same KDC.
 
