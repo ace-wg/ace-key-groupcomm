@@ -95,7 +95,7 @@ Marco: I am not sure the change is consistent, since the KDC is an AS in pub-sub
 Marco: We have extended the definition of Dispatches, clarifying the two main cases involving either a Broker (ACE RS) or a bus (multicast delivery). Does this help?
 -->
 
-Participants:
+The following participants (see {{fig-roles}}) take part in the authorization and key distribution.
 
 * Client (C): Node that wants to join the group communication. It can request write and/or read rights.
 
