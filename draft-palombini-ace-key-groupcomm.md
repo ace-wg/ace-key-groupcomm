@@ -1,6 +1,6 @@
 ---
 title: Key Provisioning for Group Communication using ACE
-abbrev: Key Prov Group Comm
+abbrev: Key Provisioning for Group Communication
 docname: draft-palombini-ace-key-groupcomm-latest
 
 ipr: trust200902
@@ -27,7 +27,7 @@ author:
       -
         ins: M. Tiloca
         name: Marco Tiloca
-        org: RISE SICS
+        org: RISE AB
         street: Isafjordsgatan 22
         city: Kista
         code: SE-16440 Stockholm
