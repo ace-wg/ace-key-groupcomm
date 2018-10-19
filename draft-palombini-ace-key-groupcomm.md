@@ -39,6 +39,7 @@ normative:
   RFC2119:
   RFC8152:
   I-D.ietf-ace-oauth-authz:
+  I-D.ietf-ace-oauth-params:
   I-D.ietf-ace-oscore-profile:
   
 informative:
@@ -124,32 +125,29 @@ C                 AS               KDC           Dispatcher
 
 This section describes in detail the message formats exchanged by the participants when a node requests access to the group. The first part of the exchange is based on ACE {{I-D.ietf-ace-oauth-authz}}, where the KDC takes the role of RS.
 
-## Authorization Request
+## Authorization Request {#ssec-authorization-request}
 
-The Authorization Request sent from the Client to the AS (as defined in {{I-D.ietf-ace-oauth-authz}}, Section 5.6.1, MUST contain the following parameters:
+The Authorization Request sent from the Client to the AS is as defined in Section 5.6.1 of {{I-D.ietf-ace-oauth-authz}} and MUST contain the following parameters:
 
-* grant_type, with value "client_credentials".
+* 'grant_type', with value "client_credentials".
 
 Additionally, the Authorization Request MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
+* 'scope', with value the identifier of the specific group or topic the Client wishes to access, and optionally the role(s) the Client wishes to take. This value is a CBOR array encoded as a byte string, which contains:
 
-<!-- 
-  Based on a discussion with Ludwig, the "scope" claim represented as a CBOR Array should be further encoded as CBOR byte array, to be compliant with the ACE framework.
--->
+  - As first element, the identifier of the specific group or topic.
 
-* scope, with value the identifier of the specific group or topic the Client wishes to access, as well as the role the Client wishes to take, if necessary. This value is a CBOR array encoded as a byte string, which contains:
+  - Optionally, as second element, the role (or CBOR array of roles) the Client wishes to take in the group.
 
-  - as first element, the identifier of the specific group or topic
-  - optionally, as second element, the role (or CBOR array of roles) the Client wishes to take in the group
+  The encoding of the group or topic identifier and of the role identifiers is application specific.
 
-  How exactly the group or topic identifier and the roles are encoded is application specific.
+* 'req_aud', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, with value an identifier of the KDC.
 
-* aud, with value an identifier of the KDC.
+* 'req_cnf', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, optionally containing the public key (or the certificate) of the Client, if it wishes to communicate that to the AS.
 
-* cnf, containing the public key (or certificate) of the Client, if it wishes to communicate that to the AS.
+<!-- Peter 30-07: Question: is this a certificate identifier, or the public key extracted from the certificate, or a hash?????
 
-<!--
-  Jim 14-06: Remove "get_pub_keys" from the Authorization Request and Access Token. There is no particular reason why it should be here, i.e. that the AS cases at all about it.  
+Marco: It is just as per ACE. See Sections 3.2 and 3.4 of draft-ietf-ace-cwt-proof-of-possession-03
 -->
 
 * Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary. 
@@ -157,7 +155,16 @@ Additionally, the Authorization Request MAY contain the following parameters, wh
 <!--
 Marco 27-02: “scope” should include a list of identifiers. One can ask authorization for joining multiple groups in a single Authorization Request, so getting a single Access Token.
 
+Jim 13-07: Section 3.1 - Can I get authorization for multiple items at a single time?
+
 FP: Is this something we really want to cover? I think this could open up to a number of comments and questions (how do you renew keying material for just one of these res, for example). Let's think a bit more about this.
+-->
+
+<!-- Jim 13-07: Section 3.1 - Does it make sense to allow for multiple audiences to be on a single KDC?  
+
+Marco: In principle yes, if you consider a logical audience as the GM/Broker at a single physical KDC.
+
+Should we discuss this in the draft?
 -->
 
 ## Authorization Response
