@@ -59,7 +59,7 @@ This document defines message formats and procedures for requesting and distribu
 
 # Introduction {#intro}
 
-This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define the format of messages used to request, distribute and renew the keying material to protect the communication in a group. 
+This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define the format of messages used to request, distribute and renew the keying material in a group communication scenario, e.g. based on multicast {{RFC7390}} or on publishing-subscribing {{I-D.ietf-core-coap-pubsub}}.
 
 Profiles that use group communication can build on this document to specify the selection of the message parameters defined in this document to use and their values. Known applications that can benefit from this document would be, for example, profiles addressing group communication based on multicast {{RFC7390}} or publishing/subscribing {{I-D.ietf-core-coap-pubsub}} in ACE.
 
@@ -73,19 +73,18 @@ Readers are expected to be familiar with the terms and concepts described in  {{
 # Overview
 
 ~~~~~~~~~~~
-+-----------+                  +-----------+
-|     AS    |                  |    KDC    |
-|           |        .-------->|           |
-+-----------+       /          +-----------+
-      ^            / 
-      |           /                  
-      v          /                           +-----------+
-+-----------+   /      +------------+        |+-----------+
-|   Client  |<-'       | Dispatcher |        ||+-----------+
-|           |<-------->|    (RS)    |<------->||   Group   |
-+-----------+          +------------+         +|  members  |
-                                               +-----------+
-
++------------+                  +-----------+
+|     AS     |                  |    KDC    |
+|            |        .-------->|           |
++------------+       /          +-----------+
+      ^             / 
+      |            /                  
+      v           /                           +-----------+
++------------+   /      +------------+        |+-----------+
+|   Client   |<-'       | Dispatcher |        ||+-----------+
+|            |<-------->|    (RS)    |<------->||   Group   |
++------------+          +------------+         +|  members  |
+                                                +-----------+
 ~~~~~~~~~~~
 {: #fig-roles title="Key Distribution Participants" artwork-align="center"}
 
