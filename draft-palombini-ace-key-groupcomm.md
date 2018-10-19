@@ -53,19 +53,22 @@ informative:
   
 --- abstract
 
-This document defines a message format for distributing keying material in group communication scenarios (such as based on multicast or publisher-subscriber model) using the ACE framework.
+This document defines message formats and procedures for requesting and distributing keying material to groups to protect the communication between group members using the ACE framework.
 
 --- middle
 
 # Introduction {#intro}
 
-This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define the format of messages used to distribute the keying material in a group communication scenario. Profiles that use group communication can build on this document to specify exactly which of the message parameters defined in this documents are used, and what are their values. Known applications that can benefit from this document would be, for example, profiles addressing group communication based on multicast {{RFC7390}} or publishing/subscribing {{I-D.ietf-core-coap-pubsub}} in ACE.
+This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define the format of messages used to request, distribute and renew the keying material to protect the communication in a group. 
+
+Profiles that use group communication can build on this document to specify the selection of the message parameters defined in this document to use and their values. Known applications that can benefit from this document would be, for example, profiles addressing group communication based on multicast {{RFC7390}} or publishing/subscribing {{I-D.ietf-core-coap-pubsub}} in ACE.
 
 ## Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}. These words may also appear in this document in lowercase, absent their normative meanings.
 
-Readers are expected to be familiar with the terms and concepts described in  {{I-D.ietf-ace-oauth-authz}} and {{RFC8152}}.
+Readers are expected to be familiar with the terms and concepts described in  {{I-D.ietf-ace-oauth-authz}} and {{RFC8152}}, such as Authorization Server (AS) and Resource Server (RS).
+
 
 # Overview
 
@@ -88,9 +91,9 @@ Readers are expected to be familiar with the terms and concepts described in  {{
 
 Participants:
 
-* Client: Node that wants to join the group communication. It can either want write rights or read rights.
-* AS: Same as AS in the ACE Framework; it contains policies, and knows if a node is allowed to join the group with write or read rights. 
-* Key Distribution Center: Maintains the keying material to protect group communications, and provides it to clients authorized to join the group. During the first part of the exchange, it corresponds to the RS in the ACE Framework.
+* Client (C): Node that wants to join the group communication. It can request write and/or read rights.
+* Authorization Server (AS): Same as AS in the ACE Framework; it contains policies, and knows if a node is allowed to join the group with write and/or read rights. 
+* Key Distribution Center (KDC): Maintains the keying material to protect group communications, and provides it to clients authorized to join the group. During the first part of the exchange, it corresponds to the RS in the ACE Framework.
 * Dispatcher: this is the entity the Client wants to securely communicate with and is responsible for distribution of group messages. It can be an existing node, such as the Broker in a pub-sub setting (in which case the Dispatcher is also a RS), or it can be implicit, as in the multicast communication setting, where the message distribution is done by transmitting to a multicast IP address, and entrusting message delivery to the transport channel.
 
 <!-- Marco 22-02: A KDC can be responsible for more groups, while every group is associated to only one KDC.
