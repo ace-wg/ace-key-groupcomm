@@ -195,7 +195,7 @@ Additionally, the Authorization Request MAY contain the following parameters, wh
 
 * 'req_aud', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, with value an identifier of the KDC.
 
-* 'req_cnf', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, optionally containing the public key (or the certificate) of the Client, if it wishes to communicate that to the AS.
+* 'req_cnf', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, optionally containing the public key or the certificate of the Client, if it wishes to communicate that to the AS.
 
 <!-- Peter 30-07: Question: is this a certificate identifier, or the public key extracted from the certificate, or a hash?????
 
@@ -256,7 +256,7 @@ When receiving an Authorization Request from a Client that was previously author
 
 ## Token Post
 
-The Client sends a CoAP POST request including the access token to the KDC, as specified in section 5.8.1 of {{I-D.ietf-ace-oauth-authz}}. If the specific profile defines it, the Client MAY use a different endpoint at the KDC to post the access token to. After successful verification, the Client is authorized to receive the group keying material from the KDC and join the group.
+The Client sends a CoAP POST request including the access token to the KDC, as specified in section 5.8.1 of {{I-D.ietf-ace-oauth-authz}}. If the specific ACE profile defines it, the Client MAY use a different endpoint than /authz-info at the KDC to post the access token to. After successful verification, the Client is authorized to receive the group keying material from the KDC and join the group.
 
 Note that this step could be merged with the following message from the Client to the KDC, namely Key Distribution Request.
 
@@ -264,7 +264,7 @@ Note that this step could be merged with the following message from the Client t
 
 This section defines how the keying material used for group communication is distributed from the KDC to the Client, when joining the group as a new member.
 
-The same types of messages can also be used for the following cases, when the Client is already a group member:
+The same set of message can also used for the following cases, when the Client is already a group member:
 
 * The Client wishes to (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed rekeying. This is further discussed in {{sec-expiration}}.
 
