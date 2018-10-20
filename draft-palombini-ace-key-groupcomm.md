@@ -63,7 +63,7 @@ This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define t
 
 Profiles that use group communication can build on this document to specify the selection of the message parameters defined in this document to use and their values. Known applications that can benefit from this document would be, for example, profiles addressing group communication based on multicast {{RFC7390}} or publishing/subscribing {{I-D.ietf-core-coap-pubsub}} in ACE.
 
-If the application requires backward and forward security, updated keying material is generated and distributed to the group members (rekeying), when membership changes. A key management scheme performs the actual distribution of the updated keying material to the group. In particular, the key management scheme rekeys the current group members when a new node joins the group, and the remaining group members when a node leaves the group. This document provides a message format for group rekeying that fulfills these requirements, and rekeying mechanism can be based on {{RFC2093}}, {{RFC2094}} and {{RFC2627}}.
+If the application requires backward and forward security, updated keying material is generated and distributed to the group members (rekeying), when membership changes. A key management scheme performs the actual distribution of the updated keying material to the group. In particular, the key management scheme rekeys the current group members when a new node joins the group, and the remaining group members when a node leaves the group. This document provides a message format for group rekeying that allows to fulfill these requirements. Rekeying mechanisms can be based on {{RFC2093}}, {{RFC2094}} and {{RFC2627}}.
 
 ## Terminology
 
@@ -94,7 +94,7 @@ Readers are expected to be familiar with the terms and concepts described in  {{
 
 Marco: I am not sure the change is consistent, since the KDC is an AS in pub-sub, i.e. not an RS or part of an RS. Also, in group OSCORE the KDC is the RS, not part of it.
 
-Marco: We have extended the definition of Dispatches, clarifying the two main cases involving either a Broker (ACE RS) or a bus (multicast delivery). Does this help?
+Marco: We have extended the definition of Dispatcher, clarifying the two main cases involving either a Broker (ACE RS) or a bus (multicast delivery). Does this help?
 -->
 
 The following participants (see {{fig-roles}}) take part in the authorization and key distribution.
