@@ -525,10 +525,6 @@ To request public keys, the Client sends a shortened Key Distribution Request to
 Marco: It makes sense, should we then just make 'scope' mandatory?
 -->
 
-If the KDC can not unambiguously identify the nodes specified in the 'get_pub_keys' parameter, it MUST reply with an error message. In this case, the Client can issue a new Public Key Request specifying the group in the 'scope' parameter.
-
-TODO: define error
-
 ## Public Key Response
 
 The KDC replies to the Client with a Key Distribution Response containing only the 'pub_keys' parameter, as specified in {{ssec-key-distribution-response}}. The payload of this response contains the following field:
