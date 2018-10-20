@@ -53,7 +53,7 @@ informative:
   
 --- abstract
 
-This document defines message formats and procedures for requesting and distributing keying material to groups to protect the communication between group members using the ACE framework.
+This document defines message formats and procedures for requesting and distributing keying material to groups using the ACE framework, to protect communications between group members.
 
 --- middle
 
