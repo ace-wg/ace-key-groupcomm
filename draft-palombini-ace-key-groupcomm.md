@@ -119,7 +119,7 @@ This document specifies the message flows and formats for:
 
 * Retrieving keying material as a current group member ({{sec-expiration}} and {{sec-key-retrieval}}).
 
-* Renewing and re-distributing the group keying material (rekeying) upon a membership change in the group (TODO: add sections ref).
+* Renewing and re-distributing the group keying material (rekeying) upon a membership change in the group ({{ssec-key-distribution-response}} and {{sec-node-removal}}).
 
 {{fig-flow}} provides a high level overview of the message flow for a node joining a group communication setting.
 
