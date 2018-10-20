@@ -268,7 +268,7 @@ If not previously established, the Client and the KDC MUST first establish a pai
 
 During this exchange, the Client sends a request to the AS, specifying the group it wishes to join (see {{ssec-key-distribution-request}}). Then, the KDC verifies the access token and that the Client is authorized to join that group; if so, it provides the Client with the keying material to securely communicate with the member of the group (see {{ssec-key-distribution-response}}).
 
-{{fig-key-distr-join}} gives an overview of the exchange described.
+{{fig-key-distr-join}} gives an overview of the exchange described above.
 
 ~~~~~~~~~~~
 Client                                          KDC
@@ -293,12 +293,11 @@ Marco: We could just go for "group", as a collection of devices sharing the same
 
 The same set of message can also be used for the following cases, when the Client is already a group member:
 
-* The Client wishes to (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed rekeying. This is further discussed in {{sec-expiration}}.
+* The Client wishes to (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed group rekeying. This is further discussed in {{sec-expiration}}.
 
 * The Client wishes to (re-)get the public keys of other group members, e.g. if it is aware of new nodes joining the group after itself. This is further discussed in {{sec-key-retrieval}}.
 
-Additionally, the format of the payload of the Key Distribution Response ({{ssec-key-distribution-response}}) can also be reused for messages sent by the KDC to re-new the keying material in case of a new node joining the group, or of member leaving the group. The mechanism to send such messages could be e.g. multicast for re-keying in case of a new node joining or unicast in case of a node leaving the group.
-
+Additionally, the format of the payload of the Key Distribution Response ({{ssec-key-distribution-response}}) can be reused for messages sent by the KDC to distribute updated group keying material, in case of a new node joining the group or of a current member leaving the group. The key management scheme used to send such messages could rely on, e.g., multicast in case of a new node joining or unicast in case of a node leaving the group.
 
 <!--
   Jim 14-06: Discuss that a Key Distribution Request/Response can be performed exactly in the same way also by an already member of the group. Mention the cases when this happens, e.g. believed lost of synchronization with the current group security context, crash and reboot and so on, so forced re-synchronization with the correct current security context.
