@@ -404,7 +404,7 @@ Optionally, the Key Distribution Response MAY contain the following parameters, 
 
 * 'group_policies', with value a list of parameters indicating how the group handles specific management aspects. This includes, for instance, approaches to achieve synchronization of sequence numbers among group members. The exact format of this parameter is specific to the profile.
 
-* 'mgt_key_material', with value the administrative keying material to participate in the revocation and renewal of group keying (rekeying) performed by the KDC. The exact format and content depend on the specific rekeying algorithm used in the group, which may be specified in the profile.
+* 'mgt_key_material', with value the administrative keying material to participate in the group rekeying performed by the KDC. The exact format and content depend on the specific rekeying scheme used in the group, which may be specified in the profile.
 
 <!-- Peter 30-07: The parameters group_policies and mgt_key_material are not specified in pubsub-profile draft. Do you ever use them?
 
@@ -541,7 +541,7 @@ The KDC ignores possible identifiers included in the 'get_pub_keys' parameter of
 
 The KDC must renew the group keying material upon its expiration.
 
-The KDC should renew the keying material upon group membership change, and should provide it to the current group members through the rekeying algorithm used in the group.
+The KDC should renew the keying material upon group membership change, and should provide it to the current group members through the rekeying scheme used in the group.
 
 # IANA Considerations
 
