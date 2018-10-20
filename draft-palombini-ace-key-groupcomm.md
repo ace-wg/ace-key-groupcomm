@@ -161,14 +161,14 @@ As defined in {{I-D.ietf-ace-oauth-authz}}, the Client requests the AS an author
 {{fig-group-member-registration}} gives an overview of the exchange described above.
 
 ~~~~~~~~~~~
-Client                                         AS  KDC
-|                                               |   |
-|---- Authorization Request: POST /token ------>|   |
-|                                               |   |
-|<--- Authorization Response: 2.01 (Created) ---|   |
-|                                               |   |
-|----- POST Token: POST /authz-info --------------->|
-|                                                   |
+Client                                            AS  KDC
+   |                                               |   |
+   |---- Authorization Request: POST /token ------>|   |
+   |                                               |   |
+   |<--- Authorization Response: 2.01 (Created) ---|   |
+   |                                               |   |
+   |----- POST Token: POST /authz-info --------------->|
+   |                                                   |
 ~~~~~~~~~~~
 {: #fig-group-member-registration title="Message Flow of Join Authorization" artwork-align="center"}
 
@@ -271,12 +271,12 @@ During this exchange, the Client sends a request to the AS, specifying the group
 {{fig-key-distr-join}} gives an overview of the exchange described above.
 
 ~~~~~~~~~~~
-Client                                          KDC
-|                                                |
-|-- Key Distribution Request: POST /group-id --> |
-|                                                |
-|<- Key Distribution Response: 2.01 (Created) ---|
-|                                                |
+Client                                               KDC
+   |                                                  |
+   |---- Key Distribution Request: POST /group-id --->|
+   |                                                  |
+   |<--- Key Distribution Response: 2.01 (Created) ---|
+   |                                                  |
 ~~~~~~~~~~~
 {: #fig-key-distr-join title="Message Flow of Key Distribution to a New Group Member" artwork-align="center"}
 
@@ -496,12 +496,12 @@ In case the KDC maintains the public keys of group members, a node in the group 
 {{fig-public-key-req-resp}} gives an overview of the exchange described above.
 
 ~~~~~~~~~~~
-Client                                       KDC
-   |                                          |
-   |-- Public Key Request: POST /group-id --> |
-   |                                          |
-   |<- Public Key Response: 2.01 (Created) ---|
-   |                                          |
+Client                                         KDC
+   |                                            |
+   |---- Public Key Request: POST /group-id --->|
+   |                                            |
+   |<--- Public Key Response: 2.01 (Created) ---|
+   |                                            |
 ~~~~~~~~~~~
 {: #fig-public-key-req-resp title="Message Flow of Public Key Request-Response" artwork-align="center"}
 
