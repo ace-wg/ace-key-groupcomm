@@ -323,7 +323,7 @@ Note that proof-of-possession to bind the access token to the Client is performe
 ## Key Distribution Request {#ssec-key-distribution-request}
 
 The Client sends a Key Distribution request to the KDC.
-This corresponds to a CoAP POST request to the endpoint in the KDC associated to the group to join. The endpoint is associated in the KDC to the 'scope' value of the Authorization Request/Response. The payload of this request is a CBOR Map which MAY contain the following fields, which, if included, MUST have the corresponding values:
+This corresponds to a CoAP POST request to the endpoint in the KDC associated to the group to join. The endpoint in the KDC is associated to the 'scope' value of the Authorization Request/Response. The payload of this request is a CBOR Map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
 * 'scope', with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and role(s), encoded as in {{ssec-authorization-request}}.
 
@@ -342,7 +342,7 @@ Marco: As a parameter, it must have a type anyway and we said it should be a CBO
 
 * 'client_cred', with value the public key or certificate of the Client. If the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, this field contains the public key of the Client.
 
-* 'pub_keys_repos', can be present if a certificate is present in the client_cred field, with value a list of public key repositories storing the certificate of the Client.
+* 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value a list of public key repositories storing the certificate of the Client.
 
 
 ## Key Distribution Response {#ssec-key-distribution-response}
