@@ -413,7 +413,7 @@ Marco: We already use them in the joining draft. Aren't they anyway relevant in 
 
 Specific profiles need to specify how exactly the keying material is used to protect the group communication.
 
-If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, using the message format defined in this section.
+If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, using the message format defined in this section. Application profiles may define alternative message formats.
 
 TBD: define for verification failure
 
@@ -421,7 +421,7 @@ TBD: define for verification failure
 
 This section describes at a high level how a node can be removed from the group.
 
-If the application requires forward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members but the leaving node, using the message format defined in {{ssec-key-distribution-response}}.
+If the application requires forward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members but the leaving node, using the message format defined in {{ssec-key-distribution-response}}. Application profiles may define alternative message formats.
 
 ## Expired Authorization
 
