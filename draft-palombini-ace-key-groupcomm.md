@@ -421,13 +421,13 @@ TBD: define for verification failure
 
 This section describes at a high level how a node can be removed from the group.
 
-If the application requires forward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members but the leaving node, using the content format defined in {{ssec-key-distribution-response}}.
+If the application requires forward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members but the leaving node, using the message format defined in {{ssec-key-distribution-response}}.
 
 ## Expired Authorization
 
 If the node is not authorized anymore, the AS can directly communicate that to the KDC. Alternatively, the access token might have expired. If Token introspection is provided by the AS, the KDC can use it as per Section 5.7 of {{I-D.ietf-ace-oauth-authz}}, in order to verify that the access token is still valid.
 
-Either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of members, if the KDC keeps track of that.
+Either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
 
 ## Request to Leave the Group
 
@@ -442,7 +442,7 @@ Marco: We should define an actual message, like the ones for retrieving updating
 Marco: 'scope' encodes one group and some roles. So a node is supposed to leave that group altogether, with all its roles. If the node wants to stay in the group with less roles, it is just fine that is stops playing the roles it is not interested in anymore.
 -->
 
-The KDC should then remove the leaving node from the list of members, if the KDC keeps track of that.
+The KDC should then remove the leaving node from the list of group members, if the KDC keeps track of that.
 
 Note that, after having left the group, a node may wish to join it again. Then, as long as the node is still authorized to join the group, i.e. it has a still valid access token, it can re-request to join the group directly to the KDC without needing to retrieve a new access token from the AS. This means that the KDC needs to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
 
