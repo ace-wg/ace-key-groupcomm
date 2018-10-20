@@ -264,7 +264,7 @@ Note that this step could be merged with the following message from the Client t
 
 This section defines how the keying material used for group communication is distributed from the KDC to the Client, when joining the group as a new member.
 
-If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel using ACE. The exchange of Key Distribution Request-Response as well as further pairwise communications between the Client and the KDC MUST occur over that secure channel.
+If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel using ACE. The exchange of Key Distribution Request-Response MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications, that MUST be secured.
 
 During this exchange, the Client sends a request to the AS, specifying the group it wishes to join (see {{ssec-key-distribution-request}}). Then, the KDC verifies the access token and that the Client is authorized to join that group; if so, it provides the Client with the keying material to securely communicate with the member of the group (see {{ssec-key-distribution-response}}).
 
