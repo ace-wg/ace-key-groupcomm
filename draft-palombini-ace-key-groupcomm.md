@@ -413,6 +413,8 @@ Marco: We already use them in the joining draft. Aren't they anyway relevant in 
 
 Specific profiles need to specify how exactly the keying material is used to protect the group communication.
 
+If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, using the message format defined in this section.
+
 TBD: define for verification failure
 
 # Removal of a Node from the Group {#sec-node-removal}
