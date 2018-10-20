@@ -493,7 +493,7 @@ The KDC replies to the Client with a Key Distribution Response containing the 'k
 
 In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to request public keys of either all group members or a specified subset, using the messages defined below.
 
-{{fig-public-key-req-resp}} gives an overview of the exchange described.
+{{fig-public-key-req-resp}} gives an overview of the exchange described above.
 
 ~~~~~~~~~~~
 Client                                       KDC
@@ -511,7 +511,7 @@ Note that these messages can be combined with the Key Re-Distribution messages i
 
 To request public keys, the Client sends a shortened Key Distribution Request to the KDC ({{ssec-key-distribution-request}}), formatted as follows. The payload of this request MUST contain the following fields:
 
-* 'get_pub_keys', which has for value a CBOR array including either:
+* 'get_pub_keys', which has as value a CBOR array including either:
   - no elements, i.e. an empty array, in order to request the public key of all current group members; or
   - N elements, each of which is the identifier of a group member, in order to request the public key of the specified nodes.
 
