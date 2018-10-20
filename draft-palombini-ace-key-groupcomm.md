@@ -148,7 +148,7 @@ The exchange of Authorization Request and Authorization Response between Client 
 
 The exchange of Key Distribution Request and Key Distribution Response between Client and KDC MUST be secured, as a result of the ACE profile used between Client and KDC. 
 
-All further communications between the Client and the KDC MUST be secured with the same security mechanism used for the Key Distribution exchange.
+All further communications between the Client and the KDC MUST be secured, for instance with the same security mechanism used for the Key Distribution exchange.
 
 All further communications between a Client and the other group members MUST be secured using the keying material provided in {{key-distr}}.
 
