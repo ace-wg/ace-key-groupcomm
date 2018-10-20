@@ -99,13 +99,13 @@ Marco: We have extended the definition of Dispatcher, clarifying the two main ca
 
 The following participants (see {{fig-roles}}) take part in the authorization and key distribution.
 
-* Client (C): Node that wants to join the group communication. It can request write and/or read rights.
+* Client (C): node that wants to join the group communication. It can request write and/or read rights.
 
-* Authorization Server (AS): Same as AS in the ACE Framework; it enforces access policies, and knows if a node is allowed to join the group with write and/or read rights. 
+* Authorization Server (AS): same as AS in the ACE Framework; it enforces access policies, and knows if a node is allowed to join the group with write and/or read rights. 
 
-* Key Distribution Center (KDC): Maintains the keying material to protect group communications, and provides it to clients authorized to join the group. During the first part of the exchange ({{sec-auth}}), it takes the role of the RS in the ACE Framework. During the second part ({{key-distr}}), which is not based on the ACE Framework, it distributes the keying material. In addition, it provides the latest keying material to group members when requested. If required by the application, the KDC renews and re-distributes the keying material in the group when membership changes.
+* Key Distribution Center (KDC): maintains the keying material to protect group communications, and provides it to Clients authorized to join the group. During the first part of the exchange ({{sec-auth}}), it takes the role of the RS in the ACE Framework. During the second part ({{key-distr}}), which is not based on the ACE Framework, it distributes the keying material. In addition, it provides the latest keying material to group members when requested. If required by the application, the KDC renews and re-distributes the keying material in the group when membership changes.
 
-* Dispatcher: this is the entity through which the Clients communicate with the group and which distributes messages to the group members. Example dispatchers are: the Broker node in a pub-sub setting; a relayer node for group communication that delivers group messages as multiple unicast messages to all group members; an implicit entity as in a multicast communication setting, where messages are transmitted to a multicast IP address and delivered on the transport channel.
+* Dispatcher: entity through which the Clients communicate with the group and which distributes messages to the group members. Examples of dispatchers are: the Broker node in a pub-sub setting; a relayer node for group communication that delivers group messages as multiple unicast messages to all group members; an implicit entity as in a multicast communication setting, where messages are transmitted to a multicast IP address and delivered on the transport channel.
 
 <!-- Marco 22-02: A KDC can be responsible for more groups, while every group is associated to only one KDC.
 FP: Proposal: let's add this sentence later. There is some considerations to be done about using a "cluster of KDC", but I don't want to overcomplicate v-00. Security considerations?
@@ -115,7 +115,7 @@ This document specifies the message flows and formats for:
 
 * Authorizing a new node to join the group ({{sec-auth}}), and providing it with the group keying material to communicate with the other group members ({{key-distr}}).
 
-* Removal of a current member from the group ({{sec-node-removal}}).
+* Removing of a current member from the group ({{sec-node-removal}}).
 
 * Retrieving keying material as a current group member ({{sec-expiration}} and {{sec-key-retrieval}}).
 
