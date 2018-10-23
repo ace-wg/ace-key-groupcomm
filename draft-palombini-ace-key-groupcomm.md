@@ -197,7 +197,8 @@ Additionally, the Authorization Request MAY contain the following parameters, wh
 
 * 'req_cnf', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, optionally containing the public key or the certificate of the Client, if it wishes to communicate that to the AS.
 
-<!-- Peter 30-07: Question: is this a certificate identifier, or the public key extracted from the certificate, or a hash?????
+<!-- 
+Peter 30-07: Question: is this a certificate identifier, or the public key extracted from the certificate, or a hash?????
 
 Marco: It is just as per ACE. See Sections 3.2 and 3.4 of draft-ietf-ace-cwt-proof-of-possession-03
 -->
