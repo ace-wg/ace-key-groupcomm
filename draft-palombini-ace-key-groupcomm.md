@@ -41,6 +41,7 @@ normative:
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-ace-oauth-params:
   I-D.ietf-ace-oscore-profile:
+  I-D.ietf-core-oscore-groupcomm:
   
 informative:
   
@@ -365,39 +366,47 @@ Similarly for the Gid, this document keeps a high livel perspective. It's in ace
 Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows what kind of response to expect, since it is contacted a specific resource on the KDC in the first place.
 -->
 
-The KDC verifies the access token and, if verification succeeds, sends a Key Distribution success Response to the Client. This corresponds to a 2.01 Created message. The payload of this response is a CBOR Map which MUST contain the following fields:
+The KDC verifies the access token and, if verification succeeds, sends a Key Distribution success Response to the Client. This corresponds to a 2.01 Created message. The payload of this response is a CBOR map containing an OSCORE_Security_Context as defined in Section 3.2.1. of {{I-D.ietf-ace-oscore-profile}}, which MUST contain the following fields:
 
-* 'key', used to send the keying material to the Client, as a COSE_Key ({{RFC8152}}) containing the following parameters:
-  - 'kty', as defined in {{RFC8152}}.
-  - 'k', as defined in {{RFC8152}}.
-  - 'exp' (optionally), as defined below. This parameter is RECOMMENDED to be included in the COSE_Key. If omitted, the authorization server SHOULD provide the expiration time via other means or document the default value.
-  - 'alg' (optionally), as defined in {{RFC8152}}.
-  - 'kid' (optionally), as defined in {{RFC8152}}.
-  - 'base iv' (optionally), as defined in {{RFC8152}}.
-  - 'clientID' (optionally), as defined in {{I-D.ietf-ace-oscore-profile}}.
-  - 'serverID' (optionally), as defined in {{I-D.ietf-ace-oscore-profile}}.
-  - 'kdf' (optionally), as defined in {{I-D.ietf-ace-oscore-profile}}.
-  - 'slt' (optionally), as defined in {{I-D.ietf-ace-oscore-profile}}.
-  - 'cs_alg' (optionally), containing the algorithm value to countersign the message, taken from Table 5 and 6 of {{RFC8152}}.
+  - 'ms'
+
+Additionally, the OSCORE_Security_Context MAY contain the following fields:
+
+  - 'clientId'
+  - 'serverId'
+  - 'hkdf'
+  - 'alg'
+  - 'salt'
+  - 'contectId'
+  - 'rpl'
+  - 'exp', This parameter is RECOMMENDED to be included. This parameter identifies the expiration time in seconds after which the Security Context is not valid anymore for secure communication in the group. If omitted, the authorization server SHOULD provide the expiration time via other means or document the default value. The value of 'exp' MUST be smaller or equal to the expiration time of the access token. After the expiration point a new key needs to be obtained from the KDC.
+  - 'cs_alg', as defined below.
 
 <!--
 TODO: Add exp in COSE_Key = same as exp in token but for the key
 define it as a COSE Key Common Parameter (see section 7.1 of COSE)
 -->
 
-The parameter 'exp' identifies the expiration time in seconds after which the COSE\_Key is not valid anymore for secure communication in the group. The value of 'exp' MUST be smaller or equal to the expiration time of the access token. After the expiration point a new key needs to be obtained from the KDC. A summary of 'exp' can be found in {{table-additional-param}}.
+
+  <t hangText="cs_alg:">
+    This parameter identifies the OSCORE Counter Signature Algorithm. For more information about this field, see section 2 of <xref target="I-D.ietf-core-oscore-groupcomm"/>
+    The values used MUST be registered in the IANA "COSE Algorithms" registry and MUST be signing algorithms. The value can either be the integer or the text string value of the signing algorithm in the "COSE Algorithms" registry, (see Table 5 or 6 of {{RFC8152}}).
+    In JSON, the "alg" value is a case-sensitive ASCII string or an integer.
+    In CBOR, the "alg" type is tstr or int, and has label TBD.
+  </t>
+
+  A summary of 'cs_alg' can be found in {{table-additional-param}}.
 
 ~~~~~~~~~~~
-+------+-------+----------------+------------+-----------------+
-| Name | Label | CBOR Type      | Value      | Description     |
-|      |       |                | Registry   |                 |
-+------+-------+----------------+------------+-----------------+
-| exp  | TBD   | Integer or     | COSE Key   | Expiration time |
-|      |       | floating-point | Common     | in seconds      |
-|      |       | number         | Parameters |                 |
-+------+-------+----------------+------------+-----------------+
++--------+-------+----------------+----------------+-----------------+
+|  Name  | Label | CBOR Type      | Value Registry | Description     |
++--------+-------+----------------+----------------+-----------------+
+| cs_alg | TBD   | tstr / int     | COSE Algorithm | OSCORE Counter  |
+|        |       |                | Values (ECDSA, | Signature       |
+|        |       |                | EdDSA)         | Algorithm Value |
++--------+-------+----------------+----------------+-----------------+
 ~~~~~~~~~~~
-{: #table-additional-param title="COSE Key Common Header Parameter 'exp'" artwork-align="center"}
+{: #table-additional-param title="OSCORE_Security_Context Additional Parameter 'cs_alg'" artwork-align="center"}
 
 Optionally, the Key Distribution Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
@@ -546,13 +555,13 @@ The KDC should renew the keying material upon group membership change, and shoul
 
 # IANA Considerations
 
-The following registration is required for the COSE Key Common Parameter Registry specified in Section 16.5 of {{RFC8152}}:
+The following registration is required for the OSCORE Security Context Parameters Registry specified in Section 9.2 of {{I-D.ietf-ace-oscore-profile}}:
 
-*  Name: exp
-*  Label: TBD
-*  CBOR Type: Integer or floating-point number
-*  Value Registry: COSE Key Common Parameters
-*  Description: Identifies the expiration time in seconds of the COSE Key
+*  Name: cs_alg
+*  CBOR Label: TBD
+*  CBOR Type: tstr / int
+*  Registry: COSE Algorithm Values (ECDSA, EdDSSA)
+*  Description: OSCORE Counter Signature Algorithm Value
 *  Reference: \[\[this specification\]\]
 
 --- back
