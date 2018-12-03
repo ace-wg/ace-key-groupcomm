@@ -185,7 +185,7 @@ The Authorization Request sent from the Client to the AS is as defined in Sectio
 
 Additionally, the Authorization Request MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'scope', with value the identifier of the specific group or topic the Client wishes to access, and optionally the role(s) the Client wishes to take. This value is a CBOR array encoded as a byte string, which contains:
+* 'scope', containing the identifier of the specific group (or topic in the case of pub-sub) the Client wishes to access, and optionally the role(s) the Client wishes to take. This value is a CBOR array encoded as a byte string, which contains:
 
   - As first element, the identifier of the specific group or topic.
 
@@ -193,9 +193,9 @@ Additionally, the Authorization Request MAY contain the following parameters, wh
 
   The encoding of the group or topic identifier and of the role identifiers is application specific.
 
-* 'req_aud', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, with value an identifier of the KDC.
+* 'req_aud', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, with an identifier of a KDC.
 
-* 'req_cnf', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, optionally containing the public key or the certificate of the Client, if it wishes to communicate that to the AS.
+* 'req_cnf', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, optionally containing the public key or a referece to the public key of the Client, if it wishes to communicate that to the AS.
 
 <!-- 
 Peter 30-07: Question: is this a certificate identifier, or the public key extracted from the certificate, or a hash?????
@@ -385,7 +385,7 @@ TODO: Add exp in COSE_Key = same as exp in token but for the key
 define it as a COSE Key Common Parameter (see section 7.1 of COSE)
 -->
 
-The parameter 'exp' identifies the expiration time in seconds after which the COSE\_Key is not valid anymore for secure communication in the group. A summary of 'exp' can be found in {{table-additional-param}}.
+The parameter 'exp' identifies the expiration time in seconds after which the COSE\_Key is not valid anymore for secure communication in the group. The value of 'exp' MUST be smaller or equal to the expiration time of the access token. After the expiration point a new key needs to be obtained from the KDC. A summary of 'exp' can be found in {{table-additional-param}}.
 
 ~~~~~~~~~~~
 +------+-------+----------------+------------+-----------------+
