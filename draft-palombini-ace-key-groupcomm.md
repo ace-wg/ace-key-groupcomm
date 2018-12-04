@@ -38,6 +38,7 @@ normative:
 
   RFC2119:
   RFC8152:
+  RFC8126:
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-ace-oauth-params:
   I-D.ietf-ace-oscore-profile:
@@ -410,6 +411,8 @@ define it as a COSE Key Common Parameter (see section 7.1 of COSE)
 
 Optionally, the Key Distribution Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
+* 'profile', with value an identifier that MUST be used to uniquely identify itself. The identifier MUST be registered in the ACE Groupcomm Profile Registry.
+
 * 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request; this parameter is a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group.
 
 * 'group_policies', with value a list of parameters indicating how the group handles specific management aspects. This includes, for instance, approaches to achieve synchronization of sequence numbers among group members. The exact format of this parameter is specific to the profile.
@@ -564,6 +567,8 @@ The KDC should renew the keying material upon group membership change, and shoul
 
 # IANA Considerations
 
+## OSCORE Security Context Parameters Registry
+
 The following registration is required for the OSCORE Security Context Parameters Registry specified in Section 9.2 of {{I-D.ietf-ace-oscore-profile}}:
 
 *  Name: cs_alg
@@ -572,6 +577,22 @@ The following registration is required for the OSCORE Security Context Parameter
 *  Registry: COSE Algorithm Values (ECDSA, EdDSSA)
 *  Description: OSCORE Counter Signature Algorithm Value
 *  Reference: \[\[this specification\]\]
+
+## ACE Groupcomm Profile Registry
+
+This specification establishes the IANA "ACE Groupcomm Profile" registry.  The
+registry has been created to use the "Expert Review Required"
+registration procedure {{RFC8126}}. It should be noted that, in
+addition to the expert review, some portions of the registry require
+a specification, potentially a Standards Track RFC, be supplied as
+well.
+
+The columns of this registry are:
+
+* Name: The name of the profile, to be used as value of the profile attribute.
+* Description: Text giving an overview of the profile and the context it is developed for.
+* CBOR Value: CBOR abbreviation for this profile name. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 are designated as Standards Action. Integer values from -65536 to -257 and from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as Expert Review. Integer values less than -65536 are marked as Private Use.
+* Reference: This contains a pointer to the public specification of the profile abbreviation, if one exists.
 
 --- back
 
