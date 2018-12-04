@@ -51,6 +51,7 @@ informative:
   RFC2093:
   RFC2094:
   RFC2627:
+  I-D.ietf-core-object-security:
 
   
 --- abstract
@@ -565,7 +566,7 @@ The KDC must renew the group keying material upon its expiration.
 
 The KDC should renew the keying material upon group membership change, and should provide it to the current group members through the rekeying scheme used in the group.
 
-When a Client receives a message from a sender for the first time, it needs to have a mechanism in place to avoid replay, e.g. Appendix B.2 of {{I-D.draft-ietf-core-object-security}}.
+When a Client receives a message from a sender for the first time, it needs to have a mechanism in place to avoid replay, e.g. Appendix B.2 of {{I-D.ietf-core-object-security}}.
 
 # IANA Considerations
 
