@@ -477,6 +477,15 @@ Is there any other convenient OSCORE thing which is reusable here and we are mis
 
 Note that policies can be set up so that the Client sends a request to the KDC only after a given number of unsuccessfully decrypted incoming messages.
 
+Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
+
+* Can maintain an Observable resource to send notifications to Clients when the keying material is updated. Such a notification would have the same payload as the Key Re-Distribution Response.
+* Can send the payload of the Key Re-Distribution Response in a multicast request to the members of the group.
+* Can send unicast requests to each Client over secure channel, with the Key-Redistribution Response as payload.
+* Can act as a publisher in a pub-sub scenario, and update the keying material by publishing on a specific topic on a broker, which all the members of the group are subscribed to.
+
+Note that these methods of KDC-initiated key re-distribution have different security properties and require different security associations.
+
 ## Key Re-Distribution Request
 
 To request a re-distribution of keying material, the Client sends a shortened Key Distribution Request to the KDC ({{ssec-key-distribution-request}}), formatted as follows. The payload MUST contain only the following field:
