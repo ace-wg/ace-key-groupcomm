@@ -198,7 +198,7 @@ Additionally, the Authorization Request MAY contain the following parameters, wh
 
 * 'req_aud', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, with an identifier of a KDC.
 
-* 'req_cnf', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, optionally containing the public key or a referece to the public key of the Client, if it wishes to communicate that to the AS.
+* 'req_cnf', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, optionally containing the public key or a reference to the public key of the Client, if it wishes to communicate that to the AS.
 
 <!-- 
 Peter 30-07: Question: is this a certificate identifier, or the public key extracted from the certificate, or a hash?????
@@ -388,7 +388,7 @@ Additionally, the OSCORE_Security_Context MAY contain the following fields:
   - 'hkdf'
   - 'alg'
   - 'salt'
-  - 'contectId'
+  - 'contextId'
   - 'rpl'
   - 'exp', as defined below. This parameter is RECOMMENDED to be included. This parameter identifies the expiration time in seconds after which the Security Context is not valid anymore for secure communication in the group. If omitted, the authorization server SHOULD provide the expiration time via other means or document the default value. The value of 'exp' MUST be smaller or equal to the expiration time of the access token. After the expiration point a new key needs to be obtained from the KDC.
   - 'cs_alg', as defined below.
@@ -506,9 +506,12 @@ Note that policies can be set up so that the Client sends a request to the KDC o
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
 
-* Can maintain an Observable resource to send notifications to Clients when the keying material is updated. Such a notification would have the same payload as the Key Re-Distribution Response.
+* Can maintain an Observable resource to send notifications to Clients when the keying material is updated. Such a notification would have the same payload as the Key Re-Distribution Response defined in {{ssec-key-redistribution-response}}.
+
 * Can send the payload of the Key Re-Distribution Response in a multicast request to the members of the group.
-* Can send unicast requests to each Client over secure channel, with the Key-Redistribution Response as payload.
+
+* Can send unicast requests to each Client over a secure channel, with the Key-Redistribution Response as payload.
+
 * Can act as a publisher in a pub-sub scenario, and update the keying material by publishing on a specific topic on a broker, which all the members of the group are subscribed to.
 
 Note that these methods of KDC-initiated key re-distribution have different security properties and require different security associations.
@@ -527,7 +530,7 @@ To request a re-distribution of keying material, the Client sends a shortened Ke
 Marco: It makes sense, should we then just make 'scope' mandatory?
 -->
 
-## Key Re-Distribution Response
+## Key Re-Distribution Response {#ssec-key-redistribution-response}
 
 The KDC receiving a Key Re-Distribution Request MUST check that it is storing a valid access token from that client for that scope.
 
@@ -593,7 +596,10 @@ When a Client receives a message from a sender for the first time, it needs to h
 
 # IANA Considerations
 
+This document has the following actions for IANA.
+
 <!--
+
 ## OSCORE Security Context Parameters Registry
 
 The following registrations are required for the OSCORE Security Context Parameters Registry specified in Section 9.2 of {{I-D.ietf-ace-oscore-profile}}:
