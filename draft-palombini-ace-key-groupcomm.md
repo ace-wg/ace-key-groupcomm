@@ -368,7 +368,10 @@ Similarly for the Gid, this document keeps a high livel perspective. It's in ace
 Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows what kind of response to expect, since it is contacted a specific resource on the KDC in the first place.
 -->
 
-The KDC verifies the access token and, if verification succeeds, sends a Key Distribution success Response to the Client. This corresponds to a 2.01 Created message. The payload of this response is a CBOR map, which MUST contain a 'cnf' parameter, with value an OSCORE_Security_Context as defined in Section 3.2.1. of {{I-D.ietf-ace-oscore-profile}}, which MUST contain the following fields:
+The KDC verifies the access token and, if verification succeeds, sends a Key Distribution success Response to the Client. This corresponds to a 2.01 Created message. The payload of this response is a CBOR map, which MUST contain a 'key' parameter containing the keying material necessary for the group communication, and a 'kty' parameter, identifying the key type of the key. The exact format of the 'key' value MUST be defined in applications of this specifications. Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry, defined in {{iana-key}}, and MUST register its type in the "ACE Groupcomm Key Type" registry, defined in {{iana-kty}}
+
+
+<!-- OSCORE_Security_Context as defined in Section 3.2.1. of {{I-D.ietf-ace-oscore-profile}}, which MUST contain the following fields:
 
   - 'ms'
 
@@ -381,14 +384,22 @@ Additionally, the OSCORE_Security_Context MAY contain the following fields:
   - 'salt'
   - 'contectId'
   - 'rpl'
-  - 'exp', This parameter is RECOMMENDED to be included. This parameter identifies the expiration time in seconds after which the Security Context is not valid anymore for secure communication in the group. If omitted, the authorization server SHOULD provide the expiration time via other means or document the default value. The value of 'exp' MUST be smaller or equal to the expiration time of the access token. After the expiration point a new key needs to be obtained from the KDC.
+  - 'exp', as defined below. This parameter is RECOMMENDED to be included. This parameter identifies the expiration time in seconds after which the Security Context is not valid anymore for secure communication in the group. If omitted, the authorization server SHOULD provide the expiration time via other means or document the default value. The value of 'exp' MUST be smaller or equal to the expiration time of the access token. After the expiration point a new key needs to be obtained from the KDC.
   - 'cs_alg', as defined below.
 
-<!--
+<!- -
 TODO: Add exp in COSE_Key = same as exp in token but for the key
 define it as a COSE Key Common Parameter (see section 7.1 of COSE)
--->
+- ->
 
+  <t hangText="exp:">
+    This parameter is used to carry the expiration time, encoded as an integer or floating-point number.
+    This parameter, when used, identifies the expiration time on or after which the Security Context MUST NOT be used.
+    The processing of the exp value requires that the current date/time MUST be before the expiration date/time listed in the "exp" parameter.
+    Implementers MAY provide for some small leeway, usually no more than a few minutes, to account for clock skew. 
+    In JSON, the "exp" value is a NumericDate value, as defined in {{RFC8392}}.
+    In CBOR, the "exp" type is int or float, and has label 9.
+  </t>
 
   <t hangText="cs_alg:">
     This parameter identifies the OSCORE Counter Signature Algorithm. For more information about this field, see section 2 of <xref target="I-D.ietf-core-oscore-groupcomm"/>
@@ -409,6 +420,8 @@ define it as a COSE Key Common Parameter (see section 7.1 of COSE)
 +--------+-------+----------------+----------------+-----------------+
 ~~~~~~~~~~~
 {: #table-additional-param title="OSCORE_Security_Context Additional Parameter 'cs_alg'" artwork-align="center"}
+
+-->
 
 Optionally, the Key Distribution Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
