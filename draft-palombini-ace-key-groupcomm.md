@@ -599,7 +599,6 @@ When a Client receives a message from a sender for the first time, it needs to h
 This document has the following actions for IANA.
 
 <!--
-
 ## OSCORE Security Context Parameters Registry
 
 The following registrations are required for the OSCORE Security Context Parameters Registry specified in Section 9.2 of {{I-D.ietf-ace-oscore-profile}}:
