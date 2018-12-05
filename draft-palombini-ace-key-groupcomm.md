@@ -368,7 +368,13 @@ Similarly for the Gid, this document keeps a high livel perspective. It's in ace
 Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows what kind of response to expect, since it is contacted a specific resource on the KDC in the first place.
 -->
 
-The KDC verifies the access token and, if verification succeeds, sends a Key Distribution success Response to the Client. This corresponds to a 2.01 Created message. The payload of this response is a CBOR map, which MUST contain a 'key' parameter containing the keying material necessary for the group communication, and a 'kty' parameter, identifying the key type of the key. The exact format of the 'key' value MUST be defined in applications of this specifications. Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry, defined in {{iana-key}}, and MUST register its type in the "ACE Groupcomm Key Type" registry, defined in {{iana-kty}}
+The KDC verifies the access token and, if verification succeeds, sends a Key Distribution success Response to the Client. This corresponds to a 2.01 Created message. The payload of this response is a CBOR map, which MUST contain:
+
+* 'key', containing the keying material necessary for the group communication.
+
+* 'kty', identifying the key type of the key. 
+
+The exact format of the 'key' value MUST be defined in applications of this specifications. Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry, defined in {{iana-key}}, and MUST register its type in the "ACE Groupcomm Key Type" registry, defined in {{iana-kty}}
 
 
 <!-- OSCORE_Security_Context as defined in Section 3.2.1. of {{I-D.ietf-ace-oscore-profile}}, which MUST contain the following fields:
@@ -411,13 +417,17 @@ define it as a COSE Key Common Parameter (see section 7.1 of COSE)
   A summary of 'cs_alg' can be found in {{table-additional-param}}.
 
 ~~~~~~~~~~~
-+--------+-------+----------------+----------------+-----------------+
-|  Name  | Label | CBOR Type      | Value Registry | Description     |
-+--------+-------+----------------+----------------+-----------------+
-| cs_alg | TBD   | tstr / int     | COSE Algorithm | OSCORE Counter  |
-|        |       |                | Values (ECDSA, | Signature       |
-|        |       |                | EdDSA)         | Algorithm Value |
-+--------+-------+----------------+----------------+-----------------+
+
+|  Name  | Label | CBOR Type      | Value Registry | Description        |
+
+| exp    | TBD   | int / float    |                | OSCORE Security    |
+|        |       |                |                | Context Expiration |
+|        |       |                |                | Time               | 
+
+| cs_alg | TBD   | tstr / int     | COSE Algorithm | OSCORE Counter     |
+|        |       |                | Values (ECDSA, | Signature          |
+|        |       |                | EdDSA)         | Algorithm Value    |
+
 ~~~~~~~~~~~
 {: #table-additional-param title="OSCORE_Security_Context Additional Parameter 'cs_alg'" artwork-align="center"}
 
@@ -583,9 +593,10 @@ When a Client receives a message from a sender for the first time, it needs to h
 
 # IANA Considerations
 
+<!--
 ## OSCORE Security Context Parameters Registry
 
-The following registration is required for the OSCORE Security Context Parameters Registry specified in Section 9.2 of {{I-D.ietf-ace-oscore-profile}}:
+The following registrations are required for the OSCORE Security Context Parameters Registry specified in Section 9.2 of {{I-D.ietf-ace-oscore-profile}}:
 
 *  Name: cs_alg
 *  CBOR Label: TBD
@@ -593,6 +604,22 @@ The following registration is required for the OSCORE Security Context Parameter
 *  Registry: COSE Algorithm Values (ECDSA, EdDSSA)
 *  Description: OSCORE Counter Signature Algorithm Value
 *  Reference: \[\[this specification\]\]
+
+*  Name: exp
+*  CBOR Label: TBD
+*  CBOR Type: int / float
+*  Registry: 
+*  Description: OSCORE Counter Signature Algorithm Value
+*  Reference: \[\[this specification\]\]
+-->
+
+## ACE Groupcomm Key {#iana-key}
+
+TODO
+
+## ACE Groupcomm Key Type {#iana-kty}
+
+TODO
 
 ## ACE Groupcomm Profile Registry
 
