@@ -372,9 +372,20 @@ The KDC verifies the access token and, if verification succeeds, sends a Key Dis
 
 * 'key', containing the keying material necessary for the group communication.
 
-* 'kty', identifying the key type of the key. 
+* 'kty', identifying the key type of the key. The set of values can be found in the Key Type column of the "ACE Groupcomm Key". Implementations MUST verify that the key type matches the profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
 
-The exact format of the 'key' value MUST be defined in applications of this specifications. Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry, defined in {{iana-key}}, and MUST register its type in the "ACE Groupcomm Key Type" registry, defined in {{iana-kty}}
+The exact format of the 'key' value MUST be defined in applications of this specifications. Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry, including its name, type and profile to be used with, as defined in the "ACE Groupcomm Key" registry, defined in {{iana-key}}.
+
+
+~~~~~~~~~~~
++----------+----------------+---------+-------------------------+
+| Name     | Key Type Value | Profile | Description             |
++----------+----------------+---------+-------------------------+
+| Reserved | 0              |         | This value is reserved  |
++----------+----------------+---------+-------------------------+
+~~~~~~~~~~~
+{: #kty title="Key Type Values" artwork-align="center"}
+
 
 
 <!-- OSCORE_Security_Context as defined in Section 3.2.1. of {{I-D.ietf-ace-oscore-profile}}, which MUST contain the following fields:
@@ -620,17 +631,39 @@ The following registrations are required for the OSCORE Security Context Paramet
 
 ## ACE Groupcomm Key {#iana-key}
 
-TODO
+This specification establishes the IANA "ACE Groupcomm Key" registry.  The
+registry has been created to use the "Expert Review Required"
+registration procedure.  Expert review guidelines are provided in
+{{review}}
 
-## ACE Groupcomm Key Type {#iana-kty}
+The columns of this table are:
 
-TODO
+* Name:  This is a descriptive name that enables easier reference to
+  the item.  The name MUST be unique.  It is not used in the
+  encoding.
+
+* Key Type Value:  This is the value used to identify the keying material.  These values
+  MUST be unique.  The value can be a positive integer, a negative
+  integer, or a string.
+
+* Profile: This field may contain a descriptive string of a profile to be used with this item.
+  This should be a value that is in the Name column of the "ACE Groupcomm Profile"
+  registry.
+
+* Description:  This field contains a brief description of the keying material.
+
+* References:  This contains a pointer to the public specification for
+  the format of the keying material, if one exists.
+
+This registry has been initially populated by the values in {{kty}}.
+The specification column for all of these entries will be this document.
 
 ## ACE Groupcomm Profile Registry
 
 This specification establishes the IANA "ACE Groupcomm Profile" registry.  The
 registry has been created to use the "Expert Review Required"
-registration procedure {{RFC8126}}. It should be noted that, in
+registration procedure {{RFC8126}}. Expert review guidelines are provided in
+{{review}}. It should be noted that, in
 addition to the expert review, some portions of the registry require
 a specification, potentially a Standards Track RFC, be supplied as
 well.
@@ -641,6 +674,27 @@ The columns of this registry are:
 * Description: Text giving an overview of the profile and the context it is developed for.
 * CBOR Value: CBOR abbreviation for this profile name. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 are designated as Standards Action. Integer values from -65536 to -257 and from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as Expert Review. Integer values less than -65536 are marked as Private Use.
 * Reference: This contains a pointer to the public specification of the profile abbreviation, if one exists.
+
+## Expert Review Instructions {#review}
+
+The IANA registry established in this document is defined as expert review.
+This section gives some general guidelines for what the experts should be looking for, but they are being designated as experts for a reason so they should be given substantial latitude.
+
+
+Expert reviewers should take into consideration the following points:
+
+* Point squatting should be discouraged.
+ Reviewers are encouraged to get sufficient information for registration requests to ensure that the usage is not going to duplicate one that is already registered and that the point is likely to be used in deployments.
+ The zones tagged as private use are intended for testing purposes and closed environments, code points in other ranges should not be assigned for testing.
+
+* Specifications are required for the standards track range of point assignment.
+ Specifications should exist for specification required ranges, but early assignment before a specification is available is considered to be permissible.
+ Specifications are needed for the first-come, first-serve range if they are expected to be used outside of closed environments in an interoperable way.
+ When specifications are not provided, the description provided needs to have sufficient information to identify what the point is being used for.
+
+* Experts should take into account the expected usage of fields when approving point assignment.
+ The fact that there is a range for standards track documents does not mean that a standards track document cannot have points assigned outside of that range.
+ The length of the encoded value should be weighed against how many code points of that length are left, the size of device it will be used on, and the number of code points left that encode to that size.
 
 --- back
 
