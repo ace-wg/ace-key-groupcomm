@@ -1,7 +1,7 @@
 ---
 title: Key Provisioning for Group Communication using ACE
 abbrev: Key Provisioning for Group Communication
-docname: draft-palombini-ace-key-groupcomm-latest
+docname: draft-ietf-ace-key-groupcomm-latest
 
 ipr: trust200902
 wg: ACE Working Group
