@@ -370,9 +370,9 @@ Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows 
 
 The KDC verifies the access token and, if verification succeeds, sends a Key Distribution success Response to the Client. This corresponds to a 2.01 Created message. The payload of this response is a CBOR map, which MUST contain:
 
-* 'key', containing the keying material necessary for the group communication.
-
 * 'kty', identifying the key type of the key. The set of values can be found in the Key Type column of the "ACE Groupcomm Key". Implementations MUST verify that the key type matches the profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
+
+* 'key', containing the keying material necessary for the group communication.
 
 The exact format of the 'key' value MUST be defined in applications of this specifications. Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry, including its name, type and profile to be used with, as defined in the "ACE Groupcomm Key" registry, defined in {{iana-key}}.
 
