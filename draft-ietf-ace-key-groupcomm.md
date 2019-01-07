@@ -704,6 +704,6 @@ Expert reviewers should take into consideration the following points:
 
 The following individuals were helpful in shaping this document: Ben Kaduk, John Mattsson, Jim Schaad, Ludwig Seitz, Göran Selander and Peter van der Stok.
 
-The work on this document has been partly supported by the EIT-Digital High Impact Initiative ACTIVE.
+The work on this document has been partly supported by VINNOVA and by the EIT-Digital High Impact Initiative ACTIVE.
 
 --- fluff
