@@ -1,4 +1,4 @@
 # License
 
 See the
-[guidelines for contributions](https://github.com/EricssonResearch/ace-key-groupcomm/blob/master/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/ace-wg/ace-key-groupcomm/blob/master/CONTRIBUTING.md).

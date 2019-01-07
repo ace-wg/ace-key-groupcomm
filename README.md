@@ -1,10 +1,10 @@
-# Key Provisioning for Group Communication using ACE
+# Key Provisioning for Group Communica ion using ACE
 
-This is the working area for the individual Internet-Draft, "Key Provisioning for Group Communica ion using ACE".
+This is the working area for the IETF [ACE Working Group](https://datatracker.ietf.org/wg/ace/documents/) Internet-Draft, "Key Provisioning for Group Communica ion using ACE".
 
-* [Editor's Copy](https://EricssonResearch.github.io/ace-key-groupcomm/#go.draft-palombini-ace-key-groupcomm.html)
-* [Individual Draft](https://tools.ietf.org/html/draft-palombini-ace-key-groupcomm)
-* [Compare Editor's Copy to Individual Draft](https://EricssonResearch.github.io/ace-key-groupcomm/#go.draft-palombini-ace-key-groupcomm.diff)
+* [Editor's Copy](https://ace-wg.github.io/ace-key-groupcomm/#go.draft-ietf-ace-key-groupcomm.html)
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-ace-key-groupcomm)
+* [Compare Editor's Copy to Working Group Draft](https://ace-wg.github.io/ace-key-groupcomm/#go.draft-ietf-ace-key-groupcomm.diff)
 
 ## Building the Draft
 
@@ -21,4 +21,4 @@ This requires that you have the necessary software installed.  See
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/EricssonResearch/ace-key-groupcomm/blob/master/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/ace-wg/ace-key-groupcomm/blob/master/CONTRIBUTING.md).

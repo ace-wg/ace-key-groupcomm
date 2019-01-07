@@ -1,7 +1,7 @@
 *.DS_Store
-*.redxml
 *.html
 *.pdf
+*.redxml
 *.swp
 *.txt
 *.upload
@@ -10,13 +10,15 @@
 .tags
 .targets.mk
 /*-[0-9][0-9].xml
+draft-palombini-ace-key-groupcomm.html
+draft-palombini-ace-key-groupcomm.txt*.redxml
+draft-palombini-ace-key-groupcomm.xml
 issues.json
+lib
 lib/*
 pulls.json
 report.xml
 venv/
 venv/*
 lib
-draft-palombini-ace-key-groupcomm.xml
-draft-palombini-ace-key-groupcomm.html
-draft-palombini-ace-key-groupcomm.txt
+draft-ietf-ace-key-groupcomm.xml
