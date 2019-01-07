@@ -370,12 +370,11 @@ Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows 
 
 The KDC verifies the access token and, if verification succeeds, sends a Key Distribution success Response to the Client. This corresponds to a 2.01 Created message. The payload of this response is a CBOR map, which MUST contain:
 
-* 'kty', identifying the key type of the key. The set of values can be found in the Key Type column of the "ACE Groupcomm Key". Implementations MUST verify that the key type matches the profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
+* 'kty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key" Registry. Implementations MUST verify that the key type matches the profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
 
-* 'key', containing the keying material necessary for the group communication.
+* 'key', containing the keying material for the group communication, or information required to derive it.
 
 The exact format of the 'key' value MUST be defined in applications of this specifications. Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry, including its name, type and profile to be used with, as defined in the "ACE Groupcomm Key" registry, defined in {{iana-key}}.
-
 
 ~~~~~~~~~~~
 +----------+----------------+---------+-------------------------+
@@ -385,8 +384,6 @@ The exact format of the 'key' value MUST be defined in applications of this spec
 +----------+----------------+---------+-------------------------+
 ~~~~~~~~~~~
 {: #kty title="Key Type Values" artwork-align="center"}
-
-
 
 <!-- OSCORE_Security_Context as defined in Section 3.2.1. of {{I-D.ietf-ace-oscore-profile}}, which MUST contain the following fields:
 
@@ -446,7 +443,9 @@ define it as a COSE Key Common Parameter (see section 7.1 of COSE)
 
 Optionally, the Key Distribution Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'profile', with value an identifier that MUST be used to uniquely identify itself. The identifier MUST be registered in the ACE Groupcomm Profile Registry.
+* 'profile', with value an identifier that MUST be used to uniquely identify itself. The identifier MUST be registered in the "ACE Groupcomm Profile" Registry.
+
+* 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer or floating-point number.
 
 * 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request; this parameter is a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group.
 
@@ -547,7 +546,7 @@ The KDC receiving a Key Re-Distribution Request MUST check that it is storing a 
 
 TODO: defines error response if it does not have it / is not valid.
 
-The KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty' and 'key' parameters. The Key Distribution Response MAY also include the 'profile', 'group_policies' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
+The KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty' and 'key' parameters specified in {{ssec-key-distribution-response}}. The Key Distribution Response MAY also include the 'profile', 'exp', 'group_policies' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
 
 Note that this response might simply re-provide the same keying material currently owned by the Client, if it has not been renewed.
 
