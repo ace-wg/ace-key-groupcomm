@@ -547,7 +547,9 @@ The KDC receiving a Key Re-Distribution Request MUST check that it is storing a 
 
 TODO: defines error response if it does not have it / is not valid.
 
-The KDC replies to the Client with a Key Distribution Response containing the 'key' parameter, and optionally 'group_policies' and 'mgt_key_material', as specified in {{ssec-key-distribution-response}}. Note that this response might simply re-provide the same keying material currently owned by the Client, if it has not been renewed.
+The KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty' and 'key' parameters. The Key Distribution Response MAY also include the 'profile', 'group_policies' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
+
+Note that this response might simply re-provide the same keying material currently owned by the Client, if it has not been renewed.
 
 # Retrieval of Public Keys for Group Members {#sec-key-retrieval}
 
