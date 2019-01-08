@@ -374,7 +374,7 @@ The KDC verifies the access token and, if verification succeeds, sends a Key Dis
 
 * 'key', containing the keying material for the group communication, or information required to derive it.
 
-The exact format of the 'key' value MUST be defined in applications of this specifications. Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry, including its name, type and profile to be used with, as defined in the "ACE Groupcomm Key" registry, defined in {{iana-key}}.
+The exact format of the 'key' value MUST be defined in applications of this specification. Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry, including its name, type and profile to be used with, as defined in the "ACE Groupcomm Key" registry, defined in {{iana-key}}.
 
 ~~~~~~~~~~~
 +----------+----------------+---------+-------------------------+
@@ -633,9 +633,7 @@ The following registrations are required for the OSCORE Security Context Paramet
 ## ACE Groupcomm Key {#iana-key}
 
 This specification establishes the IANA "ACE Groupcomm Key" registry.  The
-registry has been created to use the "Expert Review Required"
-registration procedure.  Expert review guidelines are provided in
-{{review}}
+registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
 
 The columns of this table are:
 
@@ -656,18 +654,12 @@ The columns of this table are:
 * References:  This contains a pointer to the public specification for
   the format of the keying material, if one exists.
 
-This registry has been initially populated by the values in {{kty}}.
-The specification column for all of these entries will be this document.
+This registry has been initially populated by the values in {{kty}}. The specification column for all of these entries will be this document.
 
 ## ACE Groupcomm Profile Registry
 
 This specification establishes the IANA "ACE Groupcomm Profile" registry.  The
-registry has been created to use the "Expert Review Required"
-registration procedure {{RFC8126}}. Expert review guidelines are provided in
-{{review}}. It should be noted that, in
-addition to the expert review, some portions of the registry require
-a specification, potentially a Standards Track RFC, be supplied as
-well.
+registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the registry require a specification, potentially a Standards Track RFC, be supplied as well.
 
 The columns of this registry are:
 
