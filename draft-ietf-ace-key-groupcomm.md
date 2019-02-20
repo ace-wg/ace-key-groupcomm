@@ -196,7 +196,7 @@ Additionally, the Authorization Request MAY contain the following parameters, wh
 
   The encoding of the group or topic identifier and of the role identifiers is application specific.
 
-* 'req_aud', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, with an identifier of a KDC.
+* 'audience', with an identifier of a KDC.
 
 * 'req_cnf', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, optionally containing the public key or a reference to the public key of the Client, if it wishes to communicate that to the AS.
 
