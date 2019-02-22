@@ -43,9 +43,9 @@ normative:
   I-D.ietf-ace-oauth-params:
   I-D.ietf-ace-oscore-profile:
   I-D.ietf-core-oscore-groupcomm:
-  
+
 informative:
-  
+
   RFC7390:
   I-D.ietf-core-coap-pubsub:
   RFC2093:
@@ -53,7 +53,7 @@ informative:
   RFC2627:
   I-D.ietf-core-object-security:
 
-  
+
 --- abstract
 
 This document defines message formats and procedures for requesting and distributing group keying material using the ACE framework, to protect communications between group members.
@@ -82,8 +82,8 @@ Readers are expected to be familiar with the terms and concepts described in  {{
 |     AS     |                  |    KDC    |
 |            |        .-------->|           |
 +------------+       /          +-----------+
-      ^             / 
-      |            /                  
+      ^             /
+      |            /
       v           /                           +-----------+
 +------------+   /      +------------+        |+-----------+
 |   Client   |<-'       | Dispatcher |        ||+-----------+
@@ -104,7 +104,7 @@ The following participants (see {{fig-roles}}) take part in the authorization an
 
 * Client (C): node that wants to join the group communication. It can request write and/or read rights.
 
-* Authorization Server (AS): same as AS in the ACE Framework; it enforces access policies, and knows if a node is allowed to join the group with write and/or read rights. 
+* Authorization Server (AS): same as AS in the ACE Framework; it enforces access policies, and knows if a node is allowed to join the group with write and/or read rights.
 
 * Key Distribution Center (KDC): maintains the keying material to protect group communications, and provides it to Clients authorized to join the group. During the first part of the exchange ({{sec-auth}}), it takes the role of the RS in the ACE Framework. During the second part ({{key-distr}}), which is not based on the ACE Framework, it distributes the keying material. In addition, it provides the latest keying material to group members when requested. If required by the application, the KDC renews and re-distributes the keying material in the group when membership changes.
 
@@ -149,7 +149,7 @@ C                              AS     KDC   Dispatcher          Group
 
 The exchange of Authorization Request and Authorization Response between Client and AS MUST be secured, as specified by the ACE profile used between Client and KDC.
 
-The exchange of Key Distribution Request and Key Distribution Response between Client and KDC MUST be secured, as a result of the ACE profile used between Client and KDC. 
+The exchange of Key Distribution Request and Key Distribution Response between Client and KDC MUST be secured, as a result of the ACE profile used between Client and KDC.
 
 All further communications between the Client and the KDC MUST be secured, for instance with the same security mechanism used for the Key Distribution exchange.
 
@@ -200,13 +200,13 @@ Additionally, the Authorization Request MAY contain the following parameters, wh
 
 * 'req_cnf', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, optionally containing the public key or a reference to the public key of the Client, if it wishes to communicate that to the AS.
 
-<!-- 
+<!--
 Peter 30-07: Question: is this a certificate identifier, or the public key extracted from the certificate, or a hash?????
 
 Marco: It is just as per ACE. See Sections 3.2 and 3.4 of draft-ietf-ace-cwt-proof-of-possession-03
 -->
 
-* Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary. 
+* Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary.
 
 <!--
 Marco 27-02: “scope” should include a list of identifiers. One can ask authorization for joining multiple groups in a single Authorization Request, so getting a single Access Token.
@@ -216,7 +216,7 @@ Jim 13-07: Section 3.1 - Can I get authorization for multiple items at a single 
 FP: Is this something we really want to cover? I think this could open up to a number of comments and questions (how do you renew keying material for just one of these res, for example). Let's think a bit more about this.
 -->
 
-<!-- Jim 13-07: Section 3.1 - Does it make sense to allow for multiple audiences to be on a single KDC?  
+<!-- Jim 13-07: Section 3.1 - Does it make sense to allow for multiple audiences to be on a single KDC?
 
 Marco: In principle yes, if you consider a logical audience as the GM/Broker at a single physical KDC.
 
@@ -227,7 +227,7 @@ Should we discuss this in the draft?
 
 The Authorization Response sent from the AS to the Client is as defined in Section 5.6.2 of {{I-D.ietf-ace-oauth-authz}} and MUST contain the following parameters:
 
-* 'access_token', containing the proof-of-possession access token. 
+* 'access_token', containing the proof-of-possession access token.
 
 * 'cnf' if symmetric keys are used, not present if asymmetric keys are used. This parameter is defined in Section 3.2 of {{I-D.ietf-ace-oauth-params}} and contains the symmetric proof-of-possession key that the Client is supposed to use with the KDC.
 
@@ -368,7 +368,9 @@ Similarly for the Gid, this document keeps a high livel perspective. It's in ace
 Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows what kind of response to expect, since it is contacted a specific resource on the KDC in the first place.
 -->
 
-The KDC verifies the access token and, if verification succeeds, sends a Key Distribution success Response to the Client. This corresponds to a 2.01 Created message. The payload of this response is a CBOR map, which MUST contain:
+The KDC verifies the 'scope' received in the Key Distribution Request, if present, against the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. If verification succeeds, the KDC sends a Key Distribution success Response to the Client. Note that if 'scope' was omitted in the Key Distribution Request, it means that the KDC is expected to be able to retrieve the scope for which the client is requesting information (e.g. the client is only authorized one specific group or topic). If that is not the case, the KDC MUST respond with a 4.00 (Bad Request) error message.
+
+The Key Distribution sccess Response corresponds to a 2.01 Created message. The payload of this response is a CBOR map, which MUST contain:
 
 * 'kty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key" Registry. Implementations MUST verify that the key type matches the profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
 
@@ -410,7 +412,7 @@ define it as a COSE Key Common Parameter (see section 7.1 of COSE)
     This parameter is used to carry the expiration time, encoded as an integer or floating-point number.
     This parameter, when used, identifies the expiration time on or after which the Security Context MUST NOT be used.
     The processing of the exp value requires that the current date/time MUST be before the expiration date/time listed in the "exp" parameter.
-    Implementers MAY provide for some small leeway, usually no more than a few minutes, to account for clock skew. 
+    Implementers MAY provide for some small leeway, usually no more than a few minutes, to account for clock skew.
     In JSON, the "exp" value is a NumericDate value, as defined in {{RFC8392}}.
     In CBOR, the "exp" type is int or float, and has label 9.
   </t>
@@ -430,7 +432,7 @@ define it as a COSE Key Common Parameter (see section 7.1 of COSE)
 
 | exp    | TBD   | int / float    |                | OSCORE Security    |
 |        |       |                |                | Context Expiration |
-|        |       |                |                | Time               | 
+|        |       |                |                | Time               |
 
 | cs_alg | TBD   | tstr / int     | COSE Algorithm | OSCORE Counter     |
 |        |       |                | Values (ECDSA, | Signature          |
@@ -461,8 +463,6 @@ Marco: We already use them in the joining draft. Aren't they anyway relevant in 
 Specific profiles need to specify how exactly the keying material is used to protect the group communication.
 
 If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, using the message format defined in this section. Application profiles may define alternative message formats.
-
-TBD: define for verification failure
 
 # Removal of a Node from the Group {#sec-node-removal}
 
@@ -544,9 +544,9 @@ Marco: It makes sense, should we then just make 'scope' mandatory?
 
 The KDC receiving a Key Re-Distribution Request MUST check that it is storing a valid access token from that client for that scope.
 
-TODO: defines error response if it does not have it / is not valid.
+If that is not the case, i.e. it does not store the token or the token is not valid for that client for the scope requested, the KDC MUST respond with a 4.01 (Unauthorized) access token. Analogously to {{ssec-key-distribution-response}}, if the Key Re-Distribution Request is not formatted correctly (e.g. no 'scope' field present), the KDC MUST respond with 4.00 (Bad Request).
 
-The KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty' and 'key' parameters specified in {{ssec-key-distribution-response}}. The Key Distribution Response MAY also include the 'profile', 'exp', 'group_policies' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
+Otherwise, the KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty' and 'key' parameters specified in {{ssec-key-distribution-response}}. The Key Distribution Response MAY also include the 'profile', 'exp', 'group_policies' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
 
 Note that this response might simply re-provide the same keying material currently owned by the Client, if it has not been renewed.
 
@@ -625,7 +625,7 @@ The following registrations are required for the OSCORE Security Context Paramet
 *  Name: exp
 *  CBOR Label: TBD
 *  CBOR Type: int / float
-*  Registry: 
+*  Registry:
 *  Description: OSCORE Counter Signature Algorithm Value
 *  Reference: \[\[this specification\]\]
 -->
