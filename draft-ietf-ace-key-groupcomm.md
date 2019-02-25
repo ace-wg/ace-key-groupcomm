@@ -368,7 +368,7 @@ Similarly for the Gid, this document keeps a high livel perspective. It's in ace
 Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows what kind of response to expect, since it is contacted a specific resource on the KDC in the first place.
 -->
 
-The KDC verifies the 'scope' received in the Key Distribution Request, if present, against the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. If verification succeeds, the KDC sends a Key Distribution success Response to the Client. Note that if 'scope' was omitted in the Key Distribution Request, it means that the KDC is expected to be able to retrieve the scope for which the client is requesting information (e.g. the client is only authorized one specific group or topic). If that is not the case, the KDC MUST respond with a 4.00 (Bad Request) error message.
+The KDC verifies the 'scope' received in the Key Distribution Request, if present, against the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. If verification succeeds, the KDC sends a Key Distribution success Response to the Client. If the Key Distribution Request is not formatted correctly (e.g. no 'scope' field present while expected, or unknown fields present), the KDC MUST respond with 4.00 (Bad Request) error message.
 
 The Key Distribution sccess Response corresponds to a 2.01 Created message. The payload of this response is a CBOR map, which MUST contain:
 
@@ -499,7 +499,7 @@ Marco: We should define an actual message, like the ones for retrieving updating
 Marco: 'scope' encodes one group and some roles. So a node is supposed to leave that group altogether, with all its roles. If the node wants to stay in the group with less roles, it is just fine that is stops playing the roles it is not interested in anymore.
 -->
 
-The KDC should then remove the leaving node from the list of group members, if the KDC keeps track of that.
+If the Leave Request is not formatted correctly (e.g. no 'scope' field present, or unknown fields present), the KDC MUST respond with 4.00 (Bad Request) error message. Otherwise, the KDC MUST then remove the leaving node from the list of group members, if the KDC keeps track of that.
 
 Note that, after having left the group, a node may wish to join it again. Then, as long as the node is still authorized to join the group, i.e. it has a still valid access token, it can re-request to join the group directly to the KDC without needing to retrieve a new access token from the AS. This means that the KDC needs to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
 
@@ -554,7 +554,7 @@ Marco: It makes sense, should we then just make 'scope' mandatory?
 
 The KDC receiving a Key Re-Distribution Request MUST check that it is storing a valid access token from that client for that scope.
 
-If that is not the case, i.e. it does not store the token or the token is not valid for that client for the scope requested, the KDC MUST respond with a 4.01 (Unauthorized) access token. Analogously to {{ssec-key-distribution-response}}, if the Key Re-Distribution Request is not formatted correctly (e.g. no 'scope' field present), the KDC MUST respond with 4.00 (Bad Request).
+If that is not the case, i.e. it does not store the token or the token is not valid for that client for the scope requested, the KDC MUST respond with a 4.01 (Unauthorized) access token. Analogously to {{ssec-key-distribution-response}}, if the Key Re-Distribution Request is not formatted correctly (e.g. no 'scope' field present, or unknown fields present), the KDC MUST respond with 4.00 (Bad Request).
 
 Otherwise, the KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty' and 'key' parameters specified in {{ssec-key-distribution-response}}. The Key Distribution Response MAY also include the 'profile', 'exp', 'group_policies' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
 
