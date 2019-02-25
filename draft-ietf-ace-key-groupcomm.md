@@ -700,6 +700,28 @@ Expert reviewers should take into consideration the following points:
 
 --- back
 
+# Document Updates # {#sec-document-updates}
+
+RFC EDITOR: PLEASE REMOVE THIS SECTION.
+
+## Version -00 to -01 ## {#sec-00-01}
+
+* Changed name of 'req_aud' to 'audience' in the Authorization Request (Section 3.1).
+
+* Defined error handling on the KDC (Sections 4.2 and 6.2).
+
+* Updated format of the Key Distribution Response as a whole (Section 4.2).
+
+* Generalized format of 'pub_keys' in the Key Distribution Response (Section 4.2).
+
+* Defined format for the message to request leaving the group (Section 5.2).
+
+* Mentioned methods for group rekeying initiated by the KDC (Section 6).
+
+* Added security consideration on replay protection (Section 8).
+
+* New IANA registries "ACE Groupcomm Key" and "ACE Groupcomm Profile Registry" (Section 9).
+
 # Acknowledgments
 {: numbered="no"}
 
