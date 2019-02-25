@@ -478,9 +478,19 @@ Either case, once aware that a node is not authorized anymore, the KDC has to re
 
 ## Request to Leave the Group
 
-A node can actively request to leave the group. In this case, the Client can send a request formatted as follows to the KDC, to abandon the group.
+A node can actively request to leave the group. In this case, the Client can send a request formatted as follows to the KDC, to abandon the group. The client MUST use the protected channel established with ACE, mentioned in {{key-distr}}.
 
-TBD: Format of the message to leave the group
+To request to leave a group, the client MUST send a CoAP POST request to the endpoint in the KDC associated to the group to leave (same endpoint used in {{key-distr}} for Key Distribution requests). The payload of this request is a CBOR Map which MUST contain:
+
+* 'leave', with value an empty CBOR array.
+
+* 'scope', with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and wants to leave, encoded as in {{ssec-authorization-request}}. The 'role' field is omitted.
+
+Additionally, the Leave request MAY contain the following parameters, which, if included, MUST have the corresponding values:
+
+* 'client_cred', with value the identifier of the public key or certificate of the Client. This field is used if the KDC is managing (collecting from/distributing to the Client) the public keys of the group members.
+
+Note that the 'role' field is omitted since such a request should only be used to leave a group alltogether. If the node wants to be part of a group with fewer rolers, it does not need to communicate that to the KDC, and can simply stop acting as that role.
 
 <!-- Jim 13-07: Section 5.2 - What is the message to leave - can I leave one scope but not another?  Can I just give up a role?
 
