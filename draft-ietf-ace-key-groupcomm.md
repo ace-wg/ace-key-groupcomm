@@ -448,7 +448,7 @@ Optionally, the Key Distribution Response MAY contain the following parameters, 
 
 * 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer or floating-point number.
 
-* 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request; this parameter is a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group.
+* 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request. This parameter is a CBOR Byte String, which encodes the public keys of all the group members paired with the respective member identifiers. In case public keys in the group are represented as COSE Keys, the CBOR Byte String encodes a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MUST be defined in applications of this specification.
 
 * 'group_policies', with value a list of parameters indicating how the group handles specific management aspects. This includes, for instance, approaches to achieve synchronization of sequence numbers among group members. The exact format of this parameter is specific to the profile.
 
