@@ -188,7 +188,7 @@ The Authorization Request sent from the Client to the AS is as defined in Sectio
 
 Additionally, the Authorization Request MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'scope', containing the identifier of the specific group (or topic in the case of pub-sub) the Client wishes to access, and optionally the role(s) the Client wishes to take. This value is a CBOR array encoded as a byte string, which contains:
+* 'scope', containing the identifier of the specific group (or topic in the case of pub-sub) that the Client wishes to access, and optionally the role(s) that the Client wishes to take. This value is a CBOR array encoded as a byte string, which contains:
 
   - As first element, the identifier of the specific group or topic.
 
@@ -489,7 +489,7 @@ Additionally, the Leave request MAY contain the following parameters, which, if 
 
 * 'client_cred', with value the identifier of the public key or certificate of the Client. This field is used if the KDC is managing (collecting from/distributing to the Client) the public keys of the group members.
 
-Note that the 'role' field is omitted since such a request should only be used to leave a group alltogether. If the leaving node wants to be part of a group with fewer roles, it does not need to communicate that to the KDC, and can simply stop acting according to such roles.
+Note that the 'role' field is omitted since such a request should only be used to leave a group altogether. If the leaving node wants to be part of a group with fewer roles, it does not need to communicate that to the KDC, and can simply stop acting according to such roles.
 
 <!-- Jim 13-07: Section 5.2 - What is the message to leave - can I leave one scope but not another?  Can I just give up a role?
 
@@ -529,7 +529,7 @@ Alternatively, the re-distribution of keying material can be initiated by the KD
 
 * Can send the payload of the Key Re-Distribution Response in a multicast request to the members of the group.
 
-* Can send unicast requests to each Client over a secure channel, with the Key-Redistribution Response as payload.
+* Can send unicast requests to each Client over a secure channel, with the Key Re-Distribution Response as payload.
 
 * Can act as a publisher in a pub-sub scenario, and update the keying material by publishing on a specific topic on a broker, which all the members of the group are subscribed to.
 
@@ -639,49 +639,44 @@ The following registrations are required for the OSCORE Security Context Paramet
 *  Reference: \[\[this specification\]\]
 -->
 
-## ACE Groupcomm Key {#iana-key}
+## ACE Groupcomm Key Registry {#iana-key}
 
-This specification establishes the IANA "ACE Groupcomm Key" registry.  The
-registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
+This specification establishes the IANA "ACE Groupcomm Key" Registry. The
+Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
 
-The columns of this table are:
+The columns of this Registry are:
 
-* Name:  This is a descriptive name that enables easier reference to
-  the item.  The name MUST be unique.  It is not used in the
-  encoding.
+* Name: This is a descriptive name that enables easier reference to
+  the item. The name MUST be unique. It is not used in the encoding.
 
-* Key Type Value:  This is the value used to identify the keying material.  These values
-  MUST be unique.  The value can be a positive integer, a negative
-  integer, or a string.
+* Key Type Value: This is the value used to identify the keying material. These values MUST be unique.  The value can be a positive integer, a negative integer, or a string.
 
-* Profile: This field may contain a descriptive string of a profile to be used with this item.
-  This should be a value that is in the Name column of the "ACE Groupcomm Profile"
-  registry.
+* Profile: This field may contain a descriptive string of a profile to be used with this item. This should be a value that is in the Name column of the "ACE Groupcomm Profile" Registry.
 
-* Description:  This field contains a brief description of the keying material.
+* Description: This field contains a brief description of the keying material.
 
-* References:  This contains a pointer to the public specification for
-  the format of the keying material, if one exists.
+* References: This contains a pointer to the public specification for the format of the keying material, if one exists.
 
-This registry has been initially populated by the values in {{kty}}. The specification column for all of these entries will be this document.
+This Registry has been initially populated by the values in {{kty}}. The specification column for all of these entries will be this document.
 
 ## ACE Groupcomm Profile Registry
 
-This specification establishes the IANA "ACE Groupcomm Profile" registry.  The
-registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the registry require a specification, potentially a Standards Track RFC, be supplied as well.
+This specification establishes the IANA "ACE Groupcomm Profile" Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
 
-The columns of this registry are:
+The columns of this Registry are:
 
 * Name: The name of the profile, to be used as value of the profile attribute.
+
 * Description: Text giving an overview of the profile and the context it is developed for.
+
 * CBOR Value: CBOR abbreviation for this profile name. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 are designated as Standards Action. Integer values from -65536 to -257 and from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as Expert Review. Integer values less than -65536 are marked as Private Use.
+
 * Reference: This contains a pointer to the public specification of the profile abbreviation, if one exists.
 
 ## Expert Review Instructions {#review}
 
-The IANA registry established in this document is defined as expert review.
+The IANA Registries established in this document are defined as expert review.
 This section gives some general guidelines for what the experts should be looking for, but they are being designated as experts for a reason so they should be given substantial latitude.
-
 
 Expert reviewers should take into consideration the following points:
 
@@ -720,12 +715,12 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 * Added security consideration on replay protection (Section 8).
 
-* New IANA registries "ACE Groupcomm Key" and "ACE Groupcomm Profile Registry" (Section 9).
+* New IANA registries "ACE Groupcomm Key Registry" and "ACE Groupcomm Profile Registry" (Section 9).
 
 # Acknowledgments
 {: numbered="no"}
 
-The following individuals were helpful in shaping this document: Ben Kaduk, John Mattsson, Jim Schaad, Ludwig Seitz, Göran Selander and Peter van der Stok.
+The following individuals were helpful in shaping this document: Ben Kaduk, John Mattsson, Jim Schaad, Ludwig Seitz, Goeran Selander and Peter van der Stok.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Plus project CRITISEC; and by the EIT-Digital High Impact Initiative ACTIVE.
 
