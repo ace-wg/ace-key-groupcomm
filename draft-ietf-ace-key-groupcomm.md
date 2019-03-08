@@ -41,8 +41,6 @@ normative:
   RFC8126:
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-ace-oauth-params:
-  I-D.ietf-ace-oscore-profile:
-  I-D.ietf-core-oscore-groupcomm:
 
 informative:
 
@@ -722,6 +720,6 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 The following individuals were helpful in shaping this document: Ben Kaduk, John Mattsson, Jim Schaad, Ludwig Seitz, Goeran Selander and Peter van der Stok.
 
-The work on this document has been partly supported by VINNOVA and the Celtic-Plus project CRITISEC; and by the EIT-Digital High Impact Initiative ACTIVE.
+The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; and by the EIT-Digital High Impact Initiative ACTIVE.
 
 --- fluff
