@@ -528,7 +528,7 @@ Alternatively, the re-distribution of keying material can be initiated by the KD
 
 * Can maintain an Observable resource to send notifications to Clients when the keying material is updated. Such a notification would have the same payload as the Key Re-Distribution Response defined in {{ssec-key-redistribution-response}}.
 
-* Can send the payload of the Key Re-Distribution Response in a multicast request to the members of the group.
+* Can send the payload of the Key Re-Distribution Response in a multicast requests to the members of the group, using secure rekeying schemes such as TBD.
 
 * Can send unicast requests to each Client over a secure channel, with the Key Re-Distribution Response as payload.
 
