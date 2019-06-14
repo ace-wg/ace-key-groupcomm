@@ -350,7 +350,7 @@ Marco: As a parameter, it must have a type anyway and we said it should be a CBO
 
 * 'client_cred', with value the public key or certificate of the Client, encoded as a CBOR bstr. If the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, this field contains the public key of the Client.
 
-* 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value a list of public key repositories storing the certificate of the Client.
+* 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value a list of public key repositories storing the certificate of the Client. This parameter is encoded as a CBOR array of CBOR tstr containing URIs.
 
 
 ## Key Distribution Response {#ssec-key-distribution-response}
