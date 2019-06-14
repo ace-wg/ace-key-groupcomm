@@ -158,7 +158,7 @@ The exchange of Key Distribution Request and Key Distribution Response between C
 
 All further communications between the Client and the KDC MUST be secured, for instance with the same security mechanism used for the Key Distribution exchange.
 
-All further communications between a Client and the other group members MUST be secured using the keying material provided in {{key-distr}}.
+All communications between a Client and the other group members MUST be secured using the keying material provided in {{key-distr}}.
 
 # Authorization to Join a Group {#sec-auth}
 
