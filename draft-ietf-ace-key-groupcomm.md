@@ -652,7 +652,7 @@ The columns of this Registry are:
 
 * Key Type Value: This is the value used to identify the keying material. These values MUST be unique.  The value can be a positive integer, a negative integer, or a string.
 
-* Profile: This field may contain a descriptive string of a profile to be used with this item. This should be a value that is in the Name column of the "ACE Groupcomm Profile" Registry.
+* Profile: This field may contain one or more descriptive strings of profiles to be used with this item. The values should be taken from the Name column of the "ACE Groupcomm Profile" Registry.
 
 * Description: This field contains a brief description of the keying material.
 
