@@ -329,6 +329,8 @@ Marco: Isn't it ok as we are doing with the COSE Key in Section 4.2? Then it wor
 
 Note that proof-of-possession to bind the access token to the Client is performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC.
 
+If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, using the message format defined in this section. Application profiles may define alternative message formats.
+
 ## Key Distribution Request {#ssec-key-distribution-request}
 
 The Client sends a Key Distribution Request to the KDC. This corresponds to a CoAP POST request to the endpoint in the KDC associated to the group to join. The endpoint in the KDC is associated to the 'scope' value of the Authorization Request/Response. The payload of this request is a CBOR Map which MAY contain the following fields, which, if included, MUST have the corresponding values:
@@ -465,8 +467,6 @@ Marco: We already use them in the joining draft. Aren't they anyway relevant in 
 -->
 
 Specific profiles need to specify how exactly the keying material is used to protect the group communication.
-
-If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, using the message format defined in this section. Application profiles may define alternative message formats.
 
 # Removal of a Node from the Group {#sec-node-removal}
 
