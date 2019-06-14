@@ -556,7 +556,7 @@ The KDC receiving a Key Re-Distribution Request MUST check that it is storing a 
 
 If that is not the case, i.e. it does not store the token or the token is not valid for that client for the scope requested, the KDC MUST respond with a 4.01 (Unauthorized) error message. Analogously to {{ssec-key-distribution-response}}, if the Key Re-Distribution Request is not formatted correctly (e.g. no 'scope' field present, or unknown fields present), the KDC MUST respond with a 4.00 (Bad Request) error message.
 
-Otherwise, the KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty' and 'key' parameters specified in {{ssec-key-distribution-response}}. The Key Distribution Response MAY also include the 'profile', 'exp', 'group_policies' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
+Otherwise, the KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty',  'key' and 'exp' parameters specified in {{ssec-key-distribution-response}}. The Key Distribution Response MAY also include the 'profile', 'group_policies' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
 
 Note that this response might simply re-provide the same keying material currently owned by the Client, if it has not been renewed.
 
