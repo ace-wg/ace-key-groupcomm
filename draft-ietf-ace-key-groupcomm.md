@@ -47,7 +47,7 @@ normative:
 
 informative:
 
-
+  RFC7519:
   RFC7159:
   RFC7390:
   I-D.dijk-core-groupcomm-bis:
@@ -451,7 +451,7 @@ Optionally, the Key Distribution Response MAY contain the following parameters, 
 
 * 'profile', with value an identifier that MUST be used to uniquely identify itself. The identifier MUST be registered in the "ACE Groupcomm Profile" Registry.
 
-* 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer or floating-point number.
+* 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer or floating-point number. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what specified in Section 2 of {{RFC7519}}.
 
 * 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request. This parameter is a CBOR Byte String, which encodes the public keys of all the group members paired with the respective member identifiers. In case public keys in the group are represented as COSE Keys, the CBOR Byte String encodes a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MUST be defined in applications of this specification.
 
