@@ -348,7 +348,7 @@ The Client sends a Key Distribution Request to the KDC. This corresponds to a Co
 Marco: As a parameter, it must have a type anyway and we said it should be a CBOR array consistently with the usage of this parameter in the following sections.
 -->
 
-* 'client_cred', with value the public key or certificate of the Client. If the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, this field contains the public key of the Client.
+* 'client_cred', with value the public key or certificate of the Client, encoded as a CBOR bstr. If the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, this field contains the public key of the Client.
 
 * 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value a list of public key repositories storing the certificate of the Client.
 
@@ -492,7 +492,7 @@ To request to leave a group, the client MUST send a CoAP POST request to the end
 
 Additionally, the Leave request MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'client_cred', with value the identifier of the public key or certificate of the Client. This field is used if the KDC is managing (collecting from/distributing to the Client) the public keys of the group members.
+* 'client_cred', with value the identifier of the public key or certificate of the Client, encoded as a CBOR bstr. This field is used if the KDC is managing (collecting from/distributing to the Client) the public keys of the group members.
 
 Note that the 'role' field is omitted since such a request should only be used to leave a group altogether. If the leaving node wants to be part of a group with fewer roles, it does not need to communicate that to the KDC, and can simply stop acting according to such roles.
 
