@@ -490,10 +490,6 @@ To request to leave a group, the client MUST send a CoAP POST request to the end
 
 * 'scope', with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and wants to leave, encoded as in {{ssec-authorization-request}}. The 'role' field is omitted.
 
-Additionally, the Leave request MAY contain the following parameters, which, if included, MUST have the corresponding values:
-
-* 'client_cred', with value the identifier of the public key or certificate of the Client, encoded as a CBOR bstr. This field is used if the KDC is managing (collecting from/distributing to the Client) the public keys of the group members.
-
 Note that the 'role' field is omitted since such a request should only be used to leave a group altogether. If the leaving node wants to be part of a group with fewer roles, it does not need to communicate that to the KDC, and can simply stop acting according to such roles.
 
 <!-- Jim 13-07: Section 5.2 - What is the message to leave - can I leave one scope but not another?  Can I just give up a role?
