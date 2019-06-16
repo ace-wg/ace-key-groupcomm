@@ -522,7 +522,7 @@ Is there any other convenient OSCORE thing which is reusable here and we are mis
 -->
 
 
-Note that policies can be set up so that the Client sends a request to the KDC only after a given number of unsuccessfully decrypted incoming messages. It is application dependent and pertaining to the particular message exchange (e.g. {{I-D.ietf-core-oscore-groupcomm}}) to set up policies that instruct clients to keep decryption failures messages so that they can be decrypted after getting updated keying material, rather than just considering it a non valid message right away.
+Note that policies can be set up so that the Client sends a request to the KDC only after a given number of unsuccessfully decrypted incoming messages. It is application dependent and pertaining to the particular message exchange (e.g. {{I-D.ietf-core-oscore-groupcomm}}) to set up policies that instruct clients to retain unsuccessfully decrypted messages and for how long, so that they can be decrypted after getting updated keying material, rather than just considered non valid messages to discard right away.
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
 
