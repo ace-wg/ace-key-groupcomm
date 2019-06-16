@@ -350,9 +350,9 @@ The Client sends a Key Distribution Request to the KDC. This corresponds to a Co
 Marco: As a parameter, it must have a type anyway and we said it should be a CBOR array consistently with the usage of this parameter in the following sections.
 -->
 
-* 'client_cred', with value the public key or certificate of the Client, encoded as a CBOR bstr. If the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, this field contains the public key of the Client.
+* 'client_cred', with value the public key or certificate of the Client, encoded as a CBOR Byte String. If the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, this field contains the public key of the Client.
 
-* 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value a list of public key repositories storing the certificate of the Client. This parameter is encoded as a CBOR array of CBOR tstr containing URIs.
+* 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value a list of public key repositories storing the certificate of the Client. This parameter is encoded as a CBOR array of CBOR Text Strings, each of which specifies the URI of a key repository.
 
 
 ## Key Distribution Response {#ssec-key-distribution-response}
