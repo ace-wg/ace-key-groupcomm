@@ -615,7 +615,13 @@ The KDC replies to the Client with a Key Distribution Response containing only t
 
   - the public keys of the group members with the identifiers specified in the 'get_pub_keys' parameter of the Public Key request.
 
-The KDC ignores possible identifiers included in the 'get_pub_keys' parameter of the Public Key request if they are not associated to any current group member.
+The KDC may enforce one of the following policies, in order to handle possible identifiers that are included in the 'get_pub_keys' parameter of the Public Key request but are not associated to any current group member.
+
+* The KDC silently ignores those identifiers.
+
+* The KDC retains public keys of group members for a given amount of time after their leaving, before discarding them. As long as such public keys are retained, the KDC provides them to a requesting Client.
+
+Either case, a node that has left the group should not expect any of its outgoing messages to be successfully processed, if received after its leaving, due to a possible group rekeying occurred before the message reception.
 
 # Security Considerations
 
