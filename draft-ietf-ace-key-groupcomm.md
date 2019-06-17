@@ -466,7 +466,27 @@ Optionally, the Key Distribution Response MAY contain the following parameters, 
 
 * 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request. This parameter is a CBOR Byte String, which encodes the public keys of all the group members paired with the respective member identifiers. In case public keys in the group are represented as COSE Keys, the CBOR Byte String encodes a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MUST be defined in applications of this specification.
 
-* 'group_policies', with value a list of parameters indicating how the group handles specific management aspects. This includes, for instance, approaches to achieve synchronization of sequence numbers among group members. This parameter is encoded as a CBOR map.
+* 'group_policies', with value a CBOR Map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. Key map labels MUST be registered in the "ACE Groupcomm Policy" Registry, with their map label registered as "CBOR value" and the CBOR type(s) of their value registered as "Value type". This specification defines the two map entries "Sequence Number Synchronization Method" and "Key Update Check Interval", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format of included map entries.
+
+~~~~~~~~~~~
+/-----------------+-------+----------|------------------|------------\
+|      Name       | CBOR  |   CBOR   |   Description    | Reference  |
+|                 | label |   type   |                  |            |
+|-----------------+-------+----------|------------------|------------|
+| Sequence Number |   1   | tstr/int | Method for a     |            |
+| Synchronization |       |          | recipient node   |            |
+| Method          |       |          | synchronize with |            |
+|                 |       |          | sequence numbers |            |
+|                 |       |          | of a sender node |            |
+|                 |       |          |                  |            |
+| Key Update      |   2   |   int    | Polling interval | [[this     |
+| Check Interval  |       |          | in seconds, to   | document]] |
+| Check Interval  |       |          | check for new    |            |
+|                 |       |          | keying material  |            |
+|                 |       |          | at the KDC       |            |
+\-----------------+-------+----------|------------------|------------/
+~~~~~~~~~~~
+{: #fig-ACE-Groupcomm-Policies title="ACE Groupcomm Policies" artwork-align="center"}
 
 * 'mgt_key_material', with value the administrative keying material to participate in the group rekeying performed by the KDC. The exact format and content depend on the specific rekeying scheme used in the group, which may be specified in the application profile.
 
@@ -688,6 +708,24 @@ The columns of this Registry are:
 * CBOR Value: CBOR abbreviation for the name of this application profile. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 are designated as Standards Action. Integer values from -65536 to -257 and from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as Expert Review. Integer values less than -65536 are marked as Private Use.
 
 * Reference: This contains a pointer to the public specification of the abbreviation for this application profile, if one exists.
+
+## ACE Groupcomm Policy Registry
+
+This specification establishes the IANA "ACE Groupcomm Policy" Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
+
+The columns of this Registry are:
+
+* Name: The name of the group communication policy.
+
+* CBOR label: The value to be used to identify this group communication policy.  Key map labels MUST be unique. The label can be a positive integer, a negative integer or a string.  Integer values between 0 and 255 and strings of length 1 are designated as Standards Track Document required. Integer values from 256 to 65535 and strings of length 2 are designated as Specification Required.  Integer values of greater than 65535 and strings of length greater than 2 are designated as expert review.  Integer values less than -65536 are marked as private use.
+
+* CBOR type: the CBOR type used to encode the value of this group communication policy.
+
+* Description: This field contains a brief description for this group communication policy.
+
+* Reference: This field contains a pointer to the public specification providing the format of the group communication policy, if one exists.
+
+This registry will be initially populated by the values in {{fig-ACE-Groupcomm-Policies}}.
 
 ## Expert Review Instructions {#review}
 
