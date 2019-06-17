@@ -453,7 +453,7 @@ define it as a COSE Key Common Parameter (see section 7.1 of COSE)
 
 Optionally, the Key Distribution Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'profile', with value an identifier that MUST be used to uniquely identify itself. The identifier MUST be registered in the "ACE Groupcomm Profile" Registry.
+* 'profile', with value a CBOR Integer that MUST be used to uniquely identify the profile for group communication. The value MUST be registered in the "ACE Groupcomm Profile" Registry.
 
 * 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer or floating-point number. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what specified in Section 2 of {{RFC7519}}.
 
