@@ -42,7 +42,6 @@ normative:
   RFC8126:
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-ace-oauth-params:
-  I-D.ietf-ace-oscore-profile:
   I-D.ietf-core-oscore-groupcomm:
 
 informative:
@@ -50,12 +49,15 @@ informative:
   RFC7519:
   RFC7159:
   RFC7390:
-  I-D.dijk-core-groupcomm-bis:
-  I-D.ietf-core-coap-pubsub:
   RFC2093:
   RFC2094:
   RFC2627:
+  I-D.dijk-core-groupcomm-bis:
+  I-D.ietf-core-coap-pubsub:
   I-D.ietf-core-object-security:
+  I-D.ietf-ace-oscore-profile:
+  I-D.ietf-ace-dtls-authorize:
+  I-D.ietf-ace-mqtt-tls-profile:
 
 
 --- abstract
@@ -69,7 +71,7 @@ This document defines message formats and procedures for requesting and distribu
 This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define the format of messages used to request, distribute and renew the keying material in a group communication scenario, e.g. based on multicast {{RFC7390}}{{I-D.dijk-core-groupcomm-bis}} or on publishing-subscribing {{I-D.ietf-core-coap-pubsub}}.
 The ACE framework is based on CBOR {{RFC7049}}, so CBOR is the format used in this specification. However, using JSON {{RFC7159}} instead of CBOR is possible, using the conversion method specified in Sections 4.1 and 4.2 of {{RFC7049}}.
 
-Profiles that use group communication can build on this document to specify the selection of the message parameters defined in this document to use and their values. Known applications that can benefit from this document would be, for example, profiles addressing group communication based on multicast {{RFC7390}}{{I-D.dijk-core-groupcomm-bis}} or publishing/subscribing {{I-D.ietf-core-coap-pubsub}} in ACE.
+Profiles that use group communication can build on this document to specify the selection of the message parameters defined in this document to use and their values. Known applications that can benefit from this document would be, for example, those addressing group communication based on multicast {{RFC7390}}{{I-D.dijk-core-groupcomm-bis}} or publishing/subscribing {{I-D.ietf-core-coap-pubsub}} in ACE.
 
 If the application requires backward and forward security, updated keying material is generated and distributed to the group members (rekeying), when membership changes. A key management scheme performs the actual distribution of the updated keying material to the group. In particular, the key management scheme rekeys the current group members when a new node joins the group, and the remaining group members when a node leaves the group. This document provides a message format for group rekeying that allows to fulfill these requirements. Rekeying mechanisms can be based on {{RFC2093}}, {{RFC2094}} and {{RFC2627}}.
 
@@ -79,6 +81,11 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 Readers are expected to be familiar with the terms and concepts described in  {{I-D.ietf-ace-oauth-authz}} and {{RFC8152}}, such as Authorization Server (AS) and Resource Server (RS).
 
+This document refers also to the following terminology.
+
+* Transport profile, to indicate a profile of ACE as per Section 5.6.4.3 of {{I-D.ietf-ace-oauth-authz}}. That is, a transport profile specifies the communication protocol and communication security protocol between an ACE Client and Resource Server, as well as proof-of-possession methods, if it supports proof-of-possession access tokens. Tranport profiles of ACE include, for instance, {{I-D.ietf-ace-oscore-profile}}, {{I-D.ietf-ace-dtls-authorize}} and {{I-D.ietf-ace-mqtt-tls-profile}}.
+
+* Application profile, to indicate a profile of ACE that defines how applications enforce and use supporting security services they require. These services include, for instance, provisioning, revocation and (re-)distribution of keying material. An application profile may define specific procedures and message formats.
 
 # Overview
 
@@ -152,9 +159,9 @@ C                              AS     KDC   Dispatcher          Group
 ~~~~~~~~~~~
 {: #fig-flow title="Message Flow Upon New Node's Joining" artwork-align="center"}
 
-The exchange of Authorization Request and Authorization Response between Client and AS MUST be secured, as specified by the ACE profile used between Client and KDC.
+The exchange of Authorization Request and Authorization Response between Client and AS MUST be secured, as specified by the transport profile of ACE used between Client and KDC.
 
-The exchange of Key Distribution Request and Key Distribution Response between Client and KDC MUST be secured, as a result of the ACE profile used between Client and KDC.
+The exchange of Key Distribution Request and Key Distribution Response between Client and KDC MUST be secured, as a result of the transport profile of ACE used between Client and KDC.
 
 All further communications between the Client and the KDC MUST be secured, for instance with the same security mechanism used for the Key Distribution exchange.
 
@@ -164,7 +171,7 @@ All communications between a Client and the other group members MUST be secured 
 
 This section describes in detail the format of messages exchanged by the participants when a node requests access to a group. The first part of the exchange is based on ACE {{I-D.ietf-ace-oauth-authz}}.
 
-As defined in {{I-D.ietf-ace-oauth-authz}}, the Client requests from the AS an authorization to join the group through the KDC (see {{ssec-authorization-request}}). If the request is approved and authorization is granted, the AS provides the Client with a proof-of-possession access token and parameters to securely communicate with the KDC (see {{ssec-authorization-response}}). Communications between the Client and the AS MUST be secured, according to the profile of ACE used. The Content-Format used in the messages is the one specified by the used ACE profile (e.g. application/ace+cbor for the first two messages and application/cwt for the third message, depending on the format of the access token).
+As defined in {{I-D.ietf-ace-oauth-authz}}, the Client requests from the AS an authorization to join the group through the KDC (see {{ssec-authorization-request}}). If the request is approved and authorization is granted, the AS provides the Client with a proof-of-possession access token and parameters to securely communicate with the KDC (see {{ssec-authorization-response}}). Communications between the Client and the AS MUST be secured, according to the transport profile of ACE used. The Content-Format used in the messages is the one specified by the used transport profile of ACE (e.g. application/ace+cbor for the first two messages and application/cwt for the third message, depending on the format of the access token).
 
 {{fig-group-member-registration}} gives an overview of the exchange described above.
 
@@ -259,13 +266,13 @@ Additionally, the Authorization Response MAY contain the following parameters, w
 
 -->
 
-The access token MUST contain all the parameters defined above (including the same 'scope' as in this message, if present, or the 'scope' of the Authorization Request otherwise), and additionally other optional parameters the profile requires.
+The access token MUST contain all the parameters defined above (including the same 'scope' as in this message, if present, or the 'scope' of the Authorization Request otherwise), and additionally other optional parameters that the transport profile of ACE requires.
 
 When receiving an Authorization Request from a Client that was previously authorized, and which still owns a valid non expired access token, the AS replies with an Authorization Response with a new access token.
 
 ## Token Post
 
-The Client sends a CoAP POST request including the access token to the KDC, as specified in section 5.8.1 of {{I-D.ietf-ace-oauth-authz}}. If the specific ACE profile defines it, the Client MAY use a different endpoint than /authz-info at the KDC to post the access token to. After successful verification, the Client is authorized to receive the group keying material from the KDC and join the group.
+The Client sends a CoAP POST request including the access token to the KDC, as specified in section 5.8.1 of {{I-D.ietf-ace-oauth-authz}}. If the specific transport profile of ACE defines it, the Client MAY use a different endpoint than /authz-info at the KDC to post the access token to. After successful verification, the Client is authorized to receive the group keying material from the KDC and join the group.
 
 Note that this step could be merged with the following message from the Client to the KDC, namely Key Distribution Request.
 
@@ -380,11 +387,11 @@ If the Key Distribution Request is not formatted correctly (e.g. no 'scope' fiel
 
 If verification succeeds, the KDC sends a Key Distribution success Response to the Client. The Key Distribution success Response corresponds to a 2.01 Created message. The payload of this response is a CBOR map, which MUST contain:
 
-* 'kty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key" Registry. Implementations MUST verify that the key type matches the profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
+* 'kty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key" Registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
 
 * 'key', containing the keying material for the group communication, or information required to derive it.
 
-The exact format of the 'key' value MUST be defined in applications of this specification. Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry, including its name, type and profile to be used with, as defined in the "ACE Groupcomm Key" registry, defined in {{iana-key}}.
+The exact format of the 'key' value MUST be defined in applications of this specification. Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry, including its name, type and application profile to be used with, as defined in the "ACE Groupcomm Key" registry, defined in {{iana-key}}.
 
 ~~~~~~~~~~~
 +----------+----------------+---------+-------------------------+
@@ -453,7 +460,7 @@ define it as a COSE Key Common Parameter (see section 7.1 of COSE)
 
 Optionally, the Key Distribution Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'profile', with value a CBOR Integer that MUST be used to uniquely identify the profile for group communication. The value MUST be registered in the "ACE Groupcomm Profile" Registry.
+* 'profile', with value a CBOR Integer that MUST be used to uniquely identify the application profile for group communication. The value MUST be registered in the "ACE Groupcomm Profile" Registry.
 
 * 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer or floating-point number. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what specified in Section 2 of {{RFC7519}}.
 
@@ -461,14 +468,14 @@ Optionally, the Key Distribution Response MAY contain the following parameters, 
 
 * 'group_policies', with value a list of parameters indicating how the group handles specific management aspects. This includes, for instance, approaches to achieve synchronization of sequence numbers among group members. This parameter is encoded as a CBOR map.
 
-* 'mgt_key_material', with value the administrative keying material to participate in the group rekeying performed by the KDC. The exact format and content depend on the specific rekeying scheme used in the group, which may be specified in the profile.
+* 'mgt_key_material', with value the administrative keying material to participate in the group rekeying performed by the KDC. The exact format and content depend on the specific rekeying scheme used in the group, which may be specified in the application profile.
 
 <!-- Peter 30-07: The parameters group_policies and mgt_key_material are not specified in pubsub-profile draft. Do you ever use them?
 
 Marco: We already use them in the joining draft. Aren't they anyway relevant in the pubsub profile too?
 -->
 
-Specific profiles need to specify how exactly the keying material is used to protect the group communication.
+Specific application profiles that build on this document need to specify how exactly the keying material is used to protect the group communication.
 
 # Removal of a Node from the Group {#sec-node-removal}
 
@@ -654,7 +661,7 @@ The columns of this Registry are:
 
 * Key Type Value: This is the value used to identify the keying material. These values MUST be unique.  The value can be a positive integer, a negative integer, or a string.
 
-* Profile: This field may contain one or more descriptive strings of profiles to be used with this item. The values should be taken from the Name column of the "ACE Groupcomm Profile" Registry.
+* Profile: This field may contain one or more descriptive strings of application profiles to be used with this item. The values should be taken from the Name column of the "ACE Groupcomm Profile" Registry.
 
 * Description: This field contains a brief description of the keying material.
 
@@ -668,13 +675,13 @@ This specification establishes the IANA "ACE Groupcomm Profile" Registry. The Re
 
 The columns of this Registry are:
 
-* Name: The name of the profile, to be used as value of the profile attribute.
+* Name: The name of the application profile, to be used as value of the profile attribute.
 
-* Description: Text giving an overview of the profile and the context it is developed for.
+* Description: Text giving an overview of the application profile and the context it is developed for.
 
-* CBOR Value: CBOR abbreviation for this profile name. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 are designated as Standards Action. Integer values from -65536 to -257 and from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as Expert Review. Integer values less than -65536 are marked as Private Use.
+* CBOR Value: CBOR abbreviation for the name of this application profile. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 are designated as Standards Action. Integer values from -65536 to -257 and from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as Expert Review. Integer values less than -65536 are marked as Private Use.
 
-* Reference: This contains a pointer to the public specification of the profile abbreviation, if one exists.
+* Reference: This contains a pointer to the public specification of the abbreviation for this application profile, if one exists.
 
 ## Expert Review Instructions {#review}
 
