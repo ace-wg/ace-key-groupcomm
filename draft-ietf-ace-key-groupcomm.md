@@ -649,11 +649,17 @@ Either case, a node that has left the group should not expect any of its outgoin
 
 # Security Considerations
 
+When a Client receives a message from a sender for the first time, it needs to have a mechanism in place to avoid replay, e.g. Appendix B.2 of {{I-D.ietf-core-object-security}}.
+
 The KDC must renew the group keying material upon its expiration.
 
 The KDC should renew the keying material upon group membership change, and should provide it to the current group members through the rekeying scheme used in the group.
 
-When a Client receives a message from a sender for the first time, it needs to have a mechanism in place to avoid replay, e.g. Appendix B.2 of {{I-D.ietf-core-object-security}}.
+The KDC may enforce a rekeying policy that takes into account the overall time required to rekey the group, against the expected rate of changes in the group membership.
+
+That is, the KDC may not rekey the group at every membership change, for instance if members' joining and leaving occur frequently, and performing a group rekeying takes a too long amount of time. Instead, the KDC may rekey the group, for instance, after a minum number of group members have joined or left within a given time interval, or during predictable network inactivity periods.
+
+However, this would result in the KDC not constantly preserving backward and forward security. In fact, latest added group members would be able to access the key material used before their joining, and thus can access past group communications protected with that key material that they have recorded. Also, until the KDC performs a group rekeying, the latest nodes to have left the group would still be able to access upcoming group communications that are protected with the key material they have been retaining.
 
 # IANA Considerations
 
