@@ -470,22 +470,22 @@ Optionally, the Key Distribution Response MAY contain the following parameters, 
 
 * 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request. This parameter is a CBOR byte string, which encodes the public keys of all the group members paired with the respective member identifiers. In case public keys in the group are represented as COSE Keys, the CBOR byte string encodes a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MUST be defined in applications of this specification.
 
-* 'group_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. Key map labels MUST be registered in the "ACE Groupcomm Policy" Registry, with their map label registered as "CBOR value" and the CBOR type(s) of their value registered as "Value type". This specification defines the two map entries "Sequence Number Synchronization Method" and "Key Update Check Interval", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format of included map entries.
+* 'group_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policy" Registry. This specification defines the two elements "Sequence Number Synchronization Method" and "Key Update Check Interval", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format of included map entries.
 
 ~~~~~~~~~~~
 /-----------------+-------+----------|------------------|------------\
 |      Name       | CBOR  |   CBOR   |   Description    | Reference  |
 |                 | label |   type   |                  |            |
 |-----------------+-------+----------|------------------|------------|
-| Sequence Number |   1   | tstr/int | Method for a     |            |
-| Synchronization |       |          | recipient node   |            |
+| Sequence Number | TBD1  | tstr/int | Method for a re- | [[this     |
+| Synchronization |       |          | cipient node to  | document]] |
 | Method          |       |          | synchronize with |            |
 |                 |       |          | sequence numbers |            |
 |                 |       |          | of a sender node |            |
 |                 |       |          |                  |            |
-| Key Update      |   2   |   int    | Polling interval | [[this     |
+| Key Update      | TBD2  |   int    | Polling interval | [[this     |
 | Check Interval  |       |          | in seconds, to   | document]] |
-| Check Interval  |       |          | check for new    |            |
+|                 |       |          | check for new    |            |
 |                 |       |          | keying material  |            |
 |                 |       |          | at the KDC       |            |
 \-----------------+-------+----------|------------------|------------/
