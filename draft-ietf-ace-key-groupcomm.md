@@ -342,7 +342,7 @@ If the application requires backward security, the KDC SHALL generate new group 
 
 ## Key Distribution Request {#ssec-key-distribution-request}
 
-The Client sends a Key Distribution Request to the KDC. This corresponds to a CoAP POST request to the endpoint in the KDC associated to the group to join. The endpoint in the KDC is associated to the 'scope' value of the Authorization Request/Response. The payload of this request is a CBOR Map which MAY contain the following fields, which, if included, MUST have the corresponding values:
+The Client sends a Key Distribution Request to the KDC. This corresponds to a CoAP POST request to the endpoint in the KDC associated to the group to join. The endpoint in the KDC is associated to the 'scope' value of the Authorization Request/Response. The payload of this request is a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
 * 'scope', with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and role(s), encoded as in {{ssec-authorization-request}}.
 
@@ -352,18 +352,18 @@ The Client sends a Key Distribution Request to the KDC. This corresponds to a Co
   TODO: define format get_pub_keys: []
 -->
 
-* 'get_pub_keys', if the Client wishes to receive the public keys of the other nodes in the group from the KDC. The value is an empty CBOR Array. This parameter may be present if the KDC stores the public keys of the nodes in the group and distributes them to the Client; it is useless to have here if the set of public keys of the members of the group is known in another way, e.g. it was provided by the AS.
+* 'get_pub_keys', if the Client wishes to receive the public keys of the other nodes in the group from the KDC. The value is an empty CBOR array. This parameter may be present if the KDC stores the public keys of the nodes in the group and distributes them to the Client; it is useless to have here if the set of public keys of the members of the group is known in another way, e.g. it was provided by the AS.
 
 <!-- Peter 30-07: get_pub_keys: Instead of empty CBOR array, an empty payload is also possible?
 
 Marco: As a parameter, it must have a type anyway and we said it should be a CBOR array consistently with the usage of this parameter in the following sections.
 -->
 
-* 'client_cred', with value the public key or certificate of the Client, encoded as a CBOR Byte String. If the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, this field contains the public key of the Client.
+* 'client_cred', with value the public key or certificate of the Client, encoded as a CBOR byte string. If the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, this field contains the public key of the Client.
 
 * 'client_cred_verify', encoded as a CBOR byte string. This parameter contains a signature computed by the Client over the nonce N received from the KDC in the 2.01 (Created) response to the token POST request (see {{token-post}}). The Client computes the signature by using its own private key, whose corresponding public key is either directly specified in the 'client_cred' parameter or included in the certificate specified in the 'client_cred' parameter. This parameter MUST be present if the 'client_cred' parameter is present.
 
-* 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value a list of public key repositories storing the certificate of the Client. This parameter is encoded as a CBOR array of CBOR Text Strings, each of which specifies the URI of a key repository.
+* 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value a list of public key repositories storing the certificate of the Client. This parameter is encoded as a CBOR array of CBOR text strings, each of which specifies the URI of a key repository.
 
 
 ## Key Distribution Response {#ssec-key-distribution-response}
@@ -464,13 +464,13 @@ define it as a COSE Key Common Parameter (see section 7.1 of COSE)
 
 Optionally, the Key Distribution Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'profile', with value a CBOR Integer that MUST be used to uniquely identify the application profile for group communication. The value MUST be registered in the "ACE Groupcomm Profile" Registry.
+* 'profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. The value MUST be registered in the "ACE Groupcomm Profile" Registry.
 
 * 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer or floating-point number. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what specified in Section 2 of {{RFC7519}}.
 
-* 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request. This parameter is a CBOR Byte String, which encodes the public keys of all the group members paired with the respective member identifiers. In case public keys in the group are represented as COSE Keys, the CBOR Byte String encodes a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MUST be defined in applications of this specification.
+* 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request. This parameter is a CBOR byte string, which encodes the public keys of all the group members paired with the respective member identifiers. In case public keys in the group are represented as COSE Keys, the CBOR byte string encodes a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MUST be defined in applications of this specification.
 
-* 'group_policies', with value a CBOR Map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. Key map labels MUST be registered in the "ACE Groupcomm Policy" Registry, with their map label registered as "CBOR value" and the CBOR type(s) of their value registered as "Value type". This specification defines the two map entries "Sequence Number Synchronization Method" and "Key Update Check Interval", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format of included map entries.
+* 'group_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. Key map labels MUST be registered in the "ACE Groupcomm Policy" Registry, with their map label registered as "CBOR value" and the CBOR type(s) of their value registered as "Value type". This specification defines the two map entries "Sequence Number Synchronization Method" and "Key Update Check Interval", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format of included map entries.
 
 ~~~~~~~~~~~
 /-----------------+-------+----------|------------------|------------\
@@ -517,7 +517,7 @@ Either case, once aware that a node is not authorized anymore, the KDC has to re
 
 A node can actively request to leave the group. In this case, the Client can send a request formatted as follows to the KDC, to abandon the group. The client MUST use the protected channel established with ACE, mentioned in {{key-distr}}.
 
-To request to leave a group, the client MUST send a CoAP POST request to the endpoint in the KDC associated to the group to leave (same endpoint used in {{ssec-key-distribution-request}} for Key Distribution requests). The payload of this Leave Request is a CBOR Map which MUST contain:
+To request to leave a group, the client MUST send a CoAP POST request to the endpoint in the KDC associated to the group to leave (same endpoint used in {{ssec-key-distribution-request}} for Key Distribution requests). The payload of this Leave Request is a CBOR map which MUST contain:
 
 * 'leave', with value an empty CBOR array.
 
