@@ -647,6 +647,51 @@ The KDC may enforce one of the following policies, in order to handle possible i
 
 Either case, a node that has left the group should not expect any of its outgoing messages to be successfully processed, if received after its leaving, due to a possible group rekeying occurred before the message reception.
 
+# ACE Groupcomm Parameters {#params}
+
+This specification defines a number of fields used during the message exchange. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name.
+
+~~~~~~~~~~~
++--------------+----------+---------------+
+| Name         | CBOR Key | CBOR Type     |
++--------------+----------+---------------+
+| scope        |   TBD    | array         |
++--------------+----------+---------------+
+| get_pub_keys |   TBD    | array         |
++--------------+----------+---------------+
+| client_cred  |   TBD    | byte string   |
++--------------+----------+---------------+
+| client_cred_ |   TBD    | byte string   |
+| verify       |          |               |
++--------------+----------+---------------+
+| pub_keys_    |   TBD    | array         |
+| repos        |          |               |
++--------------+----------+---------------+
+| kty          |   TBD    | int / byte    |
+|              |          | string        |
++--------------+----------+---------------+
+| key          |   TBD    | see "ACE      |
+|              |          | Groupcomm     |
+|              |          | Key" Registry |
++--------------+----------+---------------+
+| profile      |   TBD    | int           |
++--------------+----------+---------------+
+| exp          |   TBD    | int / float   |
++--------------+----------+---------------+
+| pub_keys     |   TBD    | byte string   |
++--------------+----------+---------------+
+| group_       |   TBD    | map           |
+| policies     |          |               |
++--------------+----------+---------------+
+| mgt_key_     |   TBD    | byte string   |
+| material     |          |               |
++--------------+----------+---------------+
+| leave        |   TBD    | array         |
++--------------+----------+---------------+
+~~~~~~~~~~~
+
+<!-- TODO: leave will be removed soon-->
+
 # Security Considerations
 
 When a Client receives a message from a sender for the first time, it needs to have a mechanism in place to avoid replay, e.g. Appendix B.2 of {{I-D.ietf-core-object-security}}.
@@ -684,10 +729,27 @@ The following registrations are required for the OSCORE Security Context Paramet
 *  Description: OSCORE Counter Signature Algorithm Value
 *  Reference: \[\[this specification\]\]
 -->
+## ACE Groupcomm Parameters Registry {#iana-reg}
+
+This specification establishes the "ACE Groupcomm Parameters" IANA Registry. The
+Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
+
+The columns of this Registry are:
+
+* Name: This is a descriptive name that enables easier reference to
+  the item. The name MUST be unique. It is not used in the encoding.
+
+* CBOR Key: This is the value used as CBOR key of the item. These values MUST be unique. The value can be a positive integer, a negative integer, or a string.
+
+* CBOR Type: This contains the CBOR type of the item, or a pointer to the registry that defines its type, when that depends on another item.
+
+* Reference: This contains a pointer to the public specification for the format of the item, if one exists.
+
+This Registry has been initially populated by the values in {{params}}. The specification column for all of these entries will be this document.
 
 ## ACE Groupcomm Key Registry {#iana-key}
 
-This specification establishes the IANA "ACE Groupcomm Key" Registry. The
+This specification establishes the "ACE Groupcomm Key" IANA Registry. The
 Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
 
 The columns of this Registry are:
@@ -707,7 +769,7 @@ This Registry has been initially populated by the values in {{kty}}. The specifi
 
 ## ACE Groupcomm Profile Registry
 
-This specification establishes the IANA "ACE Groupcomm Profile" Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
+This specification establishes the "ACE Groupcomm Profile" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
 
 The columns of this Registry are:
 
@@ -721,7 +783,7 @@ The columns of this Registry are:
 
 ## ACE Groupcomm Policy Registry
 
-This specification establishes the IANA "ACE Groupcomm Policy" Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
+This specification establishes the "ACE Groupcomm Policy" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
 
 The columns of this Registry are:
 
