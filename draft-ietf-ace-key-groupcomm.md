@@ -708,7 +708,7 @@ This specification defines a number of fields used during the message exchange. 
 +--------------+----------+---------------+
 ~~~~~~~~~~~
 
-# ACE Groupcomm Type {#type-param}
+# ACE Groupcomm Request Type {#type-param}
 
 This specification defines a number of types of requests. The table below summarizes them.
 
@@ -716,15 +716,15 @@ This specification defines a number of types of requests. The table below summar
 +------------------+----------+
 |     Name         |  Value   |
 +------------------+----------+
-| key distribution |   TBD1   |
+| key distribution |    1     |
 +------------------+----------+
-| leave            |   TBD2   |
+| leave            |    2     |
 +------------------+----------+
-| update key       |   TBD3   |
+| update key       |    3     |
 +------------------+----------+
-| new              |   TBD4   |
+| new              |    4     |
 +------------------+----------+
-| pub keys         |   TBD5   |
+| pub keys         |    5     |
 +------------------+----------+
 ~~~~~~~~~~~
 
@@ -794,7 +794,7 @@ This Registry has been initially populated by the values in {{params}}. The spec
 
 ## Ace Groupcomm Type Registry {#type}
 
-This specification establishes the "ACE Groupcomm Type" IANA Registry. The
+This specification establishes the "ACE Groupcomm Request Type" IANA Registry. The
 Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
 
 The columns of this Registry are:
@@ -806,7 +806,7 @@ The columns of this Registry are:
 
 * Reference: This contains a pointer to the public specification for the format of the item, if one exists.
 
-This Registry has been initially populated by the values in {{type-param}}. The specification column for all of these entries will be this document.
+This Registry has been initially populated by the values in {{type-param}}. The reference column for all of these entries will be this document. The value 0 is to be marked as "Reserved".
 
 ## ACE Groupcomm Key Registry {#iana-key}
 
