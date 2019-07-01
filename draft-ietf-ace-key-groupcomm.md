@@ -927,17 +927,23 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 # Requirements on Application Profiles
 
-This section lists the requirements on application profiles of this specification,for the convenience of profile designers.
+This section lists the requirements on application profiles of this specification,for the convenience of application profile designers.
 
 * Specify the communication protocol the members of the group must use (e.g., multicast CoAP).
 
 * Specify the security protocol the group members must use to protect their communication (e.g., group OSCORE). This must provide encryption, integrity and replay protection.
 
-* Specify the exact encoding of 'scope' (See {{ssec-authorization-request}}).
+* Specify the encoding and value of the identifier of group or gopic and role of 'scope' (see {{ssec-authorization-request}}).
 
 * Specify the negotiation of parameters for signature algorithm and signature keys (See TBD).
 
-* Specify and register the application profile identifier (See {{ssec-key-distribution-request}}).
+* Specify and register the application profile identifier (see {{ssec-key-distribution-request}}).
+
+* Specify the acceptable values of 'kty' (see {{ssec-key-distribution-response}}).
+
+* Specify the format and content of 'group\_policies' entries (see {{ssec-key-distribution-response}}).
+
+* Specify the format and content of 'mgt\_key\_material' (see {{ssec-key-distribution-response}}).
 
 * Optionally, profile of ACE {{I-D.ietf-ace-oauth-authz}} to use between Client and KDC.
 
