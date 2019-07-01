@@ -708,7 +708,7 @@ This specification defines a number of fields used during the message exchange. 
 +--------------+----------+---------------+
 ~~~~~~~~~~~
 
-# ACE Groupcomm Parameters {#type-param}
+# ACE Groupcomm Type {#type-param}
 
 This specification defines a number of types of requests. The table below summarizes them.
 
