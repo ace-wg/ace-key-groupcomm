@@ -364,7 +364,7 @@ Additionally, the CBOR map in the payload MAY contain the following fields, whic
 Marco: As a parameter, it must have a type anyway and we said it should be a CBOR array consistently with the usage of this parameter in the following sections.
 -->
 
-* 'client_cred', with value the public key or certificate of the Client, encoded as a CBOR byte string. If the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, this field contains the public key of the Client.
+* 'client_cred', with value the public key or certificate of the Client, encoded as a CBOR byte string. If the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, this field contains the public key of the Client. The default encoding for public keys is COSE Keys. Alternative specific encodings of this parameter MAY be defined in applications of this specification.
 
 * 'client_cred_verify', encoded as a CBOR byte string. This parameter contains a signature computed by the Client over the nonce N received from the KDC in the 2.01 (Created) response to the token POST request (see {{token-post}}). The Client computes the signature by using its own private key, whose corresponding public key is either directly specified in the 'client_cred' parameter or included in the certificate specified in the 'client_cred' parameter. This parameter MUST be present if the 'client_cred' parameter is present.
 
@@ -473,7 +473,7 @@ Optionally, the Key Distribution Response MAY contain the following parameters, 
 
 * 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer or floating-point number. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what specified in Section 2 of {{RFC7519}}.
 
-* 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request. This parameter is a CBOR byte string, which encodes the public keys of all the group members paired with the respective member identifiers. In case public keys in the group are represented as COSE Keys, the CBOR byte string encodes a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MUST be defined in applications of this specification.
+* 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request. This parameter is a CBOR byte string, which encodes the public keys of all the group members paired with the respective member identifiers. The default encoding for public keys is COSE Keys, so the default encoding for 'pub\_keys' is a CBOR byte string wrapping a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MAY be defined in applications of this specification.
 
 * 'group_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policy" Registry. This specification defines the two elements "Sequence Number Synchronization Method" and "Key Update Check Interval", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format of included map entries.
 
@@ -924,6 +924,24 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 * Added security consideration on replay protection (Section 8).
 
 * New IANA registries "ACE Groupcomm Key Registry" and "ACE Groupcomm Profile Registry" (Section 9).
+
+# Requirements on Application Profiles
+
+This section lists the requirements on application profiles of this specification,for the convenience of profile designers.
+
+* Specify the communication protocol the members of the group must use (e.g., multicast CoAP).
+
+* Specify the security protocol the group members must use to protect their communication (e.g., group OSCORE). This must provide encryption, integrity and replay protection.
+
+* Specify the exact encoding of 'scope' (See {{ssec-authorization-request}}).
+
+* Specify the negotiation of parameters for signature algorithm and signature keys (See TBD).
+
+* Specify and register the application profile identifier (See {{ssec-key-distribution-request}}).
+
+* Optionally, profile of ACE {{I-D.ietf-ace-oauth-authz}} to use between Client and KDC.
+
+* Optionally, encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used (See {{ssec-key-distribution-response}}).
 
 # Acknowledgments
 {: numbered="no"}
