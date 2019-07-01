@@ -569,7 +569,7 @@ Note that policies can be set up so that the Client sends a request to the KDC o
 
 The same request could also be sent by the client without being triggered by a failed decryption of a message, if the client wants to confirm that it has the latest keying material. If that is the case, the client will receive from the KDC the same keying material it has in memory.
 
-Note that the difference between the keying material renewal request and the keying material updating request is that the first triggers the KDC to produce new keying material, while the second only triggers only distribution (the renewal might have happened independently, because of expiration).
+Note that the difference between the keying material renewal request and the keying material update request is that the first triggers the KDC to produce new keying material for that node, while the second only triggers distribution (the renewal might have happened independently, because of expiration). Once a node receives new keying material, other group members may need to use the update keying material request to retrieve it.
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
 
