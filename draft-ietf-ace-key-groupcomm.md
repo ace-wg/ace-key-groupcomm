@@ -342,7 +342,11 @@ If the application requires backward security, the KDC SHALL generate new group 
 
 ## Key Distribution Request {#ssec-key-distribution-request}
 
-The Client sends a Key Distribution Request to the KDC. This corresponds to a CoAP POST request to the endpoint in the KDC associated to the group to join. The endpoint in the KDC is associated to the 'scope' value of the Authorization Request/Response. The payload of this request is a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
+The Client sends a Key Distribution Request to the KDC. This corresponds to a CoAP POST request to the endpoint in the KDC associated to the group to join. The endpoint in the KDC is associated to the 'scope' value of the Authorization Request/Response. The payload of this request is a CBOR map which MUST contain the following fields:
+
+* 'type', encoded as a CBOR int, with value TBD1.
+
+Additionally, the CBOR map in the payload MAY contain the following fields, which, if included, MUST have the corresponding values:
 
 * 'scope', with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and role(s), encoded as in {{ssec-authorization-request}}.
 
@@ -519,7 +523,7 @@ A node can actively request to leave the group. In this case, the Client can sen
 
 To request to leave a group, the client MUST send a CoAP POST request to the endpoint in the KDC associated to the group to leave (same endpoint used in {{ssec-key-distribution-request}} for Key Distribution requests). The payload of this Leave Request is a CBOR map which MUST contain:
 
-* 'leave', with value an empty CBOR array.
+* 'type', encoded as a CBOR ints, with value TBD2.
 
 * 'scope', with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and wants to leave, encoded as in {{ssec-authorization-request}}. The 'role' field is omitted.
 
@@ -536,12 +540,13 @@ If the Leave Request is such that the KDC cannot extract all the necessary infor
 
 Note that, after having left the group, a node may wish to join it again. Then, as long as the node is still authorized to join the group, i.e. it has a still valid access token, it can re-request to join the group directly to the KDC without needing to retrieve a new access token from the AS. This means that the KDC needs to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
 
-# Retrieval of Updated Keying Material {#sec-expiration}
+# Retrieval of New or Updated Keying Material {#sec-expiration}
 
-A node stops using the group keying material upon its expiration, according to the 'exp' parameter specified in the retained COSE Key. Then, if it wants to continue participating in the group communication, the node has to request new updated keying material to the KDC.
+A node stops using the group keying material upon its expiration, according to the 'exp' parameter specified in the retained COSE Key. Then, if it wants to continue participating in the group communication, the node has to request new updated keying material to the KDC. In this case, and depending on what keying material is expired, the client may need to communicate to the KDC its need for new keying material: for example, if the sending key of a node has to be renewed, the node may request new input material to derive new sending key based on the existing group keying material.
+
+<!-- FP: cannot talk about kid here, as we are not OSCORE -->
 
 The Client may perform the same request to the KDC also upon receiving messages from other group members without being able to retrieve the material to correctly decrypt them. This may be due to a previous update of the group keying material (rekeying) triggered by the KDC, that the Client was not able to receive or decrypt.
-
 
 <!-- Jim 13-07: Comment somewhere about getting strike zones setup correctly for a newly seen sender of messages. Ptr to OSCORE?
 
@@ -554,8 +559,11 @@ If this is about retrieving the public key of a newly joined sender, that's actu
 Is there any other convenient OSCORE thing which is reusable here and we are missing?
 -->
 
-
 Note that policies can be set up so that the Client sends a request to the KDC only after a given number of unsuccessfully decrypted incoming messages. It is application dependent and pertaining to the particular message exchange (e.g. {{I-D.ietf-core-oscore-groupcomm}}) to set up policies that instruct clients to retain unsuccessfully decrypted messages and for how long, so that they can be decrypted after getting updated keying material, rather than just considered non valid messages to discard right away.
+
+The same request could also be sent by the client without being triggered by a failed decryption of a message, if the client wants to confirm that it has the latest keying material. If that is the case, the client will receive from the KDC the same keying material it has in memory.
+
+Note that the difference between the keying material renewal request and the keying material updating request is that the first triggers the KDC to produce new keying material, while the second only triggers only distribution (the renewal might have happened independently, because of expiration).
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
 
@@ -571,7 +579,9 @@ Note that these methods of KDC-initiated key re-distribution have different secu
 
 ## Key Re-Distribution Request
 
-To request a re-distribution of keying material, the Client sends a shortened Key Distribution Request to the KDC ({{ssec-key-distribution-request}}), formatted as follows. The payload MUST contain only the following field:
+To request a re-distribution of keying material, the Client sends a shortened Key Distribution Request to the KDC ({{ssec-key-distribution-request}}), formatted as follows. The payload MUST contain the following fields:
+
+* 'type', encoded as a CBOR int, with value TBD3 if the request is intended to retrieve updated keying material and TBD4 if the request is intended to produce and retrieve new keying material.
 
 * 'scope', which contains only the identifier of the specific group or topic, encoded as in {{ssec-authorization-request}}. That is, the role field is not present.
 
@@ -614,6 +624,8 @@ Note that these messages can be combined with the Key Re-Distribution messages i
 ## Public Key Request
 
 To request public keys, the Client sends a shortened Key Distribution Request to the KDC ({{ssec-key-distribution-request}}), formatted as follows. The payload of this request MUST contain the following fields:
+
+* 'type', encoded as a CBOR int, with value TBD5.
 
 * 'get_pub_keys', which has as value a CBOR array including either:
   - no elements, i.e. an empty array, in order to request the public key of all current group members; or
@@ -686,11 +698,29 @@ This specification defines a number of fields used during the message exchange. 
 | mgt_key_     |   TBD    | byte string   |
 | material     |          |               |
 +--------------+----------+---------------+
-| leave        |   TBD    | array         |
+| type         |   TBD    | int           |
 +--------------+----------+---------------+
 ~~~~~~~~~~~
 
-<!-- TODO: leave will be removed soon-->
+# ACE Groupcomm Parameters {#type-param}
+
+This specification defines a number of types of requests. The table below summarizes them.
+
+~~~~~~~~~~~
++------------------+----------+
+|     Name         |  Value   |
++------------------+----------+
+| key distribution |   TBD1   |
++------------------+----------+
+| leave            |   TBD2   |
++------------------+----------+
+| update key       |   TBD3   |
++------------------+----------+
+| new              |   TBD4   |
++------------------+----------+
+| pub keys         |   TBD5   |
++------------------+----------+
+~~~~~~~~~~~
 
 # Security Considerations
 
@@ -746,6 +776,22 @@ The columns of this Registry are:
 * Reference: This contains a pointer to the public specification for the format of the item, if one exists.
 
 This Registry has been initially populated by the values in {{params}}. The specification column for all of these entries will be this document.
+
+## Ace Groupcomm Type Registry {#type}
+
+This specification establishes the "ACE Groupcomm Type" IANA Registry. The
+Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
+
+The columns of this Registry are:
+
+* Name: This is a descriptive name that enables easier reference to
+  the item. The name MUST be unique. It is not used in the encoding.
+
+* Value: This is the value used to identify the request. These values MUST be unique. The value must be a positive integer.
+
+* Reference: This contains a pointer to the public specification for the format of the item, if one exists.
+
+This Registry has been initially populated by the values in {{type-param}}. The specification column for all of these entries will be this document.
 
 ## ACE Groupcomm Key Registry {#iana-key}
 
