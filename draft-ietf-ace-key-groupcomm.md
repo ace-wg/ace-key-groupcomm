@@ -548,7 +548,7 @@ Note that, after having left the group, a node may wish to join it again. Then, 
 
 # Retrieval of New or Updated Keying Material {#sec-expiration}
 
-A node stops using the group keying material upon its expiration, according to the 'exp' parameter specified in the retained COSE Key. Then, if it wants to continue participating in the group communication, the node has to request new updated keying material to the KDC. In this case, and depending on what keying material is expired, the client may need to communicate to the KDC its need for new keying material: for example, if the key used to protect outgoing traffic has to be renewed, the node may request new input material to derive it, based on the existing group keying material.
+A node stops using the group keying material upon its expiration, according to the 'exp' parameter specified in the retained COSE Key. Then, if it wants to continue participating in the group communication, the node has to request new updated keying material to the KDC. In this case, and depending on what part of the keying material is expired, the client may need to communicate to the KDC its need for that part to be renewed: for example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
 
 <!-- FP: cannot talk about kid here, as we are not OSCORE -->
 
@@ -567,9 +567,9 @@ Is there any other convenient OSCORE thing which is reusable here and we are mis
 
 Note that policies can be set up so that the Client sends a request to the KDC only after a given number of unsuccessfully decrypted incoming messages. It is application dependent and pertaining to the particular message exchange (e.g. {{I-D.ietf-core-oscore-groupcomm}}) to set up policies that instruct clients to retain unsuccessfully decrypted messages and for how long, so that they can be decrypted after getting updated keying material, rather than just considered non valid messages to discard right away.
 
-The same request could also be sent by the client without being triggered by a failed decryption of a message, if the client wants to confirm that it has the latest keying material. If that is the case, the client will receive from the KDC the same keying material it has in memory.
+The same request could also be sent by the client without being triggered by a failed decryption of a message, if the client wants to confirm that it has the latest group keying material. If that is the case, the client will receive from the KDC the same group keying material it has in memory.
 
-Note that the difference between the keying material renewal request and the keying material update request is that the first triggers the KDC to produce new keying material for that node, while the second only triggers distribution (the renewal might have happened independently, because of expiration). Once a node receives new keying material, other group members may need to use the update keying material request to retrieve it.
+Note that the difference between the keying material renewal request and the keying material update request is that the first triggers the KDC to produce new keying material for that node, while the second only triggers distribution (the renewal might have happened independently, because of expiration). Once a node receives new individual keying material, other group members may need to use the update keying material request to retrieve it.
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
 
@@ -587,7 +587,7 @@ Note that these methods of KDC-initiated key re-distribution have different secu
 
 To request a re-distribution of keying material, the Client sends a shortened Key Distribution Request to the KDC ({{ssec-key-distribution-request}}), formatted as follows. The payload MUST contain the following fields:
 
-* 'type', encoded as a CBOR int, with value TBD3 if the request is intended to retrieve updated keying material and TBD4 if the request is intended to produce and retrieve new keying material.
+* 'type', encoded as a CBOR int, with value TBD3 if the request is intended to retrieve updated group keying material, and TBD4 if the request is intended for the KDC to produce and provide new individual keying material for the Client.
 
 * 'scope', which contains only the identifier of the specific group or topic, encoded as in {{ssec-authorization-request}}. That is, the role field is not present.
 
@@ -605,7 +605,7 @@ The KDC receiving a Key Re-Distribution Request MUST check that it is storing a 
 
 If that is not the case, i.e. it does not store the token or the token is not valid for that client for the scope requested, the KDC MUST respond with a 4.01 (Unauthorized) error message. Analogously to {{ssec-key-distribution-response}}, if the Key Re-Distribution Request is not formatted correctly (e.g. no 'scope' field present, or unknown fields present), the KDC MUST respond with a 4.00 (Bad Request) error message.
 
-Otherwise, the KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty',  'key' and 'exp' parameters specified in {{ssec-key-distribution-response}}. The Key Distribution Response MAY also include the 'profile', 'group_policies' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
+Otherwise, the KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty', 'key' and 'exp' parameters specified in {{ssec-key-distribution-response}}. The Key Distribution Response MAY also include the 'profile', 'group_policies' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
 
 Note that this response might simply re-provide the same keying material currently owned by the Client, if it has not been renewed.
 
