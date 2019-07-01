@@ -477,22 +477,28 @@ Optionally, the Key Distribution Response MAY contain the following parameters, 
 * 'group_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policy" Registry. This specification defines the two elements "Sequence Number Synchronization Method" and "Key Update Check Interval", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format of included map entries.
 
 ~~~~~~~~~~~
-/-----------------+-------+----------|------------------|------------\
-|      Name       | CBOR  |   CBOR   |   Description    | Reference  |
-|                 | label |   type   |                  |            |
-|-----------------+-------+----------|------------------|------------|
-| Sequence Number | TBD1  | tstr/int | Method for a re- | [[this     |
-| Synchronization |       |          | cipient node to  | document]] |
-| Method          |       |          | synchronize with |            |
-|                 |       |          | sequence numbers |            |
-|                 |       |          | of a sender node |            |
-|                 |       |          |                  |            |
-| Key Update      | TBD2  |   int    | Polling interval | [[this     |
-| Check Interval  |       |          | in seconds, to   | document]] |
-|                 |       |          | check for new    |            |
-|                 |       |          | keying material  |            |
-|                 |       |          | at the KDC       |            |
-\-----------------+-------+----------|------------------|------------/
++-----------------+-------+----------|--------------------|------------+
+|      Name       | CBOR  |   CBOR   |    Description     | Reference  |
+|                 | label |   type   |                    |            |
+|-----------------+-------+----------|--------------------|------------|
+| Sequence Number | TBD1  | tstr/int | Method for a re-   | [[this     |
+| Synchronization |       |          | cipient node to    | document]] |
+| Method          |       |          | synchronize with   |            |
+|                 |       |          | sequence numbers   |            |
+|                 |       |          | of a sender node.  |            |
+|                 |       |          | Its value is taken |            |
+|                 |       |          | from the 'Value'   |            |
+|                 |       |          | column of the      |            |
+|                 |       |          | Sequence Number    |            |
+|                 |       |          | Synchronization    |            |
+|                 |       |          | Method registry    |            |
+|                 |       |          |                    |            |
+| Key Update      | TBD2  |   int    | Polling interval   | [[this     |
+| Check Interval  |       |          | in seconds, to     | document]] |
+|                 |       |          | check for new      |            |
+|                 |       |          | keying material at |            |
+|                 |       |          | the KDC            |            |
++-----------------+-------+----------|--------------------|------------+
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Policies title="ACE Groupcomm Policies" artwork-align="center"}
 
@@ -759,6 +765,7 @@ The following registrations are required for the OSCORE Security Context Paramet
 *  Description: OSCORE Counter Signature Algorithm Value
 *  Reference: \[\[this specification\]\]
 -->
+
 ## ACE Groupcomm Parameters Registry {#iana-reg}
 
 This specification establishes the "ACE Groupcomm Parameters" IANA Registry. The
@@ -844,6 +851,20 @@ The columns of this Registry are:
 * Reference: This field contains a pointer to the public specification providing the format of the group communication policy, if one exists.
 
 This registry will be initially populated by the values in {{fig-ACE-Groupcomm-Policies}}.
+
+## Sequence Number Synchronization Method Registry
+
+This specification establishes the "Sequence Number Syncrhonization Method" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
+
+The columns of this Registry are:
+
+* Name: The name of the sequence number synchronization method.
+
+* Value: The value to be used to identify this sequence number synchronization method.
+
+* Description: This field contains a brief description for this sequence number synchronization method.
+
+* Reference: This field contains a pointer to the public specification describing the sequence number synchronization method.
 
 ## Expert Review Instructions {#review}
 
