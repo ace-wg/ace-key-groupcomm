@@ -943,11 +943,17 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 * Defined format for the message to request leaving the group (Section 5.2).
 
-* Mentioned methods for group rekeying initiated by the KDC (Section 6).
+* Renewal of individual keying material and methods for group rekeying initiated by the KDC (Section 6).
 
-* Added security consideration on replay protection (Section 8).
+* Added section on parameter identifiers and their CBOR keys (Section 8).
 
-* New IANA registries "ACE Groupcomm Key Registry" and "ACE Groupcomm Profile Registry" (Section 9).
+* Added request types for requests to a Join Response (Section 9).
+
+* Extended security considerations (Section 10).
+
+* New IANA registries "ACE Groupcomm Key Registry", "ACE Groupcomm Profile Registry", "ACE Groupcomm Policy Registry" and "Sequence Number Synchronization Method Registry" (Section 11).
+
+* Added appendix about requirements for application profiles of ACE on group communication (Appendix A).
 
 # Acknowledgments
 {: numbered="no"}
