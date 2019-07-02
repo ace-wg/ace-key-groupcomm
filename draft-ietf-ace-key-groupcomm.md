@@ -799,7 +799,7 @@ The columns of this Registry are:
 
 This Registry has been initially populated by the values in {{params}}. The specification column for all of these entries will be this document.
 
-## Ace Groupcomm Type Registry {#type}
+## Ace Groupcomm Request Type Registry {#type}
 
 This specification establishes the "ACE Groupcomm Request Type" IANA Registry. The
 Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
