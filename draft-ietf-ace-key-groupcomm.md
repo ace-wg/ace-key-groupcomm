@@ -520,7 +520,11 @@ If the application requires forward security, the KDC SHALL generate new group k
 
 ## Expired Authorization
 
-If the node is not authorized anymore, the AS can directly communicate that to the KDC. Alternatively, the access token might have expired. If Token introspection is provided by the AS, the KDC can use it as per Section 5.7 of {{I-D.ietf-ace-oauth-authz}}, in order to verify that the access token is still valid.
+If the AS provides Token introspection (see Section 5.7 of {{I-D.ietf-ace-oauth-authz}}), the KDC can optionally use and check whether:
+
+* the node is not authorized anymore;
+
+* the access token is still valid, upon its expiration.
 
 Either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
 
