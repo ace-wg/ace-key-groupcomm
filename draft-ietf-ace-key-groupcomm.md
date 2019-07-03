@@ -345,7 +345,7 @@ If the application requires backward security, the KDC SHALL generate new group 
 
 The Client sends a Key Distribution Request to the KDC. This corresponds to a CoAP POST request to the endpoint in the KDC associated to the group to join. The endpoint in the KDC is associated to the 'scope' value of the Authorization Request/Response. The payload of this request is a CBOR map which MUST contain the following fields:
 
-* 'type', encoded as a CBOR int, with value TBD1.
+* 'type', encoded as a CBOR int, with value 1 ("key distribution").
 
 Additionally, the CBOR map in the payload MAY contain the following fields, which, if included, MUST have the corresponding values:
 
@@ -530,7 +530,7 @@ A node can actively request to leave the group. In this case, the Client can sen
 
 To request to leave a group, the client MUST send a CoAP POST request to the endpoint in the KDC associated to the group to leave (same endpoint used in {{ssec-key-distribution-request}} for Key Distribution requests). The payload of this Leave Request is a CBOR map which MUST contain:
 
-* 'type', encoded as a CBOR ints, with value TBD2.
+* 'type', encoded as a CBOR ints, with value 2 ("leave").
 
 * 'scope', with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and wants to leave, encoded as in {{ssec-authorization-request}}. The 'role' field is omitted.
 
@@ -588,7 +588,7 @@ Note that these methods of KDC-initiated key re-distribution have different secu
 
 To request a re-distribution of keying material, the Client sends a shortened Key Distribution Request to the KDC ({{ssec-key-distribution-request}}), formatted as follows. The payload MUST contain the following fields:
 
-* 'type', encoded as a CBOR int, with value TBD3 if the request is intended to retrieve updated group keying material, and TBD4 if the request is intended for the KDC to produce and provide new individual keying material for the Client.
+* 'type', encoded as a CBOR int, with value 3 ("update key") if the request is intended to retrieve updated group keying material, and 4 ("new") if the request is intended for the KDC to produce and provide new individual keying material for the Client.
 
 * 'scope', which contains only the identifier of the specific group or topic, encoded as in {{ssec-authorization-request}}. That is, the role field is not present.
 
@@ -632,7 +632,7 @@ Note that these messages can be combined with the Key Re-Distribution messages i
 
 To request public keys, the Client sends a shortened Key Distribution Request to the KDC ({{ssec-key-distribution-request}}), formatted as follows. The payload of this request MUST contain the following fields:
 
-* 'type', encoded as a CBOR int, with value TBD5.
+* 'type', encoded as a CBOR int, with value 5 ("pub keys").
 
 * 'get_pub_keys', which has as value a CBOR array including either:
   - no elements, i.e. an empty array, in order to request the public key of all current group members; or
@@ -944,6 +944,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 * Defined format for the message to request leaving the group (Section 5.2).
 
 * Renewal of individual keying material and methods for group rekeying initiated by the KDC (Section 6).
+
+* CBOR type for node identifiers in 'get_pub_keys' (Section 7.1).
 
 * Added section on parameter identifiers and their CBOR keys (Section 8).
 
