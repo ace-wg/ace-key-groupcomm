@@ -636,7 +636,7 @@ To request public keys, the Client sends a shortened Key Distribution Request to
 
 * 'get_pub_keys', which has as value a CBOR array including either:
   - no elements, i.e. an empty array, in order to request the public key of all current group members; or
-  - N elements, each of which is the identifier of a group member, in order to request the public key of the specified nodes.
+  - N elements, each of which is the identifier of a group member encoded as a CBOR byte string, in order to request the public key of the specified nodes.
 
 * 'scope', which contains only the identifier of the specific group or topic, encoded as in {{ssec-authorization-request}}. That is, the role field is not present.
 
