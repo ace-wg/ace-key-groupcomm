@@ -1000,9 +1000,9 @@ This section lists the requirements on application profiles of this specificatio
 
 * Specify the security protocol the group members must use to protect their communication (e.g., group OSCORE). This must provide encryption, integrity and replay protection.
 
-* Specify the encoding and value of the identifier of group or gopic and role of 'scope' (see {{ssec-authorization-request}}).
+* Specify the encoding and value of the identifier of group or topic and role of 'scope' (see {{ssec-authorization-request}}).
 
-* Specify the negotiation of parameters for signature algorithm and signature keys (See TBD).
+* Specify the acceptable values for signature algorithm and signature keys parameters: 'sign_alg', 'sign_parameters', 'sign_key_parameters', 'pub_key_enc' (See {{token-post}}).
 
 * Specify and register the application profile identifier (see {{ssec-key-distribution-request}}).
 
