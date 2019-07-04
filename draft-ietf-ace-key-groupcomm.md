@@ -1008,15 +1008,15 @@ This section lists the requirements on application profiles of this specificatio
 
 * Specify the format and content of 'group\_policies' entries (see {{ssec-key-distribution-response}}).
 
-* Specify the format and content of 'mgt\_key\_material' (see {{ssec-key-distribution-response}}).
+* Optionally, specify the format and content of 'mgt\_key\_material' (see {{ssec-key-distribution-response}}).
 
 * Optionally, specify tranport profile of ACE {{I-D.ietf-ace-oauth-authz}} to use between Client and KDC.
 
-* Optionally, specify the encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used (See {{ssec-key-distribution-response}}).
+* Optionally, specify the encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used (see {{ssec-key-distribution-response}}).
 
-* Optionally, specify the acceptable values for signature algorithm and signature keys parameters: 'sign_alg', 'sign_parameters', 'sign_key_parameters', 'pub_key_enc' (See {{token-post}}).
+* Optionally, specify the acceptable values for parameters related to signature algorithm and signature keys: 'sign_alg', 'sign_parameters', 'sign_key_parameters', 'pub_key_enc' (see {{token-post}}).
 
-* Optionally, specify the negotiation of parameters for signature algorithm and signature keys, if 'sign_info' and 'pub_key_enc' are not used (See {{token-post}}).
+* Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' and 'pub_key_enc' are not used (see {{token-post}}).
 
 # Document Updates # {#sec-document-updates}
 
