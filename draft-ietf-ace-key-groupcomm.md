@@ -1002,8 +1002,6 @@ This section lists the requirements on application profiles of this specificatio
 
 * Specify the encoding and value of the identifier of group or topic and role of 'scope' (see {{ssec-authorization-request}}).
 
-* Specify the acceptable values for signature algorithm and signature keys parameters: 'sign_alg', 'sign_parameters', 'sign_key_parameters', 'pub_key_enc' (See {{token-post}}).
-
 * Specify and register the application profile identifier (see {{ssec-key-distribution-request}}).
 
 * Specify the acceptable values of 'kty' (see {{ssec-key-distribution-response}}).
@@ -1012,9 +1010,13 @@ This section lists the requirements on application profiles of this specificatio
 
 * Specify the format and content of 'mgt\_key\_material' (see {{ssec-key-distribution-response}}).
 
-* Optionally, tranport profile of ACE {{I-D.ietf-ace-oauth-authz}} to use between Client and KDC.
+* Optionally, specify tranport profile of ACE {{I-D.ietf-ace-oauth-authz}} to use between Client and KDC.
 
-* Optionally, encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used (See {{ssec-key-distribution-response}}).
+* Optionally, specify the encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used (See {{ssec-key-distribution-response}}).
+
+* Optionally, specify the acceptable values for signature algorithm and signature keys parameters: 'sign_alg', 'sign_parameters', 'sign_key_parameters', 'pub_key_enc' (See {{token-post}}).
+
+* Optionally, specify the negotiation of parameters for signature algorithm and signature keys, if 'sign_info' and 'pub_key_enc' are not used (See {{token-post}}).
 
 # Document Updates # {#sec-document-updates}
 
