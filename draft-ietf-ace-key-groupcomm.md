@@ -1022,6 +1022,38 @@ This section lists the requirements on application profiles of this specificatio
 
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
+## Version -01 to -02 ## {#sec-01-02}
+
+* Editorial fixes.
+
+* Distinction between transport profile and application profile (Section 1.1).
+
+* New parameters 'sign_info' and 'pub_key_enc' to negotiate parameter values for signature algorithm and signature keys (Section 3.3).
+
+* New parameter 'type' to distinguish different Key Distribution Request messages (Section 4.1).
+
+* New parameter 'client_cred_verify' in the Key Distribution Request to convey a Client signature (Section 4.1).
+
+* Encoding of 'pub_keys_repos' (Section 4.1).
+
+* Encoding of 'mgt_key_material' (Section 4.1).
+
+* Improved description on retrieval of new or updated keying material (Section 6).
+
+* Encoding of 'get_pub_keys' in Public Key Request (Section 7.1).
+
+* Extended security considerations (Sections 10.1 and 10.2).
+
+* New "ACE Public Key Encoding" IANA Registry (Section 11.2).
+
+* New "ACE Groupcomm Parameters" IANA Registry (Section 11.3), populated with the entries in Section 8.
+
+* New "Ace Groupcomm Request Type" IANA Registry (Section 11.4), populated with the values in Section 9.
+
+* New "ACE Groupcomm Policy" IANA Registry (Section 11.7) populated with two entries "Sequence Number Synchronization Method" and "Key Update Check Interval" (Section 4.2). 
+
+* Improved list of requirements for application profiles (Appendix A).
+
 ## Version -00 to -01 ## {#sec-00-01}
 
 * Changed name of 'req_aud' to 'audience' in the Authorization Request (Section 3.1).
