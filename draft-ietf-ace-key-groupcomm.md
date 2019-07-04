@@ -273,7 +273,7 @@ When receiving an Authorization Request from a Client that was previously author
 
 ## Token Post {#token-post}
 
-The Client sends a CoAP POST request including the access token to the KDC, as specified in section 5.8.1 of {{I-D.ietf-ace-oauth-authz}}. If the specific transport profile of ACE defines it, the Client MAY use a different endpoint than /authz-info at the KDC to post the access token to.
+The Client sends a CoAP POST request including the access token to the KDC, as specified in Section 5.8.1 of {{I-D.ietf-ace-oauth-authz}}. If the specific transport profile of ACE defines it, the Client MAY use a different endpoint than /authz-info at the KDC to post the access token to.
 
 Optionally, the Client might need to request necessary information concerning public keys for computing/verifying signatures in the group. In such a case, the joining node MAY ask for that information to the KDC in this same request. To this end, it sends the CoAP POST request to the /authz-info endpoint using the Content-Format "application/ace+cbor" defined in Section 8.14 of {{I-D.ietf-ace-oauth-authz}}, and includes also the following parameters:
 
@@ -587,7 +587,7 @@ A node can actively request to leave the group. In this case, the Client can sen
 
 To request to leave a group, the client MUST send a CoAP POST request to the endpoint in the KDC associated to the group to leave (same endpoint used in {{ssec-key-distribution-request}} for Key Distribution requests). The payload of this Leave Request is a CBOR map which MUST contain:
 
-* 'type', encoded as a CBOR ints, with value 2 ("leave").
+* 'type', encoded as a CBOR int, with value 2 ("leave").
 
 * 'scope', with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and wants to leave, encoded as in {{ssec-authorization-request}}. The 'role' field is omitted.
 
@@ -627,7 +627,7 @@ Note that policies can be set up so that the Client sends a request to the KDC o
 
 The same request could also be sent by the client without being triggered by a failed decryption of a message, if the client wants to confirm that it has the latest group keying material. If that is the case, the client will receive from the KDC the same group keying material it has in memory.
 
-Note that the difference between the keying material renewal request and the keying material update request is that the first triggers the KDC to produce new keying material for that node, while the second only triggers distribution (the renewal might have happened independently, because of expiration). Once a node receives new individual keying material, other group members may need to use the update keying material request to retrieve it.
+Note that the difference between the keying material renewal request and the keying material update request is that the first one triggers the KDC to produce new keying material for that node, while the second one only triggers distribution (the renewal might have happened independently, because of expiration). Once a node receives new individual keying material, other group members may need to use the update keying material request to retrieve it.
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
 
@@ -794,7 +794,7 @@ The KDC must renew the group keying material upon its expiration.
 
 The KDC should renew the keying material upon group membership change, and should provide it to the current group members through the rekeying scheme used in the group.
 
-The KDC may enforce a rekeying policy that takes into account the overall time required to rekey the group, taking into account the expected rate of changes in the group membership.
+The KDC may enforce a rekeying policy that takes into account the overall time required to rekey the group, as well as the expected rate of changes in the group membership.
 
 That is, the KDC may not rekey the group at every membership change, for instance if members' joining and leaving occur frequently and performing a group rekeying takes too long. Instead, the KDC may rekey the group after a minum number of group members have joined or left within a given time interval, or during predictable network inactivity periods.
 
@@ -958,7 +958,7 @@ This registry will be initially populated by the values in {{fig-ACE-Groupcomm-P
 
 ## Sequence Number Synchronization Method Registry
 
-This specification establishes the "Sequence Number Syncrhonization Method" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
+This specification establishes the "Sequence Number Synchronization Method" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
 
 The columns of this Registry are:
 
