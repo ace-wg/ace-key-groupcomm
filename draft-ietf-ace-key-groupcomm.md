@@ -1006,7 +1006,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * Specify the acceptable values of 'kty' (see {{ssec-key-distribution-response}}).
 
-* Specify the format and content of 'group\_policies' entries (see {{ssec-key-distribution-response}}).
+* Optionally, specify the format and content of 'group\_policies' entries (see {{ssec-key-distribution-response}}).
 
 * Optionally, specify the format and content of 'mgt\_key\_material' (see {{ssec-key-distribution-response}}).
 
@@ -1050,7 +1050,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 * New "Ace Groupcomm Request Type" IANA Registry (Section 11.4), populated with the values in Section 9.
 
-* New "ACE Groupcomm Policy" IANA Registry (Section 11.7) populated with two entries "Sequence Number Synchronization Method" and "Key Update Check Interval" (Section 4.2). 
+* New "ACE Groupcomm Policy" IANA Registry (Section 11.7) populated with two entries "Sequence Number Synchronization Method" and "Key Update Check Interval" (Section 4.2).
 
 * Improved list of requirements for application profiles (Appendix A).
 
