@@ -53,9 +53,9 @@ informative:
   RFC2627:
   RFC7959:
   RFC8259:
+  RFC8613:
   I-D.dijk-core-groupcomm-bis:
   I-D.ietf-core-coap-pubsub:
-  I-D.ietf-core-object-security:
   I-D.ietf-ace-oscore-profile:
   I-D.ietf-ace-dtls-authorize:
   I-D.ietf-ace-mqtt-tls-profile:
@@ -140,23 +140,23 @@ This document specifies the message flows and formats for:
 {{fig-flow}} provides a high level overview of the message flow for a node joining a group communication setting.
 
 ~~~~~~~~~~~
-C                              AS     KDC   Dispatcher          Group
-|                              |       |        |               Member
-|                              |       |        | \               |
-|     Authorization Request    |       |        | | Defined       |
-|----------------------------->|       |        | | in the ACE    |
-|                              |       |        | | framework     |
-|     Authorization Response   |       |        | |               |
-|<-----------------------------|       |        | |               |
-|                              |       |        | |               |
-|--------- Token Post ---------------->|        | /               |
-|                                      |        |                 |
-|---- Key Distribution Request ------->|        |                 |
-|                                      |        |                 |
-|<--- Key Distribution Response ------ | --- Group Rekeying ----->|
-|                                               |                 |
-|<================== Protected communication ===|================>|
-|                                               |                 |
+            C                             AS  KDC   Dispatcher   Group
+            |                             |    |        |        Member
+          / |                             |    |        |            |
+          | |    Authorization Request    |    |        |            |
+ Defined  | |---------------------------->|    |        |            |
+ in the   | |                             |    |        |            |
+   ACE    | |    Authorization Response   |    |        |            |
+framework | |<----------------------------|    |        |            |
+          | |                             |    |        |            |
+          \ |----------- Token Post ---------->|        |            |
+            |                                  |        |            |
+            |--- Key Distribution Request ---->|        |            |
+            |                                  |        |            |
+            |<-- Key Distribution Response ----|-- Group Rekeying -->|
+            |                                           |            |
+            |<======== Protected communication =========|===========>|
+            |                                           |            |
 ~~~~~~~~~~~
 {: #fig-flow title="Message Flow Upon New Node's Joining" artwork-align="center"}
 
@@ -195,11 +195,7 @@ Client                                            AS  KDC
 
 ## Authorization Request {#ssec-authorization-request}
 
-The Authorization Request sent from the Client to the AS is as defined in Section 5.6.1 of {{I-D.ietf-ace-oauth-authz}} and MUST contain the following parameters:
-
-* 'grant_type', with value "client_credentials".
-
-Additionally, the Authorization Request MAY contain the following parameters, which, if included, MUST have the corresponding values:
+The Authorization Request sent from the Client to the AS is as defined in Section 5.6.1 of {{I-D.ietf-ace-oauth-authz}} and MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
 * 'scope', containing the identifier of the specific group (or topic in the case of pub-sub) that the Client wishes to access, and optionally the role(s) that the Client wishes to take. This value is a CBOR array encoded as a byte string, which contains:
 
@@ -275,7 +271,7 @@ When receiving an Authorization Request from a Client that was previously author
 
 The Client sends a CoAP POST request including the access token to the KDC, as specified in Section 5.8.1 of {{I-D.ietf-ace-oauth-authz}}. If the specific transport profile of ACE defines it, the Client MAY use a different endpoint than /authz-info at the KDC to post the access token to.
 
-Optionally, the Client might need to request necessary information concerning the public keys in the group, as well as concerning the algorithm and related parameters for computing signatures in the group. In such a case, the joining node MAY ask for that information to the KDC in this same request. To this end, it sends the CoAP POST request to the /authz-info endpoint using the Content-Format "application/ace+cbor" defined in Section 8.14 of {{I-D.ietf-ace-oauth-authz}}, and includes also the following parameters:
+Optionally, the Client might need to request necessary information concerning the public keys in the group, as well as concerning the algorithm and related parameters for computing signatures in the group. In such a case, the joining node MAY ask for that information to the KDC in this same request. To this end, it sends the CoAP POST request to the /authz-info endpoint using the Content-Format "application/ace+cbor" defined in Section 8.14 of {{I-D.ietf-ace-oauth-authz}}, and includes also the following parameters which MUST be wrapped in a CBOR map, together with the access token:
 
 * 'sign_info' defined in {{sign-info}}, encoding the CBOR simple value Null, to require information and parameters on the signature algorithm and on the public keys used in the group.
 
@@ -293,7 +289,7 @@ Alternatively, the joining node may retrieve this information by other means.
 
 After successful verification, the Client is authorized to receive the group keying material from the KDC and join the group. In particular, the KDC replies to the Client with a 2.01 (Created) response, using Content-Format "application/ace+cbor" defined in Section 8.14 of {{I-D.ietf-ace-oauth-authz}}.
 
-The payload of the 2.01 response is a CBOR map, which MUST include a nonce N generated by the KDC. The Client may use this nonce for proving the possession of its own private key (see the 'client_cred_verify' parameter in {{key-distr}}).
+The payload of the 2.01 response is a CBOR map, which MUST include a dedicated nonce N generated by the KDC. The Client may use this nonce for proving the possession of its own private key (see the 'client_cred_verify' parameter in {{key-distr}}).
 
 Optionally, if they were included in the request, the AS MAY include the 'sign_info' parameter as well as the 'pub_key_enc' parameter defined in {{sign-info}} and {{pub-key-enc}} of this specification, respectively.
 
@@ -327,16 +323,21 @@ Note that this step could be merged with the following message from the Client t
 
 The 'sign_info' parameter is an OPTIONAL parameter of the AS Request Creation Hints message defined in Section 5.1.2. of {{I-D.ietf-ace-oauth-authz}}. This parameter contains information and parameters about the signature algorithm and the public keys to be used between the Client and the RS. Its exact content is application specific.
 
+In this specification and in application profiles building on it, this parameter is used as described in {{token-post}}, i.e. for asking to and retrieving from the KDC information about the signature algorithm and related parameters used in the group.
+
 ### 'pub_key_enc' Parameter {#pub-key-enc}
 
 The 'pub_key_enc' parameter is an OPTIONAL parameter of the AS Request Creation Hints message defined in Section 5.1.2. of {{I-D.ietf-ace-oauth-authz}}. This parameter contains information about the exact encoding of public keys to be used between the Client and the RS. Its exact content is application specific.
 
+In this specification and in application profiles building on it, this parameter is used as described in {{token-post}}, i.e. for asking to and retrieving from the KDC information about the encoding of public keys used in the group.
 
 # Key Distribution {#key-distr}
 
 This section defines how the keying material used for group communication is distributed from the KDC to the Client, when joining the group as a new member.
 
-If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel using ACE. The exchange of Key Distribution Request-Response MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications, that MUST be secured.
+If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel. This can be achieved, for instance, by using a transport profile of ACE, which can have been pre-configured on the Client through out-of-band means, or indicated to the Client in the Authorization Response from the AS (see {{ssec-authorization-response}}).
+
+The exchange of Key Distribution Request-Response MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications, that MUST be secured.
 
 During this exchange, the Client sends a request to the AS, specifying the group it wishes to join (see {{ssec-key-distribution-request}}). Then, the KDC verifies the access token and that the Client is authorized to join that group; if so, it provides the Client with the keying material to securely communicate with the member of the group (see {{ssec-key-distribution-response}}). The Content-Format used in the messages is set to application/cbor.
 
@@ -363,7 +364,7 @@ Marco: It was just briefly mentioned before and not really elaborated. Although 
 Marco: We could just go for "group", as a collection of devices sharing the same keyign material (i.e. a security group). Then a group can be mapped to a topic of common interest for its members, such as in a pub-sub environment.
 -->
 
-The same set of message can also be used for the following cases, when the Client is already a group member:
+The same set of messages can also be used for the following cases, when the Client is already a group member:
 
 * The Client wishes to (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed group rekeying. This is further discussed in {{sec-expiration}}.
 
@@ -390,7 +391,7 @@ Marco: In Section 4.2, we are indicating the key identifier in the optional 'kid
 Marco: Isn't it ok as we are doing with the COSE Key in Section 4.2? Then it works quite fine in ace-oscoap-joining when considering the particular joining of OSCORE groups.
 -->
 
-Note that proof-of-possession to bind the access token to the Client is performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC.
+The proof-of-possession to bind the access token to the Client must be performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC. To this end, the underlying secure communication protocol is required to enforce client authentication and to support the secure channel establishment by using the proof-of-possession key.
 
 If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, using the message format defined in this section. Application profiles may define alternative message formats.
 
@@ -453,7 +454,7 @@ If verification succeeds, the KDC sends a Key Distribution success Response to t
 
 * 'key', containing the keying material for the group communication, or information required to derive it.
 
-The exact format of the 'key' value MUST be defined in applications of this specification. Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry, including its name, type and application profile to be used with, as defined in the "ACE Groupcomm Key" registry, defined in {{iana-key}}.
+The exact format of the 'key' value MUST be defined in applications of this specification. Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry defined in {{iana-key}}, including its name, type and application profile to be used with.
 
 ~~~~~~~~~~~
 +----------+----------------+---------+-------------------------+
@@ -606,7 +607,7 @@ Note that, after having left the group, a node may wish to join it again. Then, 
 
 # Retrieval of New or Updated Keying Material {#sec-expiration}
 
-A node stops using the group keying material upon its expiration, according to the 'exp' parameter specified in the retained COSE Key. Then, if it wants to continue participating in the group communication, the node has to request new updated keying material to the KDC. In this case, and depending on what part of the keying material is expired, the client may need to communicate to the KDC its need for that part to be renewed: for example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
+A node stops using the group keying material upon its expiration, according to the 'exp' parameter specified in the retained COSE Key. Then, if it wants to continue participating in the group communication, the node has to request new updated keying material from the KDC. In this case, and depending on what part of the keying material is expired, the client may need to communicate to the KDC its need for that part to be renewed: for example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
 
 <!-- FP: cannot talk about kid here, as we are not OSCORE -->
 
@@ -788,7 +789,7 @@ This specification defines a number of types of requests. The table below summar
 
 # Security Considerations
 
-When a Client receives a message from a sender for the first time, it needs to have a mechanism in place to avoid replay, e.g. Appendix B.2 of {{I-D.ietf-core-object-security}}.
+When a Client receives a message from a sender for the first time, it needs to have a mechanism in place to avoid replay, e.g. Appendix B.2 of {{RFC8613}}.
 
 The KDC must renew the group keying material upon its expiration.
 
