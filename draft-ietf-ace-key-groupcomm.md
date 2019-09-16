@@ -1023,6 +1023,10 @@ This section lists the requirements on application profiles of this specificatio
 
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
+## Version -02 to -03 ## {#sec-02-03}
+
+TBD
+
 ## Version -01 to -02 ## {#sec-01-02}
 
 * Editorial fixes.
