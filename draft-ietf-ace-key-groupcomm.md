@@ -301,7 +301,7 @@ The 'sign_info' parameter MUST be present if the POST request included the 'sign
 
 * The third element 'sign_key_parameters' indicates the parameters of the key used with the signature algorithm. Its structure depends on the value of 'sign_alg'. It is required of the application profiles to define specific values for this parameter. If no parameters of the key used with the signature algorithm are specified, 'sign_key_parameters' MUST be encoding the CBOR simple value Null.
 
-The 'pub_key_enc' parameter MUST be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, the 'pub_key_enc' parameter of the 2.01 (Created) response is a CBOR integer, indicating the encoding of public keys used in the group. The values of this field are registered in the "ACE Public Key Encoding" Registry, defined in {{ssec-iana-pub-key-enc}}. It is required of the application profiles to define specific values to use for this parameter.
+The 'pub_key_enc' parameter MUST be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, the 'pub_key_enc' parameter of the 2.01 (Created) response is a CBOR integer, indicating the encoding of public keys used in the group. It is required of the application profiles to define specific values to use for this parameter.
 
 The CDDL notation of the 'sign_info' and 'pub_key_enc' parameters formatted as in the response is given below.
 
@@ -852,24 +852,6 @@ IANA is asked to register the following entries in the "ACE Authorization Server
 * CBOR Key: TBD (range -256 to 255)
 * Value Type: integer
 * Reference: \[\[This specification\]\]
-
-## ACE Public Key Encoding Registry {#ssec-iana-pub-key-enc}
-
-This specification establishes the "ACE Public Key Encoding" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
-
-The columns of this Registry are:
-
-* Name: This is a descriptive name that enables easier reference to
-  the item. The name MUST be unique. It is not used in the encoding.
-
-* Value: The value to be used to identify this public key encoding. This value MUST be unique. The value can be a positive or a negative integer.  Integer values between 0 and 255 are designated as Standards Track Document required. Integer values from 256 to 65535 are designated as Specification Required.  Integer values of greater than 65535 are designated as expert review.  Integer values less than -65536 are marked as private use.
-
-* Description: This field contains a brief description for this public key encoding.
-
-* Reference: This field contains a pointer to the public specification providing the public key encoding, if one exists.
-
-The value 0 is to be marked as "Reserved".
-
 
 ## ACE Groupcomm Parameters Registry {#iana-reg}
 
