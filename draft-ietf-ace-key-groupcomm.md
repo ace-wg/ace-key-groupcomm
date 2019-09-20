@@ -339,7 +339,7 @@ This section defines how the keying material used for group communication is dis
 
 If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel using ACE. The exchange of Key Distribution Request-Response MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications, that needs to be secured.
 
-During the first exchange ("joining"), the Client sends a request to the AS, specifying the group it wishes to join (see {{ssec-key-distribution-request}}). Then, the KDC verifies the access token and that the Client is authorized to join that group; if so, it provides the Client with the keying material to securely communicate with the member of the group (see {{ssec-key-distribution-response}}). The Content-Format used in the messages is set to application/cbor.
+During the first exchange ("joining"), the Client sends a request to the AS, specifying the group it wishes to join (see {{ssec-key-distribution-request}}). Then, the KDC verifies the access token and that the Client is authorized to join that group; if so, it provides the Client with the keying material to securely communicate with the member of the group (see {{ssec-key-distribution-response}}). Whenever used, the Content-Format in messages containing a payload is set to application/cbor.
 
 <!-- Jim 13-07: Should one talk about the ability to use OBSERVE as part of
 key distribution?
@@ -680,7 +680,7 @@ Note that these methods of KDC-initiated key re-distribution have different secu
 
 ### Key Re-Distribution Request
 
-To request a re-distribution of keying material, the Client sends a CoAP GET request to the /ace-group/gid endpoint at the KDC. The payload MUST contain the following fields:
+To request a re-distribution of keying material, the Client sends a CoAP GET request to the /ace-group/gid endpoint at the KDC.
 
 <!-- In some cases, it is not necessary to include the scope parameter, for instance if the KDC maintains a list of active group members for each managed group, and the Client is member of only one group. The Client MUST include the scope parameter if it is a member of multiple groups under the same KDC.
 
@@ -746,6 +746,57 @@ The KDC may enforce one of the following policies, in order to handle possible i
 * The KDC retains public keys of group members for a given amount of time after their leaving, before discarding them. As long as such public keys are retained, the KDC provides them to a requesting Client.
 
 Either case, a node that has left the group should not expect any of its outgoing messages to be successfully processed, if received after its leaving, due to a possible group rekeying occurred before the message reception.
+
+## Retrieval of Group Policies {#policies}
+
+A node in the group can contact the KDC to request the group policies, using the messages defined below. The POST handler to the same endpoint used in the exchange is used by the administrator to set up the policies on the KDC, but that is out of scope of this specification.
+
+{{fig-policies}} gives an overview of the exchange described above.
+
+~~~~~~~~~~~
+TODO: Update this
+Client                                         KDC
+   |                                            |
+   |---- Public Key Request: POST /group-id --->|
+   |                                            |
+   |<--- Public Key Response: 2.01 (Created) ---|
+   |                                            |
+~~~~~~~~~~~
+{: #fig-policies title="Message Flow of Public Key Request-Response" artwork-align="center"}
+
+### Policies Request
+
+To request the group policies, the Client sends a CoAP GET request to the /ace-group/gid/policies endpoint at the KDC, where gid is the group identifier.
+
+### Policies Response
+
+The KDC replies to the Client with a CBOR Map containing the policies of the group. The specific format and meaning of policies is specified by the application profile.
+
+## Retrieval of Keying Material Version {#key-version}
+
+A node in the group can contact the KDC to request information about the version number of the symmetric group keying material. In particular, the version is incremented by the KDC every time the group keying material is renewed.
+The initial version MUST be set to 0 at the KDC.
+
+{{fig-version}} gives an overview of the exchange described above.
+
+~~~~~~~~~~~
+TODO: Update this
+Client                                         KDC
+   |                                            |
+   |---- Public Key Request: POST /group-id --->|
+   |                                            |
+   |<--- Public Key Response: 2.01 (Created) ---|
+   |                                            |
+~~~~~~~~~~~
+{: #fig-version title="Message Flow of Public Key Request-Response" artwork-align="center"}
+
+### Version Request
+
+To request the keying material version number, the Client sends a CoAP GET request to the /ace-group/gid/ctx-num endpoint at the KDC, where gid is the group identifier.
+
+### Version Response
+
+The KDC replies to the Client with a response payload containing an integer indicating the group keying material version number. The Content-Format is set to text/plain.
 
 # Removal of a Node from the Group {#sec-node-removal}
 
