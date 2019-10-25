@@ -337,6 +337,10 @@ The 'rsnonce' parameter is an OPTIONAL parameter of the AS Request Creation Hint
 
 In this specification and in application profiles building on it, this parameter is used as described in {{token-post}}, i.e. for providing a nonce that the Client may use to prove possession of its own private key in the Key Distribution Request (see {{ssec-key-distribution-request}}).
 
+If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel. This can be achieved, for instance, by using a transport profile of ACE, which can have been pre-configured on the Client through out-of-band means, or indicated to the Client in the Authorization Response from the AS (see {{ssec-authorization-response}}).
+
+The exchange of Key Distribution Request-Response MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications, that MUST be secured.
+
 # Key Provisioning {#key-distr}
 
 TODO - check title
