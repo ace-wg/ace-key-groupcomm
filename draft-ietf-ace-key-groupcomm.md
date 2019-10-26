@@ -347,6 +347,8 @@ If not previously established, the Client and the KDC MUST first establish a pai
 
 The exchange of Key Distribution Request-Response MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications, that MUST be secured.
 
+The proof-of-possession to bind the access token to the Client must be performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC. To this end, the underlying secure communication protocol is required to enforce client authentication and to support the secure channel establishment by using the proof-of-possession key.
+
 During the first exchange ("joining"), the Client sends a request to the AS, specifying the group it wishes to join (see {{ssec-key-distribution-request}}). Then, the KDC verifies the access token and that the Client is authorized to join that group; if so, it provides the Client with the keying material to securely communicate with the member of the group (see {{ssec-key-distribution-response}}). Whenever used, the Content-Format in messages containing a payload is set to application/cbor.
 
 <!-- Jim 13-07: Should one talk about the ability to use OBSERVE as part of
@@ -362,11 +364,17 @@ Marco: We could just go for "group", as a collection of devices sharing the same
 
 When the Client is already a group member, the Client can use the interface at the KDC to perform the following actions:
 
-* The Client wishes to (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed group rekeying. This is further discussed in {{sec-expiration}}.
+* The Client can (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed group rekeying. This is further discussed in {{sec-expiration}}.
 
-* The Client wishes to (re-)get the public keys of other group members, e.g. if it is aware of new nodes joining the group after itself. This is further discussed in {{sec-key-retrieval}}.
+* The Client can (re-)get the public keys of other group members, e.g. if it is aware of new nodes joining the group after itself. This is further discussed in {{sec-key-retrieval}}.
 
-Additionally, the format of the payload of the Key Distribution Response ({{ssec-key-distribution-response}}) can be reused for messages sent by the KDC to distribute updated group keying material, in case of a new node joining the group or of a current member leaving the group. The key management scheme used to send such messages could rely on, e.g., multicast in case of a new node joining or unicast in case of a node leaving the group.
+* The Client can (re-)get the policies currently enforced in the group.
+
+* The Client can (re-)get the version number of the keying material currently used in the group.
+
+* The Client can request to leave the group. This is further discussed in {{ssec-req-leave}}.
+
+Additionally, the format of the payload of the Key Distribution Response ({{ssec-key-distribution-response}}) can be reused for messages sent by the KDC to distribute updated keying material to the group, in case of a new node joining the group or of a current member leaving the group. The key management scheme used to send such messages could rely on, e.g., multicast in case of a new node joining or unicast in case of a node leaving the group.
 
 <!--
   Jim 14-06: Discuss that a Key Distribution Request/Response can be performed exactly in the same way also by an already member of the group. Mention the cases when this happens, e.g. believed lost of synchronization with the current group security context, crash and reboot and so on, so forced re-synchronization with the correct current security context.
@@ -387,9 +395,7 @@ Marco: In Section 4.2, we are indicating the key identifier in the optional 'kid
 Marco: Isn't it ok as we are doing with the COSE Key in Section 4.2? Then it works quite fine in ace-oscoap-joining when considering the particular joining of OSCORE groups.
 -->
 
-The proof-of-possession to bind the access token to the Client must be performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC. To this end, the underlying secure communication protocol is required to enforce client authentication and to support the secure channel establishment by using the proof-of-possession key.
-
-If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, using the message format defined in this section. Application profiles may define alternative message formats.
+If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the Key Distribution Response (see {{ssec-key-distribution-response}}). Application profiles may define alternative message formats.
 
 TODO: verify that this section is ok.
 
@@ -399,7 +405,7 @@ The KDC is configured with the following resources:
 
 * /ace-group : this resource is fixed and indicates that this specification is used. Other applications that run on a KDC implementing this specification MUST NOT use this same resource.
 
-* /ace-group/gid : one sub-resource to /ace-group is implemented for each group the KDC manages. These resources are the group identifiers of the groups the KDC manages (in this example, the group identifier is given value "gid"). These resources support GET and POST method.
+* /ace-group/gid : one sub-resource to /ace-group is implemented for each group the KDC manages. These resources are identified by the group identifiers of the groups the KDC manages (in this example, the group identifier has value "gid"). These resources support GET and POST method.
 
 * /ace-group/gid/pub-key : this sub-resource is fixed and supports GET and POST methods.
 
@@ -413,7 +419,7 @@ The details for the handlers of each resource are given in the following section
 
 ### ace-group
 
-No handlers is implemented for this resource.
+No handlers are implemented for this resource.
 
 ### ace-group/gid
 
@@ -635,7 +641,7 @@ Marco: We already use them in the joining draft. Aren't they anyway relevant in 
 
 Specific application profiles that build on this document need to specify how exactly the keying material is used to protect the group communication.
 
-## Request to Leave the Group
+## Request to Leave the Group  ## {#ssec-req-leave}
 
 A node can actively request to leave the group. In this case, the Client MUST send a CoAP POST request to the /ace-group/gid/node at the KDC (where gid is the group identifier) using the protected channel established with ACE, mentioned in {{key-distr}}.
 The payload of this Leave Request is empty.
