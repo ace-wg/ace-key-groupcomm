@@ -437,7 +437,7 @@ This resource implements GET and POST handlers.
 
 * GET: the GET handler returns the list of public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
-* POST: the POST handler expects a request with payload formatted as a CBOR Array. Each element of the array is a CBOR byte string encoding the identifier of a group member. With reference to the group identified by "gid", the handler identifies the public keys of the current group members for which the identifier matches with one of those indicated in the request. Then, the handler returns a response with payload formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
+* POST: the POST handler expects a request with payload formatted as a CBOR Array. Each element of the array is the identifier of a group member. With reference to the group identified by "gid", the handler identifies the public keys of the current group members for which the identifier matches with one of those indicated in the request. Then, the handler returns a response with payload formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
 The specific format of the symmetric group keying material MUST be specified in the application profile (REQ1).
 
@@ -777,7 +777,7 @@ To request the public keys of all the current group members, the Client sends a 
 
 To request only the public keys associated to some specific group members, the Client sends a CoAP POST request to the /ace-group/gid/pub-key endpoint at the KDC. The payload of this request is a CBOR Map that MUST contain the following fields:
 
-* 'get_pub_keys', which has as value a CBOR array. Each element of the array is the identifier of a group member encoded as a CBOR byte string, so requesting the public key of that group member. The specific format of public keys as well as identifiers of group members is specified by the application profile.
+* 'get_pub_keys', which has as value a CBOR array. Each element of the array is the identifier of a group member, so requesting the public key of that group member. The specific format of public keys as well as identifiers of group members is specified by the application profile.
 
 <!-- In some cases, it is not necessary to include the scope parameter, for instance if the KDC maintains a list of active group members for each managed group, and the Client is member of only one group. The Client MUST include the scope parameter if it is a member of multiple groups under the same KDC.
 
