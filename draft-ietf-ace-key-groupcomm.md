@@ -133,7 +133,7 @@ This document specifies an interface at the KDC, message flows and formats for:
 
 * Removing of a current member from the group ({{sec-node-removal}}).
 
-* Retrieving keying material as a current group member ({{sec-expiration}} and {{sec-key-retrieval}}).
+* Retrieving keying material as a current group member ({{sec-new-update-keys}} and {{sec-key-retrieval}}).
 
 * Renewing and re-distributing the group keying material (rekeying) upon a membership change in the group ({{ssec-key-distribution-response}} and {{sec-node-removal}}).
 
@@ -358,9 +358,9 @@ Marco: We could just go for "group", as a collection of devices sharing the same
 
 When the Client is already a group member, the Client can use the interface at the KDC to perform the following actions:
 
-* The Client can (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed group rekeying. This is further discussed in {{sec-expiration}}.
+* The Client can (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed group rekeying. This is further discussed in {{sec-new-update-keys}}.
 
-* The Client can get a new individual key, or new input material to derive it. This is further discussed in {{sec-expiration}}.
+* The Client can get a new individual key, or new input material to derive it. This is further discussed in {{sec-new-update-keys}}.
 
 * The Client can (re-)get the public keys of other group members, e.g. if it is aware of new nodes joining the group after itself. This is further discussed in {{sec-key-retrieval}}.
 
@@ -668,7 +668,7 @@ Marco: We already use them in the joining draft. Aren't they anyway relevant in 
 
 Specific application profiles that build on this document need to specify how exactly the keying material is used to protect the group communication.
 
-## Retrieval of New or Updated Keying Material {#sec-expiration}
+## Retrieval of New or Updated Keying Material {#sec-new-update-keys}
 
 A node stops using the group keying material upon its expiration, according to what indicated by the KDC with the 'exp' parameter of a Key (Re-)Distribution Response, or to a pre-configured value. Then, if it wants to continue participating in the group communication, the node has to request new updated keying material from the KDC.
 
@@ -1122,6 +1122,8 @@ This section lists the requirements on application profiles of this specificatio
 
 * Specify the acceptable values of 'kty' (see {{ssec-key-distribution-response}}).
 
+* Specify the format of the identifiers of group members (see {{ssec-key-distribution-response}}).
+
 * Optionally, specify the format and content of 'group\_policies' entries (see {{ssec-key-distribution-response}}).
 
 * Optionally, specify the format and content of 'mgt\_key\_material' (see {{ssec-key-distribution-response}}).
@@ -1133,6 +1135,10 @@ This section lists the requirements on application profiles of this specificatio
 * Optionally, specify the acceptable values for parameters related to signature algorithm and signature keys: 'sign_alg', 'sign_parameters', 'sign_key_parameters', 'pub_key_enc' (see {{token-post}}).
 
 * Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' and 'pub_key_enc' are not used (see {{token-post}}).
+
+* Optionally, specify the format of newly-generated individual keying material for group members, or of the information to derive it (see {{sec-new-update-keys}}).
+
+* Optionally, specificy the format and content of the payload of the Group Leaving request (see {{ssec-group-leaving}}).
 
 # Document Updates # {#sec-document-updates}
 
