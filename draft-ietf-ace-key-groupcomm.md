@@ -485,15 +485,17 @@ The proof-of-possession to bind the access token to the Client must be performed
 
 If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the Key Distribution Response (see {{ssec-key-distribution-response}}). Application profiles may define alternative message formats.
 
-### Joining Request {#ssec-key-distribution-request}
+### Join Request {#ssec-key-distribution-request}
 
-The Client sends a Key Distribution Request to the KDC. This corresponds to a CoAP POST request to the /ace-group/gid endpoint in the KDC, where gid is the group identifier of the group to join. This endpoint is the same as the 'scope' value of the Authorization Request/Response. The payload of this request is a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
+The Client sends a Key Distribution Request to the KDC. This corresponds to a CoAP POST request to the /ace-group/gid endpoint at the KDC, where gid is the group identifier of the group to join. This endpoint is the same as the 'scope' value of the Authorization Request/Response. The payload of this request is a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
 <!--
   Jim 14-06: We need an API for distributing all public keys or a specific public key to an endpoint already member of the group. In the first case, the query information can be the identifier of the group/topic. In the second case, the query information can be the endpoint ID associated to the key to be retrieved, as considered as key identifier. This particular details such as "Group ID" and "Sender ID" are specified in the main group OSCORE document as a particular instance of this generic model.
 
   TODO: define format get_pub_keys: []
 -->
+
+* 'scope', with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and role(s), encoded as in {{ssec-authorization-request}}.
 
 * 'get_pub_keys', if the Client wishes to receive the public keys of the other nodes in the group from the KDC. The value is an empty CBOR array. This parameter may be present if the KDC stores the public keys of the nodes in the group and distributes them to the Client; it is useless to have here if the set of public keys of the members of the group is known in another way, e.g. it was provided by the AS.
 
