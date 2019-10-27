@@ -360,7 +360,7 @@ When the Client is already a group member, the Client can use the interface at t
 
 * The Client can (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed group rekeying. This is further discussed in {{sec-expiration}}.
 
-* The client can get a new individual key, or new input material to derive it. This is further discussed in {{sec-expiration}}.
+* The Client can get a new individual key, or new input material to derive it. This is further discussed in {{sec-expiration}}.
 
 * The Client can (re-)get the public keys of other group members, e.g. if it is aware of new nodes joining the group after itself. This is further discussed in {{sec-key-retrieval}}.
 
@@ -658,9 +658,9 @@ Specific application profiles that build on this document need to specify how ex
 
 ## Retrieval of New or Updated Keying Material {#sec-expiration}
 
-A node stops using the group keying material upon its expiration, according to the 'exp' parameter specified in the retained COSE Key. Then, if it wants to continue participating in the group communication, the node has to request new updated keying material from the KDC. In this case, and depending on what part of the keying material is expired, the client may need to communicate to the KDC its need for that part to be renewed: for example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
+A node stops using the group keying material upon its expiration, according to what indicated by the KDC with the 'exp' parameter of a Key (Re-)Distribution Response, or to a pre-configured value. Then, if it wants to continue participating in the group communication, the node has to request new updated keying material from the KDC.
 
-The Client may need to request the group keying material also upon receiving messages from other group members without being able to retrieve the material to correctly decrypt them. This may be due to a previous update of the group keying material (rekeying) triggered by the KDC, that the Client was not able to receive or decrypt.
+The Client may need to request the latest group keying material also upon receiving messages from other group members without being able to retrieve the material to correctly decrypt them. This may be due to a previous update of the group keying material (rekeying) triggered by the KDC, that the Client was not able to receive or decrypt. To this end, the client performs a Key Re-Distribution Request/Response exchange with the KDC, as defined in {{ssec-key-redistribution-request}} and {{ssec-key-redistribution-response}}.
 
 <!-- Jim 13-07: Comment somewhere about getting strike zones setup correctly for a newly seen sender of messages. Ptr to OSCORE?
 
@@ -673,11 +673,37 @@ If this is about retrieving the public key of a newly joined sender, that's actu
 Is there any other convenient OSCORE thing which is reusable here and we are missing?
 -->
 
-Note that policies can be set up so that the Client sends a request to the KDC only after a given number of unsuccessfully decrypted incoming messages. It is application dependent and pertaining to the particular message exchange (e.g. {{I-D.ietf-core-oscore-groupcomm}}) to set up policies that instruct clients to retain unsuccessfully decrypted messages and for how long, so that they can be decrypted after getting updated keying material, rather than just considered non valid messages to discard right away.
+Note that policies can be set up so that the Client sends a Key Re-Distribution Request to the KDC only after a given number of unsuccessfully decrypted incoming messages. It is application dependent and pertaining to the particular message exchange (e.g. {{I-D.ietf-core-oscore-groupcomm}}) to set up policies that instruct clients to retain unsuccessfully decrypted messages and for how long, so that they can be decrypted after getting updated keying material, rather than just considered non valid messages to discard right away.
 
-The same request could also be sent by the client without being triggered by a failed decryption of a message, if the client wants to confirm that it has the latest group keying material. If that is the case, the client will receive from the KDC the same group keying material it has in memory.
+The same Key Re-Distribution Request could also be sent by the Client without being triggered by a failed decryption of a message, if the Client wants to be sure that it has the latest group keying material. If that is the case, the Client will receive from the KDC the same group keying material it already has in memory.
 
-Note that the difference between the keying material renewal request and the keying material update request is that the first one triggers the KDC to produce new keying material for that node, while the second one only triggers distribution (the renewal might have happened independently, because of expiration). Once a node receives new individual keying material, other group members may need to use the update keying material request to retrieve it.
+{{fig-key-redistr-req-resp}} gives an overview of the exchange described above.
+
+~~~~~~~~~~~
+Client                                                     KDC
+   |                                                        |
+   |--- Key Re-Distribution Request: POST ace-group/gid --->|
+   |                                                        |
+   |<---- Key Re-Distribution Response: 2.01 (Created) -----|
+   |                                                        |
+~~~~~~~~~~~
+{: #fig-key-redistr-req-resp title="Message Flow of Key Re-Distribution Request-Response" artwork-align="center"}
+
+Beside possible expiration and depending on what part of the keying material is no longer eligible to be used, the client may need to communicate to the KDC its need for that part to be renewed. For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material. To this end, the client performs a Key Renewal Request/Response exchange with the KDC, as defined in {{ssec-key-renewal-request}} and {{ssec-key-renewal-response}}.
+
+{{fig-renewal-req-resp}} gives an overview of the exchange described above.
+
+~~~~~~~~~~~
+Client                                                  KDC
+   |                                                     |
+   |--- Key Renewal Request: POST ace-group/gid/node --->|
+   |                                                     |
+   |<----- Key Renewal Response: 2.01 (Created) ---------|
+   |                                                     |
+~~~~~~~~~~~
+{: #fig-renewal-req-resp title="Message Flow of Key Renewal Request-Response" artwork-align="center"}
+
+Note that the difference between the Key Re-Distribution Request and the Key Renewal Request is that the first one only triggers distribution (the renewal might have happened independently, because of expiration), while the second one triggers the KDC to produce new keying material for the requesting node. Once a node receives new individual keying material, other group members may need to use the Keying Material Update Request to retrieve it.
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
 
@@ -685,13 +711,13 @@ Alternatively, the re-distribution of keying material can be initiated by the KD
 
 * Can send the payload of the Key Re-Distribution Response as one or multiple multicast requests to the members of the group, using secure rekeying schemes such as {{RFC2093}}{{RFC2094}}{{RFC2627}}.
 
-* Can send unicast requests to each Client over a secure channel, with the Key Re-Distribution Response as payload.
+* Can send unicast requests to each Client over a secure channel, with the same payload as the Key Re-Distribution Response.
 
 * Can act as a publisher in a pub-sub scenario, and update the keying material by publishing on a specific topic on a broker, which all the members of the group are subscribed to.
 
 Note that these methods of KDC-initiated key re-distribution have different security properties and require different security associations.
 
-### Key Re-Distribution Request
+### Key Re-Distribution Request ### {#ssec-key-redistribution-request}
 
 To request a re-distribution of keying material, the Client sends a CoAP GET request to the /ace-group/gid endpoint at the KDC.
 
@@ -707,11 +733,25 @@ Marco: It makes sense, should we then just make 'scope' mandatory?
 
 The KDC receiving a Key Re-Distribution Request MUST check that it is storing a valid access token from that client for that group identifier (identified by the endpoint).
 
-If that is not the case, i.e. it does not store the token or the token is not valid for that client for the group identifier requested, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+If that is not the case, i.e. it does not store a valid access token or this is not valid for that client for the requested group identifier, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
 Otherwise, the KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty', 'key' and 'exp' parameters specified in {{ssec-key-distribution-response}} in a CBOR Map in the payload. The Key Distribution Response MAY also include the 'profile', 'group_policies' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
 
 Note that this response might simply re-provide the same keying material currently owned by the Client, if it has not been renewed.
+
+### Key Renewal Request ### {#ssec-key-renewal-request}
+
+To request the renewal of individual keying material used in the group, the Client sends a CoAP GET request to the /ace-group/gid/node endpoint at the KDC.
+
+### Key Renewal Response ### {#ssec-key-renewal-response}
+
+The KDC receiving a Key Renewal Request MUST check that it is storing a valid access token from that client for that group identifier (identified by the endpoint).
+
+If that is not the case, i.e. it does not store a valid access token or this is not valid for that client for the requested group identifier, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+
+Otherwise, the KDC replies to the Client with a Key Renewal Response, whose payload is a CBOR byte string encoding newly generated keying material for the Client, or information enabling the Client to derive it.
+
+The specific format of the information and keying material provided in the Key Renewal Response MUST be specified in the application profile (REQ5).
 
 ## Retrieval of Public Keys for Group Members {#sec-key-retrieval}
 
