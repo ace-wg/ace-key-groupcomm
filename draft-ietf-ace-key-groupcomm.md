@@ -743,7 +743,7 @@ Marco: It makes sense, should we then just make 'scope' mandatory?
 
 ### Key Re-Distribution Response {#ssec-key-redistribution-response}
 
-he KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty' and 'key' specified in {{ssec-key-distribution-response}} in a CBOR Map in the payload. The Key Distribution Response MAY also include the parameters 'profile', 'exp' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
+The KDC replies to the Client with a Key Re-Distribution Response, whose payload is a CBOR map which MUST include the parameters 'kty' and 'key' specified in {{ssec-key-distribution-response}}. The payload of the Key Re-Distribution Response MAY also include the parameters 'profile', 'exp' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
 
 Note that this response might simply re-provide the same keying material currently owned by the Client, if it has not been renewed.
 
