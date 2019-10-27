@@ -513,7 +513,7 @@ Marco: As a parameter, it must have a type anyway and we said it should be a CBO
 * 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value a list of public key repositories storing the certificate of the Client. This parameter is encoded as a CBOR array of CBOR text strings, each of which specifies the URI of a key repository.
 
 
-### Joining Response {#ssec-key-distribution-response}
+### Join Response {#ssec-key-distribution-response}
 
 <!-- Jim 13-07: Section X.X - Define a new cnf method to hold the OSCORE context parameters - should it be a normal COSE_Key or something new just to makes sure that it is different.
 
