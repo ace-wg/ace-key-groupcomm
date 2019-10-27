@@ -360,11 +360,13 @@ When the Client is already a group member, the Client can use the interface at t
 
 * The Client can (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed group rekeying. This is further discussed in {{sec-expiration}}.
 
+* The client can get a new individual key, or new input material to derive it. This is further discussed in {{sec-expiration}}.
+
 * The Client can (re-)get the public keys of other group members, e.g. if it is aware of new nodes joining the group after itself. This is further discussed in {{sec-key-retrieval}}.
 
-* The Client can (re-)get the policies currently enforced in the group.
+* The Client can (re-)get the policies currently enforced in the group. This is further discussed in {{policies}}.
 
-* The Client can (re-)get the version number of the keying material currently used in the group.
+* The Client can (re-)get the version number of the keying material currently used in the group. This is further discussed in {{key-version}}.
 
 * The Client can request to leave the group. This is further discussed in {{ssec-req-leave}}.
 
@@ -654,24 +656,6 @@ Marco: We already use them in the joining draft. Aren't they anyway relevant in 
 
 Specific application profiles that build on this document need to specify how exactly the keying material is used to protect the group communication.
 
-## Request to Leave the Group  ## {#ssec-req-leave}
-
-A node can actively request to leave the group. In this case, the Client MUST send a CoAP POST request to the /ace-group/gid/node at the KDC (where gid is the group identifier) using the protected channel established with ACE, mentioned in {{key-distr}}.
-The payload of this Leave Request is empty.
-
-<!-- Jim 13-07: Section 5.2 - What is the message to leave - can I leave one scope but not another?  Can I just give up a role?
-
-Marco: We should define an actual message, like the ones for retrieving updating keying material in Section 6. It can be like the one in Section 6.1, only with the second part of 'scope' present and encoded as an empty CBOR array.
-
-Marco: 'scope' encodes one group and some roles. So a node is supposed to leave that group altogether, with all its roles. If the node wants to stay in the group with less roles, it is just fine that is stops playing the roles it is not interested in anymore.
--->
-
-If the Leave Request is such that the KDC cannot extract all the necessary information to understand and process it correctly (e.g. unrecognized endpoint), the KDC MUST respond with a 4.00 (Bad Request) error message. Otherwise, the KDC MUST remove the leaving node from the list of group members, if the KDC keeps track of that.
-
-Note that, after having left the group, a node may wish to join it again. Then, as long as the node is still authorized to join the group, i.e. it has a still valid access token, it can re-request to join the group directly to the KDC without needing to retrieve a new access token from the AS. This means that the KDC needs to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
-
-TODO: ref {{sec-node-removal}}
-
 ## Retrieval of New or Updated Keying Material {#sec-expiration}
 
 A node stops using the group keying material upon its expiration, according to the 'exp' parameter specified in the retained COSE Key. Then, if it wants to continue participating in the group communication, the node has to request new updated keying material from the KDC. In this case, and depending on what part of the keying material is expired, the client may need to communicate to the KDC its need for that part to be renewed: for example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
@@ -826,6 +810,24 @@ To request the keying material version number, the Client sends a CoAP GET reque
 ### Version Response
 
 The KDC replies to the Client with a response payload containing an integer indicating the group keying material version number. The Content-Format is set to text/plain.
+
+## Request to Leave the Group  ## {#ssec-req-leave}
+
+A node can actively request to leave the group. In this case, the Client MUST send a CoAP POST request to the /ace-group/gid/node at the KDC (where gid is the group identifier) using the protected channel established with ACE, mentioned in {{key-distr}}.
+The payload of this Leave Request is empty.
+
+<!-- Jim 13-07: Section 5.2 - What is the message to leave - can I leave one scope but not another?  Can I just give up a role?
+
+Marco: We should define an actual message, like the ones for retrieving updating keying material in Section 6. It can be like the one in Section 6.1, only with the second part of 'scope' present and encoded as an empty CBOR array.
+
+Marco: 'scope' encodes one group and some roles. So a node is supposed to leave that group altogether, with all its roles. If the node wants to stay in the group with less roles, it is just fine that is stops playing the roles it is not interested in anymore.
+-->
+
+If the Leave Request is such that the KDC cannot extract all the necessary information to understand and process it correctly (e.g. unrecognized endpoint), the KDC MUST respond with a 4.00 (Bad Request) error message. Otherwise, the KDC MUST remove the leaving node from the list of group members, if the KDC keeps track of that.
+
+Note that, after having left the group, a node may wish to join it again. Then, as long as the node is still authorized to join the group, i.e. it has a still valid access token, it can re-request to join the group directly to the KDC without needing to retrieve a new access token from the AS. This means that the KDC needs to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
+
+TODO: ref {{sec-node-removal}}
 
 # Removal of a Node from the Group {#sec-node-removal}
 
