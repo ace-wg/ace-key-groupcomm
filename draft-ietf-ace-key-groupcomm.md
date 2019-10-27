@@ -337,19 +337,13 @@ The 'rsnonce' parameter is an OPTIONAL parameter of the AS Request Creation Hint
 
 In this specification and in application profiles building on it, this parameter is used as described in {{token-post}}, i.e. for providing a nonce that the Client may use to prove possession of its own private key in the Key Distribution Request (see {{ssec-key-distribution-request}}).
 
-# Key Provisioning {#key-distr}
+# Operations at the KDC {#key-distr}
 
 TODO - check title
 
-This section defines how the keying material used for group communication is distributed from the KDC to the Client.
+This section defines the operations available at the KDC for a Client as (candidate) group member, and especially how the keying material used for group communication is distributed from the KDC to the Client.
 
-If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel. This can be achieved, for instance, by using a transport profile of ACE, which can have been pre-configured on the Client through out-of-band means, or indicated to the Client in the Authorization Response from the AS (see {{ssec-authorization-response}}).
-
-The exchange of Key Distribution Request-Response MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications, that MUST be secured.
-
-The proof-of-possession to bind the access token to the Client must be performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC. To this end, the underlying secure communication protocol is required to enforce client authentication and to support the secure channel establishment by using the proof-of-possession key.
-
-During the first exchange ("joining"), the Client sends a request to the AS, specifying the group it wishes to join (see {{ssec-key-distribution-request}}). Then, the KDC verifies the access token and that the Client is authorized to join that group; if so, it provides the Client with the keying material to securely communicate with the member of the group (see {{ssec-key-distribution-response}}). Whenever used, the Content-Format in messages containing a payload is set to application/cbor.
+During the first exchange ("joining"), the Client sends a request to the KDC, specifying the group it wishes to join (see {{ssec-key-distribution-request}}). Then, the KDC verifies the access token and that the Client is authorized to join that group. If so, it provides the Client with the keying material to securely communicate with the other members of the group (see {{ssec-key-distribution-response}}). Whenever used, the Content-Format in messages containing a payload is set to application/cbor.
 
 <!-- Jim 13-07: Should one talk about the ability to use OBSERVE as part of
 key distribution?
@@ -374,7 +368,7 @@ When the Client is already a group member, the Client can use the interface at t
 
 * The Client can request to leave the group. This is further discussed in {{ssec-req-leave}}.
 
-Additionally, the format of the payload of the Key Distribution Response ({{ssec-key-distribution-response}}) can be reused for messages sent by the KDC to distribute updated keying material to the group, in case of a new node joining the group or of a current member leaving the group. The key management scheme used to send such messages could rely on, e.g., multicast in case of a new node joining or unicast in case of a node leaving the group.
+Additionally, the format of the payload of the Key Distribution Response (see {{ssec-key-distribution-response}}) can be reused for messages sent by the KDC to distribute updated keying material to the group, in case of a new node joining the group or of a current member leaving the group. The key management scheme used to send such messages could rely on, e.g., multicast in case of a new node joining or unicast in case of a node leaving the group.
 
 <!--
   Jim 14-06: Discuss that a Key Distribution Request/Response can be performed exactly in the same way also by an already member of the group. Mention the cases when this happens, e.g. believed lost of synchronization with the current group security context, crash and reboot and so on, so forced re-synchronization with the correct current security context.
@@ -394,8 +388,6 @@ Marco: In Section 4.2, we are indicating the key identifier in the optional 'kid
 
 Marco: Isn't it ok as we are doing with the COSE Key in Section 4.2? Then it works quite fine in ace-oscoap-joining when considering the particular joining of OSCORE groups.
 -->
-
-If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the Key Distribution Response (see {{ssec-key-distribution-response}}). Application profiles may define alternative message formats.
 
 TODO: verify that this section is ok.
 
@@ -425,39 +417,51 @@ No handlers are implemented for this resource.
 
 This resource implements GET and POST handlers.
 
-* GET: the GET handler returns the symmetric group keying material in the payload of the response. The specific format of the symmetric group material MUST be specified in the application profile (REQ1).
+* GET: the GET handler returns the symmetric group keying material for the group identified by "gid". The payload of the response is formatted as a CBOR Map, whose possible elements are "kty", "key", "profile", "exp" and "mgt_key_material", with CBOR labels defined in TBD.
 
-* POST: the POST handler expects a CBOR Map of one or more public keys in the payload of the request. The handler adds the public keys received to the list of public keys in storage. The specific format of the public keys MUST be specified in the application profile (REQ2). The handler returns the symmetric group keying material, the policies and all the public keys of current members of the group in a CBOR Map, if the KDC manages those. The response is formatted as a CBOR Map, the CBOR elements returned are "key", "policies" and "pub-keys", with CBOR labels defined in TBD.
+* POST: the POST handler expects a request with payload formatted as a CBOR Map, whose possible elements are "scope", "get_pub_keys", "client_cred", "c_nonce", "client_cred_verify" and "pub_key_repos", with CBOR labels defined in TBD. The handler adds the public key indicated in "client_cred" to the list of public keys stored for the group identified by "gid". With reference to the group identified by "gid", the handler returns, the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested so in the previous request. The payload of the response is formatted as a CBOR Map, whose possible elements are "kty", "key", "profile", "exp", "pub_keys", "group_policies" and "mgt_key_material", with CBOR labels defined in TBD.
+
+The specific format of the symmetric group keying material MUST be specified in the application profile (REQ1).
+
+The specific format of the public keys MUST be specified in the application profile (REQ2).
 
 ### ace-group/gid/pub-key
 
 This resource implements GET and POST handlers.
 
-* GET: the GET handler returns the list of all public keys in storage for the group identified by "gid" as a CBOR Array in the payload of the response.
+* GET: the GET handler returns the list of public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
-* POST: the POST handler expects a CBOR Array containing int or bstr in the payload of the request. The handler  identifies the public keys for which the key ids have the values received in the CBOR Array and returns these keys in a CBOR Array in the payload of the response. If the KDC does not store any key with those kid, the handler returns an empty payload.
+* POST: the POST handler expects a request with payload formatted as a CBOR Array. Each element of the array is a CBOR byte string encoding the identifier of a group member. With reference to the group identified by "gid", the handler identifies the public keys of the current group members for which the identifier matches with one of those indicated in the request. Then, the handler returns a response with payload formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
+
+The specific format of the public keys MUST be specified in the application profile (REQ2).
+
+The specific format of the identifiers of group members MUST be specified in the application profile (REQ3).
 
 ### ace-group/gid/policies
 
 This resource implements GET and POST handlers.
 
-* GET: the GET handler returns the list of policies for the group identified by "gid", as a CBOR Array in the payload of the response. The specific format and meaning of policies MUST be specified in the application profile (REQ3).
+* GET: the GET handler returns the list of policies for the group identified by "gid". The payload of the response is formatted as a CBOR Map, where each pair specifies a particular management aspect.
 
 * POST: the POST handler is not defined in this document. This handler is meant for the administration of policies at the KDC.
+
+The specific format and meaning of group policies MUST be specified in the application profile (REQ4).
 
 ### ace-group/gid/ctx-num
 
 This resource implements a GET handler.
 
-* GET: the GET handler returns an integer that represents the epoch of the symmetric group keying material. This number is incremented on the KDC every time the KDC updates the symmetric group keying material.
+* GET: the GET handler returns an integer that represents the epoch of the symmetric group keying material. This number is incremented on the KDC every time the KDC updates the symmetric group keying material. The payload of the response is formatted as a CBOR integer.
 
 ### ace-group/gid/node
 
 This resource implements GET and POST handlers.
 
-* GET: the GET handler returns a new value for the identifier of the node. The specific format of that identifier MUST be specified in the application profile (REQ4)
+* GET: the GET handler returns a new value for the identifier of the node as group member. The payload includes the new identifier, encoded as a CBOR byte string or text string.
 
-* POST: the POST handler expects TBD. The handler removes the node from the group.
+* POST: the POST handler expects a request with empty payload. The handler removes the node from the group.
+
+The specific format of the identifiers of group members MUST be specified in the application profile (REQ3).
 
 ## Joining Exchange {#ssec-key-distribution-exchange}
 
@@ -473,6 +477,14 @@ Client                                               KDC
    |                                                  |
 ~~~~~~~~~~~
 {: #fig-key-distr-join title="Message Flow of Key Distribution to a New Group Member" artwork-align="center"}
+
+If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel. This can be achieved, for instance, by using a transport profile of ACE, which can have been pre-configured on the Client through out-of-band means, or indicated to the Client in the Authorization Response from the AS (see {{ssec-authorization-response}}).
+
+The exchange of Key Distribution Request-Response MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications, that MUST be secured.
+
+The proof-of-possession to bind the access token to the Client must be performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC. To this end, the underlying secure communication protocol is required to enforce client authentication and to support the secure channel establishment by using the proof-of-possession key.
+
+If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the Key Distribution Response (see {{ssec-key-distribution-response}}). Application profiles may define alternative message formats.
 
 ### Joining Request {#ssec-key-distribution-request}
 
