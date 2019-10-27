@@ -465,18 +465,17 @@ The specific format of the identifiers of group members MUST be specified in the
 
 ## Joining Exchange {#ssec-key-distribution-exchange}
 
-{{fig-key-distr-join}} gives an overview of the exchange between Client and KDC when the Client first joins a group.
+{{fig-key-distr-join}} gives an overview of the Key Distribution Request/Response exchange between Client and KDC, when the Client first joins a group.
 
 ~~~~~~~~~~~
-TODO: Update this and caption
-Client                                               KDC
-   |                                                  |
-   |---- Key Distribution Request: POST /group-id --->|
-   |                                                  |
-   |<--- Key Distribution Response: 2.01 (Created) ---|
-   |                                                  |
+Client                                                     KDC
+   |                                                        |
+   |---- Key Distribution Request: POST /ace-group/gid ---->|
+   |                                                        |
+   |<----- Key Distribution Response: 2.01 (Created) ------ |
+   |                                                        |
 ~~~~~~~~~~~
-{: #fig-key-distr-join title="Message Flow of Key Distribution to a New Group Member" artwork-align="center"}
+{: #fig-key-distr-join title="Message Flow of First Exchange for Group Joining" artwork-align="center"}
 
 If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel. This can be achieved, for instance, by using a transport profile of ACE, which can have been pre-configured on the Client through out-of-band means, or indicated to the Client in the Authorization Response from the AS (see {{ssec-authorization-response}}).
 
