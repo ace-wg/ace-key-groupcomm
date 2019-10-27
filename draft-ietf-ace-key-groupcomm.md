@@ -427,6 +427,8 @@ The specific format of the symmetric group keying material MUST be specified in 
 
 The specific format of the public keys MUST be specified in the application profile (REQ2).
 
+The specific format of the identifiers of group members MUST be specified in the application profile (REQ3).
+
 ### ace-group/gid/pub-key
 
 This resource implements GET and POST handlers.
@@ -434,6 +436,8 @@ This resource implements GET and POST handlers.
 * GET: the GET handler returns the list of public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
 * POST: the POST handler expects a request with payload formatted as a CBOR Array. Each element of the array is a CBOR byte string encoding the identifier of a group member. With reference to the group identified by "gid", the handler identifies the public keys of the current group members for which the identifier matches with one of those indicated in the request. Then, the handler returns a response with payload formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
+
+The specific format of the symmetric group keying material MUST be specified in the application profile (REQ1).
 
 The specific format of the public keys MUST be specified in the application profile (REQ2).
 
@@ -735,7 +739,7 @@ The KDC receiving a Key Re-Distribution Request MUST check that it is storing a 
 
 If that is not the case, i.e. it does not store a valid access token or this is not valid for that client for the requested group identifier, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-Otherwise, the KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty', 'key' and 'exp' parameters specified in {{ssec-key-distribution-response}} in a CBOR Map in the payload. The Key Distribution Response MAY also include the 'profile', 'group_policies' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
+Otherwise, the KDC replies to the Client with a Key Distribution Response, which MUST include the 'kty' and 'key' specified in {{ssec-key-distribution-response}} in a CBOR Map in the payload. The Key Distribution Response MAY also include the parameters 'profile', 'exp' and 'mgt_key_material' parameters specified in {{ssec-key-distribution-response}}.
 
 Note that this response might simply re-provide the same keying material currently owned by the Client, if it has not been renewed.
 
@@ -751,34 +755,29 @@ If that is not the case, i.e. it does not store a valid access token or this is 
 
 Otherwise, the KDC replies to the Client with a Key Renewal Response, whose payload is a CBOR byte string encoding newly generated keying material for the Client, or information enabling the Client to derive it.
 
-The specific format of the information and keying material provided in the Key Renewal Response MUST be specified in the application profile (REQ5).
-
 ## Retrieval of Public Keys for Group Members {#sec-key-retrieval}
 
 In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to request public keys of either all group members or a specified subset, using the messages defined below.
 
-{{fig-public-key-req-resp}} gives an overview of the exchange described above.
+{{fig-public-key-req-resp}} gives an overview of the exchange described above, with the Client using the POST method.
 
 ~~~~~~~~~~~
-TODO: Update this
-Client                                         KDC
-   |                                            |
-   |---- Public Key Request: POST /group-id --->|
-   |                                            |
-   |<--- Public Key Response: 2.01 (Created) ---|
-   |                                            |
+Client                                                     KDC
+   |                                                        |
+   |--- Public Key Request: POST /ace-group/gid/pub-key --->|
+   |                                                        |
+   |<--------- Public Key Response: 2.01 (Created) ---------|
+   |                                                        |
 ~~~~~~~~~~~
 {: #fig-public-key-req-resp title="Message Flow of Public Key Request-Response" artwork-align="center"}
 
-Note that the Key Re-Distribution messages in {{sec-expiration}}, request at the same time the group keying material and the public keys, as well as all additional information such as policies.
-
 ### Public Key Request
 
-To request all public keys, the Client sends a CoAP GET request to the /ace-group/gid/pub-key endpoint at the KDC, where gid is the group identifier.
+To request the public keys of all the current group members, the Client sends a CoAP GET request to the /ace-group/gid/pub-key endpoint at the KDC, where gid is the group identifier.
 
-To request only some specific public keys for which the client has the identifiers, the Client sends a CoAP POST request to the /ace-group/gid/pub-key endpoint at the KDC. The payload of this request is a CBOR Map that MUST contain the following fields:
+To request only the public keys associated to some specific group members, the Client sends a CoAP POST request to the /ace-group/gid/pub-key endpoint at the KDC. The payload of this request is a CBOR Map that MUST contain the following fields:
 
-* 'get_pub_keys', which has as value a CBOR array including either N elements, each of which is the identifier of a group member encoded as a CBOR byte string, in order to request the public key of the specified nodes.
+* 'get_pub_keys', which has as value a CBOR array. Each element of the array is the identifier of a group member encoded as a CBOR byte string, so requesting the public key of that group member.
 
 <!-- In some cases, it is not necessary to include the scope parameter, for instance if the KDC maintains a list of active group members for each managed group, and the Client is member of only one group. The Client MUST include the scope parameter if it is a member of multiple groups under the same KDC.
 
@@ -790,9 +789,15 @@ Marco: It makes sense, should we then just make 'scope' mandatory?
 
 ### Public Key Response
 
-The KDC replies to the Client with a CBOR Map containing the public keys of the member of the group, either all of them if the request was a GET, or only those indicated if the request was a POST.
+The KDC receiving a Public Key Request MUST check that it is storing a valid access token from that client for that group identifier (identified by the endpoint).
 
-The KDC may enforce one of the following policies, in order to handle possible identifiers that are included in the 'get_pub_keys' parameter of the Public Key request but are not associated to any current group member.
+If that is not the case, i.e. it does not store a valid access token or this is not valid for that client for the requested group identifier, the KDC MUST respond with a 4.01 (Unauthorized) error message. If the Public Key Request is a POST request and the 'get_pub_keys' parameter is an empty CBOR Array, the KDC MUST treat the request as malformed and respond with a 4.00 (Bad Request) error message.
+
+Otherwise, the KDC replies to the Client with a Public Key Response, whose paylaod is a CBOR map including only the parameter 'pub_keys' defined for the Key Distribution Response in {{ssec-key-distribution-response}}.
+
+In particular, 'pub_keys' contains the public keys either of all the group members (if the Public Key Request was a GET request), or only those associated to the group members indicated by the Client with the 'get_pub_keys' parameter (if the Public Key Request was a POST request).
+
+The KDC may enforce one of the following policies, in order to handle possible identifiers that are included in the 'get_pub_keys' parameter of the Public Key POST request but are not associated to any current group member.
 
 * The KDC silently ignores those identifiers.
 
