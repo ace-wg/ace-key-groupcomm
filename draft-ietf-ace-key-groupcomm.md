@@ -852,7 +852,7 @@ To request the keying material version number, the Client sends a CoAP GET reque
 
 The KDC replies to the Client with a Version Response, whose payload payload contains the group keying material version number, encoded as a CBOR integer.
 
-## Group Leaving  ## {#ssec-group-leaving}
+## Group Leaving Request ## {#ssec-group-leaving}
 
 A node can actively request to leave the group. In this case, the Client MUST send a CoAP POST request to the endpoint /ace-group/gid/node at the KDC (where gid is the group identifier) using the protected channel established with ACE, mentioned in {{key-distr}}. The specific format and content of the payload of the Group Leaving request is specified by the application profile.
 
@@ -1146,7 +1146,17 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 ## Version -02 to -03 ## {#sec-02-03}
 
-TBD
+* Exchange of information on the countersignature algorithm and related parameters, during the Token POST (Section 3.3).
+
+* Nonce 'rsnonce' from the KDC to the Client (Section 3.3).
+
+* Restructured KDC interface, with new possible operations (Section 4).
+
+* Client PoP signature in the Key Distribution Request upon joining (Section 4.2.1).
+
+* Revised text on group member removal (Section 5).
+
+* Added more profile requirements (Appendix A).
 
 ## Version -01 to -02 ## {#sec-01-02}
 
