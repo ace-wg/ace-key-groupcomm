@@ -368,7 +368,7 @@ When the Client is already a group member, the Client can use the interface at t
 
 * The Client can (re-)get the version number of the keying material currently used in the group. This is further discussed in {{key-version}}.
 
-* The Client can request to leave the group. This is further discussed in {{ssec-req-leave}}.
+* The Client can request to leave the group. This is further discussed in {{ssec-group-leaving}}.
 
 Additionally, the format of the payload of the Key Distribution Response (see {{ssec-key-distribution-response}}) can be reused for messages sent by the KDC to distribute updated keying material to the group, in case of a new node joining the group or of a current member leaving the group. The key management scheme used to send such messages could rely on, e.g., multicast in case of a new node joining or unicast in case of a node leaving the group.
 
@@ -473,7 +473,9 @@ This resource implements GET and POST handlers.
 
 * POST: the POST handler expects a request with empty payload. The handler removes the node from the group.
 
-The specific format of newly-generated individual keying material for group members, or of the information to derive it, MUST be specified in the application profile (REQ5).
+The specific format and content of the payload of the Group Leaving request is specified by the application profile (REQ5).
+
+The specific format of newly-generated individual keying material for group members, or of the information to derive it, MUST be specified in the application profile (REQ6).
 
 ## Joining Exchange {#ssec-key-distribution-exchange}
 
@@ -850,10 +852,9 @@ To request the keying material version number, the Client sends a CoAP GET reque
 
 The KDC replies to the Client with a Version Response, whose payload payload contains the group keying material version number, encoded as a CBOR integer.
 
-## Request to Leave the Group  ## {#ssec-req-leave}
+## Group Leaving  ## {#ssec-group-leaving}
 
-A node can actively request to leave the group. In this case, the Client MUST send a CoAP POST request to the /ace-group/gid/node at the KDC (where gid is the group identifier) using the protected channel established with ACE, mentioned in {{key-distr}}.
-The payload of this Leave Request is empty.
+A node can actively request to leave the group. In this case, the Client MUST send a CoAP POST request to the endpoint /ace-group/gid/node at the KDC (where gid is the group identifier) using the protected channel established with ACE, mentioned in {{key-distr}}. The specific format and content of the payload of the Group Leaving request is specified by the application profile.
 
 <!-- Jim 13-07: Section 5.2 - What is the message to leave - can I leave one scope but not another?  Can I just give up a role?
 
@@ -864,26 +865,29 @@ Marco: 'scope' encodes one group and some roles. So a node is supposed to leave 
 
 If the Leave Request is such that the KDC cannot extract all the necessary information to understand and process it correctly (e.g. unrecognized endpoint), the KDC MUST respond with a 4.00 (Bad Request) error message. Otherwise, the KDC MUST remove the leaving node from the list of group members, if the KDC keeps track of that.
 
-Note that, after having left the group, a node may wish to join it again. Then, as long as the node is still authorized to join the group, i.e. it has a still valid access token, it can re-request to join the group directly to the KDC without needing to retrieve a new access token from the AS. This means that the KDC needs to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
-
-TODO: ref {{sec-node-removal}}
+Alternatively, a node may be removed by the KDC, without having explicitly asked for it. This is further discussed in {{sec-node-removal}}.
 
 # Removal of a Node from the Group {#sec-node-removal}
 
 This section describes the different scenarios according to which a node ends up being removed from the group.
 
-If the application requires forward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members but the leaving node, using the message format defined in {{ssec-key-distribution-response}}. Application profiles may define alternative message formats.
+If the application requires forward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members but the leaving node, using the message format of the Key Distribution Response (see {{ssec-key-distribution-response}}). Application profiles may define alternative message formats.
 
-## Expired Authorization
+Note that, after having left the group, a node may wish to join it again. Then, as long as the node is still authorized to join the group, i.e. it has a still valid access token, it can re-request to join the group directly to the KDC without needing to retrieve a new access token from the AS. This means that the KDC needs to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
 
-If the AS provides Token introspection (see Section 5.7 of {{I-D.ietf-ace-oauth-authz}}), the KDC can optionally use and check whether:
+A node may be evicted from the group in the following cases.
 
-* the node is not authorized anymore;
+1. The node explicitly asks to leave the group, as defined in {{ssec-group-leaving}}.
 
-* the access token is still valid, upon its expiration.
+2. The node has been found compromised or is suspected so.
 
-Either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
+3. The node's authorization to be a group member is expired. If the AS provides Token introspection (see Section 5.7 of {{I-D.ietf-ace-oauth-authz}}), the KDC can optionally use and check whether:
 
+   * the node is not authorized anymore;
+
+   * the access token is still valid, upon its expiration.
+
+   Either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
 
 # ACE Groupcomm Parameters {#params}
 
