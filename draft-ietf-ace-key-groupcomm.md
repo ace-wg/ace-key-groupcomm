@@ -777,7 +777,7 @@ To request the public keys of all the current group members, the Client sends a 
 
 To request only the public keys associated to some specific group members, the Client sends a CoAP POST request to the /ace-group/gid/pub-key endpoint at the KDC. The payload of this request is a CBOR Map that MUST contain the following fields:
 
-* 'get_pub_keys', which has as value a CBOR array. Each element of the array is the identifier of a group member encoded as a CBOR byte string, so requesting the public key of that group member.
+* 'get_pub_keys', which has as value a CBOR array. Each element of the array is the identifier of a group member encoded as a CBOR byte string, so requesting the public key of that group member. The specific format of public keys as well as identifiers of group members is specified by the application profile.
 
 <!-- In some cases, it is not necessary to include the scope parameter, for instance if the KDC maintains a list of active group members for each managed group, and the Client is member of only one group. The Client MUST include the scope parameter if it is a member of multiple groups under the same KDC.
 
@@ -795,7 +795,7 @@ If that is not the case, i.e. it does not store a valid access token or this is 
 
 Otherwise, the KDC replies to the Client with a Public Key Response, whose paylaod is a CBOR map including only the parameter 'pub_keys' defined for the Key Distribution Response in {{ssec-key-distribution-response}}.
 
-In particular, 'pub_keys' contains the public keys either of all the group members (if the Public Key Request was a GET request), or only those associated to the group members indicated by the Client with the 'get_pub_keys' parameter (if the Public Key Request was a POST request).
+In particular, 'pub_keys' contains the public keys either of all the group members (if the Public Key Request was a GET request), or only those associated to the group members indicated by the Client with the 'get_pub_keys' parameter (if the Public Key Request was a POST request). The specific format of public keys as well as identifiers of group members is specified by the application profile.
 
 The KDC may enforce one of the following policies, in order to handle possible identifiers that are included in the 'get_pub_keys' parameter of the Public Key POST request but are not associated to any current group member.
 
@@ -807,28 +807,31 @@ Either case, a node that has left the group should not expect any of its outgoin
 
 ## Retrieval of Group Policies {#policies}
 
-A node in the group can contact the KDC to request the group policies, using the messages defined below. The POST handler to the same endpoint used in the exchange is used by the administrator to set up the policies on the KDC, but that is out of scope of this specification.
+A node in the group can contact the KDC to retrieve the current group policies, by using the messages defined below. The POST handler to the same endpoint used in the exchange is used by the administrator to set up the policies on the KDC, but that is out of the scope of this specification.
 
 {{fig-policies}} gives an overview of the exchange described above.
 
 ~~~~~~~~~~~
-TODO: Update this
-Client                                         KDC
-   |                                            |
-   |---- Public Key Request: POST /group-id --->|
-   |                                            |
-   |<--- Public Key Response: 2.01 (Created) ---|
-   |                                            |
+Client                                                   KDC
+   |                                                      |
+   |--- Policies Request: GET ace-group/gid/policies ---->|
+   |                                                      |
+   |<--------- Policies Response: 2.05 (Content) ---------|
+   |                                                      |
 ~~~~~~~~~~~
-{: #fig-policies title="Message Flow of Public Key Request-Response" artwork-align="center"}
+{: #fig-policies title="Message Flow of Policies Request-Response" artwork-align="center"}
 
 ### Policies Request
 
-To request the group policies, the Client sends a CoAP GET request to the /ace-group/gid/policies endpoint at the KDC, where gid is the group identifier.
+To request the current group policies, the Client sends a CoAP GET request to the /ace-group/gid/policies endpoint at the KDC, where gid is the group identifier.
 
 ### Policies Response
 
-The KDC replies to the Client with a CBOR Map containing the policies of the group. The specific format and meaning of policies is specified by the application profile.
+The KDC receiving a Public Key Request MUST check that it is storing a valid access token from that client for that group identifier (identified by the endpoint).
+
+If that is not the case, i.e. it does not store a valid access token or this is not valid for that client for the requested group identifier, the KDC MUST respond with a 4.01 (Unauthorized) error message. If the Public Key Request is a POST request and the 'get_pub_keys' parameter is an empty CBOR Array, the KDC MUST treat the request as malformed and respond with a 4.00 (Bad Request) error message.
+
+The KDC replies to the Client with a CBOR Map containing the policies of the group, including only the parameter 'group_policies' defined for the Key Distribution Response in {{ssec-key-distribution-response}}. The specific format and meaning of policies is specified by the application profile.
 
 ## Retrieval of Keying Material Version {#key-version}
 
