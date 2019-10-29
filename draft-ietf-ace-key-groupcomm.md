@@ -327,13 +327,13 @@ Note that this step could be merged with the following message from the Client t
 
 The 'sign_info' parameter is an OPTIONAL parameter of the AS Request Creation Hints message defined in Section 5.1.2. of {{I-D.ietf-ace-oauth-authz}}. This parameter contains information and parameters about the signature algorithm and the public keys to be used between the Client and the RS. Its exact content is application specific.
 
-In this specification and in application profiles building on it, this parameter is used as described in {{token-post}}, i.e. for asking to and retrieving from the KDC information about the signature algorithm and related parameters used in the group.
+In this specification and in application profiles building on it, this parameter is used to ask and retrieve from the KDC information about the signature algorithm and related parameters used in the group.
 
 ### 'pub_key_enc' Parameter {#pub-key-enc}
 
 The 'pub_key_enc' parameter is an OPTIONAL parameter of the AS Request Creation Hints message defined in Section 5.1.2. of {{I-D.ietf-ace-oauth-authz}}. This parameter contains information about the exact encoding of public keys to be used between the Client and the RS. Its exact content is application specific.
 
-In this specification and in application profiles building on it, this parameter is used as described in {{token-post}}, i.e. for asking to and retrieving from the KDC information about the encoding of public keys used in the group.
+In this specification and in application profiles building on it, this parameter is used to ask and retrieve from the KDC information about the encoding of public keys used in the group.
 
 ### 'rsnonce' Parameter {#rsnonce}
 
