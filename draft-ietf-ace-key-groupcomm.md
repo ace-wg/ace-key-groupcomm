@@ -495,9 +495,7 @@ Client                                                     KDC
 ~~~~~~~~~~~
 {: #fig-key-distr-join title="Message Flow of First Exchange for Group Joining" artwork-align="center"}
 
-If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel. This can be achieved, for instance, by using a transport profile of ACE, which can have been pre-configured on the Client through out-of-band means, or indicated to the Client in the Authorization Response from the AS (see {{ssec-authorization-response}}).
-
-The exchange of Key Distribution Request-Response MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications, that MUST be secured.
+If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel. This can be achieved, for instance, by using a transport profile of ACE. The exchange of Key Distribution Request-Response MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications, that MUST be secured.
 
 The proof-of-possession to bind the access token to the Client must be performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC. To this end, the underlying secure communication protocol is required to enforce client authentication and to support the secure channel establishment by using the proof-of-possession key.
 
