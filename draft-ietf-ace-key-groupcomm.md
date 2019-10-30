@@ -140,20 +140,22 @@ This document specifies an interface at the KDC, message flows and formats for:
 {{fig-flow}} provides a high level overview of the message flow for a node joining a group communication setting.
 
 ~~~~~~~~~~~
-            C                             AS  KDC   Dispatcher   Group
-            |                             |    |        |        Member
-          / |                             |    |        |            |
-          | |    Authorization Request    |    |        |            |
- Defined  | |---------------------------->|    |        |            |
- in the   | |                             |    |        |            |
-   ACE    | |    Authorization Response   |    |        |            |
-framework | |<----------------------------|    |        |            |
-          | |                             |    |        |            |
-          \ |----------- Token Post ---------->|        |            |
-            |                                  |        |            |
-            |--- Key Distribution Request ---->|        |            |
-            |                                  |        |            |
+            C                             AS  KDC                 Group
+            |                             |    |                  Member
+          / |                             |    |                     |
+          | |    Authorization Request    |    |                     |
+ Defined  | |---------------------------->|    |                     |
+ in the   | |                             |    |                     |
+   ACE    | |    Authorization Response   |    |                     |
+framework | |<----------------------------|    |                     |
+          | |                                  |                     |
+          \ |----------- Token Post ---------->|                     |
+            |                                  |                     |
+            |--- Key Distribution Request ---->|                     |
+            |                                  |                     |
             |<-- Key Distribution Response ----|-- Group Rekeying -->|
+            |                                  |                     |
+            |                                       Dispatcher       |
             |                                           |            |
             |<======== Protected communication =========|===========>|
             |                                           |            |
