@@ -411,7 +411,7 @@ The KDC is configured with the following resources:
 
 * /ace-group/gid/pub-key : this sub-resource is fixed and supports GET and POST methods.
 
-* /ace-group/gid/policies: this sub-resource is fixed and supports GET and POST methods.
+* /ace-group/gid/policies: this sub-resource is fixed and supports the GET method.
 
 * /ace-group/gid/ctx-num: this sub-resource is fixed and supports the GET method.
 
@@ -456,8 +456,6 @@ The specific format of the identifiers of group members MUST be specified in the
 This resource implements GET and POST handlers.
 
 * GET: the GET handler returns the list of policies for the group identified by "gid". The payload of the response is formatted as a CBOR Map, where each pair specifies a particular management aspect.
-
-* POST: the POST handler is not defined in this document. This handler is meant for the administration of policies at the KDC.
 
 The specific format and meaning of group policies MUST be specified in the application profile (REQ4).
 
@@ -809,7 +807,7 @@ Either case, a node that has left the group should not expect any of its outgoin
 
 ## Retrieval of Group Policies {#policies}
 
-A node in the group can contact the KDC to retrieve the current group policies, by using the messages defined below. The POST handler to the same endpoint used in the exchange is used by the administrator to set up the policies on the KDC, but that is out of the scope of this specification.
+A node in the group can contact the KDC to retrieve the current group policies, by using the messages defined below. How the policies are set up at the KDC is out of the scope of this specification.
 
 {{fig-policies}} gives an overview of the exchange described above.
 
