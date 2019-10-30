@@ -157,7 +157,7 @@ framework | |<----------------------------|    |                     |
             |                                  |                     |
             |                                       Dispatcher       |
             |                                           |            |
-            |<======== Protected communication =========|===========>|
+            |<====== Secure group communication ========|===========>|
             |                                           |            |
 ~~~~~~~~~~~
 {: #fig-flow title="Message Flow Upon New Node's Joining" artwork-align="center"}
