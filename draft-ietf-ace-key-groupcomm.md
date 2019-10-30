@@ -495,9 +495,9 @@ Client                                                     KDC
 ~~~~~~~~~~~
 {: #fig-key-distr-join title="Message Flow of First Exchange for Group Joining" artwork-align="center"}
 
-If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel. This can be achieved, for instance, by using a transport profile of ACE. The exchange of Key Distribution Request-Response MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications that must be secured.
+If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel. This can be achieved, for instance, by using a transport profile of ACE. The exchange of Key Distribution Request-Response MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications that must be secured. The secure communication protocol is REQUIRED to establish the secure channel by using the proof-of-possession key bound to the access token.
 
-The proof-of-possession to bind the access token to the Client must be performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC. To this end, the underlying secure communication protocol is required to enforce client authentication and to support the secure channel establishment by using the proof-of-possession key.
+As a result, the proof-of-possession to bind the access token to the Client is performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC.
 
 If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the Key Distribution Response (see {{ssec-key-distribution-response}}). Application profiles may define alternative message formats.
 
@@ -895,48 +895,22 @@ A node may be evicted from the group in the following cases.
 
 This specification defines a number of fields used during the message exchange. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name.
 
-~~~~~~~~~~~
-+--------------+----------+---------------+
-| Name         | CBOR Key | CBOR Type     |
-+--------------+----------+---------------+
-| scope        |   TBD    | array         |
-+--------------+----------+---------------+
-| get_pub_keys |   TBD    | array         |
-+--------------+----------+---------------+
-| client_cred  |   TBD    | byte string   |
-+--------------+----------+---------------+
-| cnonce       |   TBD    | byte string   |
-+--------------+----------+---------------+
-| rsnonce      |   TBD    | byte string   |
-+--------------+----------+---------------+
-| client_cred_ |   TBD    | byte string   |
-| verify       |          |               |
-+--------------+----------+---------------+
-| pub_keys_    |   TBD    | array         |
-| repos        |          |               |
-+--------------+----------+---------------+
-| kty          |   TBD    | int / byte    |
-|              |          | string        |
-+--------------+----------+---------------+
-| key          |   TBD    | see "ACE      |
-|              |          | Groupcomm     |
-|              |          | Key" Registry |
-+--------------+----------+---------------+
-| profile      |   TBD    | int           |
-+--------------+----------+---------------+
-| exp          |   TBD    | int / float   |
-+--------------+----------+---------------+
-| pub_keys     |   TBD    | byte string   |
-+--------------+----------+---------------+
-| group_       |   TBD    | map           |
-| policies     |          |               |
-+--------------+----------+---------------+
-| mgt_key_     |   TBD    | byte string   |
-| material     |          |               |
-+--------------+----------+---------------+
-| type         |   TBD    | int           |
-+--------------+----------+---------------+
-~~~~~~~~~~~
+
+ Name         | CBOR Key | CBOR Type     |   Reference
+--------------|----------|---------------|---------------
+ scope        |   TBD    | array         | {{ssec-key-distribution-request}}
+ get_pub_keys |   TBD    | array         | {{ssec-key-distribution-request}}
+ client_cred  |   TBD    | byte string   | {{ssec-key-distribution-request}}
+ cnonce       |   TBD    | byte string   | {{ssec-key-distribution-request}}
+ client_cred_verify |   TBD    | byte string   | {{ssec-key-distribution-request}}
+ pub_keys_repos   |   TBD    | array         | {{ssec-key-distribution-request}}
+ kty          |   TBD    | int / byte string   | {{ssec-key-distribution-response}}
+ key          |   TBD    | see "ACE Groupcomm Key" Registry     | {{ssec-key-distribution-response}}
+ profile      |   TBD    | int           | {{ssec-key-distribution-response}}
+ exp          |   TBD    | int / float   | {{ssec-key-distribution-response}}
+ pub_keys     |   TBD    | byte string   | {{ssec-key-distribution-response}}
+ group_policies      |   TBD    | map           | {{ssec-key-distribution-response}}
+ mgt_key_material    |   TBD    | byte string   | {{ssec-key-distribution-response}}
 
 # Security Considerations
 
@@ -1020,7 +994,7 @@ The columns of this Registry are:
 
 * Reference: This contains a pointer to the public specification for the format of the item, if one exists.
 
-This Registry has been initially populated by the values in {{params}}. The specification column for all of these entries will be this document.
+This Registry has been initially populated by the values in {{params}}. The Reference column for all of these entries refers to sections of this document .
 
 ## ACE Groupcomm Key Registry {#iana-key}
 
@@ -1149,8 +1123,6 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 ## Version -02 to -03 ## {#sec-02-03}
 
 * Exchange of information on the countersignature algorithm and related parameters, during the Token POST (Section 3.3).
-
-* Nonce 'rsnonce' from the KDC to the Client (Section 3.3).
 
 * Restructured KDC interface, with new possible operations (Section 4).
 
