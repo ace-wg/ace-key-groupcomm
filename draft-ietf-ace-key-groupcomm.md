@@ -501,7 +501,7 @@ If not previously established, the Client and the KDC MUST first establish a pai
 
 As a result, the proof-of-possession to bind the access token to the Client is performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC.
 
-If the application requires backward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the Key Distribution Response (see {{ssec-key-distribution-response}}). Application profiles may define alternative message formats.
+If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the Key Distribution Response (see {{ssec-key-distribution-response}}). Application profiles may define alternative message formats.
 
 ### Join Request {#ssec-key-distribution-request}
 
@@ -875,7 +875,7 @@ Alternatively, a node may be removed by the KDC, without having explicitly asked
 
 This section describes the different scenarios according to which a node ends up being removed from the group.
 
-If the application requires forward security, the KDC SHALL generate new group keying material and securely distribute it to all the current group members but the leaving node, using the message format of the Key Distribution Response (see {{ssec-key-distribution-response}}). Application profiles may define alternative message formats.
+If the application requires forward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members but the leaving node, using the message format of the Key Distribution Response (see {{ssec-key-distribution-response}}). Application profiles may define alternative message formats.
 
 Note that, after having left the group, a node may wish to join it again. Then, as long as the node is still authorized to join the group, i.e. it has a still valid access token, it can re-request to join the group directly to the KDC without needing to retrieve a new access token from the AS. This means that the KDC needs to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
 
