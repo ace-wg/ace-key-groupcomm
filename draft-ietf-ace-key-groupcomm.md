@@ -277,7 +277,7 @@ When receiving an Authorization Request from a Client that was previously author
 
 The Client sends a CoAP POST request including the access token to the KDC, as specified in Section 5.8.1 of {{I-D.ietf-ace-oauth-authz}}. If the specific transport profile of ACE defines it, the Client MAY use a different endpoint than /authz-info at the KDC to post the access token to.
 
-Optionally, the Client might need to request necessary information concerning the public keys in the group, as well as concerning the algorithm and related parameters for computing signatures in the group. In such a case, the joining node MAY ask for that information to the KDC in this same request. To this end, it sends the CoAP POST request to the /authz-info endpoint using the Content-Format "application/ace+cbor". The payload of the message MUST be formatted as a CBOR map, including the access token an the following parameters:
+Optionally, the Client might need to request necessary information concerning the public keys in the group, as well as concerning the algorithm and related parameters for computing signatures in the group. In such a case, the joining node MAY ask for that information to the KDC in this same request. To this end, it sends the CoAP POST request to the /authz-info endpoint using the Content-Format "application/ace+cbor". The payload of the message MUST be formatted as a CBOR map, including the access token and the following parameters:
 
 * 'sign_info' defined in {{sign-info}}, encoding the CBOR simple value Null, to require information and parameters on the signature algorithm and on the public keys used in the group.
 
@@ -898,7 +898,7 @@ This specification defines a number of fields used during the message exchange. 
 
  Name         | CBOR Key | CBOR Type     |   Reference
 --------------|----------|---------------|---------------
- scope        |   TBD    | array         | {{ssec-key-distribution-request}}
+ scope        |   TBD    | array         | {{ssec-authorization-request}}
  get_pub_keys |   TBD    | array         | {{ssec-key-distribution-request}}
  client_cred  |   TBD    | byte string   | {{ssec-key-distribution-request}}
  cnonce       |   TBD    | byte string   | {{ssec-key-distribution-request}}
