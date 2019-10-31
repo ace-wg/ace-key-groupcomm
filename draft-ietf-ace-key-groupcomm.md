@@ -431,9 +431,6 @@ No handlers are implemented for this resource.
 
 This resource implements GET and POST handlers.
 
-TODO:
-The specific format of the identifiers of group members MUST be specified in the application profile (REQ8).
-
 #### POST Handler {#gid-post}
 
 The POST handler handles the public keys of the client to the group member's list and returns the symmetric group keying material for the group identified by "gid".
@@ -462,7 +459,7 @@ If verification succeeds, the handler adds the public key indicated in "client_c
 
 * 'key', containing the keying material for the group communication, or information required to derive it.
 
-* 'num', containing the version number of the keying material for the group communication, formatted as an integer.
+* 'num', containing the version number of the keying material for the group communication, formatted as an integer. The initial version MUST be set to 0 at the KDC.
 
 The exact format of the 'key' value MUST be defined in applications of this specification (REQ6). Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry defined in {{iana-key}}, including its name, type and application profile to be used with.
 
@@ -481,7 +478,7 @@ Optionally, the Key Distribution Response MAY contain the following parameters, 
 
 * 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer or floating-point number. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what specified in Section 2 of {{RFC7519}}.
 
-* 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request. This parameter is a CBOR byte string, which encodes the public keys of all the group members paired with the respective member identifiers. The default encoding for public keys is COSE Keys, so the default encoding for 'pub\_keys' is a CBOR byte string wrapping a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT).
+* 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the Key Distribution Request. This parameter is a CBOR byte string, which encodes the public keys of all the group members paired with the respective member identifiers. The default encoding for public keys is COSE Keys, so the default encoding for 'pub\_keys' is a CBOR byte string wrapping a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT). The specific format of the identifiers of group members MUST be specified in the application profile (REQ8).
 
 * 'group_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policy" Registry. This specification defines the two elements "Sequence Number Synchronization Method" and "Key Update Check Interval", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format of included map entries (REQ).
 
@@ -792,7 +789,6 @@ The KDC replies to the Client with a Policies Response, whose payload is a CBOR 
 ## Retrieval of Keying Material Version {#key-version}
 
 A node in the group can contact the KDC to request information about the version number of the symmetric group keying material. In particular, the version is incremented by the KDC every time the group keying material is renewed.
-The initial version MUST be set to 0 at the KDC.
 
 {{fig-version}} gives an overview of the exchange described above.
 
