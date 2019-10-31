@@ -128,15 +128,16 @@ The following participants (see {{fig-roles}}) take part in the authorization an
 FP: Proposal: let's add this sentence later. There is some considerations to be done about using a "cluster of KDC", but I don't want to overcomplicate v-00. Security considerations?
 -->
 
-This document specifies an interface at the KDC, message flows and formats for:
+This document specifies a mechanism for:
 
 * Authorizing a new node to join the group ({{sec-auth}}), and providing it with the group keying material to communicate with the other group members ({{key-distr}}).
 
-* Removing of a current member from the group ({{sec-node-removal}}).
+* Removal of a current member from the group ({{sec-node-removal}}).
 
 * Retrieving keying material as a current group member ({{sec-new-update-keys}} and {{sec-key-retrieval}}).
 
 * Renewing and re-distributing the group keying material (rekeying) upon a membership change in the group ({{ssec-key-distribution-response}} and {{sec-node-removal}}).
+
 
 {{fig-flow}} provides a high level overview of the message flow for a node joining a group communication setting.
 
@@ -352,13 +353,20 @@ This parameter MUST NOT be used as a replacement for the 'cnonce' parameter defi
 
 In this specification and in application profiles building on it, this parameter is used to provide a nonce that the Client may use to prove possession of its own private key in the Key Distribution Request (see {{ssec-key-distribution-request}}).
 
-# Operations at the KDC {#key-distr}
+# Keying Material Provisioning Overview {#key-distr}
+
+<!--
+  Key Provisioning?
+  Key Distribution?
+  Keying Material Distribution?
+  ***Keying Material Provisioning***
+-->
 
 TODO - check title
 
-This section defines the operations available at the KDC for a Client as (candidate) group member, and especially how the keying material used for group communication is distributed from the KDC to the Client.
+This section defines the interface available at the KDC. Moreover, this section specifies how the clients can use this interface to join a group, leave a group, retrieve new keying material or policies.
 
-During the first exchange ("joining"), the Client sends a request to the KDC, specifying the group it wishes to join (see {{ssec-key-distribution-request}}). Then, the KDC verifies the access token and that the Client is authorized to join that group. If so, it provides the Client with the keying material to securely communicate with the other members of the group (see {{ssec-key-distribution-response}}). Whenever used, the Content-Format in messages containing a payload is set to application/cbor.
+During the first exchange with the KDC ("Jsoining"), the Client sends a request to the KDC, specifying the group it wishes to join (see {{ssec-key-distribution-request}}). Then, the KDC verifies the access token and that the Client is authorized to join that group. If so, it provides the Client with the keying material to securely communicate with the other members of the group (see {{ssec-key-distribution-response}}). Whenever used, the Content-Format in messages containing a payload is set to application/cbor.
 
 <!-- Jim 13-07: Should one talk about the ability to use OBSERVE as part of
 key distribution?
@@ -373,19 +381,19 @@ Marco: We could just go for "group", as a collection of devices sharing the same
 
 When the Client is already a group member, the Client can use the interface at the KDC to perform the following actions:
 
-* The Client can (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed group rekeying. This is further discussed in {{sec-new-update-keys}}.
+* The Client can (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed group rekeying. This is described in {{sec-new-update-keys}}.
 
+<!-- FP: This is covered by the above. We don't define "indvidual yet"
 * The Client can get a new individual key, or new input material to derive it. This is further discussed in {{sec-new-update-keys}}.
+-->
 
-* The Client can (re-)get the public keys of other group members, e.g. if it is aware of new nodes joining the group after itself. This is further discussed in {{sec-key-retrieval}}.
+* The Client can (re-)get the public keys of other group members, e.g. if it is aware of new nodes joining the group after itself. This is described in {{sec-key-retrieval}}.
 
-* The Client can (re-)get the policies currently enforced in the group. This is further discussed in {{policies}}.
+* The Client can (re-)get the policies currently enforced in the group. This is described in {{policies}}.
 
-* The Client can (re-)get the version number of the keying material currently used in the group. This is further discussed in {{key-version}}.
+* The Client can (re-)get the version number of the keying material currently used in the group. This is described in {{key-version}}.
 
 * The Client can request to leave the group. This is further discussed in {{ssec-group-leaving}}.
-
-Additionally, the format of the payload of the Key Distribution Response (see {{ssec-key-distribution-response}}) can be reused for messages sent by the KDC to distribute updated keying material to the group, in case of a new node joining the group or of a current member leaving the group. The key management scheme used to send such messages could rely on, e.g., multicast in case of a new node joining or unicast in case of a node leaving the group.
 
 <!--
   Jim 14-06: Discuss that a Key Distribution Request/Response can be performed exactly in the same way also by an already member of the group. Mention the cases when this happens, e.g. believed lost of synchronization with the current group security context, crash and reboot and so on, so forced re-synchronization with the correct current security context.
@@ -407,8 +415,6 @@ Marco: Isn't it ok as we are doing with the COSE Key in Section 4.2? Then it wor
 -->
 
 Upon receiving a request from a Client, the KDC MUST check that it is storing a valid access token from that Client for the group identifier assiciated to the endpoint. If that is not the case, i.e. the KDC does not store a valid access token or this is not valid for that Client for the group identifier at hand, the KDC MUST respond to the Client with a 4.01 (Unauthorized) error message.
-
-TODO: verify that this section is ok.
 
 ## Interface at KDC
 
