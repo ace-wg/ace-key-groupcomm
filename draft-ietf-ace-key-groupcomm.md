@@ -175,7 +175,9 @@ All communications between a Client and the other group members MUST be secured 
 
 This section describes in detail the format of messages exchanged by the participants when a node requests access to a group. This exchange is based on ACE {{I-D.ietf-ace-oauth-authz}}.
 
-As defined in {{I-D.ietf-ace-oauth-authz}}, the Client requests from the AS an authorization to join the group through the KDC (see {{ssec-authorization-request}}). If the request is approved and authorization is granted, the AS provides the Client with a proof-of-possession access token and parameters to securely communicate with the KDC (see {{ssec-authorization-response}}). Communications between the Client and the AS MUST be secured, according to the transport profile of ACE used. The Content-Format used in the messages is the one specified by the used transport profile of ACE (e.g. application/ace+cbor for the first two messages and application/cwt for the third message, depending on the format of the access token).
+As defined in {{I-D.ietf-ace-oauth-authz}}, the Client requests from the AS an authorization to join the group through the KDC (see {{ssec-authorization-request}}). If the request is approved and authorization is granted, the AS provides the Client with a proof-of-possession access token and parameters to securely communicate with the KDC (see {{ssec-authorization-response}}).
+
+Communications between the Client and the AS MUST be secured, as defined by the transport profile of ACE used. The Content-Format used in the messages is the one specified by the used transport profile of ACE (e.g. application/ace+cbor for the first two messages and application/cwt for the third message, depending on the format of the access token). The transport profile of ACE also defines a number of details such as the communication and security protocols used with the KDC (see Appendix C of {{I-D.ietf-ace-oauth-authz}}).
 
 {{fig-group-member-registration}} gives an overview of the exchange described above.
 
@@ -206,7 +208,7 @@ The Authorization Request sent from the Client to the AS is as defined in Sectio
 
   - Optionally, as second element, the role (or CBOR array of roles) the Client wishes to take in the group.
 
-  The encoding of the group or topic identifier and of the role identifiers is application specific.
+  The encoding of the group or topic identifier (REQ1) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
 
 * 'audience', with an identifier of a KDC.
 
@@ -257,7 +259,7 @@ Additionally, the Authorization Response MAY contain the following parameters, w
 
   - Optionally, as second element, the role (or CBOR array of roles) the Client is authorized to take in the group.
 
-  The encoding of the group or topic identifier and of the role identifiers is application specific.
+  The encoding of the group or topic identifier and of the role identifiers is the same as in {{ssec-authorization-request}}.
 
 * Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary.
 
