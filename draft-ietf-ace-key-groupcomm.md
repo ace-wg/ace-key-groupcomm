@@ -132,7 +132,7 @@ This document specifies a mechanism for:
 
 * Authorizing a new node to join the group ({{sec-auth}}), and providing it with the group keying material to communicate with the other group members ({{key-distr}}).
 
-* Removal of a current member from the group ({{sec-node-removal}}).
+* A node to leave the group of for the KDC to remove a current member of the group ({{sec-node-removal}}).
 
 * Retrieving keying material as a current group member ({{sec-new-update-keys}} and {{sec-key-retrieval}}).
 
@@ -473,6 +473,8 @@ If verification succeeds, the handler adds the public key indicated in "client_c
 
 * 'key', containing the keying material for the group communication, or information required to derive it.
 
+* 'num', containing the version number of the keying material for the group communication, formatted as an integer.
+
 The exact format of the 'key' value MUST be defined in applications of this specification (REQ6). Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry defined in {{iana-key}}, including its name, type and application profile to be used with.
 
 ~~~~~~~~~~~
@@ -534,7 +536,7 @@ The handler expects a GET request.
 
 The handler verifies that the group identifier of the /ace-group/gid endpoint is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If verification succeeds, the handler returns a 2.05 Content message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'kty' and 'key' specified in {{gid-post}}.
+If verification succeeds, the handler returns a 2.05 Content message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'kty','key' and 'num' specified in {{gid-post}}.
 
 The payload MAY also include the parameters 'profile', 'exp' and 'mgt_key_material' parameters specified in {{gid-post}}.
 
@@ -542,7 +544,20 @@ The payload MAY also include the parameters 'profile', 'exp' and 'mgt_key_materi
 
 This resource implements GET and POST handlers.
 
-* GET: the GET handler returns the list of public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
+#### GET Handler {#pubkey-get}
+
+The handler expects a GET request.
+
+The handler verifies that the group identifier of the /ace-group/gid endpoint is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+
+If verification succeeds, the handler returns a 2.05 Content message containing the public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the payload is formatted as a CBOR byte string of zero length.
+
+#### POST Handler {#pubkey-post}
+
+The POST handler handles the public keys of the client to the group member's list and returns the symmetric group keying material for the group identified by "gid".
+
+The handler expects a request with payload formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
+
 
 * POST: the POST handler expects a request with payload formatted as a CBOR Array. Each element of the array is the identifier of a group member. With reference to the group identified by "gid", the handler identifies the public keys of the current group members for which the identifier matches with one of those indicated in the request. Then, the handler returns a response with payload formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
@@ -604,7 +619,7 @@ If the application requires backward security, the KDC MUST generate new group k
 
 ### Join Request {#ssec-key-distribution-request}
 
-The Client sends a Key Distribution Request to the KDC. This corresponds to a CoAP POST request to the /ace-group/gid endpoint at the KDC, where gid is the group identifier of the group to join. This endpoint is the same as the 'scope' value of the Authorization Request/Response.
+The Client sends a Key Distribution Request to the KDC. This corresponds to a CoAP POST request to the /ace-group/gid endpoint at the KDC, where gid is the group identifier of the group to join. This endpoint is the same as the 'scope' value of the Authorization Request/Response, or it can be retrieved from it.
 
 ### Join Response {#ssec-key-distribution-response}
 
@@ -673,7 +688,7 @@ Client                                                  KDC
 ~~~~~~~~~~~
 {: #fig-renewal-req-resp title="Message Flow of Key Renewal Request-Response" artwork-align="center"}
 
-Note that the difference between the Key Re-Distribution Request and the Key Renewal Request is that the first one only triggers distribution (the renewal might have happened independently, because of expiration), while the second one triggers the KDC to produce new keying material for the requesting node. Once a node receives new individual keying material, other group members may need to use the Keying Material Update Request to retrieve it.
+Note that the difference between the Key Re-Distribution Request and the Key Renewal Request is that the first one only triggers distribution (the renewal might have happened independently, because of expiration), while the second one triggers the KDC to produce new keying material for the requesting node.
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
 
@@ -849,7 +864,7 @@ A node may be evicted from the group in the following cases.
 
 # ACE Groupcomm Parameters {#params}
 
-This specification defines a number of fields used during the message exchange. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name.
+This specification defines a number of fields used during the second part of the message exchange, after the Token POST exchange. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name.
 
 
  Name         | CBOR Key | CBOR Type     |   Reference
@@ -953,7 +968,7 @@ The columns of this Registry are:
 
 * CBOR Type: This contains the CBOR type of the item, or a pointer to the registry that defines its type, when that depends on another item.
 
-* Reference: This contains a pointer to the public specification for the format of the item, if one exists.
+* Reference: This contains a pointer to the public specification for the item.
 
 This Registry has been initially populated by the values in {{params}}. The Reference column for all of these entries refers to sections of this document .
 
