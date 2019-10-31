@@ -173,7 +173,7 @@ All communications between a Client and the other group members MUST be secured 
 
 # Authorization to Join a Group {#sec-auth}
 
-This section describes in detail the format of messages exchanged by the participants when a node requests access to a group. The first part of the exchange is based on ACE {{I-D.ietf-ace-oauth-authz}}.
+This section describes in detail the format of messages exchanged by the participants when a node requests access to a group. This exchange is based on ACE {{I-D.ietf-ace-oauth-authz}}.
 
 As defined in {{I-D.ietf-ace-oauth-authz}}, the Client requests from the AS an authorization to join the group through the KDC (see {{ssec-authorization-request}}). If the request is approved and authorization is granted, the AS provides the Client with a proof-of-possession access token and parameters to securely communicate with the KDC (see {{ssec-authorization-response}}). Communications between the Client and the AS MUST be secured, according to the transport profile of ACE used. The Content-Format used in the messages is the one specified by the used transport profile of ACE (e.g. application/ace+cbor for the first two messages and application/cwt for the third message, depending on the format of the access token).
 
