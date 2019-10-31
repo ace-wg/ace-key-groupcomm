@@ -353,20 +353,11 @@ This parameter MUST NOT be used as a replacement for the 'cnonce' parameter defi
 
 In this specification and in application profiles building on it, this parameter is used to provide a nonce that the Client may use to prove possession of its own private key in the Key Distribution Request (see {{ssec-key-distribution-request}}).
 
-# Keying Material Provisioning Overview {#key-distr}
-
-<!--
-  Key Provisioning?
-  Key Distribution?
-  Keying Material Distribution?
-  ***Keying Material Provisioning***
--->
-
-TODO - check title
+#  Keying Material Provisioning and Group Membership Management {#key-distr}
 
 This section defines the interface available at the KDC. Moreover, this section specifies how the clients can use this interface to join a group, leave a group, retrieve new keying material or policies.
 
-During the first exchange with the KDC ("Jsoining"), the Client sends a request to the KDC, specifying the group it wishes to join (see {{ssec-key-distribution-request}}). Then, the KDC verifies the access token and that the Client is authorized to join that group. If so, it provides the Client with the keying material to securely communicate with the other members of the group (see {{ssec-key-distribution-response}}). Whenever used, the Content-Format in messages containing a payload is set to application/cbor.
+During the first exchange with the KDC ("Joining"), the Client sends a request to the KDC, specifying the group it wishes to join (see {{ssec-key-distribution-request}}). Then, the KDC verifies the access token and that the Client is authorized to join that group. If so, it provides the Client with the keying material to securely communicate with the other members of the group (see {{ssec-key-distribution-response}}). Whenever used, the Content-Format in messages containing a payload is set to application/cbor.
 
 <!-- Jim 13-07: Should one talk about the ability to use OBSERVE as part of
 key distribution?
@@ -383,9 +374,7 @@ When the Client is already a group member, the Client can use the interface at t
 
 * The Client can (re-)get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed group rekeying. This is described in {{sec-new-update-keys}}.
 
-<!-- FP: This is covered by the above. We don't define "indvidual yet"
-* The Client can get a new individual key, or new input material to derive it. This is further discussed in {{sec-new-update-keys}}.
--->
+* The Client can retrieve a new individual key, or new input material to derive it. This is described in {{sec-new-update-keys}}.
 
 * The Client can (re-)get the public keys of other group members, e.g. if it is aware of new nodes joining the group after itself. This is described in {{sec-key-retrieval}}.
 
