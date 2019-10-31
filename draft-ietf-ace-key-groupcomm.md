@@ -983,6 +983,11 @@ IANA is asked to register the following entries in the "ACE Authorization Server
 * Value Type: integer
 * Reference: \[\[This specification\]\]
 
+* Name: rsnonce
+* CBOR Key: TBD (range -256 to 255)
+* Value Type: byte string
+* Reference: \[\[This specification\]\]
+
 ## ACE Groupcomm Parameters Registry {#iana-reg}
 
 This specification establishes the "ACE Groupcomm Parameters" IANA Registry. The
