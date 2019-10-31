@@ -899,7 +899,7 @@ This specification defines a number of fields used during the message exchange. 
 
  Name         | CBOR Key | CBOR Type     |   Reference
 --------------|----------|---------------|---------------
- scope        |   TBD    | array         | {{ssec-authorization-request}}
+ scope        |   TBD    | array         | {{ssec-key-distribution-request}}
  get_pub_keys |   TBD    | array         | {{ssec-key-distribution-request}}
  client_cred  |   TBD    | byte string   | {{ssec-key-distribution-request}}
  cnonce       |   TBD    | byte string   | {{ssec-key-distribution-request}}
