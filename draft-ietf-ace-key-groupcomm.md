@@ -432,7 +432,7 @@ The KDC is configured with the following resources:
 
 * /ace-group/gid/node: this sub-resource is fixed and supports GET and POST methods.
 
-The details for the handlers of each resource are given in the following sections. These endpoints are used to perform the operations introduced in {{key-distr}}.
+The details for the handlers of each resource are given in the following sections. These endpoints are used to perform the operations introduced in {{key-distr}}. Note that the url-path given here are default names: implementations are not required to use these names, and can define their own instead.
 
 ### ace-group
 
