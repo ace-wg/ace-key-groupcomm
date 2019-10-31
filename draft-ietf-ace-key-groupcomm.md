@@ -862,6 +862,7 @@ This specification defines a number of fields used during the second part of the
  pub_keys_repos   |   TBD    | array         | {{ssec-key-distribution-request}}
  kty          |   TBD    | int / byte string   | {{ssec-key-distribution-response}}
  key          |   TBD    | see "ACE Groupcomm Key" Registry     | {{ssec-key-distribution-response}}
+ num          |   TBD    | int           | {{ssec-key-distribution-response}}
  profile      |   TBD    | int           | {{ssec-key-distribution-response}}
  exp          |   TBD    | int / float   | {{ssec-key-distribution-response}}
  pub_keys     |   TBD    | byte string   | {{ssec-key-distribution-response}}
