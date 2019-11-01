@@ -449,7 +449,7 @@ The handler expects a request with payload formatted as a CBOR map which MAY con
 
 * 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value a list of public key repositories storing the certificate of the Client. This parameter is encoded as a CBOR array of CBOR text strings, each of which specifies the URI of a key repository.
 
-The handler verifies that the group identifier of the /ace-group/gid endpoint is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
 If the request is not formatted correctly (e.g. unknown fields present), the handler MUST respond with 4.00 (Bad Request) error message.
 
@@ -520,7 +520,7 @@ The GET handler returns the symmetric group keying material for the group identi
 
 The handler expects a GET request.
 
-The handler verifies that the group identifier of the /ace-group/gid endpoint is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
 If verification succeeds, the handler returns a 2.05 Content message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'kty','key' and 'num' specified in {{gid-post}}.
 
@@ -534,25 +534,41 @@ This resource implements GET and POST handlers.
 
 The POST handler handles the public keys of the client to the group member's list and returns the symmetric group keying material for the group identified by "gid".
 
-The handler expects a request with payload formatted as a CBOR array, where each element of the array is the identifier of a group member for the group identified by "gid".
+The handler expects a request with payload formatted as a CBOR map. The payload of this request is a CBOR Map that MUST contain the following fields:
 
-The handler verifies that the group identifier of the /ace-group/gid endpoint is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+* 'get_pub_keys', whose value is a non-empty CBOR array. Each element of the array is the identifier of a group member for the group identified by "gid". The specific format of public keys as well as identifiers of group members MUST be specified by the application profile (REQ, REQ).
 
-If verification succeeds, the handler identifies the public keys of the current group members for which the identifier matches with one of those indicated in the request. Then, the handler returns a 2.05 Content message response with payload formatted as a CBOR byte string, which encodes the list of public keys of those group members including the respective member identifiers. The exact format is the same as the one in the value of the "pub\_keys" parameter in {{gid-post}}. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
+The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+
+The handler verifies that the 'get_pub_keys' parameter is not an empty CBOR Array. If verification fails, the KDC MUST treat the request as malformed and respond with a 4.00 (Bad Request) error message.
+
+If verification succeeds, the handler identifies the public keys of the current group members for which the identifier matches with one of those indicated in the request. Then, the handler returns a 2.05 Content message response with payload formatted as a CBOR map containing only the 'pub\_keys' parameter from {{gid-post}}, which encodes the list of public keys of those group members including the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length. The specific format of public keys as well as identifiers of group members is specified by the application profile (REQ, REQ).
+
+The handler MAY enforce one of the following policies, in order to handle possible identifiers that are included in the 'get_pub_keys' parameter of the Public Key POST request but are not associated to any current group member. Such a policy MUST be specified by the application profile (REQ)
+
+* The KDC silently ignores those identifiers.
+
+* The KDC retains public keys of group members for a given amount of time after their leaving, before discarding them. As long as such public keys are retained, the KDC provides them to a requesting Client.
 
 #### GET Handler {#pubkey-get}
 
 The handler expects a GET request.
 
-The handler verifies that the group identifier of the /ace-group/gid endpoint is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If verification succeeds, the handler returns a 2.05 Content message containing the public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. The exact format is the same as the one in the value of the "pub\_keys" parameter in {{gid-post}}. If the KDC does not store any public key associated with the specified member identifiers, the payload is formatted as a zero-length CBOR byte string.
+If verification succeeds, the handler returns a 2.05 Content message containing the public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR map containing only the 'pub\_keys' parameter from {{gid-post}}, which encodes the list of public keys of all the group members including the respective member identifiers. If the KDC does not store any public key for the group, the handler returns a response with payload formatted as a CBOR byte string of zero length.The specific format of public keys as well as identifiers of group members is specified by the application profile (REQ, REQ).
 
 ### ace-group/gid/policies
 
-This resource implements GET and POST handlers.
+This resource implements a GET handler.
 
-* GET: the GET handler returns the list of policies for the group identified by "gid". The payload of the response is formatted as a CBOR Map, where each pair specifies a particular management aspect.
+#### GET Handler {#policies-get}
+
+The handler expects a GET request.
+
+The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+
+If verification succeeds, the handler returns a 2.05 Content message containing the list of policies for the group identified by "gid". The payload of the response is formatted as a CBOR , where each pair specifies a particular management aspect. If the KDC does not store any policy, the payload is formatted as a zero-length CBOR byte string.
 
 The specific format and meaning of group policies MUST be specified in the application profile (REQ4).
 
@@ -560,11 +576,37 @@ The specific format and meaning of group policies MUST be specified in the appli
 
 This resource implements a GET handler.
 
-* GET: the GET handler returns an integer that represents the epoch of the symmetric group keying material. This number is incremented on the KDC every time the KDC updates the symmetric group keying material. The payload of the response is formatted as a CBOR integer.
+#### GET Handler {#num-get}
+
+The handler expects a GET request.
+
+The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+
+If verification succeeds, the handler returns a 2.05 Content message containing an integer that represents the version number of the symmetric group keying material. This number is incremented on the KDC every time the KDC updates the symmetric group keying material. The payload of the response is formatted as a CBOR integer.
 
 ### ace-group/gid/node
 
 This resource implements GET and POST handlers.
+
+#### POST Handler {#node-post}
+
+The POST handler removes the node from the group, for the group identified by "gid".
+
+The handler expects a request with empty payload.
+
+The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+
+If verification succeeds, the handler identifies the public keys of the client sending the request. Then, the handler returns a 2.05 Content message response with payload formatted as a CBOR byte string, which encodes the list of public keys of those group members including the respective member identifiers. The exact format is the same as the one in the value of the "pub\_keys" parameter in {{gid-post}}. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
+
+#### GET Handler {#node-get}
+
+The handler expects a GET request.
+
+The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+
+If verification succeeds, the handler returns a 2.05 Content message containing the public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. The exact format is the same as the one in the value of the "pub\_keys" parameter in {{gid-post}}. If the KDC does not store any public key associated with the specified member identifiers, the payload is formatted as a zero-length CBOR byte string.
+
+
 
 * GET: the GET handler returns newly-generated individual keying material for the Client, or information enabling the Client to derive it.
 
@@ -729,10 +771,6 @@ Client                                                     KDC
 
 To request the public keys of all the current group members, the Client sends a CoAP GET request to the /ace-group/gid/pub-key endpoint at the KDC, where gid is the group identifier.
 
-To request only the public keys associated to some specific group members, the Client sends a CoAP POST request to the /ace-group/gid/pub-key endpoint at the KDC. The payload of this request is a CBOR Map that MUST contain the following fields:
-
-* 'get_pub_keys', which has as value a CBOR array. Each element of the array is the identifier of a group member, so requesting the public key of that group member. The specific format of public keys as well as identifiers of group members is specified by the application profile.
-
 <!-- In some cases, it is not necessary to include the scope parameter, for instance if the KDC maintains a list of active group members for each managed group, and the Client is member of only one group. The Client MUST include the scope parameter if it is a member of multiple groups under the same KDC.
 
 
@@ -877,6 +915,8 @@ The KDC may enforce a rekeying policy that takes into account the overall time r
 That is, the KDC may not rekey the group at every membership change, for instance if members' joining and leaving occur frequently and performing a group rekeying takes too long. Instead, the KDC may rekey the group after a minum number of group members have joined or left within a given time interval, or during predictable network inactivity periods.
 
 However, this would result in the KDC not constantly preserving backward and forward security. In fact, newly joining group members could be able to access the keying material used before their joining, and thus could access past group communications. Also, until the KDC performs a group rekeying, the newly leaving nodes would still be able to access upcoming group communications that are protected with the keying material that has not yet been updated.
+
+A node that has left the group should not expect any of its outgoing messages to be successfully processed, if received after its leaving, due to a possible group rekeying occurred before the message reception.
 
 ## Update of Keying Material
 
