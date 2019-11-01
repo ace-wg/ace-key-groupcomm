@@ -568,7 +568,7 @@ The handler expects a GET request.
 
 The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If verification succeeds, the handler returns a 2.05 Content message containing the list of policies for the group identified by "gid". The payload of the response is formatted as a CBOR , where each pair specifies a particular management aspect. If the KDC does not store any policy, the payload is formatted as a zero-length CBOR byte string.
+If verification succeeds, the handler returns a 2.05 Content message containing the list of policies for the group identified by "gid". The payload of the response is formatted as a CBOR map including only the parameter 'group_policies' defined in {{gid-post}} and specifying the current policies in the group. If the KDC does not store any policy, the payload is formatted as a zero-length CBOR byte string.
 
 The specific format and meaning of group policies MUST be specified in the application profile (REQ4).
 
@@ -592,11 +592,13 @@ This resource implements GET and POST handlers.
 
 The POST handler removes the node from the group, for the group identified by "gid".
 
-The handler expects a request with empty payload.
+The handler expects a request with payload formatted as a CBOR map. The payload of this request is a CBOR Map that MAY contain only the 'scope' field as specified in {{gid-post}}.
 
 The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If verification succeeds, the handler identifies the public keys of the client sending the request. Then, the handler returns a 2.05 Content message response with payload formatted as a CBOR byte string, which encodes the list of public keys of those group members including the respective member identifiers. The exact format is the same as the one in the value of the "pub\_keys" parameter in {{gid-post}}. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
+If the request contained a 'scope' field, the handler MUST extract the roles for that client. If the value is such that the KDC cannot extract all the necessary information to understand and process it correctly (e.g. unrecognized roles), the KDC MUST respond with a 4.00 (Bad Request) error message.
+
+If verification succeeds, the handler removes the client from the group identified by "gid", for specific roles if roles were specified in the 'scope' field, or for all roles. That includes removing the public key of the client if the KDC keep tracks of that. Then, the handler returns a 2.05 Content message response with empty payload.
 
 #### GET Handler {#node-get}
 
@@ -604,21 +606,7 @@ The handler expects a GET request.
 
 The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If verification succeeds, the handler returns a 2.05 Content message containing the public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. The exact format is the same as the one in the value of the "pub\_keys" parameter in {{gid-post}}. If the KDC does not store any public key associated with the specified member identifiers, the payload is formatted as a zero-length CBOR byte string.
-
-
-
-* GET: the GET handler returns newly-generated individual keying material for the Client, or information enabling the Client to derive it.
-
-<!-- OLD TEXT
-* GET: the GET handler returns a new value for the identifier of the node as group member. The payload includes the new identifier, encoded as a CBOR byte string or text string.
--->
-
-* POST: the POST handler expects a request with empty payload. The handler removes the node from the group.
-
-The specific format and content of the payload of the Group Leaving request is specified by the application profile (REQ5).
-
-The specific format of newly-generated individual keying material for group members, or of the information to derive it, MUST be specified in the application profile (REQ6).
+If verification succeeds, the handler returns a 2.05 Content message containing newly-generated individual keying material for the Client, or information enabling the Client to derive it. The payload of the response is formatted as a CBOR map. The specific format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ6) and registered in {{iana-reg}}.
 
 ## Joining Exchange {#ssec-key-distribution-exchange}
 
@@ -781,19 +769,6 @@ Marco: It makes sense, should we then just make 'scope' mandatory?
 
 ### Public Key Response
 
-If the Public Key Request is a POST request and the 'get_pub_keys' parameter is an empty CBOR Array, the KDC MUST treat the request as malformed and respond with a 4.00 (Bad Request) error message.
-
-Otherwise, the KDC replies to the Client with a Public Key Response, whose paylaod is a CBOR map including only the parameter 'pub_keys' defined for the Key Distribution Response in {{ssec-key-distribution-response}}.
-
-In particular, 'pub_keys' contains the public keys either of all the group members (if the Public Key Request was a GET request), or only those associated to the group members indicated by the Client with the 'get_pub_keys' parameter (if the Public Key Request was a POST request). The specific format of public keys as well as identifiers of group members is specified by the application profile.
-
-The KDC may enforce one of the following policies, in order to handle possible identifiers that are included in the 'get_pub_keys' parameter of the Public Key POST request but are not associated to any current group member.
-
-* The KDC silently ignores those identifiers.
-
-* The KDC retains public keys of group members for a given amount of time after their leaving, before discarding them. As long as such public keys are retained, the KDC provides them to a requesting Client.
-
-Either case, a node that has left the group should not expect any of its outgoing messages to be successfully processed, if received after its leaving, due to a possible group rekeying occurred before the message reception.
 
 ## Retrieval of Group Policies {#policies}
 
@@ -817,7 +792,7 @@ To request the current group policies, the Client sends a CoAP GET request to th
 
 ### Policies Response
 
-The KDC replies to the Client with a Policies Response, whose payload is a CBOR Map including only the parameter 'group_policies' defined for the Key Distribution Response in {{ssec-key-distribution-response}} and specifying the current policies in the group. The specific format and meaning of policies is specified by the application profile.
+tbd
 
 ## Retrieval of Keying Material Version {#key-version}
 
@@ -841,11 +816,11 @@ To request the keying material version number, the Client sends a CoAP GET reque
 
 ### Version Response
 
-The KDC replies to the Client with a Version Response, whose payload payload contains the group keying material version number, encoded as a CBOR integer.
+tbd
 
 ## Group Leaving Request ## {#ssec-group-leaving}
 
-A node can actively request to leave the group. In this case, the Client MUST send a CoAP POST request to the endpoint /ace-group/gid/node at the KDC (where gid is the group identifier) using the protected channel established with ACE, mentioned in {{key-distr}}. The specific format and content of the payload of the Group Leaving request is specified by the application profile.
+A node can actively request to leave the group. In this case, the Client MUST send a CoAP POST request to the endpoint /ace-group/gid/node at the KDC (where gid is the group identifier) using the protected channel established with ACE, mentioned in {{key-distr}}.
 
 <!-- Jim 13-07: Section 5.2 - What is the message to leave - can I leave one scope but not another?  Can I just give up a role?
 
@@ -854,7 +829,6 @@ Marco: We should define an actual message, like the ones for retrieving updating
 Marco: 'scope' encodes one group and some roles. So a node is supposed to leave that group altogether, with all its roles. If the node wants to stay in the group with less roles, it is just fine that is stops playing the roles it is not interested in anymore.
 -->
 
-If the Leave Request is such that the KDC cannot extract all the necessary information to understand and process it correctly (e.g. unrecognized endpoint), the KDC MUST respond with a 4.00 (Bad Request) error message. Otherwise, the KDC MUST remove the leaving node from the list of group members, if the KDC keeps track of that.
 
 Alternatively, a node may be removed by the KDC, without having explicitly asked for it. This is further discussed in {{sec-node-removal}}.
 
