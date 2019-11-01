@@ -530,28 +530,23 @@ The payload MAY also include the parameters 'profile', 'exp' and 'mgt_key_materi
 
 This resource implements GET and POST handlers.
 
+#### POST Handler {#pubkey-post}
+
+The POST handler handles the public keys of the client to the group member's list and returns the symmetric group keying material for the group identified by "gid".
+
+The handler expects a request with payload formatted as a CBOR array, where each element of the array is the identifier of a group member for the group identified by "gid".
+
+The handler verifies that the group identifier of the /ace-group/gid endpoint is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+
+If verification succeeds, the handler identifies the public keys of the current group members for which the identifier matches with one of those indicated in the request. Then, the handler returns a 2.05 Content message response with payload formatted as a CBOR byte string, which encodes the list of public keys of those group members including the respective member identifiers. The exact format is the same as the one in the value of the "pub\_keys" parameter in {{gid-post}}. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
+
 #### GET Handler {#pubkey-get}
 
 The handler expects a GET request.
 
 The handler verifies that the group identifier of the /ace-group/gid endpoint is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If verification succeeds, the handler returns a 2.05 Content message containing the public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the payload is formatted as a CBOR byte string of zero length.
-
-#### POST Handler {#pubkey-post}
-
-The POST handler handles the public keys of the client to the group member's list and returns the symmetric group keying material for the group identified by "gid".
-
-The handler expects a request with payload formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
-
-
-* POST: the POST handler expects a request with payload formatted as a CBOR Array. Each element of the array is the identifier of a group member. With reference to the group identified by "gid", the handler identifies the public keys of the current group members for which the identifier matches with one of those indicated in the request. Then, the handler returns a response with payload formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
-
-The specific format of the symmetric group keying material MUST be specified in the application profile (REQ1).
-
-The specific format of the public keys MUST be specified in the application profile (REQ2).
-
-The specific format of the identifiers of group members MUST be specified in the application profile (REQ3).
+If verification succeeds, the handler returns a 2.05 Content message containing the public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR byte string, which encodes the list of public keys of all the group members paired with the respective member identifiers. The exact format is the same as the one in the value of the "pub\_keys" parameter in {{gid-post}}. If the KDC does not store any public key associated with the specified member identifiers, the payload is formatted as a zero-length CBOR byte string.
 
 ### ace-group/gid/policies
 
