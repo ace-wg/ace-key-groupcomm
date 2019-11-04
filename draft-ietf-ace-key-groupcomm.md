@@ -44,6 +44,7 @@ normative:
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-ace-oauth-params:
   I-D.ietf-core-oscore-groupcomm:
+  I-D.ietf-ace-cwt-proof-of-possession:
 
 informative:
 
@@ -310,7 +311,7 @@ The 'sign_info' parameter MUST be present if the POST request included the 'sign
 
 * The third element 'sign_key_parameters' indicates the parameters of the key used with the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ5). If no parameters of the key used with the signature algorithm are specified, 'sign_key_parameters' MUST be encoded as the CBOR simple value Null.
 
-The 'pub_key_enc' parameter MUST be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, the 'pub_key_enc' parameter of the 2.01 (Created) response is a CBOR integer, indicating the encoding of public keys used in the group. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
+The 'pub_key_enc' parameter MUST be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, the 'pub_key_enc' parameter of the 2.01 (Created) response is a CBOR integer, indicating the encoding of public keys used in the group. Its acceptable values are taken from the "CWT Confirmation Method" Registry defined in {{I-D.ietf-ace-cwt-proof-of-possession}}. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
 
 The CDDL notation of the 'sign_info' and 'pub_key_enc' parameters formatted as in the response is given below.
 
