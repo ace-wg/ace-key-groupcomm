@@ -350,7 +350,7 @@ The 'rsnonce' parameter is an OPTIONAL parameter of the AS Request Creation Hint
 This parameter MUST NOT be used as a replacement for the 'cnonce' parameter defined in Section 5.1.2 of {{I-D.ietf-ace-oauth-authz}}.
 -->
 
-In this specification and in application profiles building on it, this parameter is used to provide a nonce that the Client may use to prove possession of its own private key in the Joining Request (see {{ssec-key-distribution-exchange}}).
+In this specification and in application profiles building on it, this parameter is used to provide a nonce that the Client may use to prove possession of its own private key in the Joining Request ((see the ‘client_cred_verify’ parameter in {{key-distr}}).
 
 #  Keying Material Provisioning and Group Membership Management {#key-distr}
 
@@ -434,7 +434,7 @@ This resource implements GET and POST handlers.
 
 #### POST Handler {#gid-post}
 
-The POST handler handles the public key of the client for addition the list of the group members' public keys and returns the symmetric group keying material for the group identified by "gid".
+The POST handler adds the public key of the client to the list of the group members' public keys and returns the symmetric group keying material for the group identified by "gid".
 
 The handler expects a request with payload formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
@@ -533,7 +533,7 @@ This resource implements GET and POST handlers.
 
 #### POST Handler {#pubkey-post}
 
-The POST handler handles identifiers of group members for the group identified by "gid" and returns the public keys of such group members.
+The POST handler receives identifiers of group members for the group identified by "gid" and returns the public keys of such group members.
 
 The handler expects a request with payload formatted as a CBOR map. The payload of this request is a CBOR Map that MUST contain the following fields:
 
@@ -543,7 +543,7 @@ The handler verifies that the group identifier of the /ace-group/gid path is a s
 
 The handler verifies that the 'get_pub_keys' parameter is not an empty CBOR Array. If verification fails, the KDC MUST treat the request as malformed and respond with a 4.00 (Bad Request) error message.
 
-If verification succeeds, the handler identifies the public keys of the current group members for which the identifier matches with one of those indicated in the request. Then, the handler returns a (2.05) Content message response with payload formatted as a CBOR map containing only the 'pub\_keys' parameter from {{gid-post}}, which encodes the list of public keys of those group members including the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length. The specific format of public keys as well as of identifiers of group members is specified by the application profile (REQ11, REQ8).
+If verification succeeds, the handler identifies the public keys of the current group members for which the identifier matches with one of those indicated in the request. Then, the handler returns a 2.05 (Content) message response with payload formatted as a CBOR map containing only the 'pub\_keys' parameter from {{gid-post}}, which encodes the list of public keys of those group members including the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length. The specific format of public keys as well as of identifiers of group members is specified by the application profile (REQ11, REQ8).
 
 The handler MAY enforce one of the following policies, in order to handle possible identifiers that are included in the 'get_pub_keys' parameter of the request but are not associated to any current group member. Such a policy MUST be specified by the application profile (REQ12)
 
@@ -557,7 +557,7 @@ The handler expects a GET request.
 
 The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If verification succeeds, the handler returns a (2.05) Content message containing the public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR map containing only the 'pub\_keys' parameter from {{gid-post}}, which encodes the list of public keys of all the group members including the respective member identifiers. If the KDC does not store any public key for the group, the handler returns a response with payload formatted as a CBOR byte string of zero length. The specific format of public keys as well as of identifiers of group members is specified by the application profile (REQ11, REQ8).
+If verification succeeds, the handler returns a 2.05 (Content) message containing the public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR map containing only the 'pub\_keys' parameter from {{gid-post}}, which encodes the list of public keys of all the group members including the respective member identifiers. If the KDC does not store any public key for the group, the handler returns a response with payload formatted as a CBOR byte string of zero length. The specific format of public keys as well as of identifiers of group members is specified by the application profile (REQ11, REQ8).
 
 ### ace-group/gid/policies
 
