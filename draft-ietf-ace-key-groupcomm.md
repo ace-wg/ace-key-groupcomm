@@ -512,7 +512,7 @@ Optionally, the response MAY contain the following parameters, which, if include
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Policies title="ACE Groupcomm Policies" artwork-align="center"}
 
-* 'mgt_key_material', encoded as a CBOR byte string and containing the administrative keying material to participate in the group rekeying performed by the KDC. The exact format and content depend on the specific rekeying scheme used in the group, which MAY be specified in the application profile (OPT3).
+* 'mgt_key_material', encoded as a CBOR byte string and containing the administrative keying material to participate in the group rekeying performed by the KDC. The application profile MUST define if this field is used, and if used then MUST specify the exact format and content depend on the specific rekeying scheme used in the group (REQ20).
 
 Specific application profiles that build on this document MUST specify how exactly the keying material is used to protect the group communication (REQ10).
 
@@ -1132,11 +1132,12 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ19: Specify how the nonce N_W is generated, if the token is not being posted (e.g. if it is used directly to validate TLS instead).
 
+* REQ20: Specify if 'mgt\_key\_material' used, and if yes specify its format and content (see {{gid-post}}).
+
 * OPT1: Optionally, specify the encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used (see {{gid-post}}).
 
 * OPT2: Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' and 'pub_key_enc' are not used (see {{token-post}}).
 
-* OPT3: Optionally, specify the format and content of 'mgt\_key\_material' (see {{gid-post}}).
 
 * OPT4: Optionally, specify policies that instruct clients to retain unsuccessfully decrypted messages and for how long, so that they can be decrypted after getting updated keying material.
 
