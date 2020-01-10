@@ -357,9 +357,7 @@ In this specification and in application profiles building on it, this parameter
 
 This section defines the interface available at the KDC. Moreover, this section specifies how the clients can use this interface to join a group, leave a group, retrieve new keying material or policies.
 
-During the first exchange with the KDC ("Joining"), the Client sends a request to the KDC, specifying the group it wishes to join (see {{ssec-key-distribution-exchange}}). Then, the KDC verifies the access token and that the Client is authorized to join that group. If so, it provides the Client with the keying material to securely communicate with the other members of the group. Whenever used, the Content-Format in messages containing a payload is set to application/cbor.
-
-TODO: Do we need to define a new Content-Format cbor+ace-groupcomm?
+During the first exchange with the KDC ("Joining"), the Client sends a request to the KDC, specifying the group it wishes to join (see {{ssec-key-distribution-exchange}}). Then, the KDC verifies the access token and that the Client is authorized to join that group. If so, it provides the Client with the keying material to securely communicate with the other members of the group. Whenever used, the Content-Format in messages containing a payload is set to application/ace-groupcomm+cbor, as defined in {{content-type}}.
 
 <!-- Jim 13-07: Should one talk about the ability to use OBSERVE as part of
 key distribution?
@@ -813,7 +811,7 @@ A node may be evicted from the group in the following cases.
 
 # ACE Groupcomm Parameters {#params}
 
-This specification defines a number of fields used during the second part of the message exchange, after the ACE Token POST exchange. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name.
+This specification defines a number of fields used during the second part of the message exchange, after the ACE Token POST exchange. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name. Note that the media type ace-groupcomm+cbor MUST be used when these fields are transported.
 
 
  Name         | CBOR Key | CBOR Type     |   Reference
@@ -834,7 +832,7 @@ This specification defines a number of fields used during the second part of the
  mgt_key_material    |   TBD    | byte string   | {{gid-post}}
  get_pub_keys |   TBD    | array         | {{pubkey-post}}
 
-# Security Considerations
+# Security Considerations {#sec-cons}
 
 When a Client receives a message from a sender for the first time, it needs to have a mechanism in place to avoid replay, e.g. Appendix B.2 of {{RFC8613}}.
 
@@ -887,7 +885,66 @@ The following registrations are required for the OSCORE Security Context Paramet
 *  Registry:
 *  Description: OSCORE Counter Signature Algorithm Value
 *  Reference: \[\[this specification\]\]
+
+## Media Type Registrations {#media-type}
+
+   This specification registers the 'application/ace-groupcomm+cbor' media type
+   for messages of the protocols defined in this document following the ACE exchange and carrying
+   parameters encoded in CBOR.  This registration follows the procedures
+   specified in [RFC6838].
+
+   Type name: application
+
+   Subtype name: ace-groupcomm+cbor
+
+   Required parameters: none
+
+   Optional parameters: none
+
+   Encoding considerations: Must be encoded as CBOR map containing the
+   protocol parameters defined in [this document].
+
+   Security considerations: See {{sec-cons}} of this document.
+
+   Interoperability considerations: n/a
+
+   Published specification: [this document]
+
+   Applications that use this media type: The type is used by
+   authorization servers, clients and resource servers that support the
+   ACE groupcomm framework as specified in [this document].
+
+   Additional information:
+
+   Magic number(s): n/a
+
+   File extension(s): .ace-groupcomm
+
+   Macintosh file type code(s): n/a
+
+   Person & email address to contact for further information:
+   <iesg@ietf.org>
+
+   Intended usage: COMMON
+
+   Restrictions on usage: None
+
+   Author: Francesca Palombini <francesca.palombini@ericsson.com>
+
+   Change controller: IESG
 -->
+
+## CoAP Content-Formats Registry {#content-type}
+
+This specification registers the following entry to the "CoAP Content-Formats" registry, within the "CoRE Parameters" registry:
+
+Media Type: application/ace-groupcomm+cbor
+
+Encoding: -
+
+ID: TBD
+
+Reference: \[this document\]
 
 ## ACE Authorization Server Request Creation Hints Registry {#iana-kinfo}
 
