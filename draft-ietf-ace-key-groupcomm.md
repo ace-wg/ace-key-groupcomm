@@ -311,7 +311,11 @@ The 'sign_info' parameter MUST be present if the POST request included the 'sign
 
 * The third element 'sign_key_parameters' indicates the parameters of the key used with the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ5). If no parameters of the key used with the signature algorithm are specified, 'sign_key_parameters' MUST be encoded as the CBOR simple value Null.
 
-The 'pub_key_enc' parameter MUST be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, the 'pub_key_enc' parameter of the 2.01 (Created) response is a CBOR integer, indicating the encoding of public keys used in the group. Its acceptable values are taken from the "CWT Confirmation Method" Registry defined in {{I-D.ietf-ace-cwt-proof-of-possession}}. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
+The 'pub_key_enc' parameter MUST be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, the 'pub_key_enc' parameter of the 2.01 (Created) response is a CBOR integer, indicating the encoding of public keys used in the group. 
+
+<!-- TODO: I noted the following from our discussion with Jim at IETF106: "pub_key_enc_res" = null if not repo" -->
+
+Its acceptable values are taken from the "CWT Confirmation Method" Registry defined in {{I-D.ietf-ace-cwt-proof-of-possession}}. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
 
 The CDDL notation of the 'sign_info' and 'pub_key_enc' parameters formatted as in the response is given below.
 
@@ -451,7 +455,7 @@ The handler expects a request with payload formatted as a CBOR map which MAY con
 
 The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The KDC MAY set the payload as the payload of the 2.01 (Created) response to the Token Post, defined in {{token-post}}. Note that in this case, the content format MUST be set to application/ace+cbor.
 
-If the request is not formatted correctly (e.g. unknown fields present), the handler MUST respond with 4.00 (Bad Request) error message.
+If the request is not formatted correctly (e.g. unknown or not-expected fields present), the handler MUST respond with 4.00 (Bad Request) error message.
 
 If verification succeeds, the handler adds the public key indicated in "client_cred" to the list of public keys stored for the group identified by "gid". Moreover, the handler assigns a name to the node (e.g. "node1"), and creates a sub-resource to /ace-group/gid/ at the KDC (e.g. "/ace-group/gid/node1"). The handler returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them. The response message also contains the sub-resource created for that node in a Location-Path CoAP option. The payload of the response is formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
