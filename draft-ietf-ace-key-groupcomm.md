@@ -417,7 +417,7 @@ The KDC is configured with the following resources:
 
 * /ace-group/gid : one sub-resource to /ace-group is implemented for each group the KDC manages. These resources are identified by the group identifiers of the groups the KDC manages (in this example, the group identifier has value "gid"). These resources support GET and POST method.
 
-* /ace-group/gid/pub-key : this sub-resource is fixed and supports GET and POST methods.
+* /ace-group/gid/pub-key : this sub-resource is fixed and supports GET and FETCH methods.
 
 * /ace-group/gid/policies: this sub-resource is fixed and supports the GET method.
 
@@ -532,11 +532,11 @@ The payload MAY also include the parameters 'ace-groupcomm-profile', 'exp' and '
 
 ### ace-group/gid/pub-key
 
-This resource implements GET and POST handlers.
+This resource implements GET and FETCH handlers.
 
-#### POST Handler {#pubkey-post}
+#### FETCH Handler {#pubkey-fetch}
 
-The POST handler receives identifiers of group members for the group identified by "gid" and returns the public keys of such group members.
+The FETCH handler receives identifiers of group members for the group identified by "gid" and returns the public keys of such group members.
 
 The handler expects a request with payload formatted as a CBOR map. The payload of this request is a CBOR Map that MUST contain the following fields:
 
@@ -731,7 +731,7 @@ Note the difference between the Key Distribution Request and the Key Renewal Req
 
 ## Retrieval of Public Keys for Group Members {#sec-key-retrieval}
 
-In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to request public keys of either all group members or a specified subset, by sending a CoAP GET or POST request to the /ace-group/gid/pub-key endpoint at the KDC, where gid is the group identifier, and formatted as defined in {{pubkey-get}} and {{pubkey-post}}.
+In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to request public keys of either all group members or a specified subset, by sending a CoAP GET or FETCH request to the /ace-group/gid/pub-key endpoint at the KDC, where gid is the group identifier, and formatted as defined in {{pubkey-get}} and {{pubkey-fetch}}.
 
 {{fig-public-key-1}} and {{fig-public-key-2}} give an overview of the exchanges described above.
 
@@ -750,7 +750,7 @@ Client                                                     KDC
 ~~~~~~~~~~~
 Client                                                     KDC
    |                                                        |
-   |--- Public Key Request: POST /ace-group/gid/pub-key --->|
+   |--- Public Key Request: FETCH /ace-group/gid/pub-key --->|
    |                                                        |
    |<--------- Public Key Response: 2.01 (Created) ---------|
    |                                                        |
@@ -847,7 +847,7 @@ This specification defines a number of fields used during the second part of the
  pub_keys     |   TBD    | byte string   | {{gid-post}}
  group_policies      |   TBD    | map           | {{gid-post}}
  mgt_key_material    |   TBD    | byte string   | {{gid-post}}
- get_pub_keys |   TBD    | array         | {{pubkey-post}}
+ get_pub_keys |   TBD    | array         | {{pubkey-fetch}}
 
 # Security Considerations {#sec-cons}
 
@@ -1122,7 +1122,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ14: Optionally, specify the encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used (see {{gid-post}}).
 
-* REQ15: Specify policies at the KDC to handle id that are not included in get_pub_keys (see {{pubkey-post}}).
+* REQ15: Specify policies at the KDC to handle id that are not included in get_pub_keys (see {{pubkey-fetch}}).
 
 * REQ16: Specify the format and content of 'group_policies' (see {{gid-post}}).
 
