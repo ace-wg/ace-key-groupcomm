@@ -419,7 +419,7 @@ The KDC is configured with the following resources:
 
 * /ace-group/gid/ctx-num: this sub-resource is fixed and supports the GET method.
 
-* /ace-group/gid/node: this sub-resource is fixed and supports GET and POST methods.
+* /ace-group/gid/node: one sub-resource to /ace-group/gid is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "node"). These resources support GET, PUT and DELETE methods.
 
 The details for the handlers of each resource are given in the following sections. These endpoints are used to perform the operations introduced in {{key-distr}}. Note that the url-path given here are default names: implementations are not required to use these names, and can define their own instead.
 
@@ -453,7 +453,7 @@ The handler verifies that the group identifier of the /ace-group/gid path is a s
 
 If the request is not formatted correctly (e.g. unknown fields present), the handler MUST respond with 4.00 (Bad Request) error message.
 
-If verification succeeds, the handler adds the public key indicated in "client_cred" to the list of public keys stored for the group identified by "gid". The handler returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them. The payload of the response is formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
+If verification succeeds, the handler adds the public key indicated in "client_cred" to the list of public keys stored for the group identified by "gid". Moreover, the handler assigns a name to the node (e.g. "node1"), and creates a sub-resource to /ace-group/gid/ at the KDC (e.g. "/ace-group/gid/node1"). The handler returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them. The response message also contains the sub-resource created for that node in a Location-Path CoAP option. The payload of the response is formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
 * 'kty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key" Registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
 
@@ -586,11 +586,31 @@ If verification succeeds, the handler returns a 2.05 (Content) message containin
 
 ### ace-group/gid/node
 
-This resource implements GET and POST handlers.
+This resource implements GET, PUT and DELETE handlers.
 
-#### POST Handler {#node-post}
+#### PUT Handler {#node-put}
 
-The POST handler removes the node from the group, for the group identified by "gid".
+The PUT handler is used to get the KDC to produce and return individual keying material to protect outgoing messages for the node (identified by "node") for the group identified by "gid".
+
+The handler expects a request with empty payload.
+
+The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+
+If verification succeeds, the handler returns a 2.05 (Content) message containing newly-generated individual keying material for the Client, or information enabling the Client to derive it. The payload of the response is formatted as a CBOR map. The specific format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ14) and registered in {{iana-reg}}.
+
+#### GET Handler {#node-get}
+
+The handler expects a GET request.
+
+The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client, identified by "node". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+
+If verification succeeds, the handler returns a 2.05 (Content) message containing both the group keying material and the individual keying material for the Client, or information enabling the Client to derive it. The payload of the response is formatted as a CBOR map. The format for the group keying material is the same as defined in the response of {{gid-get}}. The specific format of individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ14) and registered in {{iana-reg}}.
+
+#### DELETE Handler {#node-delete}
+
+The DELETE handler removes the node (identified by "node") from the group, for the group identified by "gid". If the node sending the request and the node name used in the Uri-Path do not match, the handler responds with a 4.01 (Unauthorized) error response.
+
+TODO: Check the previous sentence.
 
 The handler expects a request with payload formatted as a CBOR map. The payload of this request is a CBOR Map that MAY contain only the 'scope' field as specified in {{gid-post}}.
 
@@ -598,15 +618,8 @@ The handler verifies that the group identifier of the /ace-group/gid path is a s
 
 If the request contained a 'scope' field, the handler MUST extract the roles for that client. If the value is such that the KDC cannot extract all the necessary information to understand and process it correctly (e.g. unrecognized roles), the KDC MUST respond with a 4.00 (Bad Request) error message.
 
-If verification succeeds, the handler removes the client from the group identified by "gid", for specific roles if roles were specified in the 'scope' field, or for all roles. That includes removing the public key of the client if the KDC keep tracks of that. Then, the handler returns a 2.05 (Content) message with empty payload.
+If verification succeeds, the handler removes the client from the group identified by "gid", for specific roles if roles were specified in the 'scope' field, or for all roles. That includes removing the public key of the client if the KDC keep tracks of that. Then, the handler delete the sub-resource /node and returns a 2.02 (Deleted) message with empty payload.
 
-#### GET Handler {#node-get}
-
-The handler expects a GET request.
-
-The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
-
-If verification succeeds, the handler returns a 2.05 (Content) message containing newly-generated individual keying material for the Client, or information enabling the Client to derive it. The payload of the response is formatted as a CBOR map. The specific format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ14) and registered in {{iana-reg}}.
 
 ## Joining Exchange {#ssec-key-distribution-exchange}
 
@@ -618,7 +631,7 @@ Client                                                     KDC
    |-------- Joining Request: POST /ace-group/gid --------->|
    |                                                        |
    |<--------- Joining Response: 2.01 (Created) ----------- |
-   |                                                        |
+   |        Location-Path = "/ace-group/gid/node"           |
 ~~~~~~~~~~~
 {: #fig-key-distr-join title="Message Flow of First Exchange for Group Joining" artwork-align="center"}
 
@@ -626,7 +639,7 @@ If not previously established, the Client and the KDC MUST first establish a pai
 
 The secure communication protocol is REQUIRED to establish the secure channel by using the proof-of-possession key bound to the access token. As a result, the proof-of-possession to bind the access token to the Client is performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC.
 
-To join the group, the Client sends a CoAP POST request to the /ace-group/gid endpoint at the KDC, where gid is the group identifier of the group to join, formatted as specified in {{gid-post}}. This group identifier is the same as the 'scope' value of the Authorization Request/Response, or it can be retrieved from it.
+To join the group, the Client sends a CoAP POST request to the /ace-group/gid endpoint at the KDC, where gid is the group identifier of the group to join, formatted as specified in {{gid-post}}. This group identifier is the same as the 'scope' value of the Authorization Request/Response, or it can be retrieved from it. Note that, in case of successful joining, the Client will receive the URI to retrieve individual or group keying material and to leave the group in the Location-Path option of the response.
 
 If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the Joining Response (see {{gid-post}}). Application profiles may define alternative ways of retrieving the keying material, such as sending separate requests to different resources at the KDC ({{gid-get}}, {{pubkey-get}}, {{policies-get}}). After distributing the new group keying material, the KDC MUST increment the version number of the keying material.
 
@@ -652,7 +665,7 @@ Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows 
 
 A node stops using the group keying material upon its expiration, according to what indicated by the KDC with the 'exp' parameter in a Joining response, or to a pre-configured value. Then, if it wants to continue participating in the group communication, the node has to request new updated keying material from the KDC.
 
-The Client may need to request the latest group keying material also upon receiving messages from other group members without being able to retrieve the material to correctly decrypt them. This may be due to a previous update of the group keying material (rekeying) triggered by the KDC, that the Client was not able to receive or decrypt. To this end, the Client sends a CoAP GET request to the /ace-group/gid endpoint at the KDC, formatted as specified in {{gid-get}}.
+The Client may need to request the latest group keying material also upon receiving messages from other group members without being able to retrieve the material to correctly decrypt them. This may be due to a previous update of the group keying material (rekeying) triggered by the KDC, that the Client was not able to receive or decrypt. To this end, the Client sends a CoAP GET request to the /ace-group/gid/node endpoint at the KDC, formatted as specified in {{node-get}}.
 
 
 <!-- Jim 13-07: Comment somewhere about getting strike zones setup correctly for a newly seen sender of messages. Ptr to OSCORE?
@@ -675,7 +688,7 @@ The same Key Distribution Request could also be sent by the Client without being
 ~~~~~~~~~~~
 Client                                                     KDC
    |                                                        |
-   |----- Key Distribution Request: GET ace-group/gid ----->|
+   |--- Key Distribution Request: GET ace-group/gid/node -->|
    |                                                        |
    |<----- Key Distribution Response: 2.05 (Content) -------|
    |                                                        |
@@ -696,7 +709,7 @@ Note that these methods of KDC-initiated key distribution have different securit
 
 ## Retrieval of New Keying Material {#new-keys}
 
-Beside possible expiration and depending on what part of the keying material is no longer eligible to be used, the client may need to communicate to the KDC its need for that part to be renewed. For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material. To this end, the client performs a Key Renewal Request/Response exchange with the KDC, that is a CoAP GET request to the /ace-group/gid/node endpoint at the KDC, where gid is the group identifier, and formatted as defined in {{node-get}}.
+Beside possible expiration and depending on what part of the keying material is no longer eligible to be used, the client may need to communicate to the KDC its need for that part to be renewed. For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material. To this end, the client performs a Key Renewal Request/Response exchange with the KDC, that is a CoAP PUT request to the /ace-group/gid/node endpoint at the KDC, where gid is the group identifier and node the node's name, and formatted as defined in {{node-get}}.
 
 {{fig-renewal-req-resp}} gives an overview of the exchange described above.
 
@@ -775,7 +788,7 @@ Client                                                    KDC
 
 ## Group Leaving Request ## {#ssec-group-leaving}
 
-A node can actively request to leave the group. In this case, the Client sends a CoAP POST request to the endpoint /ace-group/gid/node at the KDC, where gid is the group identifier, formatted as defined in {{node-post}}
+A node can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/gid/node at the KDC, where gid is the group identifier and node the node's name, formatted as defined in {{node-delete}}
 
 <!-- Jim 13-07: Section 5.2 - What is the message to leave - can I leave one scope but not another?  Can I just give up a role?
 
