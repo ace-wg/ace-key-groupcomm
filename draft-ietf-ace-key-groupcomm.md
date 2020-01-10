@@ -459,13 +459,13 @@ If the request is not formatted correctly (e.g. unknown or not-expected fields p
 
 If verification succeeds, the handler adds the public key indicated in "client_cred" to the list of public keys stored for the group identified by "gid". Moreover, the handler assigns a name to the node (e.g. "node1"), and creates a sub-resource to /ace-group/gid/ at the KDC (e.g. "/ace-group/gid/node1"). The handler returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them. The response message also contains the sub-resource created for that node in a Location-Path CoAP option. The payload of the response is formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
-* 'kty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key" Registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
+* 'gkty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key" Registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
 
 * 'key', containing the keying material for the group communication, or information required to derive it.
 
 * 'num', containing the version number of the keying material for the group communication, formatted as an integer. The initial version MUST be set to 0 at the KDC. This is a strictly monotonic increasing field.
 
-The exact format of the 'key' value MUST be defined in applications of this specification (REQ7), as well as accepted values of 'kty' by the application (REQ8). Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry defined in {{iana-key}}, including its name, type and application profile to be used with.
+The exact format of the 'key' value MUST be defined in applications of this specification (REQ7), as well as accepted values of 'gkty' by the application (REQ8). Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry defined in {{iana-key}}, including its name, type and application profile to be used with.
 
 ~~~~~~~~~~~
 +----------+----------------+---------+-------------------------+
@@ -474,7 +474,7 @@ The exact format of the 'key' value MUST be defined in applications of this spec
 | Reserved | 0              |         | This value is reserved  |
 +----------+----------------+---------+-------------------------+
 ~~~~~~~~~~~
-{: #kty title="Key Type Values" artwork-align="center"}
+{: #gkty title="Key Type Values" artwork-align="center"}
 
 Optionally, the response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
@@ -526,7 +526,7 @@ The handler expects a GET request.
 
 The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If verification succeeds, the handler returns a 2.05 (Content) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'kty','key' and 'num' specified in {{gid-post}}.
+If verification succeeds, the handler returns a 2.05 (Content) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'gkty','key' and 'num' specified in {{gid-post}}.
 
 The payload MAY also include the parameters 'ace-groupcomm-profile', 'exp' and 'mgt_key_material' parameters specified in {{gid-post}}.
 
@@ -839,7 +839,7 @@ This specification defines a number of fields used during the second part of the
  cnonce       |   TBD    | byte string   | {{gid-post}}
  client_cred_verify |   TBD    | byte string   | {{gid-post}}
  pub_keys_repos   |   TBD    | array         | {{gid-post}}
- kty          |   TBD    | int / byte string   | {{gid-post}}
+ gkty          |   TBD    | int / byte string   | {{gid-post}}
  key          |   TBD    | see "ACE Groupcomm Key" Registry     | {{gid-post}}
  num          |   TBD    | int           | {{gid-post}}
  ace-groupcomm-profile |   TBD    | int           | {{gid-post}}
@@ -1018,7 +1018,7 @@ The columns of this Registry are:
 
 * References: This contains a pointer to the public specification for the format of the keying material, if one exists.
 
-This Registry has been initially populated by the values in {{kty}}. The specification column for all of these entries will be this document.
+This Registry has been initially populated by the values in {{gkty}}. The specification column for all of these entries will be this document.
 
 ## ACE Groupcomm Profile Registry
 
