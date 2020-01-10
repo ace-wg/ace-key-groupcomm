@@ -699,7 +699,7 @@ Client                                                     KDC
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
 
-* Can make the ace-group/gid resource Observable, and send notifications to Clients when the keying material is updated.
+* Can make the ace-group/gid/node resource Observable, and send notifications to Clients when the keying material is updated.
 
 * Can send the Key Distribution Response as one or multiple multicast requests to the members of the group, using secure rekeying schemes such as {{RFC2093}}{{RFC2094}}{{RFC2627}}.
 
