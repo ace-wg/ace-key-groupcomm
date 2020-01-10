@@ -463,7 +463,7 @@ If verification succeeds, the handler adds the public key indicated in "client_c
 
 * 'key', containing the keying material for the group communication, or information required to derive it.
 
-* 'num', containing the version number of the keying material for the group communication, formatted as an integer. The initial version MUST be set to 0 at the KDC.
+* 'num', containing the version number of the keying material for the group communication, formatted as an integer. The initial version MUST be set to 0 at the KDC. This is a strictly monotonic increasing field.
 
 The exact format of the 'key' value MUST be defined in applications of this specification (REQ7), as well as accepted values of 'kty' by the application (REQ8). Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key" registry defined in {{iana-key}}, including its name, type and application profile to be used with.
 
@@ -478,7 +478,7 @@ The exact format of the 'key' value MUST be defined in applications of this spec
 
 Optionally, the response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. The value MUST be registered in the "ACE Groupcomm Profile" Registry.
+* 'ace-groupcomm-profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. The value MUST be registered in the "ACE Groupcomm Profile" Registry.
 
 * 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer or floating-point number. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what specified in Section 2 of {{RFC7519}}.
 
@@ -528,7 +528,7 @@ The handler verifies that the group identifier of the /ace-group/gid path is a s
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'kty','key' and 'num' specified in {{gid-post}}.
 
-The payload MAY also include the parameters 'profile', 'exp' and 'mgt_key_material' parameters specified in {{gid-post}}.
+The payload MAY also include the parameters 'ace-groupcomm-profile', 'exp' and 'mgt_key_material' parameters specified in {{gid-post}}.
 
 ### ace-group/gid/pub-key
 
@@ -842,7 +842,7 @@ This specification defines a number of fields used during the second part of the
  kty          |   TBD    | int / byte string   | {{gid-post}}
  key          |   TBD    | see "ACE Groupcomm Key" Registry     | {{gid-post}}
  num          |   TBD    | int           | {{gid-post}}
- profile      |   TBD    | int           | {{gid-post}}
+ ace-groupcomm-profile |   TBD    | int           | {{gid-post}}
  exp          |   TBD    | int / float   | {{gid-post}}
  pub_keys     |   TBD    | byte string   | {{gid-post}}
  group_policies      |   TBD    | map           | {{gid-post}}
