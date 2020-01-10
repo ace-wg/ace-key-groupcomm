@@ -449,7 +449,7 @@ The handler expects a request with payload formatted as a CBOR map which MAY con
 
 * 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value a list of public key repositories storing the certificate of the Client. This parameter is encoded as a CBOR array of CBOR text strings, each of which specifies the URI of a key repository.
 
-The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The KDC MAY set the payload as the payload of the 2.01 (Created) response to the Token Post, defined in {{token-post}}. Note that in this case, the content format MUST be set to application/ace+cbor.
 
 If the request is not formatted correctly (e.g. unknown fields present), the handler MUST respond with 4.00 (Bad Request) error message.
 
