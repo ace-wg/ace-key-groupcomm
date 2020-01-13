@@ -139,7 +139,17 @@ This document specifies a mechanism for:
 
 * Renewing and re-distributing the group keying material (rekeying) upon a membership change in the group ({{ssec-group-leaving}} and {{sec-node-removal}}).
 
-{{fig-flow}} provides a high level overview of the message flow for a node joining a group communication setting.
+{{fig-flow}} provides a high level overview of the message flow for a node joining a group communication setting, which can be expanded as follows.
+
+1. The joining node requests an Access Token from the AS, in order to access a specific group-membership resource on the KDC and hence join the associated group. The joining node will start or continue using a secure communication association with the KDC, according to the response from the AS.
+
+2. The joining node transfers authentication and authorization information to the KDC, by posting the obtained Access Token to the /authz-info endpoint at the KDC. After that, a joining node MUST have a secure communication association established with the KDC, before starting to join a group under that KDC. Possible ways to provide a secure communication association are DTLS {{RFC6347}} and OSCORE {{RFC8613}}.
+
+3. The joining node starts the joining process to become a member of the group, by accessing the related group-membership resource at the KDC.
+At the end of the joining process, the joining node has received from the KDC the parameters and keying material to securely communicate with the other members of the group.
+
+5. The joining node and the KDC maintain the secure association, to support possible future communications. These especially include key management operations, such as retrieval of updated keying material or participation to a group rekeying process.
+
 
 ~~~~~~~~~~~
             C                             AS  KDC                 Group
@@ -455,9 +465,13 @@ The handler expects a request with payload formatted as a CBOR map which MAY con
 
 The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The KDC MAY set the payload as the payload of the 2.01 (Created) response to the Token Post, defined in {{token-post}}. Note that in this case, the content format MUST be set to application/ace+cbor.
 
-If the request is not formatted correctly (e.g. unknown or not-expected fields present), the handler MUST respond with 4.00 (Bad Request) error message.
+If the request is not formatted correctly (e.g. unknown, not-expected fields present, or expected fields with incorrect format), the handler MUST respond with 4.00 (Bad Request) error message.
 
-If verification succeeds, the handler adds the public key indicated in "client_cred" to the list of public keys stored for the group identified by "gid". Moreover, the handler assigns a name to the node (e.g. "node1"), and creates a sub-resource to /ace-group/gid/ at the KDC (e.g. "/ace-group/gid/node1"). The handler returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them. The response message also contains the URI path to the sub-resource created for that node in a Location-Path CoAP option. The payload of the response is formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
+If the signature contained in "client_cred_verify" does not pass verification, the handler MUST respond with 4.00 (Bad Request) error message.
+
+If the KDC stores the group members public keys, the handler verifies that one public key can be retrieved for the joining member, either from the "client_cred" field, or from the KDC previous knowledge of it. If that cannot be verified, it is RECOMMENDED that the handler stops the joining process and responds with 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT6).
+
+If verification succeeds, the handler adds the retrieved public key of the joining node to the list of public keys stored for the group identified by "gid". Moreover, the handler assigns a name to the node (e.g. "node1"), and creates a sub-resource to /ace-group/gid/ at the KDC (e.g. "/ace-group/gid/node1"). The handler returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them. The response message also contains the URI path to the sub-resource created for that node in a Location-Path CoAP option. The payload of the response is formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
 * 'gkty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key" Registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
 
@@ -475,6 +489,8 @@ The exact format of the 'key' value MUST be defined in applications of this spec
 +----------+----------------+---------+-------------------------+
 ~~~~~~~~~~~
 {: #gkty title="Key Type Values" artwork-align="center"}
+
+<!-- FP Im confused why do we say this "The response MAY contain which if included MUST..." twice -->
 
 Optionally, the response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
@@ -1141,6 +1157,8 @@ This section lists the requirements on application profiles of this specificatio
 * OPT4: Optionally, specify policies that instruct clients to retain unsuccessfully decrypted messages and for how long, so that they can be decrypted after getting updated keying material.
 
 * OPT5: Optionally, specify the encoding of 'pub\_keys\_repos' if the default is not used (see {{gid-post}}).
+
+* OPT6: Optionally, specify the behavior of the handler in case of failure to retrieve a public key for the specific node (see {{gid-post}})
 
 # Document Updates # {#sec-document-updates}
 
