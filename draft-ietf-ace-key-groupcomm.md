@@ -53,6 +53,7 @@ informative:
   RFC2093:
   RFC2094:
   RFC2627:
+  RFC6347:
   RFC7959:
   RFC8259:
   RFC8613:
