@@ -38,6 +38,7 @@ normative:
 
   RFC7049:
   RFC2119:
+  RFC6838:
   RFC8152:
   RFC8126:
   RFC8174:
@@ -900,13 +901,11 @@ The following registrations are required for the OSCORE Security Context Paramet
 *  Registry:
 *  Description: OSCORE Counter Signature Algorithm Value
 *  Reference: \[\[this specification\]\]
+-->
 
 ## Media Type Registrations {#media-type}
 
-   This specification registers the 'application/ace-groupcomm+cbor' media type
-   for messages of the protocols defined in this document following the ACE exchange and carrying
-   parameters encoded in CBOR.  This registration follows the procedures
-   specified in [RFC6838].
+   This specification registers the 'application/ace-groupcomm+cbor' media type for messages of the protocols defined in this document following the ACE exchange and carrying parameters encoded in CBOR. This registration follows the procedures specified in {{RFC6838}}.
 
    Type name: application
 
@@ -916,8 +915,7 @@ The following registrations are required for the OSCORE Security Context Paramet
 
    Optional parameters: none
 
-   Encoding considerations: Must be encoded as CBOR map containing the
-   protocol parameters defined in [this document].
+   Encoding considerations: Must be encoded as CBOR map containing the protocol parameters defined in [this document].
 
    Security considerations: See {{sec-cons}} of this document.
 
@@ -925,9 +923,7 @@ The following registrations are required for the OSCORE Security Context Paramet
 
    Published specification: [this document]
 
-   Applications that use this media type: The type is used by
-   authorization servers, clients and resource servers that support the
-   ACE groupcomm framework as specified in [this document].
+   Applications that use this media type: The type is used by authorization servers, clients and resource servers that support the ACE groupcomm framework as specified in [this document].
 
    Additional information:
 
@@ -947,7 +943,6 @@ The following registrations are required for the OSCORE Security Context Paramet
    Author: Francesca Palombini <francesca.palombini@ericsson.com>
 
    Change controller: IESG
--->
 
 ## CoAP Content-Formats Registry {#content-type}
 
