@@ -1166,6 +1166,20 @@ This section lists the requirements on application profiles of this specificatio
 
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
+## Version -03 to -04 ## {#sec-03-04}
+
+* Revised RESTful interface, as to methods and parameters.
+
+* Extended processing of joining request, as to check/retrieval of public keys.
+
+* Revised and extended profile requirements.
+
+* Included general content previously in draft-ace-key-groupcomm-oscore
+
+* Registration of media type and content format application/ace-group+cbor
+
+* Editorial improvements.
+
 ## Version -02 to -03 ## {#sec-02-03}
 
 * Exchange of information on the countersignature algorithm and related parameters, during the Token POST (Section 3.3).
