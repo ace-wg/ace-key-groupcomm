@@ -1110,8 +1110,6 @@ Expert reviewers should take into consideration the following points:
 
 # Requirements on Application Profiles {#req}
 
-TODO: fix req numbers in the text.
-
 This section lists the requirements on application profiles of this specification,for the convenience of application profile designers.
 
 * REQ1: Specify the encoding and value of the identifier of group or topic of 'scope' (see {{ssec-authorization-request}}).
@@ -1130,7 +1128,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ8: Specify the acceptable values of 'gkty' (see {{gid-post}}).
 
-* REQ9: Specity the format of the identifiers of group members (see {{gid-post}}).
+* REQ9: Specify the format of the identifiers of group members (see {{gid-post}}).
 
 * REQ10: Specify the communication protocol the members of the group must use (e.g., multicast CoAP).
 
