@@ -1118,13 +1118,13 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ2: Specify the encoding and value of roles of 'scope' (see {{ssec-authorization-request}}).
 
-* REQ3: Optionally, specify the acceptable values for 'sign_alg' (see {{token-post}}).
+* REQ3: If used, specify the acceptable values for 'sign_alg' (see {{token-post}}).
 
-* REQ4: Optionally, specify the acceptable values for 'sign_parameters' (see {{token-post}}).
+* REQ4: If used, specify the acceptable values for 'sign_parameters' (see {{token-post}}).
 
-* REQ5: Optionally, specify the acceptable values for 'sign_key_parameters' (see {{token-post}}).
+* REQ5: If used, specify the acceptable values for 'sign_key_parameters' (see {{token-post}}).
 
-* REQ6: Optionally, specify the acceptable values for 'pub_key_enc' (see {{token-post}}).
+* REQ6: If used, specify the acceptable values for 'pub_key_enc' (see {{token-post}}).
 
 * REQ7: Specify the exact format of the 'key' value (see {{gid-post}}).
 
@@ -1132,19 +1132,15 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ9: Specity the format of the identifiers of group members (see {{gid-post}}).
 
-* REQ10: Optionally, specify the format and content of 'group\_policies' entries (see {{gid-post}}).
-
 * REQ11: Specify the communication protocol the members of the group must use (e.g., multicast CoAP).
 
 * REQ12: Specify the security protocol the group members must use to protect their communication (e.g., group OSCORE). This must provide encryption, integrity and replay protection.
 
 * REQ13: Specify and register the application profile identifier (see {{gid-post}}).
 
-* REQ14: Optionally, specify the encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used (see {{gid-post}}).
-
 * REQ15: Specify policies at the KDC to handle ids that are not included in get_pub_keys (see {{pubkey-fetch}}).
 
-* REQ16: Specify the format and content of 'group_policies' (see {{gid-post}}).
+* REQ16: If used, specify the format and content of 'group\_policies' and its entries (see {{gid-post}}).
 
 * REQ17: Specify the format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label (see {{node-get}}).
 
