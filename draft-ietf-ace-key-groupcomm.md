@@ -1172,7 +1172,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 * Revised and extended profile requirements.
 
-* Included general content previously in draft-ace-key-groupcomm-oscore
+* Included general content previously in draft-ietf-ace-key-groupcomm-oscore
 
 * Registration of media type and content format application/ace-group+cbor
 
