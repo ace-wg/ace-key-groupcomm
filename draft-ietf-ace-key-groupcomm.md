@@ -746,7 +746,7 @@ Beside possible expiration and depending on what part of the keying material is 
 ~~~~~~~~~~~
 Client                                                  KDC
    |                                                     |
-   |---- Key Renewal Request: GET ace-group/gid/node --->|
+   |---- Key Renewal Request: PUT ace-group/gid/node --->|
    |                                                     |
    |<----- Key Renewal Response: 2.05 (Content) ---------|
    |                                                     |
