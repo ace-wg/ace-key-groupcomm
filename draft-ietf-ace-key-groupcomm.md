@@ -864,7 +864,7 @@ This specification defines a number of fields used during the second part of the
  cnonce       |   TBD    | byte string   | {{gid-post}}
  client_cred_verify |   TBD    | byte string   | {{gid-post}}
  pub_keys_repos   |   TBD    | array         | {{gid-post}}
- gkty          |   TBD    | int / byte string   | {{gid-post}}
+ gkty          |   TBD    | int / text string   | {{gid-post}}
  key          |   TBD    | see "ACE Groupcomm Key" Registry     | {{gid-post}}
  num          |   TBD    | int           | {{gid-post}}
  ace-groupcomm-profile |   TBD    | int           | {{gid-post}}
@@ -1029,7 +1029,7 @@ The columns of this Registry are:
 * Name: This is a descriptive name that enables easier reference to
   the item. The name MUST be unique. It is not used in the encoding.
 
-* Key Type Value: This is the value used to identify the keying material. These values MUST be unique.  The value can be a positive integer, a negative integer, or a string.
+* Key Type Value: This is the value used to identify the keying material. These values MUST be unique.  The value can be a positive integer, a negative integer, or a text string.
 
 * Profile: This field may contain one or more descriptive strings of application profiles to be used with this item. The values should be taken from the Name column of the "ACE Groupcomm Profile" Registry.
 
@@ -1165,7 +1165,9 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 ## Version -04 to -05 ## {#sec-04-05}
 
-* Update uppercase/lowercase URI segments for KDC resources.
+* Updated uppercase/lowercase URI segments for KDC resources.
+
+* Editorial improvements.
 
 ## Version -03 to -04 ## {#sec-03-04}
 
