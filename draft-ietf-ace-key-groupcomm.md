@@ -686,7 +686,7 @@ Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows 
 
 ## Retrieval of Updated Keying Material {#update-keys}
 
-When any of the following happens, a node stops using the owned group keying material.
+When any of the following happens, a node must stop using the owned group keying material to protect outgoing messages, and should stop using it to decrypt and verify incoming messages.
 
 * Upon expiration of the keying material, according to what indicated by the KDC with the 'exp' parameter in a Joining Response, or to a pre-configured value.
 
