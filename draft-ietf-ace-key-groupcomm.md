@@ -1176,6 +1176,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 * Updated uppercase/lowercase URI segments for KDC resources.
 
+* Added 'control_path' parameter in the Joining Request.
+
 * Clarification on stopping using owned keying material.
 
 * Clarification on different reasons for processing failures, related policies, and requirement OPT4.
