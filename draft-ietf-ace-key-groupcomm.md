@@ -858,7 +858,7 @@ A node may be evicted from the group in the following cases.
 
 In either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
 
-In case of forced eviction, the KDC may explicitly inform the leaving node. To this end, the KDC can send a request targeting the URI path possibly provided upon joining the group, as specified in the 'control_path' parameter of the Joining Request (see {{gid-post}}).
+In case of forced eviction, the KDC may explicitly inform the leaving node. To this end, the KDC can send a POST request with empty payload, targeting the URI path possibly provided upon joining the group, as specified in the 'control_path' parameter of the Joining Request (see {{gid-post}}).
 
 # ACE Groupcomm Parameters {#params}
 
