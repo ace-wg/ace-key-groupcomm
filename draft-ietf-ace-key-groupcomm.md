@@ -733,7 +733,7 @@ Alternatively, the re-distribution of keying material can be initiated by the KD
 
 * Can send the Key Distribution Response as one or multiple multicast requests to the members of the group, using secure rekeying schemes such as {{RFC2093}}{{RFC2094}}{{RFC2627}}.
 
-* Can send unicast requests to each Client over a secure channel, with the same payload as the Key Distribution Response. The KDC can send each request to the URI path specified by the intended recipient upon joining the group, in the 'control_path' parameter of the Joining Request (see {{gid-post}}).
+* Can send unicast requests to each Client over a secure channel, with the same payload as the Key Distribution Response. The KDC can send each request to the URI path possibly provided by the intended recipient upon joining the group, as specified in the 'control_path' parameter of the Joining Request (see {{gid-post}}).
 
 * Can act as a publisher in a pub-sub scenario, and update the keying material by publishing on a specific topic on a broker, which all the members of the group are subscribed to.
 
@@ -858,7 +858,7 @@ A node may be evicted from the group in the following cases.
 
 In either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
 
-In case of forced eviction, the KDC can explicitly inform the leaving node, by sending a request to the URI path specified upon joining the group, in the 'control_path' parameter of the Joining Request (see {{gid-post}}).
+In case of forced eviction, the KDC can explicitly inform the leaving node, by sending a request to the URI path possibly provided upon joining the group, as specified in the 'control_path' parameter of the Joining Request (see {{gid-post}}).
 
 # ACE Groupcomm Parameters {#params}
 
