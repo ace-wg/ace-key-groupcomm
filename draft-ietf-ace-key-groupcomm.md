@@ -318,7 +318,7 @@ Optionally, if they were included in the request, the KDC MAY include the 'sign_
 
 The 'sign_info' parameter MUST be present if the POST request included the 'sign_info' parameter with value Null. If present, the 'sign_info' parameter of the 2.01 (Created) response is a CBOR array formatted as follows.
 
-* The first element 'sign_alg' is an integer or a text string, indicating the signature algorithm used in the group. It is REQUIRED of the application profiles to define specific values for this parameter (REQ3).
+* The first element 'sign_alg' is an integer or a text string, indicating the signature algorithm used in the group. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), including but not limited to the values from Table 5 and 6 of {{RFC8152}}.
 
 * The second element 'sign_parameters' indicates the parameters of the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ4). If no parameters of the signature algorithm are specified, 'sign_parameters' MUST be encoded as the CBOR simple value Null.
 
