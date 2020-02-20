@@ -273,13 +273,7 @@ The Authorization Response sent from the AS to the Client is as defined in Secti
 
 Additionally, the Authorization Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'scope', which mirrors the 'scope' parameter in the Authorization Request (see {{ssec-authorization-request}}). Its value is a CBOR array encoded as a byte string, containing:
-
-  - As first element, the identifier of the specific group or topic the Client is authorized to access.
-
-  - Optionally, as second element, the role (or CBOR array of roles) the Client is authorized to take in the group.
-
-  The encoding of the group or topic identifier and of the role identifiers is the same as in {{ssec-authorization-request}}.
+* 'scope' if the granted scope is different from the scope requested by the client. This parameter has the same format and encoding of 'scope' in the Authorization Request, defined in {{ssec-authorization-request}}.
 
 * Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary.
 
