@@ -1172,6 +1172,14 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 * Updated uppercase/lowercase URI segments for KDC resources.
 
+* Clarification on stopping using owned keying material.
+
+* Clarification on different reasons for processing failures, related policies, and requirement OPT4.
+
+* Possible group rekeying following an individual Key Renewal Request.
+
+* Clarified meaning of requirement REQ3.
+
 * Editorial improvements.
 
 ## Version -03 to -04 ## {#sec-03-04}
