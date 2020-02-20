@@ -222,13 +222,13 @@ Client                                            AS  KDC
 
 The Authorization Request sent from the Client to the AS is as defined in Section 5.6.1 of {{I-D.ietf-ace-oauth-authz}} and MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'scope', containing the identifier of the specific group (or topic in the case of pub-sub) that the Client wishes to access, and optionally the role(s) that the Client wishes to take. This value is a CBOR array encoded as a byte string, which contains:
+* 'scope', containing the identifier of the specific group (or topic in the case of pub-sub) that the Client wishes to access, and optionally the role(s) that the Client wishes to take. The encoding of the group or topic identifier (REQ1) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
+
+   This value is a CBOR array encoded as a byte string, which contains:
 
   - As first element, the identifier of the specific group or topic.
 
   - Optionally, as second element, the role (or CBOR array of roles) the Client wishes to take in the group.
-
-  The encoding of the group or topic identifier (REQ1) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
 
 * 'audience', with an identifier of a KDC.
 
