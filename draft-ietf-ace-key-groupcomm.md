@@ -707,7 +707,9 @@ If this is about retrieving the public key of a newly joined sender, that's actu
 Is there any other convenient OSCORE thing which is reusable here and we are missing?
 -->
 
-Note that policies can be set up so that the Client sends a Key Re-Distribution Request to the KDC only after a given number of unsuccessfully decrypted incoming messages. It is application dependent and pertaining to the particular message exchange (e.g. {{I-D.ietf-core-oscore-groupcomm}}) to set up policies that instruct clients to retain unsuccessfully decrypted messages and for how long, so that they can be decrypted after getting updated keying material, rather than just considered non valid messages to discard right away (OPT4).
+Note that policies can be set up, so that the Client sends a Key Re-Distribution Request to the KDC only after a given number of received messages have been unsuccessfully decrypted, or could not have been decrypted due to the lack of the necessary keying material.
+
+It is application dependent and pertaining to the particular message exchange (e.g. {{I-D.ietf-core-oscore-groupcomm}}) to set up policies that instruct clients to retain incoming messages and for how long, if they are unsuccessfully decrypted or currently not possible to decrypt (OPT4). This allows clients to possibly decrypt such messages after getting updated keying material, rather than just consider them non valid messages to discard right away.
 
 The same Key Distribution Request could also be sent by the Client without being triggered by a failed decryption of a message, if the Client wants to be sure that it has the latest group keying material. If that is the case, the Client will receive from the KDC the same group keying material it already has in memory.
 
@@ -1152,7 +1154,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * OPT3: Optionally, specify the encoding of 'pub\_keys\_repos' if the default is not used (see {{gid-post}}).
 
-* OPT4: Optionally, specify policies that instruct clients to retain unsuccessfully decrypted messages and for how long, so that they can be decrypted after getting updated keying material.
+* OPT4: Optionally, specify policies that instruct clients to retain messages and for how long, if they are unsuccessfully decrypted, or not possible to decrypt due to the lack of the necessary keying material (see {{update-keys}}). This makes it possible to decrypt such messages after getting updated keying material.
 
 * OPT5: Optionally, specify the behavior of the handler in case of failure to retrieve a public key for the specific node (see {{gid-post}}).
 
