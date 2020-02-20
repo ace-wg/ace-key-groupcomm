@@ -877,7 +877,6 @@ This specification defines a number of fields used during the second part of the
  pub_keys     |   TBD    | byte string   | {{gid-post}}
  group_policies      |   TBD    | map           | {{gid-post}}
  mgt_key_material    |   TBD    | byte string   | {{gid-post}}
- get_pub_keys |   TBD    | array         | {{pubkey-fetch}}
 
 # Security Considerations {#sec-cons}
 
