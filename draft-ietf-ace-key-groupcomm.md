@@ -1221,6 +1221,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 * Clarification on different reasons for processing failures, related policies, and requirement OPT4.
 
+* Added a KDC sub-resource for group members to upload a new public key.
+
 * Possible group rekeying following an individual Key Renewal Request.
 
 * Clarified meaning of requirement REQ3.
