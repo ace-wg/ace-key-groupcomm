@@ -222,13 +222,17 @@ Client                                            AS  KDC
 
 The Authorization Request sent from the Client to the AS is as defined in Section 5.6.1 of {{I-D.ietf-ace-oauth-authz}} and MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'scope', containing the identifier of the specific group (or topic in the case of pub-sub) that the Client wishes to access, and optionally the role(s) that the Client wishes to take. The encoding of the group or topic identifier (REQ1) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
+* 'scope', containing the identifier of the specific group(s), or topic(s) in the case of pub-sub, that the Client wishes to access, and optionally the role(s) that the Client wishes to take.
 
-   This value is a CBOR array encoded as a byte string, which contains:
+   This value is a CBOR byte string, encoding either a single scope entry, or a CBOR array of scope entries.
+
+   A scope entry has as value a CBOR array, which contains:
 
   - As first element, the identifier of the specific group or topic.
 
-  - Optionally, as second element, the role (or CBOR array of roles) the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s).
+  - Optionally, as second element, the role (or CBOR array of roles) that the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s).
+   
+  In each scope entry, the encoding of the group or topic identifier (REQ1) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
 
 * 'audience', with an identifier of a KDC.
 
@@ -458,7 +462,7 @@ The POST handler adds the public key of the client to the list of the group memb
 
 The handler expects a request with payload formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
-* 'scope', with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and role(s), encoded as in {{ssec-authorization-request}}.
+* 'scope', with value the specific resource that the Client is authorized to access, i.e. group or topic identifier, and role(s). This value is a CBOR byte string encoding a scope entry, as defined in {{ssec-authorization-request}}.
 
 * 'get_pub_keys', if the Client wishes to receive the public keys of the other nodes in the group from the KDC. The value is an empty CBOR array. This parameter may be present if the KDC stores the public keys of the nodes in the group and distributes them to the Client; it is useless to have here if the set of public keys of the members of the group is known in another way, e.g. it was provided by the AS.
 
@@ -683,7 +687,7 @@ If not previously established, the Client and the KDC MUST first establish a pai
 
 The secure communication protocol is REQUIRED to establish the secure channel by using the proof-of-possession key bound to the access token. As a result, the proof-of-possession to bind the access token to the Client is performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC.
 
-To join the group, the Client sends a CoAP POST request to the /ace-group/GID endpoint at the KDC, where GID is the group identifier of the group to join, formatted as specified in {{gid-post}}. This group identifier is the same as the 'scope' value of the Authorization Request/Response, or it can be retrieved from it. Note that, in case of successful joining, the Client will receive the URI to retrieve individual or group keying material and to leave the group in the Location-Path option of the response.
+To join the group, the Client sends a CoAP POST request to the /ace-group/GID endpoint at the KDC, where GID is the group identifier of the group to join, formatted as specified in {{gid-post}}. This group identifier is the same as the scope entry corresponding to that group, specified in the 'scope' parameter of the Authorization Request/Response, or it can be retrieved from it. Note that, in case of successful joining, the Client will receive the URI to retrieve individual or group keying material and to leave the group in the Location-Path option of the response.
 
 If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the Joining Response (see {{gid-post}}). Application profiles may define alternative ways of retrieving the keying material, such as sending separate requests to different resources at the KDC ({{gid-get}}, {{pubkey-get}}, {{policies-get}}). After distributing the new group keying material, the KDC MUST increment the version number of the keying material.
 
@@ -1159,9 +1163,9 @@ Expert reviewers should take into consideration the following points:
 
 This section lists the requirements on application profiles of this specification,for the convenience of application profile designers.
 
-* REQ1: Specify the encoding and value of the identifier of group or topic of 'scope' (see {{ssec-authorization-request}}).
+* REQ1: Specify the encoding and value of the identifier of group or topic, for scope entries of 'scope' (see {{ssec-authorization-request}}).
 
-* REQ2: Specify the encoding and value of roles of 'scope' (see {{ssec-authorization-request}}).
+* REQ2: Specify the encoding and value of roles, for scope entries of 'scope' (see {{ssec-authorization-request}}).
 
 * REQ3: If used, specify the acceptable values for 'sign_alg' (see {{token-post}}).
 
