@@ -906,12 +906,12 @@ This specification defines a number of fields used during the second part of the
 
  Name         | CBOR Key | CBOR Type     |   Reference
 --------------|----------|---------------|---------------
- scope        |   TBD    | array         | {{gid-post}}
+ scope        |   TBD    | byte string   | {{gid-post}}
  get_pub_keys |   TBD    | array         | {{gid-post}}
  client_cred  |   TBD    | byte string   | {{gid-post}}
  cnonce       |   TBD    | byte string   | {{gid-post}}
  client_cred_verify |   TBD    | byte string   | {{gid-post}}
- pub_keys_repos   |   TBD    | array         | {{gid-post}}
+ pub_keys_repos   |   TBD    | text string         | {{gid-post}}
  control_path | TBD | text string | {{gid-post}}
  gkty          |   TBD    | int / text string   | {{gid-post}}
  key          |   TBD    | see "ACE Groupcomm Key" Registry     | {{gid-post}}
