@@ -228,7 +228,7 @@ The Authorization Request sent from the Client to the AS is as defined in Sectio
 
   - As first element, the identifier of the specific group or topic.
 
-  - Optionally, as second element, the role (or CBOR array of roles) the Client wishes to take in the group.
+  - Optionally, as second element, the role (or CBOR array of roles) the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s).
 
 * 'audience', with an identifier of a KDC.
 
