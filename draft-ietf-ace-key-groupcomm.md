@@ -322,6 +322,8 @@ Optionally, if they were included in the request, the KDC MAY include the 'sign_
 
 The 'sign_info' parameter MUST be present if the POST request included the 'sign_info' parameter with value Null. If present, the 'sign_info' parameter of the 2.01 (Created) response is a CBOR array formatted as follows.
 
+TODO: have 'sign_info' as an array of arrays, if 'scope' in the Access Token covers multiple groups/topics.
+
 * The first element 'sign_alg' is an integer or a text string, indicating the signature algorithm used in the group. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), including but not limited to the values from Table 5 and 6 of {{RFC8152}}.
 
 * The second element 'sign_parameters' indicates the parameters of the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ4). If no parameters of the signature algorithm are specified, 'sign_parameters' MUST be encoded as the CBOR simple value Null.
@@ -329,6 +331,8 @@ The 'sign_info' parameter MUST be present if the POST request included the 'sign
 * The third element 'sign_key_parameters' indicates the parameters of the key used with the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ5). If no parameters of the key used with the signature algorithm are specified, 'sign_key_parameters' MUST be encoded as the CBOR simple value Null.
 
 The 'pub_key_enc' parameter MUST be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, the 'pub_key_enc' parameter of the 2.01 (Created) response is either a CBOR integer indicating the encoding of public keys used in the group, or has value Null indicating that the KDC does not act as repository of public keys for group members.
+
+TODO: have 'pub_key_enc' as an array, if 'scope' in the Access Token covers multiple groups/topics.
 
 <!-- TODO: I noted the following from our discussion with Jim at IETF106: "pub_key_enc_res" = null if not repo" -->
 
