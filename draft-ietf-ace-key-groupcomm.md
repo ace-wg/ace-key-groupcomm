@@ -233,7 +233,9 @@ The Authorization Request sent from the Client to the AS is as defined in Sectio
   - Optionally, as second element, the role (or CBOR array of roles) that the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s).
    
   In each scope entry, the encoding of the group or topic identifier (REQ1) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
-
+  
+  In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7). These CBOR values are taken from the "ACE Groupcomm Role CBOR Mappings" Registry defined in {{iana-ace-groupcomm-role}} of this specification.
+  
 * 'audience', with an identifier of a KDC.
 
 * 'req_cnf', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, optionally containing the public key or a reference to the public key of the Client, if it wishes to communicate that to the AS.
@@ -937,6 +939,12 @@ This specification defines a number of fields used during the second part of the
  group_policies      |   TBD    | map           | {{gid-post}}
  mgt_key_material    |   TBD    | byte string   | {{gid-post}}
 
+# ACE Groupcomm Role CBOR Mappings # {#sec-cbor-role-mappings}
+ 
+ Name     | CBOR Value | Reference
+----------|------------|-------------------|
+ Reserved |      0     | \[This document\] |
+ 
 # Security Considerations {#sec-cons}
 
 When a Client receives a message from a sender for the first time, it needs to have a mechanism in place to avoid replay, e.g. Appendix B.2 of {{RFC8613}}.
@@ -1148,6 +1156,22 @@ The columns of this Registry are:
 
 * Reference: This field contains a pointer to the public specification describing the sequence number synchronization method.
 
+## ACE Groupcomm Role CBOR Mappings Registry ## {#iana-ace-groupcomm-role}
+
+This specification establishes the "ACE Groupcomm Role CBOR Mappings" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}, except for the value range designated for private use. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
+
+The columns of this Registry are:
+
+* Name: The identifier of the role in the group or topic.
+
+* CBOR Value: CBOR abbreviation for this role identifier. Integer values less than -65536 are marked as "Private Use", all other values use the registration policy "Expert Review" {{RFC8126}}.
+
+* Reference: This field contains a pointer to the public specification describing the role identifier.
+
+The CBOR value 0 is to be marked as 'Reserved'.
+
+This Registry has been initially populated by the values in {{sec-cbor-role-mappings}}.
+
 ## Expert Review Instructions {#review}
 
 The IANA Registries established in this document are defined as expert review.
@@ -1221,6 +1245,8 @@ This section lists the requirements on application profiles of this specificatio
 * OPT5: Optionally, specify the behavior of the handler in case of failure to retrieve a public key for the specific node (see {{gid-post}}).
 
 * OPT6: Optionally, specify possible or required payload formats for specific error cases.
+
+* OPT7: Optionally, specify CBOR values to use for abbreviating identifiers of roles in the group or topic (see {{ssec-authorization-request}}).
 
 # Document Updates # {#sec-document-updates}
 
