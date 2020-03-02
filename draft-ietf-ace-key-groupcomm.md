@@ -1256,7 +1256,11 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 * Updated uppercase/lowercase URI segments for KDC resources.
 
+* Supporting single Access Token for multiple groups/topics.
+
 * Added 'control_path' parameter in the Joining Request.
+
+* Added 'peer_roles' parameter to support legal requesters/responders.
 
 * Clarification on stopping using owned keying material.
 
@@ -1265,6 +1269,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 * Added a KDC sub-resource for group members to upload a new public key.
 
 * Possible group rekeying following an individual Key Renewal Request.
+
+* Added new IANA Registry for CBOR values to abbreviate role identifiers.
 
 * Clarified meaning of requirement REQ3.
 
