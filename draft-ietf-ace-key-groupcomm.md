@@ -231,11 +231,11 @@ The Authorization Request sent from the Client to the AS is as defined in Sectio
   - As first element, the identifier of the specific group or topic.
 
   - Optionally, as second element, the role (or CBOR array of roles) that the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s).
-   
+
   In each scope entry, the encoding of the group or topic identifier (REQ1) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
-  
+
   In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7). These CBOR values are taken from the "ACE Groupcomm Role CBOR Mappings" Registry defined in {{iana-ace-groupcomm-role}} of this specification.
-  
+
 * 'audience', with an identifier of a KDC.
 
 * 'req_cnf', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, optionally containing the public key or a reference to the public key of the Client, if it wishes to communicate that to the AS.
@@ -279,7 +279,7 @@ The Authorization Response sent from the AS to the Client is as defined in Secti
 
 Additionally, the Authorization Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'scope' if the granted scope is different from the scope requested by the client. This parameter has the same format and encoding of 'scope' in the Authorization Request, defined in {{ssec-authorization-request}}.
+* 'scope' containing the granted scope, if different from the scope requested by the client. This parameter has the same format and encoding of 'scope' in the Authorization Request, defined in {{ssec-authorization-request}}.
 
 * Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary.
 
@@ -326,7 +326,7 @@ The 'sign_info' parameter MUST be present if the POST request included the 'sign
 
 TODO: have 'sign_info' as an array of arrays, if 'scope' in the Access Token covers multiple groups/topics.
 
-* The first element 'sign_alg' is an integer or a text string, indicating the signature algorithm used in the group. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), including but not limited to the values from Table 5 and 6 of {{RFC8152}}.
+* The first element 'sign_alg' is an integer or a text string, indicating the signature algorithm used in the group. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry defined in {{RFC8152}}.
 
 * The second element 'sign_parameters' indicates the parameters of the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ4). If no parameters of the signature algorithm are specified, 'sign_parameters' MUST be encoded as the CBOR simple value Null.
 
@@ -723,7 +723,7 @@ Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows 
 
 ## Retrieval of Updated Keying Material {#update-keys}
 
-When any of the following happens, a node must stop using the owned group keying material to protect outgoing messages, and should stop using it to decrypt and verify incoming messages.
+When any of the following happens, a node MUST stop using the owned group keying material to protect outgoing messages, and SHOULD stop using it to decrypt and verify incoming messages.
 
 * Upon expiration of the keying material, according to what indicated by the KDC with the 'exp' parameter in a Joining Response, or to a pre-configured value.
 
@@ -744,9 +744,9 @@ If this is about retrieving the public key of a newly joined sender, that's actu
 Is there any other convenient OSCORE thing which is reusable here and we are missing?
 -->
 
-Note that policies can be set up, so that the Client sends a Key Re-Distribution Request to the KDC only after a given number of received messages have been unsuccessfully decrypted, or could not have been decrypted due to the lack of the necessary keying material.
+Note that policies can be set up, so that the Client sends a Key Re-Distribution Request to the KDC only after a given number of received messages could not be decrypted due to the lack of the necessary keying material.
 
-It is application dependent and pertaining to the particular message exchange (e.g. {{I-D.ietf-core-oscore-groupcomm}}) to set up policies that instruct clients to retain incoming messages and for how long, if they are unsuccessfully decrypted or currently not possible to decrypt (OPT4). This allows clients to possibly decrypt such messages after getting updated keying material, rather than just consider them non valid messages to discard right away.
+It is application dependent and pertaining to the particular message exchange (e.g. {{I-D.ietf-core-oscore-groupcomm}}) to set up these policies, to instruct clients to retain incoming messages and for how long (OPT4). This allows clients to possibly decrypt such messages after getting updated keying material, rather than just consider them non valid messages to discard right away.
 
 The same Key Distribution Request could also be sent by the Client without being triggered by a failed decryption of a message, if the Client wants to be sure that it has the latest group keying material. If that is the case, the Client will receive from the KDC the same group keying material it already has in memory.
 
@@ -794,7 +794,7 @@ Client                                                    KDC
 
 Note the difference between the Key Distribution Request and the Key Renewal Request: while the first one only triggers distribution (the renewal might have happened independently, e.g. because of expiration), the second one triggers the KDC to produce new individual keying material for the requesting node.
 
-Furthermore, policies can be set up so that, upon receiving a Key Renewal Request, the KDC replies to the client with an error response, and then performs a complete group rekeying.
+Furthermore, policies can be set up so that, upon receiving a Key Renewal Request, the KDC replies to the client with an error response, and then performs a complete group rekeying (OPT8).
 
 ## Retrieval of Public Keys for Group Members {#sec-key-retrieval}
 
@@ -923,7 +923,7 @@ This specification defines a number of fields used during the second part of the
  Name         | CBOR Key | CBOR Type     |   Reference
 --------------|----------|---------------|---------------
  scope        |   TBD    | byte string   | {{gid-post}}
- get_pub_keys |   TBD    | array         | {{gid-post}}
+ get_pub_keys |   TBD    | array         | {{gid-post}}, {{pubkey-fetch}}
  client_cred  |   TBD    | byte string   | {{gid-post}}
  cnonce       |   TBD    | byte string   | {{gid-post}}
  client_cred_verify |   TBD    | byte string   | {{gid-post}}
@@ -940,11 +940,11 @@ This specification defines a number of fields used during the second part of the
  mgt_key_material    |   TBD    | byte string   | {{gid-post}}
 
 # ACE Groupcomm Role CBOR Mappings # {#sec-cbor-role-mappings}
- 
+
  Name     | CBOR Value | Reference
 ----------|------------|-------------------|
  Reserved |      0     | \[This document\] |
- 
+
 # Security Considerations {#sec-cons}
 
 When a Client receives a message from a sender for the first time, it needs to have a mechanism in place to avoid replay, e.g. Appendix B.2 of {{RFC8613}}.
@@ -1240,13 +1240,15 @@ This section lists the requirements on application profiles of this specificatio
 
 * OPT3: Optionally, specify the encoding of 'pub\_keys\_repos' if the default is not used (see {{gid-post}}).
 
-* OPT4: Optionally, specify policies that instruct clients to retain messages and for how long, if they are unsuccessfully decrypted, or not possible to decrypt due to the lack of the necessary keying material (see {{update-keys}}). This makes it possible to decrypt such messages after getting updated keying material.
+* OPT4: Optionally, specify policies that instruct clients to retain messages and for how long, if they are unsuccessfully decrypted (see {{update-keys}}). This makes it possible to decrypt such messages after getting updated keying material.
 
 * OPT5: Optionally, specify the behavior of the handler in case of failure to retrieve a public key for the specific node (see {{gid-post}}).
 
 * OPT6: Optionally, specify possible or required payload formats for specific error cases.
 
 * OPT7: Optionally, specify CBOR values to use for abbreviating identifiers of roles in the group or topic (see {{ssec-authorization-request}}).
+
+* OPT8: Optionally, specify policies for the KDC to perform group rekeying after receiving a Key Renewal Request (see {{new-keys}}).
 
 # Document Updates # {#sec-document-updates}
 
