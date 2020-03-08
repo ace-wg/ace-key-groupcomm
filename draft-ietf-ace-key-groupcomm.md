@@ -778,7 +778,7 @@ Note that these methods of KDC-initiated key distribution have different securit
 
 Beside possible expiration and depending on what part of the keying material is no longer eligible to be used, the client may need to communicate to the KDC its need for that part to be renewed. For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
 
-To this end, the client performs a Key Renewal Request/Response exchange with the KDC, that is it sends a CoAP PUT request to the /ace-group/GID/nodes/NODE endpoint at the KDC, where GID is the group identifier and NODE is the node's name, and formatted as defined in {{node-get}}.
+To this end, the client performs a Key Renewal Request/Response exchange with the KDC, i.e. it sends a CoAP PUT request to the /ace-group/GID/nodes/NODE endpoint at the KDC, where GID is the group identifier and NODE is the node's name, and formatted as defined in {{node-get}}.
 
 {{fig-renewal-req-resp}} gives an overview of the exchange described above.
 
