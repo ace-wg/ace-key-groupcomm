@@ -234,7 +234,7 @@ The Authorization Request sent from the Client to the AS is as defined in Sectio
 
   In each entry, the encoding of the group or topic identifier (REQ1) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
 
-  In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7). These CBOR values are taken from the "ACE Groupcomm Role CBOR Mappings" Registry defined in {{iana-ace-groupcomm-role}} of this specification.
+  In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7).
 
   An example of CDDL definition of scope, with group identifier encoded as byte string and role identifier as text string, is given in {{cddl-ex}}.
 
@@ -949,12 +949,6 @@ This specification defines a number of fields used during the second part of the
  group_policies      |   TBD    | map           | {{gid-post}}
  mgt_key_material    |   TBD    | byte string   | {{gid-post}}
 
-# ACE Groupcomm Role CBOR Mappings # {#sec-cbor-role-mappings}
-
- Name     | CBOR Value | Reference
-----------|------------|-------------------|
- Reserved |      0     | \[This document\] |
-
 # Security Considerations {#sec-cons}
 
 When a Client receives a message from a sender for the first time, it needs to have a mechanism in place to avoid replay, e.g. Appendix B.2 of {{RFC8613}}.
@@ -1165,22 +1159,6 @@ The columns of this Registry are:
 * Description: This field contains a brief description for this sequence number synchronization method.
 
 * Reference: This field contains a pointer to the public specification describing the sequence number synchronization method.
-
-## ACE Groupcomm Role CBOR Mappings Registry ## {#iana-ace-groupcomm-role}
-
-This specification establishes the "ACE Groupcomm Role CBOR Mappings" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}, except for the value range designated for private use. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
-
-The columns of this Registry are:
-
-* Name: The identifier of the role in the group or topic.
-
-* CBOR Value: CBOR abbreviation for this role identifier. Integer values less than -65536 are marked as "Private Use", all other values use the registration policy "Expert Review" {{RFC8126}}.
-
-* Reference: This field contains a pointer to the public specification describing the role identifier.
-
-The CBOR value 0 is to be marked as 'Reserved'.
-
-This Registry has been initially populated by the values in {{sec-cbor-role-mappings}}.
 
 ## Expert Review Instructions {#review}
 
