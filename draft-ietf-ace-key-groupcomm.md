@@ -224,17 +224,19 @@ The Authorization Request sent from the Client to the AS is as defined in Sectio
 
 * 'scope', containing the identifier of the specific group(s), or topic(s) in the case of pub-sub, that the Client wishes to access, and optionally the role(s) that the Client wishes to take.
 
-   This value is a CBOR byte string, encoding either a single scope entry, or a CBOR array of scope entries.
+   This value is a CBOR byte string, encoding a CBOR array of one or more  entries.
 
-   A scope entry has as value a CBOR array, which contains:
+   An entry has as value a CBOR array, which contains:
 
   - As first element, the identifier of the specific group or topic.
 
   - Optionally, as second element, the role (or CBOR array of roles) that the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s).
 
-  In each scope entry, the encoding of the group or topic identifier (REQ1) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
+  In each entry, the encoding of the group or topic identifier (REQ1) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
 
   In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7). These CBOR values are taken from the "ACE Groupcomm Role CBOR Mappings" Registry defined in {{iana-ace-groupcomm-role}} of this specification.
+
+  An example of CDDL definition of scope, with group identifier encoded as byte string and role identifier as text string, is given in {{cddl-ex}}.
 
 * 'audience', with an identifier of a KDC.
 
@@ -263,7 +265,15 @@ Marco: In principle yes, if you consider a logical audience as the GM/Broker at 
 Should we discuss this in the draft?
 -->
 
+
 As in {{I-D.ietf-ace-oauth-authz}}, these parameters are included in the payload, which is formatted as a CBOR map. The Content-Format "application/ace+cbor" defined in Section 8.14 of {{I-D.ietf-ace-oauth-authz}} is used.
+
+~~~~~~~~~~~~~~~~~~~~ CDDL
+scp = [ gid : bstr , role: tstr / [ 2*role ] ]
+
+scope = << [ + scp ] >>
+~~~~~~~~~~~~~~~~~~~~
+{: #cddl-ex title="CDDL example of scope, with gid encoded as bstr and role as tstr" artwork-align="center"}
 
 ## Authorization Response {#ssec-authorization-response}
 
