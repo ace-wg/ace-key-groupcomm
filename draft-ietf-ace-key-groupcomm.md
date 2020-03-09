@@ -1016,15 +1016,15 @@ The following registrations are required for the OSCORE Security Context Paramet
 
    Optional parameters: none
 
-   Encoding considerations: Must be encoded as CBOR map containing the protocol parameters defined in [this document].
+   Encoding considerations: Must be encoded as CBOR map containing the protocol parameters defined in \[this document\].
 
    Security considerations: See {{sec-cons}} of this document.
 
    Interoperability considerations: n/a
 
-   Published specification: [this document]
+   Published specification: \[this document\]
 
-   Applications that use this media type: The type is used by authorization servers, clients and resource servers that support the ACE groupcomm framework as specified in [this document].
+   Applications that use this media type: The type is used by authorization servers, clients and resource servers that support the ACE groupcomm framework as specified in \[this document\].
 
    Additional information:
 
