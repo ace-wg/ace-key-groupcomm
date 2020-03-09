@@ -1265,9 +1265,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 * Possible group rekeying following an individual Key Renewal Request.
 
-* Added new IANA Registry for CBOR values to abbreviate role identifiers.
-
-* Clarified meaning of requirement REQ3.
+* Clarified meaning of requirement REQ3; added requirement OPT8.
 
 * Editorial improvements.
 
