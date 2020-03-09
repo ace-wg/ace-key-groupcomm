@@ -458,9 +458,9 @@ The KDC is configured with the following resources:
 
 * /ace-group/GROUPNAME/ctx-num: this sub-resource is fixed and supports the GET method.
 
-* /ace-group/GROUPNAME/NODENAME: one sub-resource to /ace-group/GROUPNAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). These resources support GET, PUT and DELETE methods.
+* /ace-group/GROUPNAME/nodes/NODENAME: one sub-resource to /ace-group/GROUPNAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). These resources support GET, PUT and DELETE methods.
 
-* /ace-group/GROUPNAME/NODENAME/pub-key: one sub-resource to /ace-group/GROUPNAME/NODENAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). These resources support the POST method.
+* /ace-group/GROUPNAME/nodes/NODENAME/pub-key: one sub-resource to /ace-group/GROUPNAME/nodes/NODENAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). These resources support the POST method.
 
 The details for the handlers of each resource are given in the following sections. These endpoints are used to perform the operations introduced in {{key-distr}}. Note that the url-path given here are default names: implementations are not required to use these names, and can define their own instead.
 
@@ -500,7 +500,7 @@ If the KDC stores the group members' public keys, the handler verifies that one 
 
 If the signature contained in "client_cred_verify" does not pass verification, the handler MUST respond with a 4.00 (Bad Request) error message.
 
-If verification succeeds, the handler adds the retrieved public key of the node to the list of public keys stored for the group identified by "GROUPNAME". Moreover, the handler assigns a name NAME to the node, and creates a sub-resource to /ace-group/GROUPNAME/ at the KDC (e.g. "/ace-group/GROUPNAME/NODENAME"). The handler returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them. The response message also contains the URI path to the sub-resource created for that node in a Location-Path CoAP option. The payload of the response is formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
+If verification succeeds, the handler adds the retrieved public key of the node to the list of public keys stored for the group identified by "GROUPNAME". Moreover, the handler assigns a name NAME to the node, and creates a sub-resource to /ace-group/GROUPNAME/ at the KDC (e.g. "/ace-group/GROUPNAME/nodes/NODENAME"). The handler returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them. The response message also contains the URI path to the sub-resource created for that node in a Location-Path CoAP option. The payload of the response is formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
 * 'gkty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key" Registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
 
@@ -637,7 +637,7 @@ The handler verifies that the group identifier of the /ace-group/GROUPNAME path 
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing an integer that represents the version number of the symmetric group keying material. This number is incremented on the KDC every time the KDC updates the symmetric group keying material. The payload of the response is formatted as a CBOR integer.
 
-### ace-group/GROUPNAME/NODENAME
+### ace-group/GROUPNAME/nodes/NODENAME
 
 This resource implements GET, PUT and DELETE handlers.
 
@@ -669,9 +669,9 @@ The handler verifies that the group identifier of the /ace-group/GROUPNAME path 
 
 If the request contained a 'scope' field, the handler MUST extract the roles for that client. If the value is such that the KDC cannot extract all the necessary information to understand and process it correctly (e.g. unrecognized roles), the KDC MUST respond with a 4.00 (Bad Request) error message.
 
-If verification succeeds, the handler removes the client from the group identified by "GROUPNAME", for specific roles if roles were specified in the 'scope' field, or for all roles. That includes removing the public key of the client if the KDC keep tracks of that. Then, the handler delete the sub-resource /NODENAME and returns a 2.02 (Deleted) message with empty payload.
+If verification succeeds, the handler removes the client from the group identified by "GROUPNAME", for specific roles if roles were specified in the 'scope' field, or for all roles. That includes removing the public key of the client if the KDC keep tracks of that. Then, the handler delete the sub-resource nodes/NODENAME and returns a 2.02 (Deleted) message with empty payload.
 
-### ace-group/GROUPNAME/NODENAME/pub-key
+### ace-group/GROUPNAME/nodes/NODENAME/pub-key
 
 This resource implements a POST handler.
 
@@ -701,7 +701,7 @@ Client                                                     KDC
    |----- Joining Request: POST /ace-group/GROUPNAME ------>|
    |                                                        |
    |<--------- Joining Response: 2.01 (Created) ----------- |
-   |     Location-Path = "/ace-group/GROUPNAME/NODENAME"    |
+   | Location-Path = "/ace-group/GROUPNAME/nodes/NODENAME"  |
 ~~~~~~~~~~~
 {: #fig-key-distr-join title="Message Flow of First Exchange for Group Joining" artwork-align="center"}
 
@@ -741,7 +741,7 @@ When any of the following happens, a node MUST stop using the owned group keying
 
 * Upon receiving messages from other group members without being able to retrieve the keying material to correctly decrypt them. This may be due to rekeying messages previously sent by the KDC, that the Client was not able to receive or decrypt.
 
-In either case, if it wants to continue participating in the group communication, the node has to request the latest keying material from the KDC. To this end, the Client sends a CoAP GET request to the /ace-group/GROUPNAME/NODENAME endpoint at the KDC, formatted as specified in {{node-get}}.
+In either case, if it wants to continue participating in the group communication, the node has to request the latest keying material from the KDC. To this end, the Client sends a CoAP GET request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, formatted as specified in {{node-get}}.
 
 <!-- Jim 13-07: Comment somewhere about getting strike zones setup correctly for a newly seen sender of messages. Ptr to OSCORE?
 
@@ -765,7 +765,8 @@ The same Key Distribution Request could also be sent by the Client without being
 ~~~~~~~~~~~
 Client                                                          KDC
    |                                                             |
-   |-Key Distribution Request: GET ace-group/GROUPNAME/NODENAME->|
+   |------------------ Key Distribution Request: --------------->|
+   |           GET ace-group/GROUPNAME/nodes/NODENAME            |
    |                                                             |
    |<-------- Key Distribution Response: 2.05 (Content) ---------|
    |                                                             |
@@ -774,7 +775,7 @@ Client                                                          KDC
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
 
-* Can make the ace-group/GROUPNAME/NODENAME resource Observable, and send notifications to Clients when the keying material is updated.
+* Can make the ace-group/GROUPNAME/nodes/NODENAME resource Observable, and send notifications to Clients when the keying material is updated.
 
 * Can send the payload of the Key Distribution Response in one or multiple multicast POST requests to the members of the group, using secure rekeying schemes such as {{RFC2093}}{{RFC2094}}{{RFC2627}}.
 
@@ -788,7 +789,7 @@ Note that these methods of KDC-initiated key distribution have different securit
 
 Beside possible expiration and depending on what part of the keying material is no longer eligible to be used, the client may need to communicate to the KDC its need for that part to be renewed. For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
 
-To this end, the client performs a Key Renewal Request/Response exchange with the KDC, i.e. it sends a CoAP PUT request to the /ace-group/GROUPNAME/NODENAME endpoint at the KDC, where GROUPNAME is the group identifier and NODENAME is the node's name, and formatted as defined in {{node-get}}.
+To this end, the client performs a Key Renewal Request/Response exchange with the KDC, i.e. it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group identifier and NODENAME is the node's name, and formatted as defined in {{node-get}}.
 
 {{fig-renewal-req-resp}} gives an overview of the exchange described above.
 
@@ -796,7 +797,7 @@ To this end, the client performs a Key Renewal Request/Response exchange with th
 Client                                                    KDC
    |                                                       |
    |------------------ Key Renewal Request: -------------->|
-   |           PUT ace-group/GROUPNAME/NODENAME            |
+   |           PUT ace-group/GROUPNAME/nodes/NODENAME      |
    |                                                       |
    |<-------- Key Renewal Response: 2.05 (Content) --------|
    |                                                       |
@@ -839,7 +840,7 @@ Client                                                      KDC
 
 In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to upload a new public key to use in the group, and replace the currently stored one.
 
-To this end, the Client performs a Public Key Update Request/Response exchange with the KDC, i.e. it sends a CoAP POST request to the /ace-group/GROUPNAME/NODENAME/pub-key endpoint at the KDC, where GROUPNAME is the group identifier and NODENAME is the node's name.
+To this end, the Client performs a Public Key Update Request/Response exchange with the KDC, i.e. it sends a CoAP POST request to the /ace-group/GROUPNAME/nodes/NODENAME/pub-key endpoint at the KDC, where GROUPNAME is the group identifier and NODENAME is the node's name.
 
 The request is formatted as specified in {{node-pub-key-post}}.
 
@@ -849,7 +850,7 @@ Figure {{fig-pub-key-update-req-resp}} gives an overview of the exchange describ
 Client                                                           KDC
 |                                                                 |
 |-------------- Public Key Update Request: ---------------------->|
-|        POST ace-group/GROUPNAME/NODENAME/pub-key                |
+|      POST ace-group/GROUPNAME/nodes/NODENAME/pub-key            |
 |                                                                 |
 |<------- Public Key Update Response: 2.04 (Changed) -------------|
 |                                                                 |
@@ -891,7 +892,7 @@ Client                                                    KDC
 
 ## Group Leaving Request ## {#ssec-group-leaving}
 
-A node can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/GROUPNAME/NODENAME at the KDC, where GROUPNAME is the group identifier and NODENAME is the node's name, formatted as defined in {{node-delete}}
+A node can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/GROUPNAME/nodes/NODENAME at the KDC, where GROUPNAME is the group identifier and NODENAME is the node's name, formatted as defined in {{node-delete}}
 
 <!-- Jim 13-07: Section 5.2 - What is the message to leave - can I leave one scope but not another?  Can I just give up a role?
 
