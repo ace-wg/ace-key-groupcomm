@@ -667,19 +667,19 @@ This resource implements a POST handler.
 
 #### POST Handler {#node-pub-key-post}
 
-The POST handler is used to replace the stored public key of this client in the list of group members' public keys, with the public key specified in the request.
+The POST handler is used to replace the stored public key of this client (identified by "NODE") with the one specified in the request at the KDC, for the group identified by "GID".
 
 The handler expects a POST request with payload as specified in {{gid-post}}, with the difference that it includes only the parameters 'client_cred', 'cnonce' and 'client_cred_verify'. In particular, the signature included in 'client_cred_verify' is expected to be computed as defined in {{gid-post}}. Since no nonce N_S is provided by the KDC, it is REQUIRED of the specific profile to define how the nonce N_S is generated (REQ17). The specific format of public keys is specified by the application profile (OPT1).
 
-The handler verifies that the group identifier of the /ace-group/GID path is a subset of the 'scope' stored in the access token associated to this client, identified by "NODE". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler verifies that the group identifier GID is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
 If the request is not formatted correctly (e.g. unknown, not-expected fields present, or expected fields with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT6).
 
-Otherwise, the handler checks that the public key specified in the 'client_cred' field has an accepted format for the group identified by "GID", i.e. it is encoded as expected and is compatible with the signature algorithm and possible associated parameters. If that cannot be verified, the handler MUST respond with a 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT5).
+Otherwise, the handler checks that the public key specified in the 'client_cred' field has a valid format for the group identified by "GID", i.e. it is encoded as expected and is compatible with the signature algorithm and possible associated parameters. If that cannot be verified, the handler MUST respond with a 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT5).
 
 Otherwise, the handler verifies the signature contained in the 'client_cred_verify' field of the request, using the public key specified in the 'client_cred' field. If the signature does not pass verification, the handler MUST respond with a 4.00 (Bad Request) error message.
 
-If verification succeeds, the handler stores the public key specified in the 'client_cred' field of the request as the new current public key of the node NODE, in the list of group members' public keys for the group identified by GID. Then, the handler replies with a 2.04 (Changed) response, which does not include a payload.
+If verification succeeds, the handler replaces the old public key of the node NODE with the one specified in the 'client_cred' field of the request, and stores it as the new current public key of the node NODE, in the list of group members' public keys for the group identified by GID. Then, the handler replies with a 2.04 (Changed) response, which does not include a payload.
 
 ## Joining Exchange {#ssec-key-distribution-exchange}
 
