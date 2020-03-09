@@ -161,25 +161,25 @@ At the end of the joining process, the joining node has received from the KDC th
 
 
 ~~~~~~~~~~~
-            C                             AS  KDC                 Group
-            |                             |    |                  Member
-          / |                             |    |                     |
-          | |    Authorization Request    |    |                     |
- Defined  | |---------------------------->|    |                     |
- in the   | |                             |    |                     |
-   ACE    | |    Authorization Response   |    |                     |
-framework | |<----------------------------|    |                     |
-          | |                                  |                     |
-          \ |----------- Token Post ---------->|                     |
-            |                                  |                     |
-            |-------- Joining Request -------->|                     |
-            |                                  |                     |
-            |<------- Joining Response --------|-- Group Rekeying -->|
-            |                                  |                     |
-            |                                       Dispatcher       |
-            |                                           |            |
-            |<====== Secure group communication ========|===========>|
-            |                                           |            |
+            C                           AS  KDC                Group
+            |                           |    |                 Member
+          / |                           |    |                     |
+          | |   Authorization Request   |    |                     |
+ Defined  | |-------------------------->|    |                     |
+ in the   | |                           |    |                     |
+   ACE    | |   Authorization Response  |    |                     |
+framework | |<--------------------------|    |                     |
+          | |                                |                     |
+          \ |---------- Token Post --------->|                     |
+            |                                |                     |
+            |------- Joining Request ------->|                     |
+            |                                |                     |
+            |<------ Joining Response -------|-- Group Rekeying -->|
+            |                                |                     |
+            |                                     Dispatcher       |
+            |                                         |            |
+            |<===== Secure group communication =======|===========>|
+            |                                         |            |
 ~~~~~~~~~~~
 {: #fig-flow title="Message Flow Upon New Node's Joining" artwork-align="center"}
 
@@ -524,28 +524,28 @@ Optionally, the response MAY contain the following parameters, which, if include
 * 'group\_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policy" Registry. This specification defines the two elements "Sequence Number Synchronization Method" and "Key Update Check Interval", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format of included map entries (REQ14).
 
 ~~~~~~~~~~~
-+-----------------+-------+----------|--------------------|------------+
-|      Name       | CBOR  |   CBOR   |    Description     | Reference  |
-|                 | label |   type   |                    |            |
-|-----------------+-------+----------|--------------------|------------|
-| Sequence Number | TBD1  | tstr/int | Method for a re-   | [[this     |
-| Synchronization |       |          | cipient node to    | document]] |
-| Method          |       |          | synchronize with   |            |
-|                 |       |          | sequence numbers   |            |
-|                 |       |          | of a sender node.  |            |
-|                 |       |          | Its value is taken |            |
-|                 |       |          | from the 'Value'   |            |
-|                 |       |          | column of the      |            |
-|                 |       |          | Sequence Number    |            |
-|                 |       |          | Synchronization    |            |
-|                 |       |          | Method registry    |            |
-|                 |       |          |                    |            |
-| Key Update      | TBD2  |   int    | Polling interval   | [[this     |
-| Check Interval  |       |          | in seconds, to     | document]] |
-|                 |       |          | check for new      |            |
-|                 |       |          | keying material at |            |
-|                 |       |          | the KDC            |            |
-+-----------------+-------+----------|--------------------|------------+
++--------------+-------+----------|--------------------|------------+
+|      Name    | CBOR  |   CBOR   |    Description     | Reference  |
+|              | label |   type   |                    |            |
+|--------------+-------+----------|--------------------|------------|
+| Sequence     | TBD1  | tstr/int | Method for a re-   | [[this     |
+| Number       |       |          | cipient node to    | document]] |
+| Synchroniza- |       |          | synchronize with   |            |
+| tion Method  |       |          | sequence numbers   |            |
+|              |       |          | of a sender node.  |            |
+|              |       |          | Its value is taken |            |
+|              |       |          | from the 'Value'   |            |
+|              |       |          | column of the      |            |
+|              |       |          | Sequence Number    |            |
+|              |       |          | Synchronization    |            |
+|              |       |          | Method registry    |            |
+|              |       |          |                    |            |
+| Key Update   | TBD2  |   int    | Polling interval   | [[this     |
+| Check        |       |          | in seconds, to     | document]] |
+| Interval     |       |          | check for new      |            |
+|              |       |          | keying material at |            |
+|              |       |          | the KDC            |            |
++--------------+-------+----------|--------------------|------------+
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Policies title="ACE Groupcomm Policies" artwork-align="center"}
 
