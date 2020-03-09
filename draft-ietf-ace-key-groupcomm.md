@@ -828,9 +828,9 @@ Client                                                      KDC
 
 In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to upload a new public key to use in the group, and replace the currently stored one.
 
-To this end, the Client performs a Public Key Update Request/Response exchange with the KDC, that is it sends a CoAP POST request to the /ace-group/GID/nodes/NODE/pub-key endpoint at the KDC, where GID is the group identifier and NODE is the node's name.
+To this end, the Client performs a Public Key Update Request/Response exchange with the KDC, i.e. it sends a CoAP POST request to the /ace-group/GID/nodes/NODE/pub-key endpoint at the KDC, where GID is the group identifier and NODE is the node's name.
 
-The request is formatted as specified in {{gid-post}}, with the difference that it includes only the parameters 'client_cred', 'cnonce' and 'client_cred_verify'. In particular, the signature included in 'client_cred_verify' is computed as defined in {{gid-post}}. Since no nonce N_S is provided by the KDC, it is REQUIRED of the specific profile to define how the nonce N_S is generated (REQ17). The specific format of public keys is specified by the application profile (OPT1).
+The request is formatted as specified in {{node-pub-key-post}}.
 
 Figure {{fig-pub-key-update-req-resp}} gives an overview of the exchange described above.
 
