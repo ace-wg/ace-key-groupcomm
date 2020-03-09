@@ -808,9 +808,11 @@ Note the difference between the Key Distribution Request and the Key Renewal Req
 
 Furthermore, policies can be set up so that, upon receiving a Key Renewal Request, the KDC replies to the client with an error response, and then performs a complete group rekeying (OPT8).
 
-## Retrieval of Public Keys for Group Members {#sec-key-retrieval}
+## Retrieval of Public Keys and Roles for Group Members {#sec-key-retrieval}
 
-In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to request public keys of either all group members or a specified subset, by sending a CoAP GET or FETCH request to the /ace-group/GROUPNAME/pub-key endpoint at the KDC, where GROUPNAME is the group identifier, and formatted as defined in {{pubkey-get}} and {{pubkey-fetch}}.
+In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to request public keys and roles of either all group members or a specified subset, by sending a CoAP GET or FETCH request to the /ace-group/GROUPNAME/pub-key endpoint at the KDC, where GROUPNAME is the group identifier, and formatted as defined in {{pubkey-get}} and {{pubkey-fetch}}.
+
+When receiving a Public Key Response, the requesting group member stores (or updates) the public keys (in the 'pub_keys' parameter) and roles (in the 'peer_roles' parameter) of the group members.
 
 {{fig-public-key-1}} and {{fig-public-key-2}} give an overview of the exchanges described above.
 
