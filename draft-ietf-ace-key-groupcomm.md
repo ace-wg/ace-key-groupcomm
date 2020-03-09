@@ -845,12 +845,12 @@ The request is formatted as specified in {{node-pub-key-post}}.
 Figure {{fig-pub-key-update-req-resp}} gives an overview of the exchange described above.
 
 ~~~~~~~~~~~
-Client                                                                KDC
-|                                                                       |
+Client                                                           KDC
+|                                                                 |
 |-- Public Key Update Request: POST ace-group/GID/NODE/pub-key -->|
-|                                                                       |
-|<------------- Public Key Update Response: 2.04 (Changed) -------------|
-|                                                                       |
+|                                                                 |
+|<------- Public Key Update Response: 2.04 (Changed) -------------|
+|                                                                 |
 ~~~~~~~~~~~
 {: #fig-pub-key-update-req-resp title="Message Flow of Public Key Update Request-Response" artwork-align="center"}
 
