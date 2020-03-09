@@ -269,7 +269,7 @@ Should we discuss this in the draft?
 As in {{I-D.ietf-ace-oauth-authz}}, these parameters are included in the payload, which is formatted as a CBOR map. The Content-Format "application/ace+cbor" defined in Section 8.14 of {{I-D.ietf-ace-oauth-authz}} is used.
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
-scp = [ gid : bstr , role: tstr / [ 2*role ] ]
+scp = [ gid : bstr , ? ( role: tstr / [ 2*role ] ) ]
 
 scope = << [ + scp ] >>
 ~~~~~~~~~~~~~~~~~~~~
