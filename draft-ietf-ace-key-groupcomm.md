@@ -480,7 +480,7 @@ The handler expects a request with payload formatted as a CBOR map which MAY con
 
 * 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value the URI of the certificate of the Client. This parameter is encoded as a CBOR text string. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT3).
 
-* 'control_path', with value the URI path of a resource at the Client, encoded as a CBOR text string. This resource is intended to be accessible for the KDC to send request messages to the Client, such as for individual provisioning of new keying material when performing a group rekeying. In particular, this resource is intended for communications concerning exclusively the group or topic specified in the 'scope' parameter.
+* 'control_path', with value the URI path of a resource at the Client, encoded as a CBOR text string. This resource is intended to be accessible for the KDC to send request messages to the Client, such as for individual provisioning of new keying material when performing a group rekeying. In particular, this resource is intended for communications concerning exclusively the group or topic specified in the 'scope' parameter. Note that, in order to support mechanisms of rekeying using this resource, the Client needs to be able to act as a CoAP server.
 
 The handler verifies that the group identifier of the /ace-group/GID path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The KDC MAY set the payload with the 'sign_info' and 'pub_key_enc' parameter, formatted as 'sign_info_res' and 'pub_key_enc_res' in the payload of the 2.01 (Created) response to the Token Post as defined in {{token-post}}. Note that in this case, the content format MUST be set to application/ace+cbor.
 
@@ -744,7 +744,7 @@ If this is about retrieving the public key of a newly joined sender, that's actu
 Is there any other convenient OSCORE thing which is reusable here and we are missing?
 -->
 
-Note that policies can be set up, so that the Client sends a Key Re-Distribution Request to the KDC only after a given number of received messages could not be decrypted due to the lack of the necessary keying material.
+Note that policies can be set up, so that the Client sends a request to the KDC only after a given number of received messages could not be decrypted.
 
 It is application dependent and pertaining to the particular message exchange (e.g. {{I-D.ietf-core-oscore-groupcomm}}) to set up these policies, to instruct clients to retain incoming messages and for how long (OPT4). This allows clients to possibly decrypt such messages after getting updated keying material, rather than just consider them non valid messages to discard right away.
 
@@ -766,9 +766,9 @@ Alternatively, the re-distribution of keying material can be initiated by the KD
 
 * Can make the ace-group/GID/nodes/NODE resource Observable, and send notifications to Clients when the keying material is updated.
 
-* Can send the Key Distribution Response as one or multiple multicast requests to the members of the group, using secure rekeying schemes such as {{RFC2093}}{{RFC2094}}{{RFC2627}}.
+* Can send the payload of the Key Distribution Response in one or multiple multicast POST requests to the members of the group, using secure rekeying schemes such as {{RFC2093}}{{RFC2094}}{{RFC2627}}.
 
-* Can send unicast requests to each Client over a secure channel, with the same payload as the Key Distribution Response. When sending such requests, the KDC can target the URI path possibly provided by the intended recipient upon joining the group, as specified in the 'control_path' parameter of the Joining Request (see {{gid-post}}).
+* Can send unicast POST requests to each Client over a secure channel, with the same payload as the Key Distribution Response. When sending such requests, the KDC can target the URI path possibly provided by the intended recipient upon joining the group, as specified in the 'control_path' parameter of the Joining Request (see {{gid-post}}).
 
 * Can act as a publisher in a pub-sub scenario, and update the keying material by publishing on a specific topic on a broker, which all the members of the group are subscribed to.
 
@@ -913,7 +913,7 @@ A node may be evicted from the group in the following cases.
 
 In either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
 
-In case of forced eviction, the KDC may explicitly inform the leaving node. To this end, the KDC can send a POST request with empty payload, targeting the URI path possibly provided upon joining the group, as specified in the 'control_path' parameter of the Joining Request (see {{gid-post}}).
+In case of forced eviction, the KDC MAY explicitly inform the leaving node, if the Client implements the 'control_path' resource specified in {{gid-post}}. To this end, the KDC can send a DEL request, targeting the URI specified in the 'control_path' parameter of the Joining Request.
 
 # ACE Groupcomm Parameters {#params}
 
