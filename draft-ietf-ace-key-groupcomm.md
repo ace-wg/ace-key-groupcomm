@@ -50,7 +50,6 @@ normative:
 informative:
 
   RFC7519:
-  RFC7390:
   RFC2093:
   RFC2094:
   RFC2627:
@@ -73,12 +72,12 @@ This document defines message formats and procedures for requesting and distribu
 
 # Introduction {#intro}
 
-This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define the message exchanges used to request, distribute and renew the keying material in a group communication scenario, e.g. based on multicast {{RFC7390}}{{I-D.dijk-core-groupcomm-bis}} or on publishing-subscribing {{I-D.ietf-core-coap-pubsub}}.
+This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define the message exchanges used to request, distribute and renew the keying material in a group communication scenario, e.g. based on multicast {{I-D.dijk-core-groupcomm-bis}} or on publishing-subscribing {{I-D.ietf-core-coap-pubsub}}.
 The ACE framework is based on CBOR {{RFC7049}}, so CBOR is the format used in this specification. However, using JSON {{RFC8259}} instead of CBOR is possible, using the conversion method specified in Sections 4.1 and 4.2 of {{RFC7049}}.
 
 Profiles that use group communication can build on this document, by defining a number of details such as the exact group communication protocol and security protocols used. The specific list of details a profile needs to define is shown in {{req}}.
 
-If the application requires backward and forward security, updated keying material is generated and distributed to the group members (rekeying), when membership changes. A key management scheme performs the actual distribution of the updated keying material to the group. In particular, the key management scheme rekeys the current group members when a new node joins the group, and the remaining group members when a node leaves the group. Rekeying mechanisms can be based on {{RFC2093}}, {{RFC2094}} and {{RFC2627}}.
+If the application requires backward and forward security, new keying material is generated and distributed to the group upon membership changes. A key management scheme performs the actual distribution of the new keying material to the group. In particular, the key management scheme rekeys the current group members when a new node joins the group, and the remaining group members when a node leaves the group. Rekeying mechanisms can be based on {{RFC2093}}, {{RFC2094}} and {{RFC2627}}.
 
 ## Terminology
 
@@ -156,31 +155,31 @@ This document specifies a mechanism for:
 2. The joining node transfers authentication and authorization information to the KDC, by posting the obtained Access Token to the /authz-info endpoint at the KDC. After that, a joining node MUST have a secure communication association established with the KDC, before starting to join a group under that KDC. Possible ways to provide a secure communication association are DTLS {{RFC6347}} and OSCORE {{RFC8613}}.
 
 3. The joining node starts the joining process to become a member of the group, by accessing the related group-membership resource at the KDC.
-At the end of the joining process, the joining node has received from the KDC the parameters and keying material to securely communicate with the other members of the group.
+At the end of the joining process, the joining node has received from the KDC the parameters and keying material to securely communicate with the other members of the group, and the KDC has stored the association between the authorization information from the access token and the secure session with the client.
 
-5. The joining node and the KDC maintain the secure association, to support possible future communications. These especially include key management operations, such as retrieval of updated keying material or participation to a group rekeying process.
+4. The joining node and the KDC maintain the secure association, to support possible future communications. These especially include key management operations, such as retrieval of updated keying material or participation to a group rekeying process.
 
 
 ~~~~~~~~~~~
-            C                             AS  KDC                 Group
-            |                             |    |                  Member
-          / |                             |    |                     |
-          | |    Authorization Request    |    |                     |
- Defined  | |---------------------------->|    |                     |
- in the   | |                             |    |                     |
-   ACE    | |    Authorization Response   |    |                     |
-framework | |<----------------------------|    |                     |
-          | |                                  |                     |
-          \ |----------- Token Post ---------->|                     |
-            |                                  |                     |
-            |-------- Joining Request -------->|                     |
-            |                                  |                     |
-            |<------- Joining Response --------|-- Group Rekeying -->|
-            |                                  |                     |
-            |                                       Dispatcher       |
-            |                                           |            |
-            |<====== Secure group communication ========|===========>|
-            |                                           |            |
+            C                           AS  KDC                Group
+            |                           |    |                 Member
+          / |                           |    |                     |
+          | |   Authorization Request   |    |                     |
+ Defined  | |-------------------------->|    |                     |
+ in the   | |                           |    |                     |
+   ACE    | |   Authorization Response  |    |                     |
+framework | |<--------------------------|    |                     |
+          | |                                |                     |
+          \ |---------- Token Post --------->|                     |
+            |                                |                     |
+            |------- Joining Request ------->|                     |
+            |                                |                     |
+            |<------ Joining Response -------|-- Group Rekeying -->|
+            |                                |                     |
+            |                                     Dispatcher       |
+            |                                         |            |
+            |<===== Secure group communication =======|===========>|
+            |                                         |            |
 ~~~~~~~~~~~
 {: #fig-flow title="Message Flow Upon New Node's Joining" artwork-align="center"}
 
@@ -223,13 +222,21 @@ Client                                            AS  KDC
 
 The Authorization Request sent from the Client to the AS is as defined in Section 5.6.1 of {{I-D.ietf-ace-oauth-authz}} and MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'scope', containing the identifier of the specific group (or topic in the case of pub-sub) that the Client wishes to access, and optionally the role(s) that the Client wishes to take. This value is a CBOR array encoded as a byte string, which contains:
+* 'scope', containing the identifier of the specific group(s), or topic(s) in the case of pub-sub, that the Client wishes to access, and optionally the role(s) that the Client wishes to take.
+
+   This value is a CBOR byte string, encoding a CBOR array of one or more  entries.
+
+   An entry has as value a CBOR array, which contains:
 
   - As first element, the identifier of the specific group or topic.
 
-  - Optionally, as second element, the role (or CBOR array of roles) the Client wishes to take in the group.
+  - Optionally, as second element, the role (or CBOR array of roles) that the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s).
 
-  The encoding of the group or topic identifier (REQ1) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
+  In each entry, the encoding of the group or topic identifier (REQ1) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
+
+  In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7).
+
+  An example of CDDL definition of scope, with group identifier encoded as byte string and role identifier as text string, is given in {{cddl-ex}}.
 
 * 'audience', with an identifier of a KDC.
 
@@ -258,7 +265,15 @@ Marco: In principle yes, if you consider a logical audience as the GM/Broker at 
 Should we discuss this in the draft?
 -->
 
+
 As in {{I-D.ietf-ace-oauth-authz}}, these parameters are included in the payload, which is formatted as a CBOR map. The Content-Format "application/ace+cbor" defined in Section 8.14 of {{I-D.ietf-ace-oauth-authz}} is used.
+
+~~~~~~~~~~~~~~~~~~~~ CDDL
+scp = [ gid : bstr , ? ( role: tstr / [ 2*role ] ) ]
+
+scope = << [ + scp ] >>
+~~~~~~~~~~~~~~~~~~~~
+{: #cddl-ex title="CDDL example of scope, with group identifier encoded as bstr and role as tstr" artwork-align="center"}
 
 ## Authorization Response {#ssec-authorization-response}
 
@@ -270,17 +285,11 @@ The Authorization Response sent from the AS to the Client is as defined in Secti
 
 * 'rs_cnf' if asymmetric keys are used, not present if symmetric keys are used. This parameter is as defined in Section 3.2 of {{I-D.ietf-ace-oauth-params}} and contains information about the public key of the KDC.
 
-* 'exp', contains the lifetime in seconds of the access token. This parameter MAY be omitted if the application defines how the expiration time is communicated to the Client via other means, or if it establishes a default value.
+* 'expires_in', contains the lifetime in seconds of the access token. This parameter MAY be omitted if the application defines how the expiration time is communicated to the Client via other means, or if it establishes a default value.
 
 Additionally, the Authorization Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'scope', which mirrors the 'scope' parameter in the Authorization Request (see {{ssec-authorization-request}}). Its value is a CBOR array encoded as a byte string, containing:
-
-  - As first element, the identifier of the specific group or topic the Client is authorized to access.
-
-  - Optionally, as second element, the role (or CBOR array of roles) the Client is authorized to take in the group.
-
-  The encoding of the group or topic identifier and of the role identifiers is the same as in {{ssec-authorization-request}}.
+* 'scope' containing the granted scope, if different from the scope requested by the client. This parameter has the same format and encoding of 'scope' in the Authorization Request, defined in {{ssec-authorization-request}}.
 
 * Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary.
 
@@ -325,13 +334,17 @@ Optionally, if they were included in the request, the KDC MAY include the 'sign_
 
 The 'sign_info' parameter MUST be present if the POST request included the 'sign_info' parameter with value Null. If present, the 'sign_info' parameter of the 2.01 (Created) response is a CBOR array formatted as follows.
 
-* The first element 'sign_alg' is an integer or a text string, indicating the signature algorithm used in the group. It is REQUIRED of the application profiles to define specific values for this parameter (REQ3).
+TODO: have 'sign_info' as an array of arrays, if 'scope' in the Access Token covers multiple groups/topics.
+
+* The first element 'sign_alg' is an integer or a text string, indicating the signature algorithm used in the group. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry defined in {{RFC8152}}.
 
 * The second element 'sign_parameters' indicates the parameters of the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ4). If no parameters of the signature algorithm are specified, 'sign_parameters' MUST be encoded as the CBOR simple value Null.
 
 * The third element 'sign_key_parameters' indicates the parameters of the key used with the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ5). If no parameters of the key used with the signature algorithm are specified, 'sign_key_parameters' MUST be encoded as the CBOR simple value Null.
 
 The 'pub_key_enc' parameter MUST be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, the 'pub_key_enc' parameter of the 2.01 (Created) response is either a CBOR integer indicating the encoding of public keys used in the group, or has value Null indicating that the KDC does not act as repository of public keys for group members.
+
+TODO: have 'pub_key_enc' as an array, if 'scope' in the Access Token covers multiple groups/topics.
 
 <!-- TODO: I noted the following from our discussion with Jim at IETF106: "pub_key_enc_res" = null if not repo" -->
 
@@ -431,21 +444,23 @@ Marco: Isn't it ok as we are doing with the COSE Key in Section 4.2? Then it wor
 
 Upon receiving a request from a Client, the KDC MUST check that it is storing a valid access token from that Client for the group identifier assiciated to the endpoint. If that is not the case, i.e. the KDC does not store a valid access token or this is not valid for that Client for the group identifier at hand, the KDC MUST respond to the Client with a 4.01 (Unauthorized) error message.
 
-## Interface at KDC
+## Interface at the KDC
 
 The KDC is configured with the following resources:
 
 * /ace-group : this resource is fixed and indicates that this specification is used. Other applications that run on a KDC implementing this specification MUST NOT use this same resource.
 
-* /ace-group/gid : one sub-resource to /ace-group is implemented for each group the KDC manages. These resources are identified by the group identifiers of the groups the KDC manages (in this example, the group identifier has value "gid"). These resources support GET and POST method.
+* /ace-group/GROUPNAME : one sub-resource to /ace-group is implemented for each group the KDC manages. These resources are identified by the group identifiers of the groups the KDC manages (in this example, the group identifier has value "GROUPNAME"). These resources support GET and POST method.
 
-* /ace-group/gid/pub-key : this sub-resource is fixed and supports GET and FETCH methods.
+* /ace-group/GROUPNAME/pub-key : this sub-resource is fixed and supports GET and FETCH methods.
 
-* /ace-group/gid/policies: this sub-resource is fixed and supports the GET method.
+* /ace-group/GROUPNAME/policies: this sub-resource is fixed and supports the GET method.
 
-* /ace-group/gid/ctx-num: this sub-resource is fixed and supports the GET method.
+* /ace-group/GROUPNAME/ctx-num: this sub-resource is fixed and supports the GET method.
 
-* /ace-group/gid/node: one sub-resource to /ace-group/gid is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "node"). These resources support GET, PUT and DELETE methods.
+* /ace-group/GROUPNAME/nodes/NODENAME: one sub-resource to /ace-group/GROUPNAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). These resources support GET, PUT and DELETE methods.
+
+* /ace-group/GROUPNAME/nodes/NODENAME/pub-key: one sub-resource to /ace-group/GROUPNAME/nodes/NODENAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). These resources support the POST method.
 
 The details for the handlers of each resource are given in the following sections. These endpoints are used to perform the operations introduced in {{key-distr}}. Note that the url-path given here are default names: implementations are not required to use these names, and can define their own instead.
 
@@ -453,17 +468,17 @@ The details for the handlers of each resource are given in the following section
 
 No handlers are implemented for this resource.
 
-### ace-group/gid
+### ace-group/GROUPNAME
 
 This resource implements GET and POST handlers.
 
 #### POST Handler {#gid-post}
 
-The POST handler adds the public key of the client to the list of the group members' public keys and returns the symmetric group keying material for the group identified by "gid".
+The POST handler adds the public key of the client to the list of the group members' public keys and returns the symmetric group keying material for the group identified by "GROUPNAME".
 
 The handler expects a request with payload formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
-* 'scope', with value the specific resource that the Client is authorized to access (i.e. group or topic identifier) and role(s), encoded as in {{ssec-authorization-request}}.
+* 'scope', with value the specific resource that the Client is authorized to access, i.e. group or topic identifier, and role(s). This value is a CBOR byte string encoding one scope entry, as defined in {{ssec-authorization-request}}.
 
 * 'get_pub_keys', if the Client wishes to receive the public keys of the other nodes in the group from the KDC. The value is an empty CBOR array. This parameter may be present if the KDC stores the public keys of the nodes in the group and distributes them to the Client; it is useless to have here if the set of public keys of the members of the group is known in another way, e.g. it was provided by the AS.
 
@@ -475,15 +490,17 @@ The handler expects a request with payload formatted as a CBOR map which MAY con
 
 * 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value the URI of the certificate of the Client. This parameter is encoded as a CBOR text string. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT3).
 
-The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The KDC MAY set the payload with the 'sign_info' and 'pub_key_enc' parameter, formatted as 'sign_info_res' and 'pub_key_enc_res' in the payload of the 2.01 (Created) response to the Token Post as defined in {{token-post}}. Note that in this case, the content format MUST be set to application/ace+cbor.
+* 'control_path', with value the URI path of a resource at the Client, encoded as a CBOR text string. This resource is intended to be accessible for the KDC to send request messages to the Client, such as for individual provisioning of new keying material when performing a group rekeying. In particular, this resource is intended for communications concerning exclusively the group or topic specified in the 'scope' parameter. Note that, in order to support mechanisms of rekeying using this resource, the Client needs to be able to act as a CoAP server.
 
-If the request is not formatted correctly (e.g. unknown, not-expected fields present, or expected fields with incorrect format), the handler MUST respond with 4.00 (Bad Request) error message. The response MAY contain a CBOR map in the payload with ace-groupcomm+cbor format, e.g. it could send back “pub_key_enc” set to Null if the Client sent its own public key and the KDC is not set to store public keys of the group members. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT6).
+The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The KDC MAY set the payload with the 'sign_info' and 'pub_key_enc' parameter, formatted as 'sign_info_res' and 'pub_key_enc_res' in the payload of the 2.01 (Created) response to the Token Post as defined in {{token-post}}. Note that in this case, the content format MUST be set to application/ace+cbor.
 
-If the KDC stores the group members' public keys, the handler verifies that one public key can be retrieved for the joining node, either from the 'client_cred' field, or from the KDC previous knowledge of it. In particular, the KDC checks that such public key has an accepted format for the group identified by "gid", i.e. it is encoded as expected and is compatible with the signature algorithm and possible associated parameters. If that cannot be verified, it is RECOMMENDED that the handler stops the joining process and responds with 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT5).
+If the request is not formatted correctly (e.g. unknown, not-expected fields present, or expected fields with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. The response MAY contain a CBOR map in the payload with ace-groupcomm+cbor format, e.g. it could send back “pub_key_enc” set to Null if the Client sent its own public key and the KDC is not set to store public keys of the group members. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT6).
 
-If the signature contained in "client_cred_verify" does not pass verification, the handler MUST respond with 4.00 (Bad Request) error message.
+If the KDC stores the group members' public keys, the handler verifies that one public key can be retrieved for the node, either from the 'client_cred' field, or from the KDC previous knowledge of it. In particular, the KDC checks that such public key has an accepted format for the group identified by "GROUPNAME", i.e. it is encoded as expected and is compatible with the signature algorithm and possible associated parameters. If that cannot be verified, it is RECOMMENDED that the handler stops the process and responds with a 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT5).
 
-If verification succeeds, the handler adds the retrieved public key of the joining node to the list of public keys stored for the group identified by "gid". Moreover, the handler assigns a name to the node (e.g. "node1"), and creates a sub-resource to /ace-group/gid/ at the KDC (e.g. "/ace-group/gid/node1"). The handler returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them. The response message also contains the URI path to the sub-resource created for that node in a Location-Path CoAP option. The payload of the response is formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
+If the signature contained in "client_cred_verify" does not pass verification, the handler MUST respond with a 4.00 (Bad Request) error message.
+
+If verification succeeds, the handler adds the retrieved public key of the node to the list of public keys stored for the group identified by "GROUPNAME". Moreover, the handler assigns a name NAME to the node, and creates a sub-resource to /ace-group/GROUPNAME/ at the KDC (e.g. "/ace-group/GROUPNAME/nodes/NODENAME"). The handler returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them. The response message also contains the URI path to the sub-resource created for that node in a Location-Path CoAP option. The payload of the response is formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
 * 'gkty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key" Registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
 
@@ -508,35 +525,37 @@ Optionally, the response MAY contain the following parameters, which, if include
 
 * 'ace-groupcomm-profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. Applications of this specification MUST register an application profile identifier and the related value for this parameter in the "ACE Groupcomm Profile" Registry (REQ12).
 
-* 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer or floating-point number. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what specified in Section 2 of {{RFC7519}}.
+* 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer or floating-point number. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what specified for NumericDate in Section 2 of {{RFC7519}}.
 
 * 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the request. This parameter is a CBOR byte string, which encodes the public keys of all the group members paired with the respective member identifiers. The default encoding for public keys is COSE Keys, so the default encoding for 'pub\_keys' is a CBOR byte string wrapping a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT1). The specific format of the identifiers of group members MUST be specified in the application profile (REQ9).
+
+* 'peer\_roles', MUST be present if 'pub\_keys' is present. This parameter is a CBOR array of n elements, with n the number of members in the group (and number of public keys included in the 'pub\_keys' parameter). The i-th element of the array specifies the role (or CBOR array of roles) that the group member associated to the i-th public key in 'pub\_keys' has in the group. In particular, each array element is encoded as the role element of a scope entry, as defined in {{ssec-authorization-request}}.
 
 * 'group\_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policy" Registry. This specification defines the two elements "Sequence Number Synchronization Method" and "Key Update Check Interval", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format of included map entries (REQ14).
 
 ~~~~~~~~~~~
-+-----------------+-------+----------|--------------------|------------+
-|      Name       | CBOR  |   CBOR   |    Description     | Reference  |
-|                 | label |   type   |                    |            |
-|-----------------+-------+----------|--------------------|------------|
-| Sequence Number | TBD1  | tstr/int | Method for a re-   | [[this     |
-| Synchronization |       |          | cipient node to    | document]] |
-| Method          |       |          | synchronize with   |            |
-|                 |       |          | sequence numbers   |            |
-|                 |       |          | of a sender node.  |            |
-|                 |       |          | Its value is taken |            |
-|                 |       |          | from the 'Value'   |            |
-|                 |       |          | column of the      |            |
-|                 |       |          | Sequence Number    |            |
-|                 |       |          | Synchronization    |            |
-|                 |       |          | Method registry    |            |
-|                 |       |          |                    |            |
-| Key Update      | TBD2  |   int    | Polling interval   | [[this     |
-| Check Interval  |       |          | in seconds, to     | document]] |
-|                 |       |          | check for new      |            |
-|                 |       |          | keying material at |            |
-|                 |       |          | the KDC            |            |
-+-----------------+-------+----------|--------------------|------------+
++--------------+-------+----------|--------------------|------------+
+|      Name    | CBOR  |   CBOR   |    Description     | Reference  |
+|              | label |   type   |                    |            |
+|--------------+-------+----------|--------------------|------------|
+| Sequence     | TBD1  | tstr/int | Method for a re-   | [[this     |
+| Number       |       |          | cipient node to    | document]] |
+| Synchroniza- |       |          | synchronize with   |            |
+| tion Method  |       |          | sequence numbers   |            |
+|              |       |          | of a sender node.  |            |
+|              |       |          | Its value is taken |            |
+|              |       |          | from the 'Value'   |            |
+|              |       |          | column of the      |            |
+|              |       |          | Sequence Number    |            |
+|              |       |          | Synchronization    |            |
+|              |       |          | Method registry    |            |
+|              |       |          |                    |            |
+| Key Update   | TBD2  |   int    | Polling interval   | [[this     |
+| Check        |       |          | in seconds, to     | document]] |
+| Interval     |       |          | check for new      |            |
+|              |       |          | keying material at |            |
+|              |       |          | the KDC            |            |
++--------------+-------+----------|--------------------|------------+
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Policies title="ACE Groupcomm Policies" artwork-align="center"}
 
@@ -548,31 +567,33 @@ CBOR labels for these fields are defined in {{params}}.
 
 #### GET Handler {#gid-get}
 
-The GET handler returns the symmetric group keying material for the group identified by "gid".
+The GET handler returns the symmetric group keying material for the group identified by "GROUPNAME".
 
 The handler expects a GET request.
 
-The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The KDC MAY set the payload with the 'sign_info' and 'pub_key_enc' parameter, formatted as 'sign_info_res' and 'pub_key_enc_res' in the payload of the 2.01 (Created) response to the Token Post as defined in {{token-post}}. Note that in this case, the content format MUST be set to application/ace+cbor.
+The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The KDC MAY set the payload with the 'sign_info' and 'pub_key_enc' parameter, formatted as 'sign_info_res' and 'pub_key_enc_res' in the payload of the 2.01 (Created) response to the Token Post as defined in {{token-post}}. Note that in this case, the content format MUST be set to application/ace+cbor.
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing the symmetric group keying material. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'gkty','key' and 'num' specified in {{gid-post}}.
 
 The payload MAY also include the parameters 'ace-groupcomm-profile', 'exp' and 'mgt_key_material' parameters specified in {{gid-post}}.
 
-### ace-group/gid/pub-key
+### ace-group/GROUPNAME/pub-key
 
 This resource implements GET and FETCH handlers.
 
 #### FETCH Handler {#pubkey-fetch}
 
-The FETCH handler receives identifiers of group members for the group identified by "gid" and returns the public keys of such group members.
+The FETCH handler receives identifiers of group members for the group identified by "GROUPNAME" and returns the public keys of such group members.
 
 The handler expects a request with payload formatted as a CBOR map. The payload of this request is a CBOR Map that MUST contain the following fields:
 
-* 'get_pub_keys', whose value is a non-empty CBOR array. Each element of the array is the identifier of a group member for the group identified by "gid". The specific format of public keys as well as identifiers of group members MUST be specified by the application profile (OPT1, REQ9).
+* 'get_pub_keys', whose value is a non-empty CBOR array. Each element of the array is the identifier of a group member for the group identified by "GROUPNAME". The specific format of public keys as well as identifiers of group members MUST be specified by the application profile (OPT1, REQ9).
 
-The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If verification succeeds, the handler identifies the public keys of the current group members for which the identifier matches with one of those indicated in the request. Then, the handler returns a 2.05 (Content) message response with payload formatted as a CBOR map containing only the 'pub\_keys' parameter from {{gid-post}}, which encodes the list of public keys of those group members including the respective member identifiers. If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length. The specific format of public keys as well as of identifiers of group members is specified by the application profile (OPT1, REQ9).
+If verification succeeds, the handler identifies the public keys of the current group members for which the identifier matches with one of those indicated in the request. Then, the handler returns a 2.05 (Content) message response with payload formatted as a CBOR map, containing only the 'pub\_keys' and 'peer\_roles' parameters from {{gid-post}}. In particular, 'pub\_keys' encodes the list of public keys of those group members including the respective member identifiers, while 'peer\_roles' encodes their respective role (or CBOR array of roles) in the group.
+
+If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length. The specific format of public keys as well as of identifiers of group members is specified by the application profile (OPT1, REQ9).
 
 The handler MAY enforce one of the following policies, in order to handle possible identifiers that are included in the 'get_pub_keys' parameter of the request but are not associated to any current group member. Such a policy MUST be specified by the application profile (REQ13)
 
@@ -584,11 +605,13 @@ The handler MAY enforce one of the following policies, in order to handle possib
 
 The handler expects a GET request.
 
-The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If verification succeeds, the handler returns a 2.05 (Content) message containing the public keys of all the current group members, for the group identified by "gid". The payload of the response is formatted as a CBOR map containing only the 'pub\_keys' parameter from {{gid-post}}, which encodes the list of public keys of all the group members including the respective member identifiers. If the KDC does not store any public key for the group, the handler returns a response with payload formatted as a CBOR byte string of zero length. The specific format of public keys as well as of identifiers of group members is specified by the application profile (OPT1, REQ9).
+If verification succeeds, the handler returns a 2.05 (Content) message containing the public keys of all the current group members, for the group identified by "GROUPNAME". The payload of the response is formatted as a CBOR map, containing only the 'pub\_keys' and 'peer\_roles' parameters from {{gid-post}}. In particular, 'pub\_keys' encodes the list of public keys of those group members including the respective member identifiers, while 'peer\_roles' encodes their respective role (or CBOR array of roles) in the group.
 
-### ace-group/gid/policies
+If the KDC does not store any public key for the group, the handler returns a response with payload formatted as a CBOR byte string of zero length. The specific format of public keys as well as of identifiers of group members is specified by the application profile (OPT1, REQ9).
+
+### ace-group/GROUPNAME/policies
 
 This resource implements a GET handler.
 
@@ -596,13 +619,13 @@ This resource implements a GET handler.
 
 The handler expects a GET request.
 
-The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If verification succeeds, the handler returns a 2.05 (Content) message containing the list of policies for the group identified by "gid". The payload of the response is formatted as a CBOR map including only the parameter 'group_policies' defined in {{gid-post}} and specifying the current policies in the group. If the KDC does not store any policy, the payload is formatted as a zero-length CBOR byte string.
+If verification succeeds, the handler returns a 2.05 (Content) message containing the list of policies for the group identified by "GROUPNAME". The payload of the response is formatted as a CBOR map including only the parameter 'group_policies' defined in {{gid-post}} and specifying the current policies in the group. If the KDC does not store any policy, the payload is formatted as a zero-length CBOR byte string.
 
 The specific format and meaning of group policies MUST be specified in the application profile (REQ14).
 
-### ace-group/gid/ctx-num
+### ace-group/GROUPNAME/ctx-num
 
 This resource implements a GET handler.
 
@@ -610,21 +633,21 @@ This resource implements a GET handler.
 
 The handler expects a GET request.
 
-The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing an integer that represents the version number of the symmetric group keying material. This number is incremented on the KDC every time the KDC updates the symmetric group keying material. The payload of the response is formatted as a CBOR integer.
 
-### ace-group/gid/node
+### ace-group/GROUPNAME/nodes/NODENAME
 
 This resource implements GET, PUT and DELETE handlers.
 
 #### PUT Handler {#node-put}
 
-The PUT handler is used to get the KDC to produce and return individual keying material to protect outgoing messages for the node (identified by "node") for the group identified by "gid".
+The PUT handler is used to get the KDC to produce and return individual keying material to protect outgoing messages for the node (identified by "NODENAME") for the group identified by "GROUPNAME".
 
 The handler expects a request with empty payload.
 
-The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client, identified by "NODENAME". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing newly-generated individual keying material for the Client, or information enabling the Client to derive it. The payload of the response is formatted as a CBOR map. The specific format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ15) and registered in {{iana-reg}}.
 
@@ -632,24 +655,41 @@ If verification succeeds, the handler returns a 2.05 (Content) message containin
 
 The handler expects a GET request.
 
-The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client, identified by "node". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client, identified by "NODENAME". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing both the group keying material and the individual keying material for the Client, or information enabling the Client to derive it. The payload of the response is formatted as a CBOR map. The format for the group keying material is the same as defined in the response of {{gid-get}}. The specific format of individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ15) and registered in {{iana-reg}}.
 
 #### DELETE Handler {#node-delete}
 
-The DELETE handler removes the node (identified by "node") from the group, for the group identified by "gid". If the node sending the request and the node name used in the Uri-Path do not match, the handler responds with a 4.01 (Unauthorized) error response.
-
-TODO: Check the previous sentence.
+The DELETE handler removes the node identified by "NODENAME" from the group identified by "GROUPNAME". If the node sending the request and the node name used in the Uri-Path do not match, the handler responds with a 4.01 (Unauthorized) error response.
 
 The handler expects a request with payload formatted as a CBOR map. The payload of this request is a CBOR Map that MAY contain only the 'scope' field as specified in {{gid-post}}.
 
-The handler verifies that the group identifier of the /ace-group/gid path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client, identified by "NODENAME". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
 If the request contained a 'scope' field, the handler MUST extract the roles for that client. If the value is such that the KDC cannot extract all the necessary information to understand and process it correctly (e.g. unrecognized roles), the KDC MUST respond with a 4.00 (Bad Request) error message.
 
-If verification succeeds, the handler removes the client from the group identified by "gid", for specific roles if roles were specified in the 'scope' field, or for all roles. That includes removing the public key of the client if the KDC keep tracks of that. Then, the handler delete the sub-resource /node and returns a 2.02 (Deleted) message with empty payload.
+If verification succeeds, the handler removes the client from the group identified by "GROUPNAME", for specific roles if roles were specified in the 'scope' field, or for all roles. That includes removing the public key of the client if the KDC keep tracks of that. Then, the handler delete the sub-resource nodes/NODENAME and returns a 2.02 (Deleted) message with empty payload.
 
+### ace-group/GROUPNAME/nodes/NODENAME/pub-key
+
+This resource implements a POST handler.
+
+#### POST Handler {#node-pub-key-post}
+
+The POST handler is used to replace the stored public key of this client (identified by "NODENAME") with the one specified in the request at the KDC, for the group identified by "GROUPNAME".
+
+The handler expects a POST request with payload as specified in {{gid-post}}, with the difference that it includes only the parameters 'client_cred', 'cnonce' and 'client_cred_verify'. In particular, the signature included in 'client_cred_verify' is expected to be computed as defined in {{gid-post}}. Since no nonce N_S is provided by the KDC, it is REQUIRED of the specific profile to define how the nonce N_S is generated (REQ17). The specific format of public keys is specified by the application profile (OPT1).
+
+The handler verifies that the group identifier GROUPNAME is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+
+If the request is not formatted correctly (e.g. unknown, not-expected fields present, or expected fields with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT6).
+
+Otherwise, the handler checks that the public key specified in the 'client_cred' field has a valid format for the group identified by "GROUPNAME", i.e. it is encoded as expected and is compatible with the signature algorithm and possible associated parameters. If that cannot be verified, the handler MUST respond with a 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT5).
+
+Otherwise, the handler verifies the signature contained in the 'client_cred_verify' field of the request, using the public key specified in the 'client_cred' field. If the signature does not pass verification, the handler MUST respond with a 4.00 (Bad Request) error message.
+
+If verification succeeds, the handler replaces the old public key of the node NODENAME with the one specified in the 'client_cred' field of the request, and stores it as the new current public key of the node NODENAME, in the list of group members' public keys for the group identified by GROUPNAME. Then, the handler replies with a 2.04 (Changed) response, which does not include a payload.
 
 ## Joining Exchange {#ssec-key-distribution-exchange}
 
@@ -658,10 +698,10 @@ If verification succeeds, the handler removes the client from the group identifi
 ~~~~~~~~~~~
 Client                                                     KDC
    |                                                        |
-   |-------- Joining Request: POST /ace-group/gid --------->|
+   |----- Joining Request: POST /ace-group/GROUPNAME ------>|
    |                                                        |
    |<--------- Joining Response: 2.01 (Created) ----------- |
-   |        Location-Path = "/ace-group/gid/node"           |
+   | Location-Path = "/ace-group/GROUPNAME/nodes/NODENAME"  |
 ~~~~~~~~~~~
 {: #fig-key-distr-join title="Message Flow of First Exchange for Group Joining" artwork-align="center"}
 
@@ -669,7 +709,7 @@ If not previously established, the Client and the KDC MUST first establish a pai
 
 The secure communication protocol is REQUIRED to establish the secure channel by using the proof-of-possession key bound to the access token. As a result, the proof-of-possession to bind the access token to the Client is performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC.
 
-To join the group, the Client sends a CoAP POST request to the /ace-group/gid endpoint at the KDC, where gid is the group identifier of the group to join, formatted as specified in {{gid-post}}. This group identifier is the same as the 'scope' value of the Authorization Request/Response, or it can be retrieved from it. Note that, in case of successful joining, the Client will receive the URI to retrieve individual or group keying material and to leave the group in the Location-Path option of the response.
+To join the group, the Client sends a CoAP POST request to the /ace-group/GROUPNAME endpoint at the KDC, where GROUPNAME is the group identifier of the group to join, formatted as specified in {{gid-post}}. This group identifier is the same as the scope entry corresponding to that group, specified in the 'scope' parameter of the Authorization Request/Response, or it can be retrieved from it. Note that, in case of successful joining, the Client will receive the URI to retrieve individual or group keying material and to leave the group in the Location-Path option of the response.
 
 If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the Joining Response (see {{gid-post}}). Application profiles may define alternative ways of retrieving the keying material, such as sending separate requests to different resources at the KDC ({{gid-get}}, {{pubkey-get}}, {{policies-get}}). After distributing the new group keying material, the KDC MUST increment the version number of the keying material.
 
@@ -693,10 +733,15 @@ Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows 
 
 ## Retrieval of Updated Keying Material {#update-keys}
 
-A node stops using the group keying material upon its expiration, according to what indicated by the KDC with the 'exp' parameter in a Joining response, or to a pre-configured value. Then, if it wants to continue participating in the group communication, the node has to request new updated keying material from the KDC.
+When any of the following happens, a node MUST stop using the owned group keying material to protect outgoing messages, and SHOULD stop using it to decrypt and verify incoming messages.
 
-The Client may need to request the latest group keying material also upon receiving messages from other group members without being able to retrieve the material to correctly decrypt them. This may be due to a previous update of the group keying material (rekeying) triggered by the KDC, that the Client was not able to receive or decrypt. To this end, the Client sends a CoAP GET request to the /ace-group/gid/node endpoint at the KDC, formatted as specified in {{node-get}}.
+* Upon expiration of the keying material, according to what indicated by the KDC with the 'exp' parameter in a Joining Response, or to a pre-configured value.
 
+* Upon receiving a notification of revoked/renewed keying material from the KDC, possibly as part of an update of the keying material (rekeying) triggered by the KDC.
+
+* Upon receiving messages from other group members without being able to retrieve the keying material to correctly decrypt them. This may be due to rekeying messages previously sent by the KDC, that the Client was not able to receive or decrypt.
+
+In either case, if it wants to continue participating in the group communication, the node has to request the latest keying material from the KDC. To this end, the Client sends a CoAP GET request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, formatted as specified in {{node-get}}.
 
 <!-- Jim 13-07: Comment somewhere about getting strike zones setup correctly for a newly seen sender of messages. Ptr to OSCORE?
 
@@ -709,29 +754,32 @@ If this is about retrieving the public key of a newly joined sender, that's actu
 Is there any other convenient OSCORE thing which is reusable here and we are missing?
 -->
 
-Note that policies can be set up so that the Client sends a Key Re-Distribution Request to the KDC only after a given number of unsuccessfully decrypted incoming messages. It is application dependent and pertaining to the particular message exchange (e.g. {{I-D.ietf-core-oscore-groupcomm}}) to set up policies that instruct clients to retain unsuccessfully decrypted messages and for how long, so that they can be decrypted after getting updated keying material, rather than just considered non valid messages to discard right away (OPT4).
+Note that policies can be set up, so that the Client sends a Key Re-Distribution request to the KDC only after a given number of received messages could not be decrypted (because of failed decryption processing or inability to retrieve the necessary keying material).
+
+It is application dependent and pertaining to the particular message exchange (e.g. {{I-D.ietf-core-oscore-groupcomm}}) to set up these policies, to instruct clients to retain incoming messages and for how long (OPT4). This allows clients to possibly decrypt such messages after getting updated keying material, rather than just consider them non valid messages to discard right away.
 
 The same Key Distribution Request could also be sent by the Client without being triggered by a failed decryption of a message, if the Client wants to be sure that it has the latest group keying material. If that is the case, the Client will receive from the KDC the same group keying material it already has in memory.
 
 {{fig-key-redistr-req-resp}} gives an overview of the exchange described above.
 
 ~~~~~~~~~~~
-Client                                                     KDC
-   |                                                        |
-   |--- Key Distribution Request: GET ace-group/gid/node -->|
-   |                                                        |
-   |<----- Key Distribution Response: 2.05 (Content) -------|
-   |                                                        |
+Client                                                          KDC
+   |                                                             |
+   |------------------ Key Distribution Request: --------------->|
+   |           GET ace-group/GROUPNAME/nodes/NODENAME            |
+   |                                                             |
+   |<-------- Key Distribution Response: 2.05 (Content) ---------|
+   |                                                             |
 ~~~~~~~~~~~
 {: #fig-key-redistr-req-resp title="Message Flow of Key Distribution Request-Response" artwork-align="center"}
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
 
-* Can make the ace-group/gid/node resource Observable, and send notifications to Clients when the keying material is updated.
+* Can make the ace-group/GROUPNAME/nodes/NODENAME resource Observable, and send notifications to Clients when the keying material is updated.
 
-* Can send the Key Distribution Response as one or multiple multicast requests to the members of the group, using secure rekeying schemes such as {{RFC2093}}{{RFC2094}}{{RFC2627}}.
+* Can send the payload of the Key Distribution Response in one or multiple multicast POST requests to the members of the group, using secure rekeying schemes such as {{RFC2093}}{{RFC2094}}{{RFC2627}}.
 
-* Can send unicast requests to each Client over a secure channel, with the same payload as the Key Distribution Response.
+* Can send unicast POST requests to each Client over a secure channel, with the same payload as the Key Distribution Response. When sending such requests, the KDC can target the URI path possibly provided by the intended recipient upon joining the group, as specified in the 'control_path' parameter of the Joining Request (see {{gid-post}}).
 
 * Can act as a publisher in a pub-sub scenario, and update the keying material by publishing on a specific topic on a broker, which all the members of the group are subscribed to.
 
@@ -739,25 +787,32 @@ Note that these methods of KDC-initiated key distribution have different securit
 
 ## Retrieval of New Keying Material {#new-keys}
 
-Beside possible expiration and depending on what part of the keying material is no longer eligible to be used, the client may need to communicate to the KDC its need for that part to be renewed. For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material. To this end, the client performs a Key Renewal Request/Response exchange with the KDC, that is a CoAP PUT request to the /ace-group/gid/node endpoint at the KDC, where gid is the group identifier and node the node's name, and formatted as defined in {{node-get}}.
+Beside possible expiration and depending on what part of the keying material is no longer eligible to be used, the client may need to communicate to the KDC its need for that part to be renewed. For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
+
+To this end, the client performs a Key Renewal Request/Response exchange with the KDC, i.e. it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group identifier and NODENAME is the node's name, and formatted as defined in {{node-get}}.
 
 {{fig-renewal-req-resp}} gives an overview of the exchange described above.
 
 ~~~~~~~~~~~
-Client                                                  KDC
-   |                                                     |
-   |---- Key Renewal Request: PUT ace-group/gid/node --->|
-   |                                                     |
-   |<----- Key Renewal Response: 2.05 (Content) ---------|
-   |                                                     |
+Client                                                    KDC
+   |                                                       |
+   |------------------ Key Renewal Request: -------------->|
+   |           PUT ace-group/GROUPNAME/nodes/NODENAME      |
+   |                                                       |
+   |<-------- Key Renewal Response: 2.05 (Content) --------|
+   |                                                       |
 ~~~~~~~~~~~
 {: #fig-renewal-req-resp title="Message Flow of Key Renewal Request-Response" artwork-align="center"}
 
 Note the difference between the Key Distribution Request and the Key Renewal Request: while the first one only triggers distribution (the renewal might have happened independently, e.g. because of expiration), the second one triggers the KDC to produce new individual keying material for the requesting node.
 
-## Retrieval of Public Keys for Group Members {#sec-key-retrieval}
+Furthermore, policies can be set up so that, upon receiving a Key Renewal Request, the KDC replies to the client with an error response, and then performs a complete group rekeying (OPT8).
 
-In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to request public keys of either all group members or a specified subset, by sending a CoAP GET or FETCH request to the /ace-group/gid/pub-key endpoint at the KDC, where gid is the group identifier, and formatted as defined in {{pubkey-get}} and {{pubkey-fetch}}.
+## Retrieval of Public Keys and Roles for Group Members {#sec-key-retrieval}
+
+In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to request public keys and roles of either all group members or a specified subset, by sending a CoAP GET or FETCH request to the /ace-group/GROUPNAME/pub-key endpoint at the KDC, where GROUPNAME is the group identifier, and formatted as defined in {{pubkey-get}} and {{pubkey-fetch}}.
+
+When receiving a Public Key Response, the requesting group member stores (or updates) the public keys (in the 'pub_keys' parameter) and roles (in the 'peer_roles' parameter) of the group members.
 
 {{fig-public-key-1}} and {{fig-public-key-2}} give an overview of the exchanges described above.
 
@@ -765,7 +820,7 @@ In case the KDC maintains the public keys of group members, a node in the group 
 ~~~~~~~~~~~
 Client                                                     KDC
    |                                                        |
-   |---- Public Key Request: GET /ace-group/gid/pub-key --->|
+   |--Public Key Request: GET /ace-group/GROUPNAME/pub-key->|
    |                                                        |
    |<--------- Public Key Response: 2.05 (Content) ---------|
    |                                                        |
@@ -774,25 +829,46 @@ Client                                                     KDC
 
 
 ~~~~~~~~~~~
-Client                                                     KDC
-   |                                                        |
-   |--- Public Key Request: FETCH /ace-group/gid/pub-key --->|
-   |                                                        |
-   |<--------- Public Key Response: 2.01 (Created) ---------|
-   |                                                        |
+Client                                                      KDC
+   |                                                         |
+   |-Public Key Request: FETCH /ace-group/GROUPNAME/pub-key->|
+   |                                                         |
+   |<--------- Public Key Response: 2.01 (Created) ----------|
+   |                                                         |
 ~~~~~~~~~~~
 {: #fig-public-key-2 title="Message Flow of Public Key Exchange to Request Specific Members Public Keys" artwork-align="center"}
 
+## Update of Public Key {#update-pub-key}
+
+In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to upload a new public key to use in the group, and replace the currently stored one.
+
+To this end, the Client performs a Public Key Update Request/Response exchange with the KDC, i.e. it sends a CoAP POST request to the /ace-group/GROUPNAME/nodes/NODENAME/pub-key endpoint at the KDC, where GROUPNAME is the group identifier and NODENAME is the node's name.
+
+The request is formatted as specified in {{node-pub-key-post}}.
+
+Figure {{fig-pub-key-update-req-resp}} gives an overview of the exchange described above.
+
+~~~~~~~~~~~
+Client                                                           KDC
+|                                                                 |
+|-------------- Public Key Update Request: ---------------------->|
+|      POST ace-group/GROUPNAME/nodes/NODENAME/pub-key            |
+|                                                                 |
+|<------- Public Key Update Response: 2.04 (Changed) -------------|
+|                                                                 |
+~~~~~~~~~~~
+{: #fig-pub-key-update-req-resp title="Message Flow of Public Key Update Request-Response" artwork-align="center"}
+
 ## Retrieval of Group Policies {#policies}
 
-A node in the group can contact the KDC to retrieve the current group policies, by sending a CoAP GET request to the /ace-group/gid/policies endpoint at the KDC, where gid is the group identifier, and formatted as defined in {{policies-get}}
+A node in the group can contact the KDC to retrieve the current group policies, by sending a CoAP GET request to the /ace-group/GROUPNAME/policies endpoint at the KDC, where GROUPNAME is the group identifier, and formatted as defined in {{policies-get}}
 
 {{fig-policies}} gives an overview of the exchange described above.
 
 ~~~~~~~~~~~
 Client                                                   KDC
    |                                                      |
-   |--- Policies Request: GET ace-group/gid/policies ---->|
+   |-Policies Request: GET ace-group/GROUPNAME/policies ->|
    |                                                      |
    |<--------- Policies Response: 2.05 (Content) ---------|
    |                                                      |
@@ -801,14 +877,14 @@ Client                                                   KDC
 
 ## Retrieval of Keying Material Version {#key-version}
 
-A node in the group can contact the KDC to request information about the version number of the symmetric group keying material, by sending a CoAP GET request to the /ace-group/gid/ctx-num endpoint at the KDC, where gid is the group identifier, formatted as defined in {{num-get}}. In particular, the version is incremented by the KDC every time the group keying material is renewed.
+A node in the group can contact the KDC to request information about the version number of the symmetric group keying material, by sending a CoAP GET request to the /ace-group/GROUPNAME/ctx-num endpoint at the KDC, where GROUPNAME is the group identifier, formatted as defined in {{num-get}}. In particular, the version is incremented by the KDC every time the group keying material is renewed.
 
 {{fig-version}} gives an overview of the exchange described above.
 
 ~~~~~~~~~~~
 Client                                                    KDC
    |                                                       |
-   |----- Version Request: GET ace-group/gid/ctx-num ----->|
+   |-- Version Request: GET ace-group/GROUPNAME/ctx-num -->|
    |                                                       |
    |<--------- Version Response: 2.05 (Content) -----------|
    |                                                       |
@@ -818,7 +894,7 @@ Client                                                    KDC
 
 ## Group Leaving Request ## {#ssec-group-leaving}
 
-A node can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/gid/node at the KDC, where gid is the group identifier and node the node's name, formatted as defined in {{node-delete}}
+A node can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/GROUPNAME/nodes/NODENAME at the KDC, where GROUPNAME is the group identifier and NODENAME is the node's name, formatted as defined in {{node-delete}}
 
 <!-- Jim 13-07: Section 5.2 - What is the message to leave - can I leave one scope but not another?  Can I just give up a role?
 
@@ -850,7 +926,9 @@ A node may be evicted from the group in the following cases.
 
    * the access token is still valid, upon its expiration.
 
-   Either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
+In either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
+
+In case of forced eviction, the KDC MAY explicitly inform the leaving node, if the Client implements the 'control_path' resource specified in {{gid-post}}. To this end, the KDC can send a DEL request, targeting the URI specified in the 'control_path' parameter of the Joining Request.
 
 # ACE Groupcomm Parameters {#params}
 
@@ -859,21 +937,22 @@ This specification defines a number of fields used during the second part of the
 
  Name         | CBOR Key | CBOR Type     |   Reference
 --------------|----------|---------------|---------------
- scope        |   TBD    | array         | {{gid-post}}
- get_pub_keys |   TBD    | array         | {{gid-post}}
+ scope        |   TBD    | byte string   | {{gid-post}}
+ get_pub_keys |   TBD    | array         | {{gid-post}}, {{pubkey-fetch}}
  client_cred  |   TBD    | byte string   | {{gid-post}}
  cnonce       |   TBD    | byte string   | {{gid-post}}
  client_cred_verify |   TBD    | byte string   | {{gid-post}}
- pub_keys_repos   |   TBD    | array         | {{gid-post}}
- gkty          |   TBD    | int / byte string   | {{gid-post}}
+ pub_keys_repos   |   TBD    | text string         | {{gid-post}}
+ control_path | TBD | text string | {{gid-post}}
+ gkty          |   TBD    | int / text string   | {{gid-post}}
  key          |   TBD    | see "ACE Groupcomm Key" Registry     | {{gid-post}}
  num          |   TBD    | int           | {{gid-post}}
  ace-groupcomm-profile |   TBD    | int           | {{gid-post}}
  exp          |   TBD    | int / float   | {{gid-post}}
  pub_keys     |   TBD    | byte string   | {{gid-post}}
+ peer_roles     |   TBD    | array   | {{gid-post}}
  group_policies      |   TBD    | map           | {{gid-post}}
  mgt_key_material    |   TBD    | byte string   | {{gid-post}}
- get_pub_keys |   TBD    | array         | {{pubkey-fetch}}
 
 # Security Considerations {#sec-cons}
 
@@ -942,15 +1021,15 @@ The following registrations are required for the OSCORE Security Context Paramet
 
    Optional parameters: none
 
-   Encoding considerations: Must be encoded as CBOR map containing the protocol parameters defined in [this document].
+   Encoding considerations: Must be encoded as CBOR map containing the protocol parameters defined in \[this document\].
 
    Security considerations: See {{sec-cons}} of this document.
 
    Interoperability considerations: n/a
 
-   Published specification: [this document]
+   Published specification: \[this document\]
 
-   Applications that use this media type: The type is used by authorization servers, clients and resource servers that support the ACE groupcomm framework as specified in [this document].
+   Applications that use this media type: The type is used by authorization servers, clients and resource servers that support the ACE groupcomm framework as specified in \[this document\].
 
    Additional information:
 
@@ -1030,7 +1109,7 @@ The columns of this Registry are:
 * Name: This is a descriptive name that enables easier reference to
   the item. The name MUST be unique. It is not used in the encoding.
 
-* Key Type Value: This is the value used to identify the keying material. These values MUST be unique.  The value can be a positive integer, a negative integer, or a string.
+* Key Type Value: This is the value used to identify the keying material. These values MUST be unique.  The value can be a positive integer, a negative integer, or a text string.
 
 * Profile: This field may contain one or more descriptive strings of application profiles to be used with this item. The values should be taken from the Name column of the "ACE Groupcomm Profile" Registry.
 
@@ -1112,9 +1191,9 @@ Expert reviewers should take into consideration the following points:
 
 This section lists the requirements on application profiles of this specification,for the convenience of application profile designers.
 
-* REQ1: Specify the encoding and value of the identifier of group or topic of 'scope' (see {{ssec-authorization-request}}).
+* REQ1: Specify the encoding and value of the identifier of group or topic, for scope entries of 'scope' (see {{ssec-authorization-request}}).
 
-* REQ2: Specify the encoding and value of roles of 'scope' (see {{ssec-authorization-request}}).
+* REQ2: Specify the encoding and value of roles, for scope entries of 'scope' (see {{ssec-authorization-request}}).
 
 * REQ3: If used, specify the acceptable values for 'sign_alg' (see {{token-post}}).
 
@@ -1154,15 +1233,41 @@ This section lists the requirements on application profiles of this specificatio
 
 * OPT3: Optionally, specify the encoding of 'pub\_keys\_repos' if the default is not used (see {{gid-post}}).
 
-* OPT4: Optionally, specify policies that instruct clients to retain unsuccessfully decrypted messages and for how long, so that they can be decrypted after getting updated keying material.
+* OPT4: Optionally, specify policies that instruct clients to retain messages and for how long, if they are unsuccessfully decrypted (see {{update-keys}}). This makes it possible to decrypt such messages after getting updated keying material.
 
 * OPT5: Optionally, specify the behavior of the handler in case of failure to retrieve a public key for the specific node (see {{gid-post}}).
 
 * OPT6: Optionally, specify possible or required payload formats for specific error cases.
 
+* OPT7: Optionally, specify CBOR values to use for abbreviating identifiers of roles in the group or topic (see {{ssec-authorization-request}}).
+
+* OPT8: Optionally, specify policies for the KDC to perform group rekeying after receiving a Key Renewal Request (see {{new-keys}}).
+
 # Document Updates # {#sec-document-updates}
 
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
+
+## Version -04 to -05 ## {#sec-04-05}
+
+* Updated uppercase/lowercase URI segments for KDC resources.
+
+* Supporting single Access Token for multiple groups/topics.
+
+* Added 'control_path' parameter in the Joining Request.
+
+* Added 'peer_roles' parameter to support legal requesters/responders.
+
+* Clarification on stopping using owned keying material.
+
+* Clarification on different reasons for processing failures, related policies, and requirement OPT4.
+
+* Added a KDC sub-resource for group members to upload a new public key.
+
+* Possible group rekeying following an individual Key Renewal Request.
+
+* Clarified meaning of requirement REQ3; added requirement OPT8.
+
+* Editorial improvements.
 
 ## Version -03 to -04 ## {#sec-03-04}
 
