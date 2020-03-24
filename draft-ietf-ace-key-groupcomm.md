@@ -57,6 +57,8 @@ informative:
   RFC7959:
   RFC8259:
   RFC8613:
+  RFC8392:
+  RFC8747:
   I-D.dijk-core-groupcomm-bis:
   I-D.ietf-core-coap-pubsub:
   I-D.ietf-ace-oscore-profile:
@@ -304,7 +306,15 @@ Additionally, the Authorization Response MAY contain the following parameters, w
 
 -->
 
-The access token MUST contain all the parameters defined above (including the same 'scope' as in this message, if present, or the 'scope' of the Authorization Request otherwise), and additionally other optional parameters that the transport profile of ACE requires.
+The proof-of-possession access token (in 'access_token' above) MUST contain the following parameters:
+
+* a confirmation claim (see for example 'cnf' defined in Section 3.1 of {{RFC8747}} for CWT);
+
+* an expiration time claim (see for example 'exp' defined in Section 3.1.4 of {{RFC8392}} for CWT);
+
+* a scope claim (see for example 'scope' registered in Section 8.13 of {{I-D.ietf-ace-oauth-authz}} for CWT). This claim has the same encoding as 'scope' parameter above. Additionally, this claim has the same value of the 'scope' parameter if the parameter is present in the message, or it takes the value of 'scope' in the Authorization Request otherwise.
+
+The access token MAY additionally contain other claims that the transport profile of ACE requires, or other optional parameters.
 
 As in {{I-D.ietf-ace-oauth-authz}}, these parameters are included in the payload, which is formatted as a CBOR map. The Content-Format "application/ace+cbor" is used.
 
