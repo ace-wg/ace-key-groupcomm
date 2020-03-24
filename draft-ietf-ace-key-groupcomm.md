@@ -299,12 +299,6 @@ Additionally, the Authorization Response MAY contain the following parameters, w
 
 * Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary.
 
-<!--
-  Jim 14-06: State explicitly what the AS does when receiving an authorization request for a group from a joining node that already has a valid not expired token to join that group (and is probably an actual member). The AS can simply issue a new token.
-
-  TODO: Note that if the joining node valid not expired token (for example if it was previously member of the group), the AS still issue a new token.
-
--->
 
 The proof-of-possession access token (in 'access_token' above) MUST contain the following parameters:
 
@@ -318,7 +312,7 @@ The access token MAY additionally contain other claims that the transport profil
 
 As in {{I-D.ietf-ace-oauth-authz}}, these parameters are included in the payload, which is formatted as a CBOR map. The Content-Format "application/ace+cbor" is used.
 
-When receiving an Authorization Request from a Client that was previously authorized, and which still owns a valid non expired access token, the AS replies with an Authorization Response with a new access token.
+When receiving an Authorization Request from a Client that was previously authorized, and for which the AS still owns a valid non expired access token, the AS replies with that token. Note that it is up to application profiles of ACE to make sure that re-posting the same token does not cause re-use of keying material between nodes (for example, that is done with the use of random nonces in {{I-D.ietf-ace-oscore-profile}}).
 
 ## Token Post {#token-post}
 
