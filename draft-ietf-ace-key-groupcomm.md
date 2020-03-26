@@ -340,34 +340,38 @@ The payload of the 2.01 response is a CBOR map, which MUST include the parameter
 
 Optionally, if they were included in the request, the KDC MAY include the 'sign_info' parameter as well as the 'pub_key_enc' parameter defined in {{sign-info}} and {{pub-key-enc}} of this specification, respectively.
 
-The 'sign_info' parameter MUST be present if the POST request included the 'sign_info' parameter with value Null. If present, the 'sign_info' parameter of the 2.01 (Created) response is a CBOR array formatted as follows.
+The 'sign_info' parameter MUST be present if the POST request included the 'sign_info' parameter with value Null. If present, the 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one ore more elements. The number of elements is equal to the number of tokens the client has posted, or the number of groups the client has been authorized to join. Each element contains information about signing parameters and keys for each group or topic and is formatted as follows.
 
-TODO: have 'sign_info' as an array of arrays, if 'scope' in the Access Token covers multiple groups/topics.
+<!--
+TODO: have 'sign_info' as an array of arrays, if 'scope' in the Access Token covers multiple groups/topics. DONE-->
+* The first element 'gid' is the identifier of the group for which this information applies.
 
-* The first element 'sign_alg' is an integer or a text string, indicating the signature algorithm used in the group. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry defined in {{RFC8152}}.
+* The second element 'sign_alg' is an integer or a text string, indicating the signature algorithm used in the group identified by 'gid'. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry defined in {{RFC8152}}.
 
-* The second element 'sign_parameters' indicates the parameters of the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ4). If no parameters of the signature algorithm are specified, 'sign_parameters' MUST be encoded as the CBOR simple value Null.
+* The third element 'sign_parameters' indicates the parameters of the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ4). If no parameters of the signature algorithm are specified, 'sign_parameters' MUST be encoded as the CBOR simple value Null.
 
-* The third element 'sign_key_parameters' indicates the parameters of the key used with the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ5). If no parameters of the key used with the signature algorithm are specified, 'sign_key_parameters' MUST be encoded as the CBOR simple value Null.
+* The fourth element 'sign_key_parameters' indicates the parameters of the key used with the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ5). If no parameters of the key used with the signature algorithm are specified, 'sign_key_parameters' MUST be encoded as the CBOR simple value Null.
 
-The 'pub_key_enc' parameter MUST be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, the 'pub_key_enc' parameter of the 2.01 (Created) response is either a CBOR integer indicating the encoding of public keys used in the group, or has value Null indicating that the KDC does not act as repository of public keys for group members.
+* The fifth element 'pub_key_enc' parameter is optional and MUST only be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, it is either a CBOR integer indicating the encoding of public keys used in the group identified by 'gid', or has value Null indicating that the KDC does not act as repository of public keys for group members.
 
-TODO: have 'pub_key_enc' as an array, if 'scope' in the Access Token covers multiple groups/topics.
+<!-- TODO: have 'pub_key_enc' as an array, if 'scope' in the Access Token covers multiple groups/topics. DONE -->
 
 <!-- TODO: I noted the following from our discussion with Jim at IETF106: "pub_key_enc_res" = null if not repo" -->
 
 Its acceptable values are taken from the "CWT Confirmation Method" Registry defined in {{I-D.ietf-ace-cwt-proof-of-possession}}. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
 
-The CDDL notation of the 'sign_info' and 'pub_key_enc' parameters formatted as in the response is given below.
+The CDDL notation of the 'sign_info' parameter formatted as in the response is given below.
 
 ~~~~~~~~~~~ CDDL
-   sign_info_res = [
+   sign_info_res = [ + sign_info_per_group ]
+
+   sign_info_per_group =
+   [
      sign_alg : int / tstr,
      sign_parameters : any / nil,
-     sign_key_parameters : any / nil
+     sign_key_parameters : any / nil,
+     ? pub_key_enc_res = int / nil
    ]
-
-   pub_key_enc_res = int / nil
 ~~~~~~~~~~~
 
 Note that the CBOR map specified as payload of the 2.01 (Created) response may include further parameters, e.g. according to the signalled transport profile of ACE.
