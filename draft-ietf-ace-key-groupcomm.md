@@ -461,7 +461,7 @@ Upon receiving a request from a Client, the KDC MUST check that it is storing a 
 
 ## Interface at the KDC
 
-The KDC is configured with the following resources:
+The KDC is configured with the following resources. Note that the root url-path "ace-group" given here are default names: implementations are not required to use these names, and can define their own instead. The Interface Description (if=) Link Target Attribute value ace-group is registered ({{if-ace-group}}) and can be used to describe this inferface.
 
 * /ace-group : this resource is fixed and indicates that this specification is used. Other applications that run on a KDC implementing this specification MUST NOT use this same resource.
 
@@ -477,7 +477,7 @@ The KDC is configured with the following resources:
 
 * /ace-group/GROUPNAME/nodes/NODENAME/pub-key: one sub-resource to /ace-group/GROUPNAME/nodes/NODENAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). These resources support the POST method.
 
-The details for the handlers of each resource are given in the following sections. These endpoints are used to perform the operations introduced in {{key-distr}}. Note that the url-path given here are default names: implementations are not required to use these names, and can define their own instead.
+The details for the handlers of each resource are given in the following sections. These endpoints are used to perform the operations introduced in {{key-distr}}.
 
 ### ace-group
 
@@ -1179,6 +1179,16 @@ The columns of this Registry are:
 * Description: This field contains a brief description for this sequence number synchronization method.
 
 * Reference: This field contains a pointer to the public specification describing the sequence number synchronization method.
+
+## Interface Description (if=) Link Target Attribute Values Registry {#if-ace-group}
+
+This specification registers the following entry to the "Interface Description (if=) Link Target Attribute Values Registry" registry, within the "CoRE Parameters" registry:
+
+* Attribute Value: ace-group
+
+* Description: The 'ace group' interface is used to provision keying material and related informations and policies to members of a group using the Ace framework.
+
+* Reference: \[This Document\]
 
 ## Expert Review Instructions {#review}
 
