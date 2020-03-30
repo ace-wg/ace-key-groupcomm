@@ -405,7 +405,7 @@ The 'rsnonce' parameter is an OPTIONAL parameter of the AS Request Creation Hint
 This parameter MUST NOT be used as a replacement for the 'cnonce' parameter defined in Section 5.1.2 of {{I-D.ietf-ace-oauth-authz}}.
 -->
 
-In this specification and in application profiles building on it, this parameter is used to provide a nonce that the Client may use to prove possession of its own private key in the Joining Request ((see the ‘client_cred_verify’ parameter in {{key-distr}}).
+In this specification and in application profiles building on it, this parameter is used by the KDC to provide a nonce that the Client may use to prove possession of its own private key in the Joining Request ((see the ‘client_cred_verify’ parameter in {{key-distr}}).
 
 #  Keying Material Provisioning and Group Membership Management {#key-distr}
 
