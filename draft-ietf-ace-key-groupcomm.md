@@ -505,7 +505,7 @@ The handler expects a request with payload formatted as a CBOR map which MAY con
 
 * 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value the URI of the certificate of the Client. This parameter is encoded as a CBOR text string. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT3).
 
-* 'control_path', with value a full URI, encoded as a CBOR text string. If 'control_path' is used, the Client acts as a CoAP server and hosts a resource at this specific URI. The KDC can use this URI to send CoAP requests to the Client (acting as CoAP server in this exchange), for example for individual provisioning of new keying material when performing a group rekeying (see {{update-keys}}), or to inform the Client of its removal from the group {{sec-node-removal}}. Other additional functionalities of this resource MAY be defined in application profiles of this specifications (OPT9). In particular, this resource is intended for communications concerning exclusively the group or topic specified in the 'scope' parameter.
+* 'control_path', with value a full URI, encoded as a CBOR text string. If 'control_path' is supported by the Client, the Client acts as a CoAP server and hosts a resource at this specific URI. The KDC MAY use this URI to send CoAP requests to the Client (acting as CoAP server in this exchange), for example for individual provisioning of new keying material when performing a group rekeying (see {{update-keys}}), or to inform the Client of its removal from the group {{sec-node-removal}}. If the KDC does not implement mechanisms using this resource, it can just ignore this parameter. Other additional functionalities of this resource MAY be defined in application profiles of this specifications (OPT9). In particular, this resource is intended for communications concerning exclusively the group or topic specified in the 'scope' parameter.
 
 The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The KDC MAY set the payload with the 'sign_info' and 'pub_key_enc' parameter, formatted as 'sign_info_res' and 'pub_key_enc_res' in the payload of the 2.01 (Created) response to the Token Post as defined in {{token-post}}. Note that in this case, the content format MUST be set to application/ace+cbor.
 
@@ -960,7 +960,7 @@ A node may be evicted from the group in the following cases.
 
 In either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
 
-In case of forced eviction, the KDC MAY explicitly inform the leaving node, if the Client implements the 'control_path' resource specified in {{gid-post}}. To this end, the KDC can send a DEL request, targeting the URI specified in the 'control_path' parameter of the Joining Request.
+In case of forced eviction, the KDC MAY explicitly inform the leaving node, if the Client implements the 'control_path' resource specified in {{gid-post}}. To this end, the KDC MAY send a DEL request, targeting the URI specified in the 'control_path' parameter of the Joining Request.
 
 # ACE Groupcomm Parameters {#params}
 
