@@ -515,7 +515,14 @@ If the KDC stores the group members' public keys, the handler verifies that one 
 
 If the signature contained in "client_cred_verify" does not pass verification, the handler MUST respond with a 4.00 (Bad Request) error message.
 
-If verification succeeds, the handler adds the retrieved public key of the node to the list of public keys stored for the group identified by "GROUPNAME". Moreover, the handler assigns a name NODENAME to the node, and creates a sub-resource to /ace-group/GROUPNAME/ at the KDC (e.g. "/ace-group/GROUPNAME/nodes/NODENAME"). The handler returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them. The response message also contains the URI path to the sub-resource created for that node in a Location-Path CoAP option. The payload of the response is formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
+If verification succeeds, the handler:
+
+* Adds the node to the list of current members of the group.
+* Adds the retrieved public key of the node to the list of public keys stored for the group identified by "GROUPNAME".
+* Assigns a name NODENAME to the node, and creates a sub-resource to /ace-group/GROUPNAME/ at the KDC (e.g. "/ace-group/GROUPNAME/nodes/NODENAME").
+* Returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them.
+
+The response message also contains the URI path to the sub-resource created for that node in a Location-Path CoAP option. The payload of the response is formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
 * 'gkty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key" Registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
 
@@ -588,6 +595,8 @@ The handler expects a GET request.
 
 The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The KDC MAY set the payload with the 'sign_info' and 'pub_key_enc' parameter, formatted as 'sign_info_res' and 'pub_key_enc_res' in the payload of the 2.01 (Created) response to the Token Post as defined in {{token-post}}. Note that in this case, the content format MUST be set to application/ace+cbor.
 
+Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message.
+
 If verification succeeds, the handler returns a 2.05 (Content) message containing the symmetric group keying material. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'gkty','key' and 'num' specified in {{gid-post}}.
 
 The payload MAY also include the parameters 'ace-groupcomm-profile', 'exp' and 'mgt_key_material' parameters specified in {{gid-post}}.
@@ -636,6 +645,8 @@ The handler expects a GET request.
 
 The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
+Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message.
+
 If verification succeeds, the handler returns a 2.05 (Content) message containing the list of policies for the group identified by "GROUPNAME". The payload of the response is formatted as a CBOR map including only the parameter 'group_policies' defined in {{gid-post}} and specifying the current policies in the group. If the KDC does not store any policy, the payload is formatted as a zero-length CBOR byte string.
 
 The specific format and meaning of group policies MUST be specified in the application profile (REQ14).
@@ -649,6 +660,8 @@ This resource implements a GET handler.
 The handler expects a GET request.
 
 The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+
+Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message.
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing an integer that represents the version number of the symmetric group keying material. This number is incremented on the KDC every time the KDC updates the symmetric group keying material. The payload of the response is formatted as a CBOR integer.
 
@@ -664,6 +677,8 @@ The handler expects a request with empty payload.
 
 The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client, identified by "NODENAME". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
+Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message.
+
 If verification succeeds, the handler returns a 2.05 (Content) message containing newly-generated individual keying material for the Client, or information enabling the Client to derive it. The payload of the response is formatted as a CBOR map. The specific format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ15) and registered in {{iana-reg}}.
 
 #### GET Handler {#node-get}
@@ -672,17 +687,19 @@ The handler expects a GET request.
 
 The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client, identified by "NODENAME". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
+Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message.
+
 If verification succeeds, the handler returns a 2.05 (Content) message containing both the group keying material and the individual keying material for the Client, or information enabling the Client to derive it. The payload of the response is formatted as a CBOR map. The format for the group keying material is the same as defined in the response of {{gid-get}}. The specific format of individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ15) and registered in {{iana-reg}}.
 
 #### DELETE Handler {#node-delete}
 
 The DELETE handler removes the node identified by "NODENAME" from the group identified by "GROUPNAME". If the node sending the request and the node name used in the Uri-Path do not match, the handler responds with a 4.01 (Unauthorized) error response.
 
-The handler expects a request with payload formatted as a CBOR map. The payload of this request is a CBOR Map that MAY contain only the 'scope' field as specified in {{gid-post}}.
+The handler expects a request with method DELETE (and empty payload).
 
 The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client, identified by "NODENAME". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If the request contained a 'scope' field, the handler MUST extract the roles for that client. If the value is such that the KDC cannot extract all the necessary information to understand and process it correctly (e.g. unrecognized roles), the KDC MUST respond with a 4.00 (Bad Request) error message.
+Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message.
 
 If verification succeeds, the handler removes the client from the group identified by "GROUPNAME", for specific roles if roles were specified in the 'scope' field, or for all roles. That includes removing the public key of the client if the KDC keep tracks of that. Then, the handler delete the sub-resource nodes/NODENAME and returns a 2.02 (Deleted) message with empty payload.
 
