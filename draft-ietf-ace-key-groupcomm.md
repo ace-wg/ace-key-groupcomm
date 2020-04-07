@@ -697,7 +697,7 @@ The DELETE handler removes the node identified by "NODENAME" from the group iden
 
 The handler expects a request with method DELETE (and empty payload).
 
-The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client, identified by "NODENAME". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler verifies that the group identifier "GROUPNAME" is a subset of the 'scope' stored in the access token associated to the "NODENAME" client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
 Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message.
 
