@@ -955,11 +955,7 @@ A node may be evicted from the group in the following cases.
 
 2. The node has been found compromised or is suspected so.
 
-3. The node's authorization to be a group member is expired. If the AS provides Token introspection (see Section 5.7 of {{I-D.ietf-ace-oauth-authz}}), the KDC can optionally use and check whether:
-
-   * the node is not authorized anymore;
-
-   * the access token is still valid, upon its expiration.
+3. The node's authorization to be a group member is not valid anymore, either because the access token has expired, or it has been revoked. If the AS provides Token introspection (see Section 5.7 of {{I-D.ietf-ace-oauth-authz}}), the KDC can optionally use it and check whether the node is still authorized for that group in that role.
 
 In either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
 
