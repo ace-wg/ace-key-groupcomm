@@ -511,7 +511,7 @@ The handler verifies that the group identifier of the /ace-group/GROUPNAME path 
 
 If the request is not formatted correctly (e.g. unknown, not-expected fields present, or expected fields with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. The response MAY contain a CBOR map in the payload with ace-groupcomm+cbor format, e.g. it could send back “pub_key_enc” set to Null if the Client sent its own public key and the KDC is not set to store public keys of the group members. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT6).
 
-If the KDC stores the group members' public keys, the handler verifies that one public key can be retrieved for the node, either from the 'client_cred' field, or from the KDC previous knowledge of it. In particular, the KDC checks that such public key has an accepted format for the group identified by "GROUPNAME", i.e. it is encoded as expected and is compatible with the signature algorithm and possible associated parameters. If that cannot be verified, it is RECOMMENDED that the handler stops the process and responds with a 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT5).
+If the KDC stores the group members' public keys, the handler verifies that one public key can be retrieved for the node, either from the 'client_cred' field, or from the KDC previous knowledge of it. In particular, the KDC checks that such public key has an acceptable format for the group identified by "GROUPNAME", i.e. it is encoded as expected and is compatible with the signature algorithm and possible associated parameters. If that cannot be verified, it is RECOMMENDED that the handler stops the process and responds with a 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT5).
 
 If the signature contained in "client_cred_verify" does not pass verification, the handler MUST respond with a 4.00 (Bad Request) error message.
 
@@ -520,6 +520,7 @@ If verification succeeds, the handler:
 * Adds the node to the list of current members of the group.
 * Adds the retrieved public key of the node to the list of public keys stored for the group identified by "GROUPNAME".
 * Assigns a name NODENAME to the node, and creates a sub-resource to /ace-group/GROUPNAME/ at the KDC (e.g. "/ace-group/GROUPNAME/nodes/NODENAME").
+* Associates the identifier "NODENAME" with the access token and the secure session for that node.
 * Returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them.
 
 The response message also contains the URI path to the sub-resource created for that node in a Location-Path CoAP option. The payload of the response is formatted as a CBOR map which MUST contain the following fields and values:
@@ -676,6 +677,8 @@ The PUT handler is used to get the KDC to produce and return individual keying m
 The handler expects a request with empty payload.
 
 The handler verifies that the group identifier of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client, identified by "NODENAME". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+
+The handler also verifies that the node sending the request and the node name used in the Uri-Path match. If that is not the case, the handler responds with a 4.01 (Unauthorized) error response.
 
 Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message.
 
