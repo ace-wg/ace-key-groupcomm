@@ -868,7 +868,7 @@ Client                                                      KDC
    |                                                         |
    |-Public Key Request: FETCH /ace-group/GROUPNAME/pub-key->|
    |                                                         |
-   |<--------- Public Key Response: 2.01 (Created) ----------|
+   |<--------- Public Key Response: 2.05 (Created) ----------|
    |                                                         |
 ~~~~~~~~~~~
 {: #fig-public-key-2 title="Message Flow of Public Key Exchange to Request Specific Members Public Keys" artwork-align="center"}
