@@ -357,9 +357,9 @@ The CDDL notation of the 'sign_info' parameter formatted as in the request is gi
    sign_info_req = nil
 ~~~~~~~~~~~
 
-The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one ore more elements. The number of elements is equal to the number of tokens the client has posted, or the number of groups the client has been authorized to join. Each element contains information about signing parameters and keys for each group or topic and is formatted as follows.
+The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one ore more elements. The number of elements is lower or at most equal to the number of groups the client has been authorized to join. Each element contains information about signing parameters and keys for one or more group or topic and is formatted as follows.
 
-* The first element 'id' is an identifier of the group or token for which this information applies.
+* The first element 'id' is an identifier of the group or an array of identifiers for the groups for which this information applies.
 
 * The second element 'sign_alg' is an integer or a text string, indicating the signature algorithm used in the group identified by 'gid'. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry defined in {{RFC8152}}.
 
@@ -369,19 +369,21 @@ The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one 
 
 * The fifth element 'pub_key_enc' parameter is optional and MUST only be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, it is either a CBOR integer indicating the encoding of public keys used in the group identified by 'gid', or has value Null indicating that the KDC does not act as repository of public keys for group members. Its acceptable values are taken from the "CWT Confirmation Method" Registry defined in {{I-D.ietf-ace-cwt-proof-of-possession}}. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
 
-The CDDL notation of the 'sign_info' parameter formatted as in the response is given below.
+The CDDL notation of the 'sign_info' parameter formatted as in the response is given below, with gid formatted as a bstr (note that gid can be encoded differently, see REQ1).
 
 ~~~~~~~~~~~ CDDL
-   sign_info_res = [ + sign_info_per_group ]
+   sign_info_res = [ + sign_info_entry ]
 
-   sign_info_per_group =
+   sign_info_entry =
    [
-     id : any,
+     id : gid / [ + gid ],
      sign_alg : int / tstr,
      sign_parameters : any / nil,
      sign_key_parameters : any / nil,
      ? pub_key_enc_res = int / nil
    ]
+
+   gid = bstr
 ~~~~~~~~~~~
 
 
