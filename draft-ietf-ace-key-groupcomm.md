@@ -275,9 +275,9 @@ gid = bstr
 
 role = tstr
 
-scp = [ gid , ? ( role / [ 2*role ] ) ]
+scope_entry = [ gid , ? ( role / [ 2*role ] ) ]
 
-scope = << [ + scp ] >>
+scope = << [ + scope_entry ] >>
 ~~~~~~~~~~~~~~~~~~~~
 {: #cddl-ex title="CDLL definition of scope, using as example group identifier encoded as bstr and role as tstr" artwork-align="center"}
 
@@ -698,11 +698,11 @@ If verification succeeds, the handler returns a 2.05 (Content) message containin
 
 #### DELETE Handler {#node-delete}
 
-The DELETE handler removes the node identified by "NODENAME" from the group identified by "GROUPNAME". If the node sending the request and the node name used in the Uri-Path do not match, the handler responds with a 4.01 (Unauthorized) error response.
+The DELETE handler removes the node identified by "NODENAME" from the group identified by "GROUPNAME".
 
 The handler expects a request with method DELETE (and empty payload).
 
-The handler verifies that the group identifier "GROUPNAME" is a subset of the 'scope' stored in the access token associated to the "NODENAME" client. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler only accept a request from the node that matches the "NODENAME" used in Uri-Path, and that is part of the "GROUPNAME" group: the handler verifies that the group identifier "GROUPNAME" is a subset of the 'scope' stored in the access token associated to this client, and that this client is identified by "NODENAME". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
 The handler also verifies that the node sending the request and the node name used in the Uri-Path match. If that is not the case, the handler responds with a 4.01 (Unauthorized) error response.
 
