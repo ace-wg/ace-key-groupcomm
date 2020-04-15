@@ -312,7 +312,7 @@ The access token MAY additionally contain other claims that the transport profil
 
 As in {{I-D.ietf-ace-oauth-authz}}, these parameters are included in the payload, which is formatted as a CBOR map. The Content-Format "application/ace+cbor" is used.
 
-When receiving an Authorization Request from a Client that was previously authorized, and for which the AS still owns a valid non expired access token, the AS replies with that token. Note that it is up to application profiles of ACE to make sure that re-posting the same token does not cause re-use of keying material between nodes (for example, that is done with the use of random nonces in {{I-D.ietf-ace-oscore-profile}}).
+When receiving an Authorization Request from a Client that was previously authorized, and for which the AS still owns a valid non expired access token, the AS MAY reply with that token. Note that it is up to application profiles of ACE to make sure that re-posting the same token does not cause re-use of keying material between nodes (for example, that is done with the use of random nonces in {{I-D.ietf-ace-oscore-profile}}).
 
 ## Token Post {#token-post}
 
