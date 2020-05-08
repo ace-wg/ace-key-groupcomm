@@ -912,6 +912,10 @@ Client                                                           KDC
 ~~~~~~~~~~~
 {: #fig-pub-key-update-req-resp title="Message Flow of Public Key Update Request-Response" artwork-align="center"}
 
+If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a group member updating its own public key. To this end, the KDC uses the message format of the Joining Response (see {{gid-post}}). Application profiles may define alternative ways of retrieving the keying material, such as sending separate requests to different resources at the KDC ({{gid-get}}, {{pubkey-get}}, {{policies-get}}). After distributing the new group keying material, the KDC MUST increment the version number of the keying material.
+
+Additionally, after updating its own public key, a group member MAY send a number of the later requests including an identifier of the updated public key, to signal nodes that they need to retrieve it. How that is done depends on the group communication protocol used, and therefore is application profile specific (OPTTBD).
+
 ## Retrieval of Group Policies {#policies}
 
 A node in the group can contact the KDC to retrieve the current group policies, by sending a CoAP GET request to the /ace-group/GROUPNAME/policies endpoint at the KDC, where GROUPNAME is the group identifier, and formatted as defined in {{policies-get}}
@@ -1303,6 +1307,8 @@ This section lists the requirements on application profiles of this specificatio
 * OPT8: Optionally, specify policies for the KDC to perform group rekeying after receiving a Key Renewal Request (see {{new-keys}}).
 
 * OPT9: Optionally, specify the functionalities implemented at the 'control_path' resource hosted at the Client, including message exchange encoding and other details (see {{gid-post}}).
+
+* OPT19: Optionally, specify how the identifier of the sender's public key is included in the group request (see {{update-pub-key}}).
 
 # Document Updates # {#sec-document-updates}
 
