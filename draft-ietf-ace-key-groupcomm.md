@@ -558,7 +558,9 @@ Optionally, the response MAY contain the following parameters, which, if include
 
 * 'ace-groupcomm-profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. Applications of this specification MUST register an application profile identifier and the related value for this parameter in the "ACE Groupcomm Profile" Registry (REQ12).
 
-* 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what specified for NumericDate in Section 2 of {{RFC7519}}.
+* 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what specified for NumericDate in Section 2 of {{RFC7519}}. Group members MUST stop using the keying material to protect outgoing messages and retrieve new keying material at the time indicated in this field.
+
+* 'exp_delta', with value the time interval (starting at 'exp') during which the keying material for the group communication can still be used for verifying incoming messages, encoded as a CBOR unsigned integer. This field contains a numeric value representing the number of seconds from 'exp' until the specified UTC date/time after which group members MUST stop using the keying material to verify incoming messages.
 
 * 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the request. This parameter is a CBOR byte string, which encodes the public keys of all the group members paired with the respective member identifiers. The default encoding for public keys is COSE Keys, so the default encoding for 'pub\_keys' is a CBOR byte string wrapping a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT1). The specific format of the identifiers of group members MUST be specified in the application profile (REQ9).
 
@@ -610,7 +612,7 @@ Additionally, the handler verifies that the node is a current member of the grou
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing the symmetric group keying material. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'gkty','key' and 'num' specified in {{gid-post}}.
 
-The payload MAY also include the parameters 'ace-groupcomm-profile', 'exp' and 'mgt_key_material' parameters specified in {{gid-post}}.
+The payload MAY also include the parameters 'ace-groupcomm-profile', 'exp', 'exp_delta' and 'mgt_key_material' parameters specified in {{gid-post}}.
 
 ### ace-group/GROUPNAME/pub-key
 
@@ -808,7 +810,7 @@ Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows 
 
 When any of the following happens, a node MUST stop using the owned group keying material to protect outgoing messages, and SHOULD stop using it to decrypt and verify incoming messages.
 
-* Upon expiration of the keying material, according to what indicated by the KDC with the 'exp' parameter in a Joining Response, or to a pre-configured value.
+* Upon expiration of the keying material, according to what indicated by the KDC with the 'exp' (and possibly the 'exp_delta') parameter in a Joining Response, or to a pre-configured value.
 
 * Upon receiving a notification of revoked/renewed keying material from the KDC, possibly as part of an update of the keying material (rekeying) triggered by the KDC.
 
@@ -1022,6 +1024,7 @@ This specification defines a number of fields used during the second part of the
  num          |   TBD    | int           | {{gid-post}}
  ace-groupcomm-profile |   TBD    | int           | {{gid-post}}
  exp          |   TBD    | int           | {{gid-post}}
+ exp_delta    |   TBD    | int           | {{gid-post}}
  pub_keys     |   TBD    | byte string   | {{gid-post}}
  peer_roles     |   TBD    | array   | {{gid-post}}
  group_policies      |   TBD    | map           | {{gid-post}}
