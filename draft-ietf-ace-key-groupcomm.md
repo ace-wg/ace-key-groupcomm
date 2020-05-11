@@ -332,9 +332,9 @@ The payload of the 2.01 response is a CBOR map. If the access token contains a r
 
 The KDC MUST store the 'kdcchallenge' value associated to the Client at least until it receives a join request from it (see {{ssec-key-distribution-exchange}}), to be able to verify the proof of possession. The same challenge MAY be reused several times by the Client, to generate new proof of possessions, e.g. in case of update of the public key, or to join a different group with a different key, so it is RECOMMENDED that the KDC keeps storing the 'kdcchallenge' after the first join is processed as well. If the KDC has already discarded the 'kdcchallenge', that will trigger an error response with a newly generated 'kdcchallenge' that the client can use to restart the join process, as specified in {{ssec-key-distribution-exchange}}.
 
-If they were included in the request, the KDC MAY include the 'sign_info' parameter  defined in {{sign-info}}, optionally including the 'pub_key_enc' parameter {{pub-key-enc}}.
+If either of 'sign_info' or 'pub_key_enc' were included in the request, the KDC MAY include the 'sign_info' parameter defined in {{sign-info}}, optionally including the 'pub_key_enc' parameter {{pub-key-enc}}.
 
-The 'sign_info' parameter MUST be present if the POST request included the 'sign_info' parameter with value Null.
+The 'sign_info' parameter MUST be present if the POST request included the 'sign_info' parameter and/or the pub_key_enc with value Null.
 The encoding of the 'sign_info' parameter in the response is defined in {{pub-key-enc}}. Note that the field 'id' takes the value of the group identifier for which the 'sign_info' applies to, in this specification.
 
 Note that the CBOR map specified as payload of the 2.01 (Created) response may include further parameters, e.g. according to the signalled transport profile of ACE.
@@ -363,11 +363,11 @@ The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one 
 
 * The first element 'id' is an identifier of the group or an array of identifiers for the groups for which this information applies.
 
-* The second element 'sign_alg' is an integer or a text string, indicating the signature algorithm used in the group identified by 'gid'. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry defined in {{RFC8152}}.
+* The second element 'sign_alg' is an integer or a text string if the POST request included the 'sing_info' parameter with value Null, and indicates the signature algorithm used in the group identified by 'gid'. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry defined in {{RFC8152}}. If the POST request did not include the 'sing_info' parameter, this element is encoded as the CBOR simple value Null.
 
-* The third element 'sign_parameters' indicates the parameters of the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ4). If no parameters of the signature algorithm are specified, 'sign_parameters' MUST be encoded as the CBOR simple value Null.
+* The third element 'sign_parameters' indicates the parameters of the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ4). If no parameters of the signature algorithm are specified, 'sign_parameters' MUST be encoded as the CBOR simple value Null. If the POST request did not include the 'sing_info' parameter, this element is encoded as the CBOR simple value Null.
 
-* The fourth element 'sign_key_parameters' indicates the parameters of the key used with the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ5). If no parameters of the key used with the signature algorithm are specified, 'sign_key_parameters' MUST be encoded as the CBOR simple value Null.
+* The fourth element 'sign_key_parameters' indicates the parameters of the key used with the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ5). If no parameters of the key used with the signature algorithm are specified, 'sign_key_parameters' MUST be encoded as the CBOR simple value Null. If the POST request did not include the 'sing_info' parameter, this element is encoded as the CBOR simple value Null.
 
 * The fifth element 'pub_key_enc' parameter is optional and MUST only be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, it is either a CBOR integer indicating the encoding of public keys used in the group identified by 'gid', or has value Null indicating that the KDC does not act as repository of public keys for group members. Its acceptable values are taken from the "CWT Confirmation Method" Registry defined in {{I-D.ietf-ace-cwt-proof-of-possession}}. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
 
@@ -379,7 +379,7 @@ The CDDL notation of the 'sign_info' parameter formatted as in the response is g
    sign_info_entry =
    [
      id : gid / [ + gid ],
-     sign_alg : int / tstr,
+     sign_alg : int / tstr / nil,
      sign_parameters : any / nil,
      sign_key_parameters : any / nil,
      ? pub_key_enc_res = int / nil
