@@ -626,8 +626,8 @@ The handler expects a request with payload formatted as a CBOR map. The payload 
 
 * 'get_pub_keys', whose value is a non-empty CBOR array containing two CBOR arrays:
 
-  - The first array contains roles (or combination of roles) of group members for the group identified by "GROUPNAME".
-  - The second array contains identifiers of group members for the group identified by "GROUPNAME".
+  - The first array contains zero or more roles (or combination of roles) of group members for the group identified by "GROUPNAME".
+  - The second array contains zero or more identifiers of group members for the group identified by "GROUPNAME".
 
 The CDDL definition of 'get_pub_keys' is given in {{cddl-ex-getpubkeys}} using as example encoding: node identifier encoded as byte string, role identifier as text string, and combination of roles encoded as a CBOR array of roles. Note that the empty array is not valid for this handler, but is valid for the value of "get_pub_keys" received by the handler of POST to ace-group/GROUPNAME (see {{gid-post}}).
 
@@ -636,9 +636,13 @@ id = bstr
 
 role = tstr
 
-get_pub_keys = [ [ *(role / [ 2*role ]) ], [ +id ] ] / [ ]
+comb_role = [ 2*role ]
+
+get_pub_keys = [ [ *(role / comb_role) ], [ *id ] ] / [ ]
 ~~~~~~~~~~~~~~~~~~~~
 {: #cddl-ex-getpubkeys title="CDLL definition of get_pub_keys, using as example node identifier encoded as bstr and role as tstr" artwork-align="center"}
+
+
 
 The specific format of public keys as well as identifiers, roles and combination of roles of group members MUST be specified by the application profile (OPT1, REQ2, REQ9).
 
