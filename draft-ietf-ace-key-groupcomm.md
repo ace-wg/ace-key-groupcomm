@@ -39,13 +39,26 @@ normative:
   RFC7049:
   RFC2119:
   RFC6838:
-  RFC8152:
   RFC8126:
   RFC8174:
+  I-D.ietf-cose-rfc8152bis-struct:
+  I-D.ietf-cose-rfc8152bis-algs:
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-ace-oauth-params:
   I-D.ietf-core-oscore-groupcomm:
   I-D.ietf-ace-cwt-proof-of-possession:
+  COSE.Algorithms:
+    author: 
+      org: IANA
+    date: false
+    title: COSE Algorithms
+    target: https://www.iana.org/assignments/cose/cose.xhtml#algorithms
+  COSE.Key.Types:
+    author: 
+      org: IANA
+    date: false
+    title: COSE Key Types
+    target: https://www.iana.org/assignments/cose/cose.xhtml#key-type
 
 informative:
 
@@ -59,7 +72,7 @@ informative:
   RFC8613:
   RFC8392:
   RFC8747:
-  I-D.dijk-core-groupcomm-bis:
+  I-D.ietf-core-groupcomm-bis:
   I-D.ietf-core-coap-pubsub:
   I-D.ietf-ace-oscore-profile:
   I-D.ietf-ace-dtls-authorize:
@@ -74,7 +87,7 @@ This document defines message formats and procedures for requesting and distribu
 
 # Introduction {#intro}
 
-This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define the message exchanges used to request, distribute and renew the keying material in a group communication scenario, e.g. based on multicast {{I-D.dijk-core-groupcomm-bis}} or on publishing-subscribing {{I-D.ietf-core-coap-pubsub}}.
+This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define the message exchanges used to request, distribute and renew the keying material in a group communication scenario, e.g. based on multicast {{I-D.ietf-core-groupcomm-bis}} or on publishing-subscribing {{I-D.ietf-core-coap-pubsub}}.
 The ACE framework is based on CBOR {{RFC7049}}, so CBOR is the format used in this specification. However, using JSON {{RFC8259}} instead of CBOR is possible, using the conversion method specified in Sections 4.1 and 4.2 of {{RFC7049}}.
 
 Profiles that use group communication can build on this document, by defining a number of details such as the exact group communication protocol and security protocols used. The specific list of details a profile needs to define is shown in {{req}}.
@@ -85,7 +98,7 @@ If the application requires backward and forward security, new keying material i
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-Readers are expected to be familiar with the terms and concepts described in  {{I-D.ietf-ace-oauth-authz}} and {{RFC8152}}, such as Authorization Server (AS) and Resource Server (RS).
+Readers are expected to be familiar with the terms and concepts described in  {{I-D.ietf-ace-oauth-authz}}{{I-D.ietf-cose-rfc8152bis-struct}}{{I-D.ietf-cose-rfc8152bis-algs}}, such as Authorization Server (AS) and Resource Server (RS).
 
 This document additionally uses the following terminology:
 
@@ -363,7 +376,7 @@ The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one 
 
 * The first element 'id' is an identifier of the group or an array of identifiers for the groups for which this information applies.
 
-* The second element 'sign_alg' is an integer or a text string if the POST request included the 'sing_info' parameter with value Null, and indicates the signature algorithm used in the group identified by 'gid'. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry defined in {{RFC8152}}. If the POST request did not include the 'sing_info' parameter, this element is encoded as the CBOR simple value Null.
+* The second element 'sign_alg' is an integer or a text string if the POST request included the 'sing_info' parameter with value Null, and indicates the signature algorithm used in the group identified by 'gid'. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry {{COSE.Algorithms}}. If the POST request did not include the 'sing_info' parameter, this element is encoded as the CBOR simple value Null.
 
 * The third element 'sign_parameters' indicates the parameters of the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ4). If no parameters of the signature algorithm are specified, 'sign_parameters' MUST be encoded as the CBOR simple value Null. If the POST request did not include the 'sing_info' parameter, this element is encoded as the CBOR simple value Null.
 
@@ -380,14 +393,19 @@ The CDDL notation of the 'sign_info' parameter formatted as in the response is g
    [
      id : gid / [ + gid ],
      sign_alg : int / tstr / nil,
-     sign_parameters : any / nil,
-     sign_key_parameters : any / nil,
+     sign_parameters : [sign_alg_capab, sign_key_type_capab] / nil,
+     sign_key_parameters : sign_key_type_capab / nil,
      ? pub_key_enc_res = int / nil
    ]
 
    gid = bstr
 ~~~~~~~~~~~
 
+In particular:
+
+* 'sign_alg_capab' is a CBOR array. Its elements are the COSE capabilities for the countersignature algorithm indicated in 'sign_alg', as specified for that algorithm in the "Capabilities" column of the "COSE Algorithms" Registry {{COSE.Algorithms}} (see Section 8.2 of {{I-D.ietf-cose-rfc8152bis-algs}}).
+
+* 'sign_key_type_capab' is a CBOR array. Its elements are the COSE capabilities for the COSE key type used by the countersignature algorithm indicated in 'sign_alg', as specified for that key type in the "Capabilities" column of the "COSE Key Types" Registry {{COSE.Key.Types}} (see Section 8.1 of {{I-D.ietf-cose-rfc8152bis-algs}}).
 
 ### 'pub_key_enc' Parameter {#pub-key-enc}
 
@@ -562,7 +580,7 @@ Optionally, the response MAY contain the following parameters, which, if include
 
 * 'exp_delta', with value the time interval (starting at 'exp') during which the keying material for the group communication can still be used for verifying incoming messages, encoded as a CBOR unsigned integer. This field contains a numeric value representing the number of seconds from 'exp' until the specified UTC date/time after which group members MUST stop using the keying material to verify incoming messages.
 
-* 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the request. This parameter is a CBOR byte string, which encodes the public keys of all the group members paired with the respective member identifiers. The default encoding for public keys is COSE Keys, so the default encoding for 'pub\_keys' is a CBOR byte string wrapping a COSE\_KeySet (see {{RFC8152}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT1). The specific format of the identifiers of group members MUST be specified in the application profile (REQ9).
+* 'pub\_keys', may only be present if 'get\_pub\_keys' was present in the request. This parameter is a CBOR byte string, which encodes the public keys of all the group members paired with the respective member identifiers. The default encoding for public keys is COSE Keys, so the default encoding for 'pub\_keys' is a CBOR byte string wrapping a COSE\_KeySet (see {{I-D.ietf-cose-rfc8152bis-struct}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT1). The specific format of the identifiers of group members MUST be specified in the application profile (REQ9).
 
 * 'peer\_roles', MUST be present if 'pub\_keys' is present. This parameter is a CBOR array of n elements, with n the number of members in the group (and number of public keys included in the 'pub\_keys' parameter). The i-th element of the array specifies the role (or CBOR array of roles) that the group member associated to the i-th public key in 'pub\_keys' has in the group. In particular, each array element is encoded as the role element of a scope entry, as defined in {{ssec-authorization-request}}.
 
