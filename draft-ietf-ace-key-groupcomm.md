@@ -376,11 +376,11 @@ The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one 
 
 * The first element 'id' is an identifier of the group or an array of identifiers for the groups for which this information applies.
 
-* The second element 'sign_alg' is an integer or a text string if the POST request included the 'sing_info' parameter with value Null, and indicates the signature algorithm used in the group identified by 'gid'. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry {{COSE.Algorithms}}. If the POST request did not include the 'sing_info' parameter, this element is encoded as the CBOR simple value Null.
+* The second element 'sign_alg' is an integer or a text string if the POST request included the 'sign_info' parameter with value Null, and indicates the signature algorithm used in the group identified by 'gid'. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry {{COSE.Algorithms}}. If the POST request did not include the 'sing_info' parameter, this element is encoded as the CBOR simple value Null.
 
-* The third element 'sign_parameters' indicates the parameters of the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ4). If no parameters of the signature algorithm are specified, 'sign_parameters' MUST be encoded as the CBOR simple value Null. If the POST request did not include the 'sing_info' parameter, this element is encoded as the CBOR simple value Null.
+* The third element 'sign_parameters' is a CBOR array indicating the parameters of the signature algorithm. Its content depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define the possible values and structure for the elements of this parameter (REQ4). If the POST request did not include the 'sign_info' parameter, this element is encoded as the CBOR simple value Null.
 
-* The fourth element 'sign_key_parameters' indicates the parameters of the key used with the signature algorithm. Its structure depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define specific values for this parameter (REQ5). If no parameters of the key used with the signature algorithm are specified, 'sign_key_parameters' MUST be encoded as the CBOR simple value Null. If the POST request did not include the 'sing_info' parameter, this element is encoded as the CBOR simple value Null.
+* The fourth element 'sign_key_parameters' is a CBOR array indicating the parameters of the key used with the signature algorithm. Its content depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define the possible values and structure for the elements of this parameter (REQ5). If the POST request did not include the 'sing_info' parameter, this element is encoded as the CBOR simple value Null.
 
 * The fifth element 'pub_key_enc' parameter is optional and MUST only be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, it is either a CBOR integer indicating the encoding of public keys used in the group identified by 'gid', or has value Null indicating that the KDC does not act as repository of public keys for group members. Its acceptable values are taken from the "CWT Confirmation Method" Registry defined in {{I-D.ietf-ace-cwt-proof-of-possession}}. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
 
@@ -393,19 +393,13 @@ The CDDL notation of the 'sign_info' parameter formatted as in the response is g
    [
      id : gid / [ + gid ],
      sign_alg : int / tstr / nil,
-     sign_parameters : [sign_alg_capab, sign_key_type_capab] / nil,
-     sign_key_parameters : sign_key_type_capab / nil,
+     sign_parameters : [* sign_parameters_element] / nil,
+     sign_key_parameters : [* sign_key_parameters_element] / nil,
      ? pub_key_enc_res = int / nil
    ]
 
    gid = bstr
 ~~~~~~~~~~~
-
-In particular:
-
-* 'sign_alg_capab' is a CBOR array. Its elements are the COSE capabilities for the countersignature algorithm indicated in 'sign_alg', as specified for that algorithm in the "Capabilities" column of the "COSE Algorithms" Registry {{COSE.Algorithms}} (see Section 8.2 of {{I-D.ietf-cose-rfc8152bis-algs}}).
-
-* 'sign_key_type_capab' is a CBOR array. Its elements are the COSE capabilities for the COSE key type used by the countersignature algorithm indicated in 'sign_alg', as specified for that key type in the "Capabilities" column of the "COSE Key Types" Registry {{COSE.Key.Types}} (see Section 8.1 of {{I-D.ietf-cose-rfc8152bis-algs}}).
 
 ### 'pub_key_enc' Parameter {#pub-key-enc}
 
