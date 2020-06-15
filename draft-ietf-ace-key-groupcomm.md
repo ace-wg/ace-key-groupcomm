@@ -69,6 +69,7 @@ informative:
   RFC6347:
   RFC7959:
   RFC8259:
+  RFC8610:
   RFC8613:
   RFC8392:
   RFC8747:
@@ -251,7 +252,7 @@ The Authorization Request sent from the Client to the AS is as defined in Sectio
 
   In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7).
 
-  The CDDL definition of scope, using as example group identifier encoded as byte string and role identifier as text string, is given in {{cddl-ex}}.
+  The CDDL definition {{RFC8610}} of scope, using as example group identifier encoded as byte string and role identifier as text string, is given in {{cddl-ex}}.
 
 * 'audience', with an identifier of a KDC.
 
@@ -366,7 +367,7 @@ In this specification and in application profiles building on it, this parameter
 
 When used in the request, the 'sign_info' encodes the CBOR simple value Null, to require information and parameters on the signature algorithm and on the public keys used.
 
-The CDDL notation of the 'sign_info' parameter formatted as in the request is given below.
+The CDDL notation {{RFC8610}} of the 'sign_info' parameter formatted as in the request is given below.
 
 ~~~~~~~~~~~ CDDL
    sign_info_req = nil
@@ -384,7 +385,7 @@ The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one 
 
 * The fifth element 'pub_key_enc' parameter is optional and MUST only be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, it is either a CBOR integer indicating the encoding of public keys used in the group identified by 'gid', or has value Null indicating that the KDC does not act as repository of public keys for group members. Its acceptable values are taken from the "CWT Confirmation Method" Registry defined in {{I-D.ietf-ace-cwt-proof-of-possession}}. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
 
-The CDDL notation of the 'sign_info' parameter formatted as in the response is given below, with gid formatted as a bstr (note that gid can be encoded differently, see REQ1).
+The CDDL notation {{RFC8610}} of the 'sign_info' parameter formatted as in the response is given below, with gid formatted as a bstr (note that gid can be encoded differently, see REQ1).
 
 ~~~~~~~~~~~ CDDL
    sign_info_res = [ + sign_info_entry ]
@@ -393,8 +394,8 @@ The CDDL notation of the 'sign_info' parameter formatted as in the response is g
    [
      id : gid / [ + gid ],
      sign_alg : int / tstr / nil,
-     sign_parameters : [* sign_parameters_element] / nil,
-     sign_key_parameters : [* sign_key_parameters_element] / nil,
+     sign_parameters : [ any ] / nil,
+     sign_key_parameters : [ any ] / nil,
      ? pub_key_enc_res = int / nil
    ]
 
@@ -407,7 +408,7 @@ The 'pub_key_enc' parameter is an OPTIONAL parameter of the AS Request Creation 
 
 In this specification and in application profiles building on it, this parameter is used to ask the KDC information about the encoding of public keys used in the group.
 
-The CDDL notation of the 'pub_key_enc' parameter formatted as in the request is given below.
+The CDDL notation {{RFC8610}} of the 'pub_key_enc' parameter formatted as in the request is given below.
 
 ~~~~~~~~~~~ CDDL
    pub_key_enc_req = nil
@@ -467,11 +468,11 @@ Marco: In Section 4.2, we are indicating the key identifier in the optional 'kid
 Marco: Isn't it ok as we are doing with the COSE Key in Section 4.2? Then it works quite fine in ace-oscoap-joining when considering the particular joining of OSCORE groups.
 -->
 
-Upon receiving a request from a Client, the KDC MUST check that it is storing a valid access token from that Client for the group identifier assiciated to the endpoint. If that is not the case, i.e. the KDC does not store a valid access token or this is not valid for that Client for the group identifier at hand, the KDC MUST respond to the Client with a 4.01 (Unauthorized) error message.
+Upon receiving a request from a Client, the KDC MUST check that it is storing a valid access token from that Client for the group identifier associated to the endpoint. If that is not the case, i.e. the KDC does not store a valid access token or this is not valid for that Client for the group identifier at hand, the KDC MUST respond to the Client with a 4.01 (Unauthorized) error message.
 
 ## Interface at the KDC
 
-The KDC is configured with the following resources. Note that the root url-path "ace-group" given here are default names: implementations are not required to use these names, and can define their own instead. The Interface Description (if=) Link Target Attribute value ace-group is registered ({{if-ace-group}}) and can be used to describe this inferface.
+The KDC is configured with the following resources. Note that the root url-path "ace-group" given here are default names: implementations are not required to use these names, and can define their own instead. The Interface Description (if=) Link Target Attribute value ace-group is registered ({{if-ace-group}}) and can be used to describe this interface.
 
 * /ace-group : this resource is fixed and indicates that this specification is used. Other applications that run on a KDC implementing this specification MUST NOT use this same resource.
 
@@ -641,7 +642,7 @@ The handler expects a request with payload formatted as a CBOR map. The payload 
   - The first array contains zero or more roles (or combination of roles) of group members for the group identified by "GROUPNAME".
   - The second array contains zero or more identifiers of group members for the group identified by "GROUPNAME".
 
-The CDDL definition of 'get_pub_keys' is given in {{cddl-ex-getpubkeys}} using as example encoding: node identifier encoded as byte string, role identifier as text string, and combination of roles encoded as a CBOR array of roles. Note that the empty array is not valid for this handler, but is valid for the value of "get_pub_keys" received by the handler of POST to ace-group/GROUPNAME (see {{gid-post}}).
+The CDDL definition {{RFC8610}} of 'get_pub_keys' is given in {{cddl-ex-getpubkeys}} using as example encoding: node identifier encoded as byte string, role identifier as text string, and combination of roles encoded as a CBOR array of roles. Note that the empty array is not valid for this handler, but is valid for the value of "get_pub_keys" received by the handler of POST to ace-group/GROUPNAME (see {{gid-post}}).
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
 id = bstr
