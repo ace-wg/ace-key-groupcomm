@@ -73,6 +73,7 @@ informative:
   RFC8613:
   RFC8392:
   RFC8747:
+  RFC7641
   I-D.ietf-core-groupcomm-bis:
   I-D.ietf-core-coap-pubsub:
   I-D.ietf-ace-oscore-profile:
@@ -876,7 +877,7 @@ Alternatively, the re-distribution of keying material can be initiated by the KD
 
 * Can act as a publisher in a pub-sub scenario, and update the keying material by publishing on a specific topic on a broker, which all the members of the group are subscribed to.
 
-Note that these methods of KDC-initiated key distribution have different security properties and require different security associations.
+Note that these methods of KDC-initiated key distribution have different security properties and require different security associations. Moreover, congestion control mechanism need to be implemented where Observe is used, see Section 4.5.1 of {{RFC7641}}. 
 
 ## Retrieval of New Keying Material {#new-keys}
 
@@ -1064,6 +1065,8 @@ That is, the KDC may not rekey the group at every membership change, for instanc
 However, this would result in the KDC not constantly preserving backward and forward security. In fact, newly joining group members could be able to access the keying material used before their joining, and thus could access past group communications. Also, until the KDC performs a group rekeying, the newly leaving nodes would still be able to access upcoming group communications that are protected with the keying material that has not yet been updated.
 
 The KDC needs to have a mechanism in place to detect DoS attacks from nodes constantly initiating rekeys (for example by updating their public key), such as removing these nodes from the group.
+
+The KDC also needs to have a congestion control mechanism in place to avoid network congestion when the KDC renews the group keying material; CoAP and Observe give guidancee on such mechanisms, see Section 4.7 of {{RFC7252}} and Section 4.5.1 of {{RFC7641}}.
 
 
 ## Update of Keying Material
