@@ -475,7 +475,7 @@ Upon receiving a request from a Client, the KDC MUST check that it is storing a 
 
 The KDC is configured with the following resources. Note that the root url-path "ace-group" given here are default names: implementations are not required to use these names, and can define their own instead. The Interface Description (if=) Link Target Attribute value ace-group is registered ({{if-ace-group}}) and can be used to describe this interface.
 
-* /ace-group : this resource is fixed and indicates that this specification is used. Other applications that run on a KDC implementing this specification MUST NOT use this same resource.
+* /ace-group : this resource is fixed and indicates that this specification is used. If other applications run on a KDC implementing this specification use this same resource, these applications will collide, and a mechanism will be needed to differentiate the endpoints.
 
 * /ace-group/GROUPNAME : one sub-resource to /ace-group is implemented for each group the KDC manages. These resources are identified by the group identifiers of the groups the KDC manages (in this example, the group identifier has value "GROUPNAME"). These resources support GET and POST method.
 
