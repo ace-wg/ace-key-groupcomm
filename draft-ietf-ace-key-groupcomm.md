@@ -38,16 +38,17 @@ normative:
 
   RFC7049:
   RFC2119:
+  RFC6749:
   RFC6838:
   RFC8126:
   RFC8174:
   RFC7252:
+  RFC8747:
   I-D.ietf-cose-rfc8152bis-struct:
   I-D.ietf-cose-rfc8152bis-algs:
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-ace-oauth-params:
   I-D.ietf-core-oscore-groupcomm:
-  I-D.ietf-ace-cwt-proof-of-possession:
   COSE.Algorithms:
     author: 
       org: IANA
@@ -73,7 +74,6 @@ informative:
   RFC8610:
   RFC8613:
   RFC8392:
-  RFC8747:
   RFC7641:
   I-D.ietf-core-groupcomm-bis:
   I-D.ietf-core-coap-pubsub:
@@ -384,7 +384,7 @@ The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one 
 
 * The fourth element 'sign_key_parameters' is a CBOR array indicating the parameters of the key used with the signature algorithm. Its content depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define the possible values and structure for the elements of this parameter (REQ5). If the POST request did not include the 'sing_info' parameter, this element is encoded as the CBOR simple value Null.
 
-* The fifth element 'pub_key_enc' parameter is optional and MUST only be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, it is either a CBOR integer indicating the encoding of public keys used in the group identified by 'gid', or has value Null indicating that the KDC does not act as repository of public keys for group members. Its acceptable values are taken from the "CWT Confirmation Method" Registry defined in {{I-D.ietf-ace-cwt-proof-of-possession}}. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
+* The fifth element 'pub_key_enc' parameter is optional and MUST only be present if the POST request included the 'pub_key_enc' parameter with value Null. If present, it is either a CBOR integer indicating the encoding of public keys used in the group identified by 'gid', or has value Null indicating that the KDC does not act as repository of public keys for group members. Its acceptable values are taken from the "CWT Confirmation Method" Registry defined in {{RFC8747}}. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
 
 The CDDL notation {{RFC8610}} of the 'sign_info' parameter formatted as in the response is given below, with gid formatted as a bstr (note that gid can be encoded differently, see REQ1).
 
@@ -1165,9 +1165,7 @@ Reference: \[this document\]
 
 ## OAuth Parameters Registry {#iana-kinfo}
 
-   The following registrations are done for the OAuth Parameters
-   Registry following the procedure specified in section 11.2 of
-   [RFC6749]:
+   The following registrations are done for the OAuth ParametersRegistry following the procedure specified in section 11.2 of {{RFC6749}}:
 
    o  Parameter name: sign_info
    o  Parameter usage location: token request, token response
