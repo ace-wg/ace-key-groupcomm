@@ -73,7 +73,8 @@ informative:
   RFC8613:
   RFC8392:
   RFC8747:
-  RFC7641
+  RFC7641:
+  RFC7252:
   I-D.ietf-core-groupcomm-bis:
   I-D.ietf-core-coap-pubsub:
   I-D.ietf-ace-oscore-profile:
