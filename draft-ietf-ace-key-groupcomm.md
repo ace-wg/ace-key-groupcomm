@@ -340,7 +340,7 @@ The payload of the message MUST be formatted as a CBOR map including the access 
 
 Additionally, the Authorization Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'sign_info' defined in {{sign-info}}.
+* 'sign_info' defined in {{sign-info}}, encoding the CBOR simple value Null to require information about the signature algorithm, signature algorithm parameters and signature key parameters used in the group.
 
 * 'pub_key_enc' defined in {{pub-key-enc}}, encoding the CBOR simple value Null, to require information on the exact encoding of public keys used in the group.
 
