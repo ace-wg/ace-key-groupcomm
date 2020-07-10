@@ -253,7 +253,7 @@ The Authorization Request sent from the Client to the AS is defined in Section 5
 
   In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7).
 
-  The CDDL definition {{RFC8610}} of scope, using as example group identifier encoded as byte string and role identifier as text string, is given in {{cddl-ex}}.
+  The CDDL definition {{RFC8610}} of scope using as example a group identifier and role identifiers encoded as text strings is given in {{cddl-ex}}.
 
 * 'audience', with an identifier of a KDC.
 
@@ -286,7 +286,7 @@ Should we discuss this in the draft?
 As in {{I-D.ietf-ace-oauth-authz}}, these parameters are included in the payload, which is formatted as a CBOR map. The Content-Format "application/ace+cbor" defined in Section 8.14 of {{I-D.ietf-ace-oauth-authz}} is used.
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
-gid = bstr
+gid = tstr
 
 role = tstr
 
@@ -294,7 +294,7 @@ scope_entry = [ gid , ? ( role / [ 2*role ] ) ]
 
 scope = << [ + scope_entry ] >>
 ~~~~~~~~~~~~~~~~~~~~
-{: #cddl-ex title="CDLL definition of scope, using as example group identifier encoded as bstr and role as tstr" artwork-align="center"}
+{: #cddl-ex title="CDLL definition of scope, using as example group identifier encoded as tstr and role as tstr" artwork-align="center"}
 
 ## Authorization Response {#ssec-authorization-response}
 
