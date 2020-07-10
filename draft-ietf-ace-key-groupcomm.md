@@ -312,7 +312,7 @@ The Authorization Response sent from the AS to the Client is defined in Section 
 
 Additionally, the Authorization Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'scope' containing the granted scope, if different from the scope requested by the client. This parameter has the same format and encoding of 'scope' in the Authorization Request, defined in {{ssec-authorization-request}}.
+* 'scope' containing the scope the AS grants access to. This parameter has the same format and encoding of 'scope' in the Authorization Request, defined in {{ssec-authorization-request}}.
 
 * Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary.
 
