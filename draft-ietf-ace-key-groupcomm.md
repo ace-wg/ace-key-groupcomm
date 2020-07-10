@@ -334,7 +334,11 @@ When receiving an Authorization Request from a Client that was previously author
 
 The Client sends a CoAP POST request including the access token to the KDC, as specified in Section 5.8.1 of {{I-D.ietf-ace-oauth-authz}}. If the specific transport profile of ACE defines it, the Client MAY use a different endpoint than /authz-info at the KDC to post the access token to.
 
-Optionally, the Client might want to request information concerning the public keys in the group, as well as concerning the algorithm and related parameters for computing signatures in the group. In such a case, the joining node MAY ask for that information to the KDC in this same request. To this end, it sends the CoAP POST request to the /authz-info endpoint using the Content-Format "application/ace+cbor". The payload of the message MUST be formatted as a CBOR map, including the access token and the following parameters:
+Optionally, the Client might want to request information concerning the public keys in the group, as well as concerning the algorithm and related parameters for computing signatures in the group. In such a case, the joining node MAY ask for that information to the KDC in this same request. To this end, it sends the CoAP POST request to the /authz-info endpoint using the Content-Format "application/ace+cbor".
+
+The payload of the message MUST be formatted as a CBOR map including the access token.
+
+Additionally, the Authorization Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
 * 'sign_info' defined in {{sign-info}}.
 
