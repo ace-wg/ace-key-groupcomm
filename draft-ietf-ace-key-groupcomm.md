@@ -112,6 +112,8 @@ This document additionally uses the following terminology:
 
 # Overview
 
+The full procedure can be separated in two phases: the first follows the ACE framework, between Client, AS and KDC. The second part is the key distribution between Client and KDC. After the two phases the Client is able to participate in the group communication, via a Dispatcher entity.
+
 ~~~~~~~~~~~
 +------------+                  +-----------+
 |     AS     |                  |    KDC    |
