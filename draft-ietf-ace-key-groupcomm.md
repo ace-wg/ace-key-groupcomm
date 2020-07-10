@@ -314,8 +314,7 @@ Additionally, the Authorization Response MAY contain the following parameters, w
 
 * 'scope' containing the scope the AS grants access to. This parameter has the same format and encoding of 'scope' in the Authorization Request, defined in {{ssec-authorization-request}}.
 
-* Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary.
-
+Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary.
 
 The proof-of-possession access token (in 'access_token' above) MUST contain the following parameters:
 
