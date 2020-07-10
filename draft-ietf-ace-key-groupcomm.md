@@ -167,7 +167,7 @@ This document specifies a mechanism for:
 
 * Evicting a group member from the group ({{sec-node-removal}}).
 
-* Allowing a group membter retrieve keying material ({{update-keys}} and {{new-keys}}).
+* Allowing a group member to retrieve keying material ({{update-keys}} and {{new-keys}}).
 
 * Renewing and re-distributing the group keying material (rekeying) upon a membership change in the group ({{ssec-group-leaving}} and {{sec-node-removal}}).
 
@@ -175,7 +175,7 @@ This document specifies a mechanism for:
 
 1. The joining node requests an Access Token from the AS, in order to access a specific group-membership resource on the KDC and hence join the associated group. This exchange between Client and AS MUST be secured, as specified by the transport profile of ACE used between Client and KDC. The joining node will start or continue using a secure communication association with the KDC, according to the response from the AS. 
 
-2. The joining node transfers authentication and authorization information to the KDC, by posting the obtained Access Token to the /authz-info endpoint at the KDC. This exchange, and all further communications between the Client and the KDC MUST be sent over the secure channel established as a result of the transport profile of ACE used between Client and KDC. After that, a joining node MUST have a secure communication association established with the KDC, before starting to join a group under that KDC. Possible ways to provide a secure communication association are DTLS {{RFC6347}} and OSCORE {{RFC8613}}.
+2. The joining node transfers authentication and authorization information to the KDC, by posting the obtained Access Token to the /authz-info endpoint at the KDC. This exchange, and all further communications between the Client and the KDC, MUST occur over the secure channel established as a result of the transport profile of ACE used between Client and KDC. After that, a joining node MUST have a secure communication association established with the KDC, before starting to join a group under that KDC. Possible ways to provide a secure communication association are DTLS {{RFC6347}} and OSCORE {{RFC8613}}.
 
 3. The joining node starts the joining process to become a member of the group, by accessing the related group-membership resource at the KDC.
 At the end of the joining process, the joining node has received from the KDC the parameters and keying material to securely communicate with the other members of the group, and the KDC has stored the association between the authorization information from the access token and the secure session with the client.
@@ -243,9 +243,9 @@ The Authorization Request sent from the Client to the AS is defined in Section 5
 
    This value is a CBOR byte string, encoding a CBOR array of one or more  entries.
 
-   By default, each entry is encoded as specified by {{I-D.bormann-core-ace-aif}}. It is up to the application profiles to define ad register Toid and Tperm to fit the use case. The object identifier Toid correspond to the group name, while the permissions Tperm contain the roles the client wish to take.
+   By default, each entry is encoded as specified by {{I-D.bormann-core-ace-aif}}. It is up to the application profiles to define and register Toid and Tperm to fit the use case. The object identifier Toid corresponds to the group name, while the permission set Tperm indicates the roles that the client wishes to take in the group.
 
-   Otherwise, the scope entries can be defined as a CBOR array, which contains:
+   Otherwise, each scope entry can be defined as a CBOR array, which contains:
 
   - As first element, the identifier of the specific group or topic.
 
@@ -255,7 +255,7 @@ The Authorization Request sent from the Client to the AS is defined in Section 5
 
   In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7).
 
-  An example of CDDL definition {{RFC8610}} of scope using the format above and group name and role identifier encoded as text strings is given in {{cddl-ex}}.
+  An example of CDDL definition {{RFC8610}} of scope using the format above, with group name and role identifiers encoded as text strings is given in {{cddl-ex}}.
 
 * 'audience', with an identifier of a KDC.
 
@@ -267,7 +267,7 @@ Peter 30-07: Question: is this a certificate identifier, or the public key extra
 Marco: It is just as per ACE. See Sections 3.2 and 3.4 of draft-ietf-ace-cwt-proof-of-possession-03
 -->
 
-Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, cann be included if necessary.
+Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, can be included if necessary.
 
 <!--
 Marco 27-02: “scope” should include a list of identifiers. One can ask authorization for joining multiple groups in a single Authorization Request, so getting a single Access Token.
@@ -352,7 +352,8 @@ The payload of the 2.01 response is a CBOR map. If the access token contains a r
 
 The KDC MUST store the 'kdcchallenge' value associated to the Client at least until it receives a join request from it (see {{ssec-key-distribution-exchange}}), to be able to verify the proof of possession. The same challenge MAY be reused several times by the Client, to generate new proof of possessions, e.g. in case of update of the public key, or to join a different group with a different key, so it is RECOMMENDED that the KDC keeps storing the 'kdcchallenge' after the first join is processed as well. If the KDC has already discarded the 'kdcchallenge', that will trigger an error response with a newly generated 'kdcchallenge' that the client can use to restart the join process, as specified in {{ssec-key-distribution-exchange}}.
 
-If ’sign_info’ or ’pub_key_enc’ are included in the request, the KDC MAY include the ’sign_info’ parameter defined in {{sign-info}}, with the same encoding. Note that the field 'id' takes the value of the group name for which the 'sign_info' applies to, in this specification.
+If ’sign_info’ or ’pub_key_enc’ are included in the request, the KDC MAY include the ’sign_info’ parameter defined in {{sign-info}}, with the same encoding. Note that the field 'id' takes the value of the group name for which the 'sign_info' applies to.
+
 If 'sign_info' is included in the response, it MAY additionally include the ’pub_key_enc’ parameter defined in {{pub-key-enc}}.
 
 Note that the CBOR map specified as payload of the 2.01 (Created) response may include further parameters, e.g. according to the signalled transport profile of ACE.
