@@ -352,9 +352,8 @@ The payload of the 2.01 response is a CBOR map. If the access token contains a r
 
 The KDC MUST store the 'kdcchallenge' value associated to the Client at least until it receives a join request from it (see {{ssec-key-distribution-exchange}}), to be able to verify the proof of possession. The same challenge MAY be reused several times by the Client, to generate new proof of possessions, e.g. in case of update of the public key, or to join a different group with a different key, so it is RECOMMENDED that the KDC keeps storing the 'kdcchallenge' after the first join is processed as well. If the KDC has already discarded the 'kdcchallenge', that will trigger an error response with a newly generated 'kdcchallenge' that the client can use to restart the join process, as specified in {{ssec-key-distribution-exchange}}.
 
-If ’sign_info’ or ’pub_key_enc’ are included in the request, the KDC MAY include the ’sign_info’ parameter defined in {{sign-info}}. In such a case the ‘sign_info’ parameter MAY additionally include the ’pub_key_enc’ parameter defined in {{pub-key-enc}}.
-
-The encoding of the 'sign_info' parameter in the response is defined in {{pub-key-enc}}. Note that the field 'id' takes the value of the group identifier for which the 'sign_info' applies to, in this specification.
+If ’sign_info’ or ’pub_key_enc’ are included in the request, the KDC MAY include the ’sign_info’ parameter defined in {{sign-info}}, with the same encoding. Note that the field 'id' takes the value of the group identifier for which the 'sign_info' applies to, in this specification.
+If 'sign_info' is included in the response, it MAY additionally include the ’pub_key_enc’ parameter defined in {{pub-key-enc}}.
 
 Note that the CBOR map specified as payload of the 2.01 (Created) response may include further parameters, e.g. according to the signalled transport profile of ACE.
 
