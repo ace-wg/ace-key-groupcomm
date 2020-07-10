@@ -173,14 +173,16 @@ This document specifies a mechanism for:
 
 {{fig-flow}} provides a high level overview of the message flow for a node joining a group communication setting, which can be expanded as follows.
 
-1. The joining node requests an Access Token from the AS, in order to access a specific group-membership resource on the KDC and hence join the associated group. The joining node will start or continue using a secure communication association with the KDC, according to the response from the AS.
+1. The joining node requests an Access Token from the AS, in order to access a specific group-membership resource on the KDC and hence join the associated group. This exchange between Client and AS MUST be secured, as specified by the transport profile of ACE used between Client and KDC. The joining node will start or continue using a secure communication association with the KDC, according to the response from the AS. 
 
-2. The joining node transfers authentication and authorization information to the KDC, by posting the obtained Access Token to the /authz-info endpoint at the KDC. After that, a joining node MUST have a secure communication association established with the KDC, before starting to join a group under that KDC. Possible ways to provide a secure communication association are DTLS {{RFC6347}} and OSCORE {{RFC8613}}.
+2. The joining node transfers authentication and authorization information to the KDC, by posting the obtained Access Token to the /authz-info endpoint at the KDC. This exchange, and all further communications between the Client and the KDC MUST be sent over the secure channel established as a result of the transport profile of ACE used between Client and KDC. After that, a joining node MUST have a secure communication association established with the KDC, before starting to join a group under that KDC. Possible ways to provide a secure communication association are DTLS {{RFC6347}} and OSCORE {{RFC8613}}.
 
 3. The joining node starts the joining process to become a member of the group, by accessing the related group-membership resource at the KDC.
 At the end of the joining process, the joining node has received from the KDC the parameters and keying material to securely communicate with the other members of the group, and the KDC has stored the association between the authorization information from the access token and the secure session with the client.
 
 4. The joining node and the KDC maintain the secure association, to support possible future communications. These especially include key management operations, such as retrieval of updated keying material or participation to a group rekeying process.
+
+5. The joining node can communicate securely with the other group members, using the keying material provided in step 3.
 
 
 ~~~~~~~~~~~
@@ -205,12 +207,6 @@ framework | |<--------------------------|    |                     |
             |                                         |            |
 ~~~~~~~~~~~
 {: #fig-flow title="Message Flow Upon New Node's Joining" artwork-align="center"}
-
-The exchange of Authorization Request and Authorization Response between Client and AS MUST be secured, as specified by the transport profile of ACE used between Client and KDC.
-
-The Joining Request and Joining Response, and all further communications between the Client and the KDC MUST be sent over the secure channel established as a result of the transport profile of ACE used between Client and KDC.
-
-All communications between a Client and the other group members MUST be secured using the keying material provided in step 3.
 
 # Authorization to Join a Group {#sec-auth}
 
