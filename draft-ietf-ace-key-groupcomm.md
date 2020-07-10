@@ -206,7 +206,7 @@ The exchange of Authorization Request and Authorization Response between Client 
 
 The Joining Request and Joining Response, and all further communications between the Client and the KDC MUST be sent over the secure channel established as a result of the transport profile of ACE used between Client and KDC.
 
-All communications between a Client and the other group members MUST be secured using the keying material provided in {{key-distr}}.
+All communications between a Client and the other group members MUST be secured using the keying material provided in step 3.
 
 # Authorization to Join a Group {#sec-auth}
 
