@@ -265,7 +265,7 @@ Peter 30-07: Question: is this a certificate identifier, or the public key extra
 Marco: It is just as per ACE. See Sections 3.2 and 3.4 of draft-ietf-ace-cwt-proof-of-possession-03
 -->
 
-* Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary.
+Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, cann be included if necessary.
 
 <!--
 Marco 27-02: “scope” should include a list of identifiers. One can ask authorization for joining multiple groups in a single Authorization Request, so getting a single Access Token.
