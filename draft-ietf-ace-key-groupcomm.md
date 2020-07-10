@@ -243,17 +243,19 @@ The Authorization Request sent from the Client to the AS is defined in Section 5
 
    This value is a CBOR byte string, encoding a CBOR array of one or more  entries.
 
-   An entry has as value a CBOR array, which contains:
+   By default, each entry is encoded as specified by {{I-D.bormann-core-ace-aif}}. It is up to the application profiles to define ad register Toid and Tperm to fit the use case. The object identifier Toid correspond to the group name, while the permissions Tperm contain the roles the client wish to take.
+
+   Otherwise, the scope entries can be defined as a CBOR array, which contains:
 
   - As first element, the identifier of the specific group or topic.
 
-  - Optionally, as second element, the role (or CBOR array of roles) that the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s). Note that, if applicable in the application use cases, the application profile can define a format for the role as the one defined in {{I-D.bormann-core-ace-aif}}.
+  - Optionally, as second element, the role (or CBOR array of roles) that the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s).
 
   In each entry, the encoding of the group or topic identifier (REQ1 in {{req}}) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
 
   In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7).
 
-  The CDDL definition {{RFC8610}} of scope using as example a group identifier and role identifiers encoded as text strings is given in {{cddl-ex}}.
+  An example of CDDL definition {{RFC8610}} of scope using the format above and group identifier and role identifier encoded as text strings is given in {{cddl-ex}}.
 
 * 'audience', with an identifier of a KDC.
 
