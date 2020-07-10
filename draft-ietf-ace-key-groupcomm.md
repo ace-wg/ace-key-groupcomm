@@ -377,7 +377,7 @@ The CDDL notation {{RFC8610}} of the 'sign_info' parameter formatted as in the r
    sign_info_req = nil
 ~~~~~~~~~~~
 
-The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one ore more elements. The number of elements is lower or at most equal to the number of groups the client has been authorized to join. Each element contains information about signing parameters and keys for one or more group or topic and is formatted as follows.
+The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one or more elements. The number of elements is lower or at most equal to the number of groups the client has been authorized to join. Each element contains information about signing parameters and keys for one or more group or topic and is formatted as follows.
 
 * The first element 'id' is an identifier of the group or an array of identifiers for the groups for which this information applies.
 
