@@ -876,7 +876,9 @@ Alternatively, the re-distribution of keying material can be initiated by the KD
 
 * Can act as a publisher in a pub-sub scenario, and update the keying material by publishing on a specific topic on a broker, which all the members of the group are subscribed to.
 
-Note that these methods of KDC-initiated key distribution have different security properties and require different security associations. Moreover, congestion control mechanism need to be implemented where Observe is used, see Section 4.5.1 of {{RFC7641}}.
+Note that these methods of KDC-initiated key distribution have different security properties and require different security associations.
+
+Congestion control mechanisms need to be implemented: see Section 4.7 of {{RFC7252}} and, where Observe is used, Section 4.5.1 of {{RFC7641}}.
 
 ## Retrieval of New Keying Material {#new-keys}
 
