@@ -528,12 +528,14 @@ The handler verifies that the group name of the /ace-group/GROUPNAME path is a s
 If the request is not formatted correctly (i.e. required fields non received or received with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. The response MAY contain a CBOR map in the payload with ace+cbor format, e.g. it could send back 'sign_info_res' with 'pub_key_enc' set to Null if the Client sent its own public key and the KDC is not set to store public keys of the group members. If the request contained unknown or non-expected fields present, the handler MUST silently drop them and continue processing. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT6).
 
 
-If the KDC stores the group members' public keys, the handler checks if one public key is already associated to the access token received (see {{ssec-key-distribution-exchange}} for an example) and to the group identified by "GROUPNAME". If that is not the case, it retrieves it from the 'client_cred' field and associates it to the access token received, after verifications succeeded. In particular, the KDC verifies:
+If the KDC stores the group members' public keys, the handler checks if one is included in the the 'client_cred' field, retrieves it and associates it to the access token received, after verifications succeeded. In particular, the KDC verifies:
 
 * that such public key has an acceptable format for the group identified by "GROUPNAME", i.e. it is encoded as expected and is compatible with the signature algorithm and possible associated parameters. If that cannot be verified, it is RECOMMENDED that the handler stops the process and responds with a 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT5).
 * that the signature contained in "client_cred_verify" passes verification. If that cannot be verified, the handler MUST respond with a 4.00 (Bad Request) error message, and if the token was posted (see REQ17) including the 'kdcchallenge' associated to this Client (see {{token-post}}) if it can be retrieved, or otherwise newly generated, in a CBOR map in the payload. This error response MUST also have Content-Format "application/ace+cbor".
 
 If one public key is already associated to the access token and to that group, but the 'client_cred' is populated with a different public key, the handler MUST delete the previous one and replace it with this one, after verifying the points above.
+
+If no public key is included in the 'client_cred' field, the handler checks if one public key is already associated to the access token received (see {{ssec-key-distribution-exchange}} for an example) and to the group identified by "GROUPNAME". If that is not the case, the handler responds with a 4.00 Bad Request error response.
 
 If the token was posted but the KDC cannot retrieve the 'kdcchallenge' associated to this Client (see {{token-post}}), the KDC MUST respond with a 4.00 Bad Request error response, including a newly generated 'kdcchallenge' in a CBOR map in the payload. This error response MUST also have Content-Format "application/ace+cbor".
 
