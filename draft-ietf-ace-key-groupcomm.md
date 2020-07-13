@@ -880,7 +880,7 @@ Note that these methods of KDC-initiated key distribution have different securit
 
 Congestion control mechanisms need to be implemented: see Section 4.7 of {{RFC7252}} and, where Observe is used, Section 4.5.1 of {{RFC7641}}.
 
-## Retrieval of New Keying Material {#new-keys}
+## Retrieval of New Individual Keying Material {#new-keys}
 
 Beside possible expiration, the client may need to communicate to the KDC its need for part of the keying material to be renewed.
 For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
