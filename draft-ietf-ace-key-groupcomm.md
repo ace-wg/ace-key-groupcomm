@@ -638,7 +638,7 @@ Additionally, the handler verifies that the node is a current member of the grou
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing the symmetric group keying material. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'gkty','key' and 'num' specified in {{gid-post}}.
 
-The payload MAY also include the parameters 'ace-groupcomm-profile', 'exp', 'exp_delta' and 'mgt_key_material' parameters specified in {{gid-post}}.
+The payload MAY also include the parameters 'ace-groupcomm-profile', 'exp', and 'mgt_key_material' parameters specified in {{gid-post}}.
 
 ### ace-group/GROUPNAME/pub-key
 
@@ -830,7 +830,7 @@ Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows 
 
 When any of the following happens, a node MUST stop using the owned group keying material to protect outgoing messages, and SHOULD stop using it to decrypt and verify incoming messages.
 
-* Upon expiration of the keying material, according to what indicated by the KDC with the 'exp' (and possibly the 'exp_delta') parameter in a Joining Response, or to a pre-configured value.
+* Upon expiration of the keying material, according to what indicated by the KDC with the 'exp' parameter in a Joining Response, or to a pre-configured value.
 
 * Upon receiving a notification of revoked/renewed keying material from the KDC, possibly as part of an update of the keying material (rekeying) triggered by the KDC.
 
@@ -1048,7 +1048,6 @@ This specification defines a number of fields used during the second part of the
  num          |   TBD    | int           | {{gid-post}}
  ace-groupcomm-profile |   TBD    | int           | {{gid-post}}
  exp          |   TBD    | int           | {{gid-post}}
- exp_delta    |   TBD    | int           | {{gid-post}}
  pub_keys     |   TBD    | byte string   | {{gid-post}}
  peer_roles     |   TBD    | array   | {{gid-post}}
  group_policies      |   TBD    | map           | {{gid-post}}
