@@ -660,7 +660,7 @@ The handler verifies that the group name of the /ace-group/GROUPNAME path is a s
 
 If verification succeeds, the handler identifies the public keys of the current group members for which either:
 
-  - the role identifier matches with one of those indicated in the request (including the exact combination of roles requested), or
+  - the role identifier matches with one of those indicated in the request; note that the request can contain a "combination of roles", where the handler select all group members who have all roles included in the combination.
   - the identifier matches with one of those indicated in the request.
 
 Then, the handler returns a 2.05 (Content) message response with payload formatted as a CBOR map, containing only the 'pub\_keys' and 'peer\_roles' parameters from {{gid-post}}. In particular, 'pub\_keys' encodes the list of public keys of those group members including the respective member identifiers, while 'peer\_roles' encodes their respective role (or CBOR array of roles) in the group.
