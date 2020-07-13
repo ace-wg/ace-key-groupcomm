@@ -465,7 +465,7 @@ The KDC is configured with the following resources. Note that the root url-path 
 
 * /ace-group/GROUPNAME/policies: this resource contains the group policies. This resource supports the GET method.
 
-* /ace-group/GROUPNAME/ctx-num:  this resource contains the version number for the symmetric group keying material. This sub-resource supports the GET method.
+* /ace-group/GROUPNAME/num:  this resource contains the version number for the symmetric group keying material. This sub-resource supports the GET method.
 
 * /ace-group/GROUPNAME/nodes/NODENAME: one sub-resource to /ace-group/GROUPNAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). Each resource contains the individual keying material for that node. These resources support GET, PUT and DELETE methods.
 
@@ -692,7 +692,7 @@ If verification succeeds, the handler returns a 2.05 (Content) message containin
 
 The specific format and meaning of group policies MUST be specified in the application profile (REQ14).
 
-### ace-group/GROUPNAME/ctx-num
+### ace-group/GROUPNAME/num
 
 This resource implements a GET handler.
 
@@ -961,14 +961,14 @@ Client                                                   KDC
 
 ## Retrieval of Keying Material Version {#key-version}
 
-A node in the group can contact the KDC to request information about the version number of the symmetric group keying material, by sending a CoAP GET request to the /ace-group/GROUPNAME/ctx-num endpoint at the KDC, where GROUPNAME is the group name, formatted as defined in {{num-get}}. In particular, the version is incremented by the KDC every time the group keying material is renewed.
+A node in the group can contact the KDC to request information about the version number of the symmetric group keying material, by sending a CoAP GET request to the /ace-group/GROUPNAME/num endpoint at the KDC, where GROUPNAME is the group name, formatted as defined in {{num-get}}. In particular, the version is incremented by the KDC every time the group keying material is renewed.
 
 {{fig-version}} gives an overview of the exchange described above.
 
 ~~~~~~~~~~~
 Client                                                    KDC
    |                                                       |
-   |-- Version Request: GET ace-group/GROUPNAME/ctx-num -->|
+   |---- Version Request: GET ace-group/GROUPNAME/num ---->|
    |                                                       |
    |<--------- Version Response: 2.05 (Content) -----------|
    |                                                       |
