@@ -388,9 +388,9 @@ The CDDL notation {{RFC8610}} of the 'sign_info' parameter formatted as in the r
    sign_info_entry =
    [
      id : gname / [ + gname ],
-     sign_alg : int / tstr / nil,
-     sign_parameters : [ any ] / nil,
-     sign_key_parameters : [ any ] / nil,
+     sign_alg : int / tstr,
+     sign_parameters : [ any ],
+     sign_key_parameters : [ any ],
      pub_key_enc = int / nil
    ]
 
