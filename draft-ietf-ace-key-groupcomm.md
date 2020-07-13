@@ -642,6 +642,8 @@ The payload MAY also include the parameters 'ace-groupcomm-profile', 'exp', 'exp
 
 ### ace-group/GROUPNAME/pub-key
 
+If the KDC does not maintain public keys for the group, the handler for any request on this resource returns a 4.05 (Method Not Allowed) error message. If it does, the rest of this section applies.
+
 This resource implements GET and FETCH handlers.
 
 #### FETCH Handler {#pubkey-fetch}
@@ -663,9 +665,9 @@ If verification succeeds, the handler identifies the public keys of the current 
   - the role identifier matches with one of those indicated in the request; note that the request can contain a "combination of roles", where the handler select all group members who have all roles included in the combination.
   - the identifier matches with one of those indicated in the request.
 
-Then, the handler returns a 2.05 (Content) message response with payload formatted as a CBOR map, containing only the 'pub\_keys' and 'peer\_roles' parameters from {{gid-post}}. In particular, 'pub\_keys' encodes the list of public keys of those group members including the respective member identifiers, while 'peer\_roles' encodes their respective role (or CBOR array of roles) in the group.
+Then, the handler returns a 2.05 (Content) message response with payload formatted as a CBOR map, containing only the 'pub\_keys' and 'peer\_roles' parameters from {{gid-post}}. In particular, 'pub\_keys' encodes the list of public keys of those group members including the respective member identifiers, while 'peer\_roles' encodes their respective role (or CBOR array of roles) in the group. The specific format of public keys as well as of identifiers of group members is specified by the application profile (OPT1, REQ9).
 
-If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length. The specific format of public keys as well as of identifiers of group members is specified by the application profile (OPT1, REQ9).
+If the KDC does not store any public key associated with the specified member identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
 The handler MAY enforce one of the following policies, in order to handle possible identifiers that are included in the 'get_pub_keys' parameter of the request but are not associated to any current group member. Such a policy MUST be specified by the application profile (REQ13)
 
