@@ -1,4 +1,4 @@
-# Key Provisioning for Group Communication using ACE [![Build Status](https://travis-ci.org/ace-wg/ace-key-groupcomm.svg?branch=master)](https://travis-ci.org/ace-wg/ace-key-groupcomm)
+# Key Provisioning for Group Communication using ACE
 
 This is the working area for the IETF [ACE Working Group](https://datatracker.ietf.org/wg/ace/documents/) Internet-Draft, "Key Provisioning for Group Communication using ACE".
 
