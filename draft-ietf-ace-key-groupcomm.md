@@ -467,7 +467,7 @@ The KDC is configured with the following resources. Note that the root url-path 
 
 * /ace-group/GROUPNAME/num:  this resource contains the version number for the symmetric group keying material. This sub-resource supports the GET method.
 
-* /ace-group/GROUPNAME/nodes/NODENAME: one sub-resource to /ace-group/GROUPNAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). Each resource contains the individual keying material for that node. These resources support GET, PUT and DELETE methods.
+* /ace-group/GROUPNAME/nodes/NODENAME: one sub-resource to /ace-group/GROUPNAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). Each resource contains the group and individual keying material for that node. These resources support GET, PUT and DELETE methods.
 
 * /ace-group/GROUPNAME/nodes/NODENAME/pub-key: one sub-resource to /ace-group/GROUPNAME/nodes/NODENAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). Each resource contains the individual public keying material for that node. These resources support the POST method.
 
