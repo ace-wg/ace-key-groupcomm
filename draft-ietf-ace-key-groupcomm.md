@@ -1072,7 +1072,7 @@ The KDC may rekey the group after a minimum number of group members have joined 
 
 However, this would result in the KDC not constantly preserving backward and forward security. Newly joining group members could be able to access the keying material used before their joining, and thus could access past group communications. Also, until the KDC performs a group rekeying, the newly leaving nodes would still be able to access upcoming group communications that are protected with the keying material that has not yet been updated.
 
-The KDC needs to have a mechanism in place to detect DoS attacks from nodes constantly initiating rekeys (for example by updating their public key), such as removing these nodes from the group.
+The KDC needs to have a mechanism in place to detect DoS attacks from nodes constantly initiating rekey events (for example by updating their public key), such as removing these nodes from the group.
 
 The KDC also needs to have a congestion control mechanism in place to avoid network congestion when the KDC renews the group keying material; CoAP and Observe give guidance on such mechanisms, see Section 4.7 of {{RFC7252}} and Section 4.5.1 of {{RFC7641}}.
 
