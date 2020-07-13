@@ -753,7 +753,7 @@ The DELETE handler removes the node identified by "NODENAME" from the group iden
 
 The handler expects a request with method DELETE (and empty payload).
 
-The handler only accept a request from the node that matches the "NODENAME" used in Uri-Path, and that is part of the "GROUPNAME" group: the handler verifies that the group name "GROUPNAME" is a subset of the 'scope' stored in the access token associated to this client, and that this client is identified by "NODENAME". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+The handler only accepts a request from the node identified by “NODENAME” via the secure session, where NODENAME is used in Uri-Path, and that is part of the “GROUPNAME” group: the handler verifies that the group name "GROUPNAME" is a subset of the 'scope' stored in the access token associated to this client, and that this client is identified by "NODENAME". If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
 The handler also verifies that the node sending the request and the node name used in the Uri-Path match. If that is not the case, the handler responds with a 4.01 (Unauthorized) error response.
 
