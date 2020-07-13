@@ -503,7 +503,7 @@ role = tstr
 
 comb_role = [ 2*role ]
 
-get_pub_keys = [ [ *(role / comb_role) ], [ *id ] ] /
+get_pub_keys = [ [ *(role / comb_role) ], [ *id ] ]
 ~~~~~~~~~~~~~~~~~~~~
 {: #cddl-ex-getpubkeys title="CDLL definition of get_pub_keys, using as example node identifier encoded as bstr and role as tstr" artwork-align="center"}
 
