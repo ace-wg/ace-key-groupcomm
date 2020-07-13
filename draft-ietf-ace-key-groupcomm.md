@@ -882,7 +882,8 @@ Congestion control mechanisms need to be implemented: see Section 4.7 of {{RFC72
 
 ## Retrieval of New Keying Material {#new-keys}
 
-Beside possible expiration and depending on what part of the keying material is no longer eligible to be used, the client may need to communicate to the KDC its need for that part to be renewed. For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
+Beside possible expiration, the client may need to communicate to the KDC its need for part of the keying material to be renewed.
+For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
 
 To this end, the client performs a Key Renewal Request/Response exchange with the KDC, i.e. it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group name and NODENAME is the node's name, and formatted as defined in {{node-get}}.
 
