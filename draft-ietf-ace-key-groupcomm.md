@@ -1057,7 +1057,7 @@ This specification defines a number of fields used during the second part of the
 # Security Considerations {#sec-cons}
 
 When a Client receives a message from a sender for the first time, it needs to have a mechanism in place to avoid replay, e.g. Appendix B.2 of {{RFC8613}}. In case the Client rebooted and lost the security state used to protect previous communication with that sender, such a mechanism is useful for the recipient to be on the safe side.
-If the group has renewed its group keying material, the time window between the end of the rekeying process and the next loss of security state is safe for recipients, as replayed older messages protected with previous keying material will not be accepted.
+Besides, if the KDC has renewed the group keying material, and the time interval between the end of the rekeying process and the joining of the Client is sufficiently small, that Client is also on the safe side, since replayed older messages protected with the previous keying material will not be accepted.
 
 The KDC must renew the group keying material upon its expiration.
 
