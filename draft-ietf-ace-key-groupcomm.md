@@ -248,6 +248,7 @@ The Authorization Request sent from the Client to the AS is defined in Section 5
   - Optionally, as second element, the role (or CBOR array of roles) that the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s).
 
   In each entry, the encoding of the group or topic identifier (REQ1 in {{req}}) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
+  Note that if the group identifier is not encoded as a text string, there needs to be a mechanism in place at the KDC to match the identifier with the GROUPNAME value defined in {{kdc-if}}.
 
   In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7).
 
@@ -473,7 +474,7 @@ Marco: Isn't it ok as we are doing with the COSE Key in Section 4.2? Then it wor
 
 Upon receiving a request from a Client, the KDC MUST check that it is storing a valid access token from that Client for the group name associated to the endpoint. If that is not the case, i.e. the KDC does not store a valid access token or this is not valid for that Client for the group name, the KDC MUST respond to the Client with a 4.01 (Unauthorized) error message.
 
-## Interface at the KDC
+## Interface at the KDC {#kdc-if}
 
 The KDC is configured with the following resources. Note that the root url-path "ace-group" given here are default names: implementations are not required to use these names, and can define their own instead. The Interface Description (if=) Link Target Attribute value ace.group is registered ({{if-ace-group}}) and can be used to describe this interface.
 
