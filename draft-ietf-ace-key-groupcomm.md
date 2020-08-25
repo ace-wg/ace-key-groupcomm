@@ -239,7 +239,7 @@ The Authorization Request sent from the Client to the AS is defined in Section 5
 
    This value is a CBOR byte string, encoding a CBOR array of one or more  entries.
 
-   By default, each entry is encoded as specified by {{I-D.bormann-core-ace-aif}}. It is up to the application profiles to define and register Toid and Tperm to fit the use case. The object identifier Toid corresponds to the group name, while the permission set Tperm indicates the roles that the client wishes to take in the group.
+   By default, each entry is encoded as specified by {{I-D.bormann-core-ace-aif}}. It is up to the application profiles to define and register Toid and Tperm to fit the use case. The object identifier Toid corresponds to the group name, while the permission set Tperm indicates the roles that the client wishes to take in the group. An example of scope using the AIF format is given in {{cddl-ex-0}}.
 
    Otherwise, each scope entry can be defined as a CBOR array, which contains:
 
@@ -293,6 +293,24 @@ scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 scope = << [ + scope_entry ] >>
 ~~~~~~~~~~~~~~~~~~~~
 {: #cddl-ex title="CDLL definition of scope, using as example group name encoded as tstr and role as tstr" artwork-align="center"}
+
+~~~~~~~~~~~~~~~~~~~~ CDDL
+gname = tstr
+
+permissions = uint . bits roles
+
+roles = &(
+   Requester: 1,
+   Responder: 2,
+   Monitor: 3,
+   Verifier: 4
+)
+
+scope_entry = AIF_Generic<gname, permissions>
+
+scope = << [ + scope_entry ] >>
+~~~~~~~~~~~~~~~~~~~~
+{: #cddl-ex-0 title="Example CDLL definition of scope, using the default Authorization Information Format" artwork-align="center"}
 
 ## Authorization Response {#ssec-authorization-response}
 
