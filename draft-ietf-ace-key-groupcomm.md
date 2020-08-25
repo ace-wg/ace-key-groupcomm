@@ -239,17 +239,15 @@ The Authorization Request sent from the Client to the AS is defined in Section 5
 
    This value is a CBOR byte string, encoding a CBOR array of one or more  entries.
 
-   By default, each entry is encoded as specified by {{I-D.bormann-core-ace-aif}}. It is up to the application profiles to define and register Toid and Tperm to fit the use case. The object identifier Toid corresponds to the group name, while the permission set Tperm indicates the roles that the client wishes to take in the group. An example of scope using the AIF format is given in {{cddl-ex-0}}.
+   By default, each entry is encoded as specified by {{I-D.bormann-core-ace-aif}}. The object identifier Toid corresponds to the group name and MUST be encoded as a tstr. The permission set Tperm indicates the roles that the client wishes to take in the group. It is up to the application profiles to define Tperm (REQ2) and register Toid and Tperm to fit the use case. An example of scope using the AIF format is given in {{cddl-ex-0}}.
 
    Otherwise, each scope entry can be defined as a CBOR array, which contains:
 
-  - As first element, the identifier of the specific group or topic.
+  - As first element, the identifier of the specific group or topic, encoded as a tstr.
 
   - Optionally, as second element, the role (or CBOR array of roles) that the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s).
 
-  In each entry, the encoding of the group or topic identifier (REQ1 in {{req}}) and of the role identifiers (REQ2) is application specific, and part of the requirements for the application profile.
-  Note that if the group identifier is not encoded as a text string, there needs to be a mechanism in place at the KDC to match the identifier with the GROUPNAME value defined in {{kdc-if}}.
-
+  In each entry, the encoding of the role identifiers is application specific, and part of the requirements for the application profile (REQ2).
   In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7).
 
   An example of CDDL definition {{RFC8610}} of scope using the format above, with group name and role identifiers encoded as text strings is given in {{cddl-ex}}.
@@ -401,7 +399,7 @@ The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one 
 
 * The fifth element 'pub_key_enc' parameter is either a CBOR integer indicating the encoding of public keys used in the group identified by 'gname', or has value Null indicating that the KDC does not act as repository of public keys for group members. Its acceptable values are taken from the "CWT Confirmation Method" Registry defined in {{RFC8747}}. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
 
-The CDDL notation {{RFC8610}} of the 'sign_info' parameter formatted as in the response is given below, with gname formatted as a bstr (note that gname can be encoded differently, see REQ1).
+The CDDL notation {{RFC8610}} of the 'sign_info' parameter formatted as in the response is given below.
 
 ~~~~~~~~~~~ CDDL
    sign_info_res = [ + sign_info_entry ]
@@ -480,7 +478,7 @@ The KDC is configured with the following resources. Note that the root url-path 
 
 * /ace-group: this resource indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same resource, these applications will collide, and a mechanism will be needed to differentiate the endpoints.
 
-* /ace-group/GROUPNAME: one sub-resource to /ace-group is implemented for each group the KDC manages. These resources are identified by the group names of the groups the KDC manages (in this example, the group name has value "GROUPNAME").  Each resource contains the symmetric group keying material for that group.  These resources support GET and POST method.
+* /ace-group/GROUPNAME: one sub-resource to /ace-group is implemented for each group the KDC manages. These resources are identified by the group names of the groups the KDC manages (in this example, the group name has value "GROUPNAME"). If the group name and the group identifier in the access token scope (gname in {{ssec-authorization-response}}) don't match, the KDC MUST implement a mechanism to map the gname to the GROUPNAME value in the URI. Each resource contains the symmetric group keying material for that group.  These resources support GET and POST method.
 
 * /ace-group/GROUPNAME/pub-key: this resource contains the public keys of all group members. This resource supports GET and FETCH methods.
 
@@ -1341,7 +1339,7 @@ Expert reviewers should take into consideration the following points:
 
 This section lists the requirements on application profiles of this specification,for the convenience of application profile designers.
 
-* REQ1: Specify the encoding and value of the identifier of group or topic, for scope entries of 'scope' (see {{ssec-authorization-request}}).
+<!-- * REQ1: Specify the encoding and value of the identifier of group or topic, for scope entries of 'scope' (see {{ssec-authorization-request}}). -->
 
 * REQ2: Specify the encoding and value of roles, for scope entries of 'scope' (see {{ssec-authorization-request}}).
 
