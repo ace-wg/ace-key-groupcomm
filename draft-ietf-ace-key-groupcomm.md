@@ -369,7 +369,7 @@ If ’sign_info’ is included in the request, the KDC MAY include the ’sign_i
 
 Note that the CBOR map specified as payload of the 2.01 (Created) response may include further parameters, e.g. according to the signalled transport profile of ACE.
 
-Applications of this specification MAY define alternative specific negotiations of parameter values for signature algorithm and signature keys, if 'sign_info' is not used (OPT2).
+Application profiles of this specification MAY define alternative specific negotiations of parameter values for signature algorithm and signature keys, if 'sign_info' is not used (OPT2).
 
 <!--
 Note that this step could be merged with the following message from the Client to the KDC, namely Key Distribution Request.
