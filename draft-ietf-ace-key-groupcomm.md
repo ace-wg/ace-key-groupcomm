@@ -478,16 +478,16 @@ Upon receiving a request from a Client, the KDC MUST check that it is storing a 
 
 The KDC is configured with the following resources. Note that the root url-path "ace-group" given here are default names: implementations are not required to use these names, and can define their own instead. The Interface Description (if=) Link Target Attribute value ace.group is registered ({{if-ace-group}}) and can be used to describe this interface.
 
-* /ace-group: this resource indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same resource, these applications will collide, and a mechanism will be needed to differentiate the endpoints.
+* /ace-group: this resource is invariant once established and indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same resource, these applications will collide, and a mechanism will be needed to differentiate the endpoints.
 
 * /ace-group/GROUPNAME: one sub-resource to /ace-group is implemented for each group the KDC manages.
 If the value of the GROUPNAME URI path and the group name in the access token scope (gname in {{ssec-authorization-response}}) don't match, the KDC MUST implement a mechanism to map the GROUPNAME value in the URI the group name, to retrieve the right group. Each resource contains the symmetric group keying material for that group.  These resources support GET and POST method.
 
-* /ace-group/GROUPNAME/pub-key: this resource contains the public keys of all group members. This resource supports GET and FETCH methods.
+* /ace-group/GROUPNAME/pub-key: this resource is invariant once established and contains the public keys of all group members. This resource supports GET and FETCH methods.
 
-* /ace-group/GROUPNAME/policies: this resource contains the group policies. This resource supports the GET method.
+* /ace-group/GROUPNAME/policies: this resource is invariant once established and contains the group policies. This resource supports the GET method.
 
-* /ace-group/GROUPNAME/num:  this resource contains the version number for the symmetric group keying material. This sub-resource supports the GET method.
+* /ace-group/GROUPNAME/num:  this resource is invariant once established and contains the version number for the symmetric group keying material. This sub-resource supports the GET method.
 
 * /ace-group/GROUPNAME/nodes/NODENAME: one sub-resource to /ace-group/GROUPNAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). Each resource contains the group and individual keying material for that node. These resources support GET, PUT and DELETE methods.
 
