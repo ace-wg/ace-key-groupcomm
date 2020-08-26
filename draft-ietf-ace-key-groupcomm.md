@@ -443,7 +443,7 @@ When the Client is already a group member, the Client can use the interface at t
 
 * The Client can get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed group rekeying. This is described in {{update-keys}}.
 
-* The Client can retrieve a new individual key, or new input material to derive it. This is described in {{new-keys}}.
+* The Client can retrieve new keying material for itself. This is described in {{new-keys}}.
 
 * The Client can get the public keys of other group members. This is described in {{sec-key-retrieval}}.
 
