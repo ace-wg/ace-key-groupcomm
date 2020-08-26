@@ -478,7 +478,8 @@ The KDC is configured with the following resources. Note that the root url-path 
 
 * /ace-group: this resource indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same resource, these applications will collide, and a mechanism will be needed to differentiate the endpoints.
 
-* /ace-group/GROUPNAME: one sub-resource to /ace-group is implemented for each group the KDC manages. These resources are identified by the group names of the groups the KDC manages (in this example, the group name has value "GROUPNAME"). If the group name and the group identifier in the access token scope (gname in {{ssec-authorization-response}}) don't match, the KDC MUST implement a mechanism to map the gname to the GROUPNAME value in the URI. Each resource contains the symmetric group keying material for that group.  These resources support GET and POST method.
+* /ace-group/GROUPNAME: one sub-resource to /ace-group is implemented for each group the KDC manages.
+If the value of the GROUPNAME URI path and the group name in the access token scope (gname in {{ssec-authorization-response}}) don't match, the KDC MUST implement a mechanism to map the GROUPNAME value in the URI the group name, to retrieve the right group. Each resource contains the symmetric group keying material for that group.  These resources support GET and POST method.
 
 * /ace-group/GROUPNAME/pub-key: this resource contains the public keys of all group members. This resource supports GET and FETCH methods.
 
