@@ -564,8 +564,10 @@ If the request is not formatted correctly (i.e. required fields non received or 
 
 If the KDC stores the group members' public keys, the handler checks if one is included in the the 'client_cred' field, retrieves it and associates it to the access token received, after verifications succeeded. In particular, the KDC verifies:
 
-* that such public key has an acceptable format for the group identified by "GROUPNAME", i.e. it is encoded as expected and is compatible with the signature algorithm and possible associated parameters. If that cannot be verified, it is RECOMMENDED that the handler stops the process and responds with a 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT5).
-* that the signature contained in "client_cred_verify" passes verification. If that cannot be verified, the handler MUST respond with a 4.00 (Bad Request) error message, and if the token was posted (see REQ17) including the 'kdcchallenge' associated to this Client (see {{token-post}}) if it can be retrieved, or otherwise newly generated, in a CBOR map in the payload. This error response MUST also have Content-Format "application/ace+cbor".
+* that such public key has an acceptable format for the group identified by "GROUPNAME", i.e. it is encoded as expected and is compatible with the signature algorithm and possible associated parameters.
+* that the signature contained in "client_cred_verify" passes verification.
+
+If that cannot be verified, it is RECOMMENDED that the handler stops the process and responds with a 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT5).
 
 If one public key is already associated to the access token and to that group, but the 'client_cred' is populated with a different public key, the handler MUST delete the previous one and replace it with this one, after verifying the points above.
 
