@@ -919,8 +919,6 @@ Alternatively, the re-distribution of keying material can be initiated by the KD
 
 Note that these methods of KDC-initiated key distribution have different security properties and require different security associations.
 
-Congestion control mechanisms need to be implemented: see Section 4.7 of {{RFC7252}} and, where Observe is used, Section 4.5.1 of {{RFC7641}}.
-
 ## Retrieval of New Individual Keying Material {#new-keys}
 
 Beside possible expiration, the client may need to communicate to the KDC its need for part of the keying material to be renewed.
