@@ -763,7 +763,8 @@ This resource implements GET, PUT and DELETE handlers.
 
 #### PUT Handler {#node-put}
 
-The PUT handler is used to get the KDC to produce and return individual keying material to protect outgoing messages for the node (identified by "NODENAME") for the group identified by "GROUPNAME".
+The PUT handler is used to get the KDC to produce and return individual keying material to protect outgoing messages for the node (identified by "NODENAME") for the group identified by "GROUPNAME". Application profiles MAY also use this handler to rekey the whole group. (OPT8)
+It is up to the application profiles to specify if this handler supports renewal of individual keying material, renewal of the group keying material or both.
 
 The handler expects a request with empty payload.
 
@@ -771,7 +772,8 @@ The handler verifies that the group name of the /ace-group/GROUPNAME path is a s
 
 Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message.
 
-If verification succeeds, the handler returns a 2.05 (Content) message containing newly-generated individual keying material for the Client, or information enabling the Client to derive it. The payload of the response is formatted as a CBOR map. The specific format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ15) and registered in {{iana-reg}}.
+If verification succeeds, the handler returns a 2.05 (Content) message containing newly-generated keying material for the Client, and/or, if the application profiles requires it (OPT8), starts the comprete group rekeying.
+The payload of the response is formatted as a CBOR map. The specific format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ15) and registered in {{iana-reg}}.
 
 #### GET Handler {#node-get}
 
@@ -919,9 +921,9 @@ Alternatively, the re-distribution of keying material can be initiated by the KD
 
 Note that these methods of KDC-initiated key distribution have different security properties and require different security associations.
 
-## Retrieval of New Individual Keying Material {#new-keys}
+## Requesting a Change of Keying Material {#new-keys}
 
-Beside possible expiration, the client may need to communicate to the KDC its need for part of the keying material to be renewed.
+Beside possible expiration, the client may need to communicate to the KDC its need for part of the keying material to be renewed. Depending on the application profile (OPT8), this can result in renewal of idividual keying material, group keying material, or both.
 For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
 
 To this end, the client performs a Key Renewal Request/Response exchange with the KDC, i.e. it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group name and NODENAME is the node's name, and formatted as defined in {{node-get}}.
@@ -941,7 +943,9 @@ Client                                                    KDC
 
 Note the difference between the Key Distribution Request and the Key Renewal Request: while the first one only triggers distribution (the renewal might have happened independently, e.g. because of expiration), the second one triggers the KDC to produce new individual keying material for the requesting node.
 
+<!--
 Furthermore, policies can be set up so that, upon receiving a Key Renewal Request, the KDC performs a complete group rekeying before or after replying to the client (OPT8).
+-->
 
 ## Retrieval of Public Keys and Roles for Group Members {#sec-key-retrieval}
 
@@ -1409,7 +1413,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * OPT7: Optionally, specify CBOR values to use for abbreviating identifiers of roles in the group or topic (see {{ssec-authorization-request}}).
 
-* OPT8: Optionally, specify policies for the KDC to perform group rekeying after receiving a Key Renewal Request (see {{new-keys}}).
+* OPT8: Optionally, specify for the KDC to perform group rekeying (together or instead of renewing individual keying material) when receiving a Key Renewal Request (see {{new-keys}}).
 
 * OPT9: Optionally, specify the functionalities implemented at the 'control_path' resource hosted at the Client, including message exchange encoding and other details (see {{gid-post}}).
 
