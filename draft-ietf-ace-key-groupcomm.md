@@ -490,7 +490,7 @@ The KDC is configured with the following resources. Note that the root url-path 
 Each application profile of this specification MUST register a Resource Type for the root url-path (REQ7a), and that Resource Type can be used to discover the correct url to access at the KDC. This Resource Type can also be used at the GROUPNAME sub-resource, to indicate different application profiles for different groups.
 The Interface Description (if=) Link Target Attribute value ace.group is registered ({{if-ace-group}}) and can be used to describe this interface.
 
-* /ace-group: this resource is invariant once established and indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same resource, these applications will collide, and a mechanism will be needed to differentiate the endpoints.
+* /ace-group: this resource is invariant once established and indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same resource, these applications will collide, and a mechanism will be needed to differentiate the endpoints. This resource supports FETCH method.
 
 * /ace-group/GROUPNAME: one sub-resource to /ace-group is implemented for each group the KDC manages.
 If the value of the GROUPNAME URI path and the group name in the access token scope (gname in {{ssec-authorization-response}}) don't match, the KDC MUST implement a mechanism to map the GROUPNAME value in the URI the group name, to retrieve the right group. Each resource contains the symmetric group keying material for that group.  These resources support GET and POST method.
@@ -509,7 +509,27 @@ The details for the handlers of each resource are given in the following section
 
 ### ace-group
 
-No handlers are implemented for this resource.
+This resource implements a FETCH handler.
+
+#### FETCH Handler {#ace-group-fetch}
+
+The FETCH handler receives group identifiers and returns the corresponding group names and GROUPNAME URIs.
+
+The handler expects a request with payload formatted as a CBOR map. The payload of this request is a CBOR Map that MUST contain the following fields:
+
+* 'gid', whose value is encoded as a CBOR array, containing zero or more group identifiers. The Client indicates that it wishes to receive the group names and GROUPNAMEs of all groups having these identifiers.
+
+The handler identifies the groups that are secured by the keying material identified by those group identifiers.
+
+Then, the handler returns a 2.05 (Content) message response with payload formatted as a CBOR map that MUST contain the following fields:
+
+* 'gid', whose value is encoded as a CBOR array, containing zero or more group identifiers. The handler indicates that those are the identifiers it is sending group names and GROUPNAMEs for. This CBOR array is a subset of the 'gid' array in the FETCH request.
+
+* 'gname', whose value is encoded as a CBOR array, containing zero or more group names. Each element of index i of this CBOR array corresponds to the element of group identifier i in the 'gid' array.
+
+* 'guri', whose value is encoded as a CBOR array, containing zero or more URIs, each indicating a GROUPNAME resource. Each element of index i of this CBOR array corresponds to the element of group identifier i in the 'gid' array.
+
+If the KDC does not find any group associated with the specified group identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
 ### ace-group/GROUPNAME
 
@@ -826,6 +846,24 @@ Otherwise, the handler checks that the public key specified in the 'client_cred'
 Otherwise, the handler verifies the signature contained in the 'client_cred_verify' field of the request, using the public key specified in the 'client_cred' field. If the signature does not pass verification, the handler MUST respond with a 4.00 (Bad Request) error message. If the KDC cannot retrieve the 'kdcchallenge' associated to this Client (see {{token-post}}), the KDC MUST respond with a 4.00 Bad Request error respons, including a newly generated 'kdcchallenge' in a CBOR map in the payload the payload. This error response MUST also have Content-Format "application/ace+cbor".
 
 If verification succeeds, the handler replaces the old public key of the node NODENAME with the one specified in the 'client_cred' field of the request, and stores it as the new current public key of the node NODENAME, in the list of group members' public keys for the group identified by GROUPNAME. Then, the handler replies with a 2.04 (Changed) response, which does not include a payload.
+
+
+## Retrieval of Group Names and URIs {#retrieval-gnames}
+
+In case the joining node only knows the group identifier of the group it wishes to join, the node can contact the KDC to request the corresponding group name and joining resource URI. The node can request several group identifiers at once. It does so by sending a CoAP FETCH request to the /ace-group endpoint at the KDCformatted as defined in {{ace-group-fetch}}.
+
+{{fig-ace-group-fetch}} gives an overview of the exchanges described above.
+
+
+~~~~~~~~~~~
+Client                                                     KDC
+   |                                                        |
+   |---- Group Name and URI Retrieval: GET /ace-group ----->|
+   |                                                        |
+   |<-Group Name and URI Retrieval Response: 2.05 (Content)-|
+   |                                                        |
+~~~~~~~~~~~
+{: #fig-ace-group-fetch title="Message Flow of Public Key Exchange to Request All Members Public Keys" artwork-align="center"}
 
 ## Joining Exchange {#ssec-key-distribution-exchange}
 
