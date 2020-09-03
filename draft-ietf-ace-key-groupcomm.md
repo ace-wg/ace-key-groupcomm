@@ -486,7 +486,9 @@ Upon receiving a request from a Client, the KDC MUST check that it is storing a 
 
 ## Interface at the KDC {#kdc-if}
 
-The KDC is configured with the following resources. Note that the root url-path "ace-group" given here are default names: implementations are not required to use these names, and can define their own instead. The Interface Description (if=) Link Target Attribute value ace.group is registered ({{if-ace-group}}) and can be used to describe this interface.
+The KDC is configured with the following resources. Note that the root url-path "ace-group" given here are default names: implementations are not required to use these names, and can define their own instead.
+Each application profile of this specification MUST register a Resource Type for the root url-path (REQ7a), and that Resource Type can be used to discover the correct url to access at the KDC. This Resource Type can also be used at the GROUPNAME sub-resource, to indicate different application profiles for different groups.
+The Interface Description (if=) Link Target Attribute value ace.group is registered ({{if-ace-group}}) and can be used to describe this interface.
 
 * /ace-group: this resource is invariant once established and indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same resource, these applications will collide, and a mechanism will be needed to differentiate the endpoints.
 
@@ -1370,6 +1372,8 @@ This section lists the requirements on application profiles of this specificatio
 * REQ5: If used, specify the acceptable values for 'sign_key_parameters' (see {{token-post}}).
 
 * REQ6: If used, specify the acceptable values for 'pub_key_enc' (see {{token-post}}).
+
+* REQ7a: Register a Resource Type for the root url-path (REQ), which is used to discover the correct url to access at the KDC.
 
 * REQ7: Specify the exact format of the 'key' value (see {{gid-post}}).
 
