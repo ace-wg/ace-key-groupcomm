@@ -963,7 +963,7 @@ Note that these methods of KDC-initiated key distribution have different securit
 
 ## Requesting a Change of Keying Material {#new-keys}
 
-Beside possible expiration, the client may need to communicate to the KDC its need for the keying material to be renewed. Depending on the application profile (OPT8), this can result in renewal of idividual keying material, group keying material, or both.
+Beside possible expiration, the client may need to communicate to the KDC its need for the keying material to be renewed, e.g. due to exhaustion of AEAD nonces, if AEAD is used for protecting group communnication. Depending on the application profile (OPT8), this can result in renewal of idividual keying material, group keying material, or both.
 For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
 
 To this end, the client performs a Key Renewal Request/Response exchange with the KDC, i.e. it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group name and NODENAME is the node's name, and formatted as defined in {{node-get}}.
