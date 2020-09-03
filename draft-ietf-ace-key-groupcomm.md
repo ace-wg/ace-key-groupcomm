@@ -493,7 +493,7 @@ The Interface Description (if=) Link Target Attribute value ace.group is registe
 * /ace-group: this resource is invariant once established and indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same resource, these applications will collide, and a mechanism will be needed to differentiate the endpoints. This resource supports FETCH method.
 
 * /ace-group/GROUPNAME: one sub-resource to /ace-group is implemented for each group the KDC manages.
-If the value of the GROUPNAME URI path and the group name in the access token scope (gname in {{ssec-authorization-response}}) don't match, the KDC MUST implement a mechanism to map the GROUPNAME value in the URI the group name, to retrieve the right group. Each resource contains the symmetric group keying material for that group.  These resources support GET and POST method.
+If the value of the GROUPNAME URI path and the group name in the access token scope (gname in {{ssec-authorization-response}}) don't match, the KDC MUST implement a mechanism to map the GROUPNAME value in the URI to the group name, to retrieve the right group (REQ1). Each resource contains the symmetric group keying material for that group.  These resources support GET and POST method.
 
 * /ace-group/GROUPNAME/pub-key: this resource is invariant once established and contains the public keys of all group members. This resource supports GET and FETCH methods.
 
@@ -1399,7 +1399,7 @@ Expert reviewers should take into consideration the following points:
 
 This section lists the requirements on application profiles of this specification,for the convenience of application profile designers.
 
-<!-- * REQ1: Specify the encoding and value of the identifier of group or topic, for scope entries of 'scope' (see {{ssec-authorization-request}}). -->
+* REQ1: If the value of the GROUPNAME URI path and the group name in the access token scope (gname in {{ssec-authorization-response}}) don't match, specify the mechanism to map the GROUPNAME value in the URI to the group name (REQ1) (see {{kdc-if}}).
 
 * REQ2: Specify the encoding and value of roles, for scope entries of 'scope' (see {{ssec-authorization-request}}).
 
