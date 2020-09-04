@@ -517,7 +517,7 @@ The FETCH handler receives group identifiers and returns the corresponding group
 
 The handler expects a request with payload formatted as a CBOR map. The payload of this request is a CBOR Map that MUST contain the following fields:
 
-* 'gid', whose value is encoded as a CBOR array, containing zero or more group identifiers. The Client indicates that it wishes to receive the group names and GROUPNAMEs of all groups having these identifiers.
+* 'gid', whose value is encoded as a CBOR array, containing one or more group identifiers. The Client indicates that it wishes to receive the group names and GROUPNAMEs of all groups having these identifiers.
 
 The handler identifies the groups that are secured by the keying material identified by those group identifiers.
 
@@ -525,9 +525,9 @@ Then, the handler returns a 2.05 (Content) message response with payload formatt
 
 * 'gid', whose value is encoded as a CBOR array, containing zero or more group identifiers. The handler indicates that those are the identifiers it is sending group names and GROUPNAMEs for. This CBOR array is a subset of the 'gid' array in the FETCH request.
 
-* 'gname', whose value is encoded as a CBOR array, containing zero or more group names. Each element of index i of this CBOR array corresponds to the element of group identifier i in the 'gid' array.
+* 'gname', whose value is encoded as a CBOR array, containing zero or more group names. The elements of this array are encoded as text strings. Each element of index i of this CBOR array corresponds to the element of group identifier i in the 'gid' array.
 
-* 'guri', whose value is encoded as a CBOR array, containing zero or more URIs, each indicating a GROUPNAME resource. Each element of index i of this CBOR array corresponds to the element of group identifier i in the 'gid' array.
+* 'guri', whose value is encoded as a CBOR array, containing zero or more URIs, each indicating a GROUPNAME resource.  The elements of this array are encoded as text strings. Each element of index i of this CBOR array corresponds to the element of group identifier i in the 'gid' array.
 
 If the KDC does not find any group associated with the specified group identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
@@ -584,7 +584,7 @@ The handler verifies that the group name of the /ace-group/GROUPNAME path is a s
 If the request is not formatted correctly (i.e. required fields non received or received with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. The response MAY contain a CBOR map in the payload with ace+cbor format, e.g. it could send back 'sign_info_res' with 'pub_key_enc' set to Null if the Client sent its own public key and the KDC is not set to store public keys of the group members. If the request contained unknown or non-expected fields present, the handler MUST silently drop them and continue processing. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT6).
 
 
-If the KDC stores the group members' public keys, the handler checks if one is included in the the 'client_cred' field, retrieves it and associates it to the access token received, after verifications succeeded. In particular, the KDC verifies:
+If the KDC stores the group members' public keys, the handler checks if one is included in the 'client_cred' field, retrieves it and associates it to the access token received, after verifications succeeded. In particular, the KDC verifies:
 
 * that such public key has an acceptable format for the group identified by "GROUPNAME", i.e. it is encoded as expected and is compatible with the signature algorithm and possible associated parameters.
 * that the signature contained in "client_cred_verify" passes verification.
@@ -850,7 +850,8 @@ If verification succeeds, the handler replaces the old public key of the node NO
 
 ## Retrieval of Group Names and URIs {#retrieval-gnames}
 
-In case the joining node only knows the group identifier of the group it wishes to join, the node can contact the KDC to request the corresponding group name and joining resource URI. The node can request several group identifiers at once. It does so by sending a CoAP FETCH request to the /ace-group endpoint at the KDCformatted as defined in {{ace-group-fetch}}.
+In case the joining node only knows the group identifier of the group it wishes to join or about which
+it wishes to get update information from the KDC, the node can contact the KDC to request the corresponding group name and joining resource URI. The node can request several group identifiers at once. It does so by sending a CoAP FETCH request to the /ace-group endpoint at the KDC formatted as defined in {{ace-group-fetch}}.
 
 {{fig-ace-group-fetch}} gives an overview of the exchanges described above.
 
@@ -858,12 +859,13 @@ In case the joining node only knows the group identifier of the group it wishes 
 ~~~~~~~~~~~
 Client                                                     KDC
    |                                                        |
-   |---- Group Name and URI Retrieval: GET /ace-group ----->|
+   |-------- Group Name and URI Retrieval Request: -------->|
+   |                   FETCH /ace-group                     |
    |                                                        |
    |<-Group Name and URI Retrieval Response: 2.05 (Content)-|
    |                                                        |
 ~~~~~~~~~~~
-{: #fig-ace-group-fetch title="Message Flow of Public Key Exchange to Request All Members Public Keys" artwork-align="center"}
+{: #fig-ace-group-fetch title="Message Flow of Group Name and URI Retrieval Request-Response" artwork-align="center"}
 
 ## Joining Exchange {#ssec-key-distribution-exchange}
 
