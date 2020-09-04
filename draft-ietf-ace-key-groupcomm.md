@@ -517,7 +517,7 @@ The FETCH handler receives group identifiers and returns the corresponding group
 
 The handler expects a request with payload formatted as a CBOR map. The payload of this request is a CBOR Map that MUST contain the following fields:
 
-* 'gid', whose value is encoded as a CBOR array, containing one or more group identifiers. The Client indicates that it wishes to receive the group names and GROUPNAMEs of all groups having these identifiers.
+* 'gid', whose value is encoded as a CBOR array, containing one or more group identifiers. The exact encoding of group identifier MUST be specified by the application profile (REQ7b). The Client indicates that it wishes to receive the group names and GROUPNAMEs of all groups having these identifiers.
 
 The handler identifies the groups that are secured by the keying material identified by those group identifiers.
 
@@ -1124,15 +1124,18 @@ This specification defines a number of fields used during the second part of the
  client_cred_verify |   TBD    | byte string   | {{gid-post}}
  pub_keys_repos   |   TBD    | text string         | {{gid-post}}
  control_path | TBD | text string | {{gid-post}}
- gkty          |   TBD    | int / text string   | {{gid-post}}
+ gkty          |   TBD    | integer / text string   | {{gid-post}}
  key          |   TBD    | see "ACE Groupcomm Key" Registry     | {{gid-post}}
- num          |   TBD    | int           | {{gid-post}}
+ num          |   TBD    | integer           | {{gid-post}}
  ace-groupcomm-profile |   TBD    | int           | {{gid-post}}
  exp          |   TBD    | int           | {{gid-post}}
  pub_keys     |   TBD    | byte string   | {{gid-post}}
  peer_roles     |   TBD    | array   | {{gid-post}}
  group_policies      |   TBD    | map           | {{gid-post}}
  mgt_key_material    |   TBD    | byte string   | {{gid-post}}
+ gid          |   TBD    | array   | {{ace-group-fetch}}
+ gname        |   TBD    | array of text string        | {{ace-group-fetch}}
+ guri         |   TBD    | array of text string   | {{ace-group-fetch}}
 
 # Security Considerations {#sec-cons}
 
@@ -1413,7 +1416,9 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ6: If used, specify the acceptable values for 'pub_key_enc' (see {{token-post}}).
 
-* REQ7a: Register a Resource Type for the root url-path (REQ), which is used to discover the correct url to access at the KDC.
+* REQ7a: Register a Resource Type for the root url-path, which is used to discover the correct url to access at the KDC (see {{kdc-if}}).
+
+* REQ7b: Specify the exact encoding of group identifier (see {{ace-group-fetch}}).
 
 * REQ7: Specify the exact format of the 'key' value (see {{gid-post}}).
 
