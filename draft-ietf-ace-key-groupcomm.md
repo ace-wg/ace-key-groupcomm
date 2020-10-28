@@ -1226,13 +1226,7 @@ The following registrations are required for the OSCORE Security Context Paramet
 
    Applications that use this media type: The type is used by authorization servers, clients and resource servers that support the ACE groupcomm framework as specified in \[this document\].
 
-   Additional information:
-
-   Magic number(s): n/a
-
-   File extension(s): .ace-groupcomm
-
-   Macintosh file type code(s): n/a
+   Additional information: n/a
 
    Person & email address to contact for further information:
    <iesg@ietf.org>
