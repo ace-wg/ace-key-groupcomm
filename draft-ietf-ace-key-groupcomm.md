@@ -535,6 +535,8 @@ Then, the handler returns a 2.05 (Content) message response with payload formatt
 
 If the KDC does not find any group associated with the specified group identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
+Note that the KDC only verifies that the node is authorized by the AS to access this resource. Nodes that are not members of the group but are authorized to do signature verifications on the group messages may be allowed to access this resource, if the application needs it.
+
 ### ace-group/GROUPNAME
 
 This resource implements GET and POST handlers.
@@ -549,7 +551,7 @@ The handler expects a request with payload formatted as a CBOR map which MAY con
 
 * 'get_pub_keys', if the Client wishes to receive the public keys of the other nodes in the group from the KDC. This parameter may be present if the KDC stores the public keys of the nodes in the group and distributes them to the Client; it is useless to have here if the set of public keys of the members of the group is known in another way, e.g. it was provided by the AS. Note that including this parameter may result in a large message size for the following response, which can be inconvenient for resource-constrained devices. The parameter's value is a non-empty CBOR array containing two CBOR arrays:
 
-  - Each element of the first array contains one role or a combination of roles for the group identified by "GROUPNAME". The Client indicates that it wishes to receive the public keys of all group members having any of the single roles, or at least all of the roles indicated in any combinations of roles. For example, the array ["role1", "role2+role3"] indicates that the Client wishes to receive all nodes that have at least "role1" or at least both "role2" and "role3". If the array is empty, it means the client wishes to receive the public keys of all nodes.
+  - Each element of the first array contains one role or a combination of roles for the group identified by "GROUPNAME". The Client indicates that it wishes to receive the public keys of all group members having any of the single roles, or at least all of the roles indicated in any combinations of roles. For example, the array \["role1", "role2+role3"\] indicates that the Client wishes to receive all nodes that have at least "role1" or at least both "role2" and "role3". If the array is empty, it means the client wishes to receive the public keys of all nodes.
   - The second array is empty.
 
   The CDDL definition {{RFC8610}} of 'get_pub_keys' is given in {{cddl-ex-getpubkeys}} using as example encoding: node identifier encoded as byte string, role identifier as text string, and combination of roles encoded as a CBOR array of roles. Note that the array ids is empty for this handler, but is not necessarily empty for the value of "get_pub_keys" received by the handler of FETCH to ace-group/GROUPNAME/pub-key (see {{pubkey-fetch}}).
