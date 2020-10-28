@@ -857,7 +857,7 @@ If verification succeeds, the handler replaces the old public key of the node NO
 In case the joining node only knows the group identifier of the group it wishes to join or about which
 it wishes to get update information from the KDC, the node can contact the KDC to request the corresponding group name and joining resource URI. The node can request several group identifiers at once. It does so by sending a CoAP FETCH request to the /ace-group endpoint at the KDC formatted as defined in {{ace-group-fetch}}.
 
-{{fig-ace-group-fetch}} gives an overview of the exchanges described above.
+{{fig-ace-group-fetch}} gives an overview of the exchanges described above, and {{fig-ace-group-fetch-2}} shows an example.
 
 
 ~~~~~~~~~~~
@@ -871,9 +871,30 @@ Client                                                     KDC
 ~~~~~~~~~~~
 {: #fig-ace-group-fetch title="Message Flow of Group Name and URI Retrieval Request-Response" artwork-align="center"}
 
+~~~~~~~~~~~
+Request:
+
+Header: FETCH (Code=0.05)
+Uri-Host: "kdc.example.com"
+Uri-Path: "ace-group"
+Content-Format: "application/ace-groupcomm+cbor"
+Payload (in CBOR diagnostic notation):
+  { "gid": [01, 02]}
+
+Response:
+
+Header: Content (Code=2.05)
+Content-Format: "application/ace-groupcomm+cbor"
+Payload (in CBOR diagnostic notation):
+  { "gid": [01, 02], "gname": ["group1", "group2"],
+    "guri": ["kdc.example.com/g1", "kdc.example.com/g2"]}
+~~~~~~~~~~~
+{: #fig-ace-group-fetch-2 title="Example of Group Name and URI Retrieval Request-Response" artwork-align="center"}
+
+
 ## Joining Exchange {#ssec-key-distribution-exchange}
 
-{{fig-key-distr-join}} gives an overview of the Joining exchange between Client and KDC, when the Client first joins a group.
+{{fig-key-distr-join}} gives an overview of the Joining exchange between Client and KDC, when the Client first joins a group, while {{fig-key-distr-join-2}} shows an example.
 
 ~~~~~~~~~~~
 Client                                                     KDC
@@ -885,6 +906,33 @@ Client                                                     KDC
 ~~~~~~~~~~~
 {: #fig-key-distr-join title="Message Flow of First Exchange for Group Joining" artwork-align="center"}
 
+
+~~~~~~~~~~~
+Request:
+
+Header: POST (Code=0.02)
+Uri-Host: "kdc.example.com"
+Uri-Path: "ace-group"
+Uri-Path: "g1"
+Content-Format: "application/ace-groupcomm+cbor"
+Payload (in CBOR diagnostic notation, with PUB_KEY and SIG being CBOR byte strings):
+  { "scope": << [ "group1", ["sender", "receiver"] >> ,
+    "get_pub_keys": [ ["sender"], []], "client_cred": PUB_KEY
+    "cnonce": h'6df49c495409a9b5', "client_cred_verify": SIG }
+
+Response:
+
+Header: Created (Code=2.01)
+Content-Format: "application/ace-groupcomm+cbor"
+Location-Path: "kdc.example.com"
+Location-Path: "c101"
+Payload (in CBOR diagnostic notation, with KEY being a CBOR byte strings):
+  { "gkty": 13, "key": KEY, "num": 12, "exp": 1609459200,
+    "pub_keys": << PUB_KEY1, PUB_KEY2 >>, "peer_roles": ["sender", ["sender","receiver"]] }
+~~~~~~~~~~~
+{: #fig-key-distr-join-2 title="Example of Group Name and URI Retrieval Request-Response" artwork-align="center"}
+
+
 If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel (REQ16). This can be achieved, for instance, by using a transport profile of ACE. The Joining exchange MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications that must be secured.
 
 The secure communication protocol is REQUIRED to establish the secure channel between Client and KDC by using the proof-of-possession key bound to the access token. As a result, the proof-of-possession to bind the access token to the Client is performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC.
@@ -894,6 +942,7 @@ To join the group, the Client sends a CoAP POST request to the /ace-group/GROUPN
 If the node is joining a group for the first time, and the KDC maintains the public keys of the group members, the Client is REQUIRED to send its own public key and proof of possession ("client_cred" and "client_cred_verify" in {{gid-post}}). The request is only accepted if both public key and proof of possession are provided. If a node re-joins a group with the same access token and the same public key, it can omit to send the public key and the proof of possession, or just omit the proof of possession, and the KDC will be able to retrieve its public key associated to its token for that group (if the key has been discarded, the KDC will reply with 4.00 Bad Request, as specified in {{gid-post}}). If a node re-joins a group but wants to update its own public key, it needs to send both public key and proof of possession.
 
 If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the response defined in {{gid-get}}. Application profiles may define alternative ways of retrieving the keying material, such as sending separate requests to different resources at the KDC ({{gid-get}}, {{pubkey-get}}, {{policies-get}}). After distributing the new group keying material, the KDC MUST increment the version number of the keying material.
+
 
 <!-- Jim 13-07: Section X.X - Define a new cnf method to hold the OSCORE context parameters - should it be a normal COSE_Key or something new just to makes sure that it is different.
 
@@ -942,7 +991,7 @@ It is application dependent and pertaining to the particular message exchange (e
 
 The same Key Distribution Request could also be sent by the Client without being triggered by a failed decryption of a message, if the Client wants to be sure that it has the latest group keying material. If that is the case, the Client will receive from the KDC the same group keying material it already has in memory.
 
-{{fig-key-redistr-req-resp}} gives an overview of the exchange described above.
+{{fig-key-redistr-req-resp}} gives an overview of the exchange described above, while {{fig-key-redistr-req-resp-2}} shows an example.
 
 ~~~~~~~~~~~
 Client                                                          KDC
@@ -954,6 +1003,28 @@ Client                                                          KDC
    |                                                             |
 ~~~~~~~~~~~
 {: #fig-key-redistr-req-resp title="Message Flow of Key Distribution Request-Response" artwork-align="center"}
+
+
+~~~~~~~~~~~
+Request:
+
+Header: GET (Code=0.01)
+Uri-Host: "kdc.example.com"
+Uri-Path: "ace-group"
+Uri-Path: "g1"
+Uri-Path: "nodes"
+Uri-Path: "c101"
+Payload: -
+
+Response:
+
+Header: Content (Code=2.05)
+Content-Format: "application/ace-groupcomm+cbor"
+Payload (in CBOR diagnostic notation, with KEY and IND_KEY being CBOR byte strings,
+  and "ind-key" the profile-specified label for individual keying material):
+  { "gkty": 13, "key": KEY, "num": 12, "ind-key": IND_KEY }
+~~~~~~~~~~~
+{: #fig-key-redistr-req-resp-2 title="Example of Key Distribution Request-Response" artwork-align="center"}
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
 
@@ -974,7 +1045,7 @@ For example, if the Client uses an individual key to protect outgoing traffic an
 
 To this end, the client performs a Key Renewal Request/Response exchange with the KDC, i.e. it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group name and NODENAME is the node's name, and formatted as defined in {{node-get}}.
 
-{{fig-renewal-req-resp}} gives an overview of the exchange described above.
+{{fig-renewal-req-resp}} gives an overview of the exchange described above, while {{fig-renewal-req-resp-2}} shows an example.
 
 ~~~~~~~~~~~
 Client                                                    KDC
@@ -986,6 +1057,27 @@ Client                                                    KDC
    |                                                       |
 ~~~~~~~~~~~
 {: #fig-renewal-req-resp title="Message Flow of Key Renewal Request-Response" artwork-align="center"}
+
+~~~~~~~~~~~
+Request:
+
+Header: PUT (Code=0.03)
+Uri-Host: "kdc.example.com"
+Uri-Path: "ace-group"
+Uri-Path: "g1"
+Uri-Path: "nodes"
+Uri-Path: "c101"
+Payload: -
+
+Response:
+
+Header: Content (Code=2.05)
+Content-Format: "application/ace-groupcomm+cbor"
+Payload (in CBOR diagnostic notation, with IND_KEY being a CBOR byte strings,
+  and "ind-key" the profile-specified label for individual keying material):
+  { "ind-key": IND_KEY }
+~~~~~~~~~~~
+{: #fig-renewal-req-resp-2 title="Example of Key Renewal Request-Response" artwork-align="center"}
 
 Note the difference between the Key Distribution Request and the Key Renewal Request: while the first one only triggers distribution (the renewal might have happened independently, e.g. because of expiration), the second one triggers the KDC to produce new individual keying material for the requesting node.
 
