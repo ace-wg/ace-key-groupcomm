@@ -295,17 +295,6 @@ As in {{I-D.ietf-ace-oauth-authz}}, these parameters are included in the payload
 ~~~~~~~~~~~~~~~~~~~~ CDDL
 gname = tstr
 
-role = tstr
-
-scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
-
-scope = << [ + scope_entry ] >>
-~~~~~~~~~~~~~~~~~~~~
-{: #cddl-ex title="CDLL definition of scope, using as example group name encoded as tstr and role as tstr" artwork-align="center"}
-
-~~~~~~~~~~~~~~~~~~~~ CDDL
-gname = tstr
-
 permissions = uint . bits roles
 
 roles = &(
@@ -320,6 +309,19 @@ scope_entry = AIF_Generic<gname, permissions>
 scope = << [ + scope_entry ] >>
 ~~~~~~~~~~~~~~~~~~~~
 {: #cddl-ex-0 title="Example CDLL definition of scope, using the default Authorization Information Format" artwork-align="center"}
+
+
+~~~~~~~~~~~~~~~~~~~~ CDDL
+gname = tstr
+
+role = tstr
+
+scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
+
+scope = << [ + scope_entry ] >>
+~~~~~~~~~~~~~~~~~~~~
+{: #cddl-ex title="CDLL definition of scope, using as example group name encoded as tstr and role as tstr" artwork-align="center"}
+
 
 ## Authorization Response {#ssec-authorization-response}
 
