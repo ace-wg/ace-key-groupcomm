@@ -105,6 +105,8 @@ This document uses names or identifiers for groups and nodes. Their different me
 
 * "Group identifier" is the identifier of the group keying material. Opposite to group name and GROUPNAME, this identifier changes over time, when the keying material is updated.
 
+* "Node name" is the invariant once established identifier of the node. It is used in the communication between AS, RS and Client to identify a member of the group.
+
 * "NODENAME" is the invariant once established text string used in URIs. NODENAME is used to identify a node in a group.
 
 This document additionally uses the following terminology:
