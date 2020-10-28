@@ -381,9 +381,9 @@ The KDC MUST store the 'kdcchallenge' value associated to the Client at least un
 
 If ’sign_info’ is included in the request, the KDC MAY include the ’sign_info’ parameter defined in {{sign-info}}, with the same encoding. Note that the field 'id' takes the value of the group name for which the 'sign_info_entry' applies to.
 
-Note that the CBOR map specified as payload of the 2.01 (Created) response may include further parameters, e.g. according to the signalled transport profile of ACE.
+Note that the CBOR map specified as payload of the 2.01 (Created) response may include further parameters, e.g. according to the signalled transport profile of ACE. Application profiles MAY define the additional parameters to use within this exchange (OPT2b).
 
-Application profiles of this specification MAY define alternative specific negotiations of parameter values for signature algorithm and signature keys, if 'sign_info' is not used (OPT2).
+Application profiles of this specification MAY define alternative specific negotiations of parameter values for signature algorithm and signature keys, if 'sign_info' is not used (OPT2a).
 
 <!--
 Note that this step could be merged with the following message from the Client to the KDC, namely Key Distribution Request.
@@ -1446,7 +1446,9 @@ This section lists the requirements on application profiles of this specificatio
 
 * OPT1: Optionally, specify the encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used (see {{gid-post}}).
 
-* OPT2: Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' is not used (see {{token-post}}).
+* OPT2a: Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' is not used (see {{token-post}}).
+
+* OPT2b: Optionally, specify the additional parameters used in the Token Post exchange (see {{token-post}}).
 
 * OPT3: Optionally, specify the encoding of 'pub\_keys\_repos' if the default is not used (see {{gid-post}}).
 
