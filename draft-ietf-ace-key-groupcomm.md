@@ -900,7 +900,7 @@ Uri-Host: "kdc.example.com"
 Uri-Path: "ace-group"
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
-  { "gid": [01, 02]}
+  { "gid": [01, 02] }
 
 Response:
 
@@ -908,7 +908,7 @@ Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
   { "gid": [01, 02], "gname": ["group1", "group2"],
-    "guri": ["kdc.example.com/g1", "kdc.example.com/g2"]}
+    "guri": ["kdc.example.com/g1", "kdc.example.com/g2"] }
 ~~~~~~~~~~~
 {: #fig-ace-group-fetch-2 title="Example of Group Name and URI Retrieval Request-Response" artwork-align="center"}
 
@@ -937,8 +937,8 @@ Uri-Path: "ace-group"
 Uri-Path: "g1"
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation, with PUB_KEY and SIG being CBOR byte strings):
-  { "scope": << [ "group1", ["sender", "receiver"] >> ,
-    "get_pub_keys": [ ["sender"], []], "client_cred": PUB_KEY
+  { "scope": << [ "group1", ["sender", "receiver"] ] >> ,
+    "get_pub_keys": [["sender"], []], "client_cred": PUB_KEY
     "cnonce": h'6df49c495409a9b5', "client_cred_verify": SIG }
 
 Response:
@@ -949,7 +949,8 @@ Location-Path: "kdc.example.com"
 Location-Path: "c101"
 Payload (in CBOR diagnostic notation, with KEY being a CBOR byte strings):
   { "gkty": 13, "key": KEY, "num": 12, "exp": 1609459200,
-    "pub_keys": << PUB_KEY1, PUB_KEY2 >>, "peer_roles": ["sender", ["sender","receiver"]] }
+    "pub_keys": << [ PUB_KEY1, PUB_KEY2 ] >>,
+    "peer_roles": ["sender", ["sender", "receiver"]] }
 ~~~~~~~~~~~
 {: #fig-key-distr-join-2 title="Example of Group Name and URI Retrieval Request-Response" artwork-align="center"}
 
@@ -1041,7 +1042,7 @@ Response:
 
 Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
-Payload (in CBOR diagnostic notation, with KEY and IND_KEY being CBOR byte strings,
+Payload (in CBOR diagnostic notation, with KEY and IND_KEY being CBOR byte string,
   and "ind-key" the profile-specified label for individual keying material):
   { "gkty": 13, "key": KEY, "num": 12, "ind-key": IND_KEY }
 ~~~~~~~~~~~
