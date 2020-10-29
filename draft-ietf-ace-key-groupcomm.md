@@ -1163,6 +1163,7 @@ Uri-Host: "kdc.example.com"
 Uri-Path: "ace-group"
 Uri-Path: "g1"
 Uri-Path: "pub-key"
+Content-Format: "application/ace-groupcomm+cbor"
 Payload:
   { "get_pub_keys": [[], ["c3"]] }
 
@@ -1184,7 +1185,7 @@ To this end, the Client performs a Public Key Update Request/Response exchange w
 
 The request is formatted as specified in {{node-pub-key-post}}.
 
-Figure {{fig-pub-key-update-req-resp}} gives an overview of the exchange described above,, while {{fig-pub-key-update-req-resp-2}} shows an example.
+Figure {{fig-pub-key-update-req-resp}} gives an overview of the exchange described above, while {{fig-pub-key-update-req-resp-2}} shows an example.
 
 ~~~~~~~~~~~
 Client                                                           KDC
@@ -1208,6 +1209,7 @@ Uri-Path: "g1"
 Uri-Path: "nodes"
 Uri-Path: "c101"
 Uri-Path: "pub-key"
+Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation, with PUB_KEY and SIG being CBOR byte strings):
   { "client_cred": PUB_KEY, "cnonce": h'9ff7684414affcc8',
     "client_cred_verify": SIG }
@@ -1215,7 +1217,6 @@ Payload (in CBOR diagnostic notation, with PUB_KEY and SIG being CBOR byte strin
 Response:
 
 Header: Changed (Code=2.04)
-Content-Format: "application/ace-groupcomm+cbor"
 Payload: -
 ~~~~~~~~~~~
 {: #fig-pub-key-update-req-resp-2 title="Example of Public Key Update Request-Response" artwork-align="center"}
@@ -1229,7 +1230,7 @@ Additionally, after updating its own public key, a group member MAY send a numbe
 
 A node in the group can contact the KDC to retrieve the current group policies, by sending a CoAP GET request to the /ace-group/GROUPNAME/policies endpoint at the KDC, where GROUPNAME is the group name, and formatted as defined in {{policies-get}}
 
-{{fig-policies}} gives an overview of the exchange described above.
+{{fig-policies}} gives an overview of the exchange described above, while {{fig-policies-2}} shows an example.
 
 ~~~~~~~~~~~
 Client                                                   KDC
@@ -1241,11 +1242,31 @@ Client                                                   KDC
 ~~~~~~~~~~~
 {: #fig-policies title="Message Flow of Policies Request-Response" artwork-align="center"}
 
+
+~~~~~~~~~~~
+Request:
+
+Header: GET (Code=0.01)
+Uri-Host: "kdc.example.com"
+Uri-Path: "ace-group"
+Uri-Path: "g1"
+Uri-Path: "policies"
+Payload: -
+
+Response:
+
+Header: Content (Code=2.05)
+Content-Format: "application/ace-groupcomm+cbor"
+Payload(in CBOR diagnostic notation):
+  { "group_policies": {"exp-delta": 120} }
+~~~~~~~~~~~
+{: #fig-policies-2 title="Example of Policies Request-Response" artwork-align="center"}
+
 ## Retrieval of Keying Material Version {#key-version}
 
 A node in the group can contact the KDC to request information about the version number of the symmetric group keying material, by sending a CoAP GET request to the /ace-group/GROUPNAME/num endpoint at the KDC, where GROUPNAME is the group name, formatted as defined in {{num-get}}. In particular, the version is incremented by the KDC every time the group keying material is renewed, before it's distributed to the group members.
 
-{{fig-version}} gives an overview of the exchange described above.
+{{fig-version}} gives an overview of the exchange described above, while {{fig-version-2}} shows an example.
 
 ~~~~~~~~~~~
 Client                                                    KDC
@@ -1257,6 +1278,25 @@ Client                                                    KDC
 ~~~~~~~~~~~
 {: #fig-version title="Message Flow of Version Request-Response" artwork-align="center"}
 
+
+~~~~~~~~~~~
+Request:
+
+Header: GET (Code=0.01)
+Uri-Host: "kdc.example.com"
+Uri-Path: "ace-group"
+Uri-Path: "g1"
+Uri-Path: "num"
+Payload: -
+
+Response:
+
+Header: Content (Code=2.05)
+Content-Format: text/plain
+Payload(in CBOR diagnostic notation):
+  13
+~~~~~~~~~~~
+{: #fig-version-2 title="Example of Version Request-Response" artwork-align="center"}
 
 ## Group Leaving Request ## {#ssec-group-leaving}
 
