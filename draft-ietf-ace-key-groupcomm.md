@@ -1111,7 +1111,7 @@ Furthermore, policies can be set up so that, upon receiving a Key Renewal Reques
 
 In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to request public keys and roles of either all group members or a specified subset, by sending a CoAP GET or FETCH request to the /ace-group/GROUPNAME/pub-key endpoint at the KDC, where GROUPNAME is the group name, and formatted as defined in {{pubkey-get}} and {{pubkey-fetch}}.
 
-{{fig-public-key-1}} and {{fig-public-key-2}} give an overview of the exchanges described above.
+{{fig-public-key-1}} and {{fig-public-key-2}} give an overview of the exchanges described above, while {{fig-public-key-3}} and {{fig-public-key-4}} show an example for each exchange.
 
 
 ~~~~~~~~~~~
@@ -1124,6 +1124,25 @@ Client                                                     KDC
 ~~~~~~~~~~~
 {: #fig-public-key-1 title="Message Flow of Public Key Exchange to Request All Members Public Keys" artwork-align="center"}
 
+~~~~~~~~~~~
+Request:
+
+Header: GET (Code=0.01)
+Uri-Host: "kdc.example.com"
+Uri-Path: "ace-group"
+Uri-Path: "g1"
+Uri-Path: "pub-key"
+Payload: -
+
+Response:
+
+Header: Content (Code=2.05)
+Content-Format: "application/ace-groupcomm+cbor"
+Payload (in CBOR diagnostic notation):
+  { "pub_keys": << [ PUB_KEY1, PUB_KEY2, PUB_KEY3 ] >>,
+    "peer_roles": ["sender", ["sender", "receiver"], "receiver"] }
+~~~~~~~~~~~
+{: #fig-public-key-3 title="Example of Public Key Exchange to Request All Members Public Keys" artwork-align="center"}
 
 ~~~~~~~~~~~
 Client                                                      KDC
@@ -1135,6 +1154,28 @@ Client                                                      KDC
 ~~~~~~~~~~~
 {: #fig-public-key-2 title="Message Flow of Public Key Exchange to Request Specific Members Public Keys" artwork-align="center"}
 
+
+~~~~~~~~~~~
+Request:
+
+Header: FETCH (Code=0.05)
+Uri-Host: "kdc.example.com"
+Uri-Path: "ace-group"
+Uri-Path: "g1"
+Uri-Path: "pub-key"
+Payload:
+  { "get_pub_keys": [[], ["c3"]] }
+
+Response:
+
+Header: Content (Code=2.05)
+Content-Format: "application/ace-groupcomm+cbor"
+Payload (in CBOR diagnostic notation):
+  { "pub_keys": << [ PUB_KEY3 ] >>,
+    "peer_roles": ["receiver"] }
+~~~~~~~~~~~
+{: #fig-public-key-4 title="Example of Public Key Exchange to Request Specific Members Public Keys" artwork-align="center"}
+
 ## Update of Public Key {#update-pub-key}
 
 In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to upload a new public key to use in the group, and replace the currently stored one.
@@ -1143,7 +1184,7 @@ To this end, the Client performs a Public Key Update Request/Response exchange w
 
 The request is formatted as specified in {{node-pub-key-post}}.
 
-Figure {{fig-pub-key-update-req-resp}} gives an overview of the exchange described above.
+Figure {{fig-pub-key-update-req-resp}} gives an overview of the exchange described above,, while {{fig-pub-key-update-req-resp-2}} shows an example.
 
 ~~~~~~~~~~~
 Client                                                           KDC
@@ -1155,6 +1196,29 @@ Client                                                           KDC
 |                                                                 |
 ~~~~~~~~~~~
 {: #fig-pub-key-update-req-resp title="Message Flow of Public Key Update Request-Response" artwork-align="center"}
+
+
+~~~~~~~~~~~
+Request:
+
+Header: POST (Code=0.02)
+Uri-Host: "kdc.example.com"
+Uri-Path: "ace-group"
+Uri-Path: "g1"
+Uri-Path: "nodes"
+Uri-Path: "c101"
+Uri-Path: "pub-key"
+Payload (in CBOR diagnostic notation, with PUB_KEY and SIG being CBOR byte strings):
+  { "client_cred": PUB_KEY, "cnonce": h'9ff7684414affcc8',
+    "client_cred_verify": SIG }
+
+Response:
+
+Header: Changed (Code=2.04)
+Content-Format: "application/ace-groupcomm+cbor"
+Payload: -
+~~~~~~~~~~~
+{: #fig-pub-key-update-req-resp-2 title="Example of Public Key Update Request-Response" artwork-align="center"}
 
 If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a group member updating its own public key. To this end, the KDC uses the message format of the response defined in {{gid-get}}. Application profiles may define alternative ways of retrieving the keying material, such as sending separate requests to different resources at the KDC ({{gid-get}}, {{pubkey-get}}, {{policies-get}}).
 The KDC MUST increment the version number of the current keying material, before distributing the newly generated keying material to the group. After that, the KDC SHOULD store the distributed keying material in persistent storage.
