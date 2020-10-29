@@ -266,15 +266,13 @@ The Authorization Request sent from the Client to the AS is defined in Section 5
 
 * 'audience', with an identifier of a KDC.
 
-* 'req_cnf', as defined in Section 3.1 of {{I-D.ietf-ace-oauth-params}}, optionally containing the public key or a reference to the public key of the Client, if it wishes to communicate that to the AS.
-
 <!--
 Peter 30-07: Question: is this a certificate identifier, or the public key extracted from the certificate, or a hash?????
 
 Marco: It is just as per ACE. See Sections 3.2 and 3.4 of draft-ietf-ace-cwt-proof-of-possession-03
 -->
 
-Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, can be included if necessary.
+As defined in {{I-D.ietf-ace-oauth-authz}}, other additional parameters can be included if necessary.
 
 <!--
 Marco 27-02: “scope” should include a list of identifiers. One can ask authorization for joining multiple groups in a single Authorization Request, so getting a single Access Token.
@@ -290,9 +288,6 @@ Marco: In principle yes, if you consider a logical audience as the GM/Broker at 
 
 Should we discuss this in the draft?
 -->
-
-
-As in {{I-D.ietf-ace-oauth-authz}}, these parameters are included in the payload, which is formatted as a CBOR map. The Content-Format "application/ace+cbor" defined in Section 8.14 of {{I-D.ietf-ace-oauth-authz}} is used.
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
 gname = tstr
@@ -327,21 +322,14 @@ scope = << [ + scope_entry ] >>
 
 ## Authorization Response {#ssec-authorization-response}
 
-The Authorization Response sent from the AS to the Client is defined in Section 5.6.2 of {{I-D.ietf-ace-oauth-authz}} and MUST contain the following parameters:
+The Authorization Response sent from the AS to the Client is defined in Section 5.6.2 of {{I-D.ietf-ace-oauth-authz}}.
+Note that the parameter 'expires_in' MAY be omitted if the application defines
+how the expiration time is communicated to the Client via other
+means, or if it establishes a default value.
 
-* 'access_token', containing the proof-of-possession access token.
+Additionally, when included, the following parameter MUST have the corresponding values:
 
-* 'cnf' if symmetric keys are used, not present if asymmetric keys are used. This parameter is defined in Section 3.2 of {{I-D.ietf-ace-oauth-params}} and contains the symmetric proof-of-possession key that the Client is supposed to use with the KDC.
-
-* 'rs_cnf' if asymmetric keys are used, not present if symmetric keys are used. This parameter is defined in Section 3.2 of {{I-D.ietf-ace-oauth-params}} and contains information about the public key of the KDC.
-
-* 'expires_in', contains the lifetime in seconds of the access token. This parameter MAY be omitted if the application defines how the expiration time is communicated to the Client via other means, or if it establishes a default value.
-
-Additionally, the Authorization Response MAY contain the following parameters, which, if included, MUST have the corresponding values:
-
-* 'scope' containing the scope the AS grants access to. This parameter has the same format and encoding of 'scope' in the Authorization Request, defined in {{ssec-authorization-request}}. If this parameter is not present the granted scope is equal to the one requested in {{ssec-authorization-request}}}.
-
-Other additional parameters as defined in {{I-D.ietf-ace-oauth-authz}}, if necessary.
+* 'scope' has the same format and encoding of 'scope' in the Authorization Request, defined in {{ssec-authorization-request}}. If this parameter is not present the granted scope is equal to the one requested in {{ssec-authorization-request}}}.
 
 The proof-of-possession access token (in 'access_token' above) MUST contain the following parameters:
 
@@ -352,8 +340,6 @@ The proof-of-possession access token (in 'access_token' above) MUST contain the 
 * a scope claim (see for example 'scope' registered in Section 8.13 of {{I-D.ietf-ace-oauth-authz}} for CWT). This claim has the same encoding as 'scope' parameter above. Additionally, this claim has the same value of the 'scope' parameter if the parameter is present in the message, or it takes the value of 'scope' in the Authorization Request otherwise.
 
 The access token MAY additionally contain other claims that the transport profile of ACE requires, or other optional parameters.
-
-As in {{I-D.ietf-ace-oauth-authz}}, these parameters are included in the payload, which is formatted as a CBOR map. The Content-Format "application/ace+cbor" is used.
 
 When receiving an Authorization Request from a Client that was previously authorized, and for which the AS still owns a valid non-expired access token, the AS MAY reply with that token. Note that it is up to application profiles of ACE to make sure that re-posting the same token does not cause re-use of keying material between nodes (for example, that is done with the use of random nonces in {{I-D.ietf-ace-oscore-profile}}).
 
