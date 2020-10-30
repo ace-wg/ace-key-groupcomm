@@ -345,9 +345,9 @@ When receiving an Authorization Request from a Client that was previously author
 
 ## Token Post {#token-post}
 
-The Client sends a CoAP POST request including the access token to the KDC, as specified in Section 5.8.1 of {{I-D.ietf-ace-oauth-authz}}. If the specific transport profile of ACE defines it, the Client MAY use a different endpoint than /authz-info at the KDC to post the access token to.
+The Client sends a CoAP POST request including the access token to the KDC, as specified in Section 5.8.1 of {{I-D.ietf-ace-oauth-authz}}.
 
-Optionally, the Client might want to request encoding information about the public keys in the group, used for source authentication, as well as any other group parameters.  The joining node MAY ask for this information from the KDC in the same message it uses to POST the token to the RS.
+This request differs from the one defined in {{I-D.ietf-ace-oauth-authz}}, because it allows to transport additional encoding information about the public keys in the group, used for source authentication, as well as any other group parameters.  The joining node MAY ask for this information from the KDC in the same message it uses to POST the token to the RS.
 
 The payload of the message MUST be formatted as a CBOR map including the access token.
 
