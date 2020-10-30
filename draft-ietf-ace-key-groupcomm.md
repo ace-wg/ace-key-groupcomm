@@ -481,9 +481,10 @@ Each application profile of this specification MUST register a Resource Type for
 The Interface Description (if=) Link Target Attribute value ace.group is registered ({{if-ace-group}}) and can be used to describe this interface.
 
 * /ace-group: this resource is invariant once established and indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same resource, these applications will collide, and a mechanism will be needed to differentiate the endpoints. This resource supports FETCH method.
+
 * /ace-group/GROUPNAME: one sub-resource to /ace-group is implemented for each group the KDC manages.
 
-If the value of the GROUPNAME URI path and the group name in the access token scope (gname in {{ssec-authorization-response}}) don't match, the KDC MUST implement a mechanism to map the GROUPNAME value in the URI to the group name, to retrieve the right group (REQ1). Each resource contains the symmetric group keying material for that group.  These resources support GET and POST method.
+  If the value of the GROUPNAME URI path and the group name in the access token scope (gname in {{ssec-authorization-response}}) don't match, the KDC MUST implement a mechanism to map the GROUPNAME value in the URI to the group name, to retrieve the right group (REQ1). Each resource contains the symmetric group keying material for that group.  These resources support GET and POST method.
 
 * /ace-group/GROUPNAME/pub-key: this resource is invariant once established and contains the public keys of all group members. This resource supports GET and FETCH methods.
 
@@ -494,6 +495,8 @@ If the value of the GROUPNAME URI path and the group name in the access token sc
 * /ace-group/GROUPNAME/nodes/NODENAME: one sub-resource to /ace-group/GROUPNAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). Each resource contains the group and individual keying material for that node. These resources support GET, PUT and DELETE methods.
 
 * /ace-group/GROUPNAME/nodes/NODENAME/pub-key: one sub-resource to /ace-group/GROUPNAME/nodes/NODENAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). Each resource contains the individual public keying material for that node. These resources support the POST method.
+
+It is REQUIRED of the application profiles of this specification to define what operations (i.e. CoAP methods) are allowed on each resource, for each role defined in {{ssec-authorization-request}}, REQ2 (REQ7aa).
 
 The details for the handlers of each resource are given in the following sections. These endpoints are used to perform the operations introduced in {{key-distr}}.
 
@@ -1624,6 +1627,8 @@ This section lists the requirements on application profiles of this specificatio
 * REQ6: If used, specify the acceptable values for 'pub_key_enc' (see {{token-post}}).
 
 * REQ7a: Register a Resource Type for the root url-path, which is used to discover the correct url to access at the KDC (see {{kdc-if}}).
+
+* REQ7aa: Define what operations (i.e. CoAP methods) are allowed on each resource, for each role defined in REQ2 (see {{token-post}}).
 
 * REQ7b: Specify the exact encoding of group identifier (see {{ace-group-fetch}}).
 
