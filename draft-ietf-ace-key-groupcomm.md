@@ -1074,10 +1074,11 @@ Note that these methods of KDC-initiated key distribution have different securit
 
 ## Requesting a Change of Keying Material {#new-keys}
 
-Beside possible expiration, the client may need to communicate to the KDC its need for the keying material to be renewed, e.g. due to exhaustion of AEAD nonces, if AEAD is used for protecting group communnication. Depending on the application profile (OPT8), this can result in renewal of idividual keying material, group keying material, or both.
+Beside possible expiration, the client may need to communicate to the KDC its need for the keying material to be renewed, e.g. due to exhaustion of AEAD nonces, if AEAD is used for protecting group communnication. Depending on the application profile (OPT8), this can result in renewal of individual keying material, group keying material, or both.
+
 For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
 
-To this end, the client performs a Key Renewal Request/Response exchange with the KDC, i.e. it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group name and NODENAME is the node's name, and formatted as defined in {{node-get}}.
+To this end, the client performs a Key Renewal Request/Response exchange with the KDC, i.e. it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group name and NODENAME is the node's node name, and formatted as defined in {{node-get}}.
 
 {{fig-renewal-req-resp}} gives an overview of the exchange described above, while {{fig-renewal-req-resp-2}} shows an example.
 
@@ -1107,8 +1108,9 @@ Response:
 
 Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
-Payload (in CBOR diagnostic notation, with IND_KEY being a CBOR byte strings,
-  and "ind-key" the profile-specified label for individual keying material):
+Payload (in CBOR diagnostic notation, with IND_KEY being
+         a CBOR byte string, and "ind-key" the profile-specified
+         label for individual keying material):
   { "ind-key": IND_KEY }
 ~~~~~~~~~~~
 {: #fig-renewal-req-resp-2 title="Example of Key Renewal Request-Response" artwork-align="center"}
@@ -1193,7 +1195,7 @@ Payload (in CBOR diagnostic notation):
 
 In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to upload a new public key to use in the group, and replace the currently stored one.
 
-To this end, the Client performs a Public Key Update Request/Response exchange with the KDC, i.e. it sends a CoAP POST request to the /ace-group/GROUPNAME/nodes/NODENAME/pub-key endpoint at the KDC, where GROUPNAME is the group name and NODENAME is the node's name.
+To this end, the Client performs a Public Key Update Request/Response exchange with the KDC, i.e. it sends a CoAP POST request to the /ace-group/GROUPNAME/nodes/NODENAME/pub-key endpoint at the KDC, where GROUPNAME is the group name and NODENAME is the node's node name.
 
 The request is formatted as specified in {{node-pub-key-post}}.
 
@@ -1222,7 +1224,8 @@ Uri-Path: "nodes"
 Uri-Path: "c101"
 Uri-Path: "pub-key"
 Content-Format: "application/ace-groupcomm+cbor"
-Payload (in CBOR diagnostic notation, with PUB_KEY and SIG being CBOR byte strings):
+Payload (in CBOR diagnostic notation, with PUB_KEY
+         and SIG being CBOR byte strings):
   { "client_cred": PUB_KEY, "cnonce": h'9ff7684414affcc8',
     "client_cred_verify": SIG }
 
@@ -1312,7 +1315,7 @@ Payload(in CBOR diagnostic notation):
 
 ## Group Leaving Request ## {#ssec-group-leaving}
 
-A node can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/GROUPNAME/nodes/NODENAME at the KDC, where GROUPNAME is the group name and NODENAME is the node's name, formatted as defined in {{node-delete}}
+A node can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/GROUPNAME/nodes/NODENAME at the KDC, where GROUPNAME is the group name and NODENAME is the node's node name, formatted as defined in {{node-delete}}
 
 <!-- Jim 13-07: Section 5.2 - What is the message to leave - can I leave one scope but not another?  Can I just give up a role?
 
@@ -1330,7 +1333,7 @@ This section describes the different scenarios according to which a node ends up
 
 If the application requires forward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members but the leaving node, using the message format of the Key Distribution Response (see {{update-keys}}). Application profiles may define alternative message formats. Before distributing the new group keying material, the KDC MUST increment the version number of the keying material.
 
-Note that, after having left the group, a node may wish to join it again. Then, as long as the node is still authorized to join the group, i.e. it still has a valid access token, it can re-request to join the group directly to the KDC without needing to retrieve a new access token from the AS. This means that the KDC might decide to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
+Note that, after having left the group, a node may wish to join it again. Then, as long as the node is still authorized to join the group, i.e. it still has a valid access token, it can request to re-join the group directly to the KDC without needing to retrieve a new access token from the AS. This means that the KDC might decide to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
 
 A node may be evicted from the group in the following cases.
 
@@ -1352,7 +1355,7 @@ This specification defines a number of fields used during the second part of the
  Name         | CBOR Key | CBOR Type     |   Reference
 --------------|----------|---------------|---------------
  scope        |   TBD    | byte string   | {{gid-post}}
- get_pub_keys |   TBD    | array / null  | {{gid-post}}, {{pubkey-fetch}}
+ get_pub_keys |   TBD    | array / simple value  | {{gid-post}}, {{pubkey-fetch}}
  client_cred  |   TBD    | byte string   | {{gid-post}}
  cnonce       |   TBD    | byte string   | {{gid-post}}
  client_cred_verify |   TBD    | byte string   | {{gid-post}}
@@ -1360,7 +1363,7 @@ This specification defines a number of fields used during the second part of the
  control_path | TBD | text string | {{gid-post}}
  gkty          |   TBD    | integer / text string   | {{gid-post}}
  key          |   TBD    | see "ACE Groupcomm Key" Registry     | {{gid-post}}
- num          |   TBD    | integer           | {{gid-post}}
+ num          |   TBD    | int           | {{gid-post}}
  ace-groupcomm-profile |   TBD    | int           | {{gid-post}}
  exp          |   TBD    | int           | {{gid-post}}
  pub_keys     |   TBD    | byte string   | {{gid-post}}
@@ -1368,12 +1371,13 @@ This specification defines a number of fields used during the second part of the
  group_policies      |   TBD    | map           | {{gid-post}}
  mgt_key_material    |   TBD    | byte string   | {{gid-post}}
  gid          |   TBD    | array   | {{ace-group-fetch}}
- gname        |   TBD    | array of text string        | {{ace-group-fetch}}
- guri         |   TBD    | array of text string   | {{ace-group-fetch}}
+ gname        |   TBD    | array of text strings        | {{ace-group-fetch}}
+ guri         |   TBD    | array of text strings   | {{ace-group-fetch}}
 
 # Security Considerations {#sec-cons}
 
 When a Client receives a message from a sender for the first time, it needs to have a mechanism in place to avoid replay, e.g. Appendix B.2 of {{RFC8613}}. In case the Client rebooted and lost the security state used to protect previous communication with that sender, such a mechanism is useful for the recipient to be on the safe side.
+
 Besides, if the KDC has renewed the group keying material, and the time interval between the end of the rekeying process and the joining of the Client is sufficiently small, that Client is also on the safe side, since replayed older messages protected with the previous keying material will not be accepted.
 
 The KDC must renew the group keying material upon its expiration.
