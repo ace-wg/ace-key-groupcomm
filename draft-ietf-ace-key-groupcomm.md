@@ -1053,10 +1053,11 @@ Response:
 
 Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
-Payload (in CBOR diagnostic notation, with KEY being
-         a CBOR byte string; the individual keying material
-         is specified inside KEY):
-  { "gkty": 13, "key": KEY, "num": 12 }
+Payload (in CBOR diagnostic notation,
+         with KEY and IND_KEY being CBOR byte strings,
+         and "ind-key" the profile-specified label
+         for individual keying material):
+  { "gkty": 13, "key": KEY, "num": 12, "ind-key": IND_KEY }
 ~~~~~~~~~~~
 {: #fig-key-redistr-req-resp-2 title="Example of Key Distribution Request-Response" artwork-align="center"}
 
