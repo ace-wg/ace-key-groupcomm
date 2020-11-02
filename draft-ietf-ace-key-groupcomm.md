@@ -47,7 +47,6 @@ normative:
   I-D.ietf-cose-rfc8152bis-struct:
   I-D.ietf-cose-rfc8152bis-algs:
   I-D.ietf-ace-oauth-authz:
-  I-D.ietf-ace-oauth-params:
   I-D.ietf-core-oscore-groupcomm:
   COSE.Algorithms:
     author:
