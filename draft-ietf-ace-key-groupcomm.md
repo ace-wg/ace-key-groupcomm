@@ -849,14 +849,14 @@ The handler expects a request with method DELETE (and empty payload).
 
 The handler verifies that the group name of the /ace-group/GROUPNAME
 path is a subset of the 'scope' stored in the access token associated
-to this client, identified by "NODENAME". The KDC also verifies that the roles the client is granted in the group allow it to perform this operation on this resource (REQ7aa). If either verification fails, the
+to this client, identified by "NODENAME". If the verification fails, the
 KDC MUST respond with a 4.01 (Unauthorized) error message.
 
 The handler also verifies that the node sending the request and the node name used in the Uri-Path match. If that is not the case, the handler responds with a 4.01 (Unauthorized) error response.
 
 Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If verification succeeds, the handler removes the client from the group identified by "GROUPNAME", for specific roles if roles were specified in the 'scope' field, or for all roles. That includes removing the public key of the client if the KDC keep tracks of that. Then, the handler delete the sub-resource nodes/NODENAME and returns a 2.02 (Deleted) message with empty payload.
+If verification succeeds, the handler removes the client from the group identified by "GROUPNAME". That includes removing the public key of the client if the KDC keep tracks of that. Then, the handler delete the sub-resource nodes/NODENAME and returns a 2.02 (Deleted) message with empty payload.
 
 ### ace-group/GROUPNAME/nodes/NODENAME/pub-key
 
