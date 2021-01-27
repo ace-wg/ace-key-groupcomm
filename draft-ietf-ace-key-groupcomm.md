@@ -584,7 +584,7 @@ get_pub_keys = null / [ [ *(role / comb_role) ], [ *id ] ]
 
 * 'pub_keys_repos', can be present if a certificate is present in the 'client_cred' field, with value the URI of the certificate of the Client. This parameter is encoded as a CBOR text string. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT3).
 
-* 'control_path', with value a full URI, encoded as a CBOR text string. If 'control_path' is supported by the Client, the Client acts as a CoAP server and hosts a resource at this specific URI. The KDC MAY use this URI to send CoAP requests to the Client (acting as CoAP server in this exchange), for example for individual provisioning of new keying material when performing a group rekeying (see {{update-keys}}), or to inform the Client of its removal from the group {{sec-node-removal}}. If the KDC does not implement mechanisms using this resource, it can just ignore this parameter. Other additional functionalities of this resource MAY be defined in application profiles of this specifications (OPT9). In particular, this resource is intended for communications concerning exclusively the group or topic specified in the 'scope' parameter.
+* 'control_uri', with value a full URI, encoded as a CBOR text string. If 'control_uri' is supported by the Client, the Client acts as a CoAP server and hosts a resource at this specific URI. The KDC MAY use this URI to send CoAP requests to the Client (acting as CoAP server in this exchange), for example for individual provisioning of new keying material when performing a group rekeying (see {{update-keys}}), or to inform the Client of its removal from the group {{sec-node-removal}}. If the KDC does not implement mechanisms using this resource, it can just ignore this parameter. Other additional functionalities of this resource MAY be defined in application profiles of this specifications (OPT9). In particular, this resource is intended for communications concerning exclusively the group or topic specified in the 'scope' parameter.
 
 ~~~~~~~~~~~~~~~~~~~~
 scope, N_S, and N_C expressed in CBOR diagnostic notation:
@@ -1066,7 +1066,7 @@ Alternatively, the re-distribution of keying material can be initiated by the KD
 
 * Can send the payload of the Key Distribution Response in one or multiple multicast POST requests to the members of the group, using secure rekeying schemes such as {{RFC2093}}{{RFC2094}}{{RFC2627}}.
 
-* Can send unicast POST requests to each Client over a secure channel, with the same payload as the Key Distribution Response. When sending such requests, the KDC can target the URI path provided by the intended recipient upon joining the group, as specified in the 'control_path' parameter of the Joining Request (see {{gid-post}}).
+* Can send unicast POST requests to each Client over a secure channel, with the same payload as the Key Distribution Response. When sending such requests, the KDC can target the URI path provided by the intended recipient upon joining the group, as specified in the 'control_uri' parameter of the Joining Request (see {{gid-post}}).
 
 * Can act as a publisher in a pub-sub scenario, and update the keying material by publishing on a specific topic on a broker, which all the members of the group are subscribed to.
 
@@ -1345,7 +1345,7 @@ A node may be evicted from the group in the following cases.
 
 In either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
 
-In case of forced eviction, the KDC MAY explicitly inform the leaving node, if the Client implements the 'control_path' resource specified in {{gid-post}}. To this end, the KDC MAY send a DEL request, targeting the URI specified in the 'control_path' parameter of the Joining Request.
+In case of forced eviction, the KDC MAY explicitly inform the leaving node, if the Client implements the 'control_uri' resource specified in {{gid-post}}. To this end, the KDC MAY send a DEL request, targeting the URI specified in the 'control_uri' parameter of the Joining Request.
 
 # ACE Groupcomm Parameters {#params}
 
@@ -1360,7 +1360,7 @@ This specification defines a number of fields used during the second part of the
  cnonce       |   TBD    | byte string   | {{gid-post}}
  client_cred_verify |   TBD    | byte string   | {{gid-post}}
  pub_keys_repos   |   TBD    | text string         | {{gid-post}}
- control_path | TBD | text string | {{gid-post}}
+ control_uri | TBD | text string | {{gid-post}}
  gkty          |   TBD    | integer / text string   | {{gid-post}}
  key          |   TBD    | see "ACE Groupcomm Key" Registry     | {{gid-post}}
  num          |   TBD    | int           | {{gid-post}}
@@ -1384,7 +1384,7 @@ The KDC must renew the group keying material upon its expiration.
 
 The KDC should renew the keying material upon group membership change, and should provide it to the current group members through the rekeying scheme used in the group.
 
-The KDC should renew the group keying material after rebooting, even in the case where all keying material is stored in persistent storage. However, if the KDC relies on Observe responses to notify the group of renewed keying material, after rebooting the KDC will have lost all the current ongoing Observations with the group members, and the previous keying material will be used to protect messages in the group anyway. The KDC will rely on each node requesting updates of the group keying material to establish the new keying material in the nodes, or, if implemented, it can push the update to the nodes in the group using the 'control_path' resource.
+The KDC should renew the group keying material after rebooting, even in the case where all keying material is stored in persistent storage. However, if the KDC relies on Observe responses to notify the group of renewed keying material, after rebooting the KDC will have lost all the current ongoing Observations with the group members, and the previous keying material will be used to protect messages in the group anyway. The KDC will rely on each node requesting updates of the group keying material to establish the new keying material in the nodes, or, if implemented, it can push the update to the nodes in the group using the 'control_uri' resource.
 
 The KDC may enforce a rekeying policy that takes into account the overall time required to rekey the group, as well as the expected rate of changes in the group membership.
 
@@ -1698,7 +1698,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * OPT8: Optionally, specify for the KDC to perform group rekeying (together or instead of renewing individual keying material) when receiving a Key Renewal Request (see {{new-keys}}).
 
-* OPT9: Optionally, specify the functionalities implemented at the 'control_path' resource hosted at the Client, including message exchange encoding and other details (see {{gid-post}}).
+* OPT9: Optionally, specify the functionalities implemented at the 'control_uri' resource hosted at the Client, including message exchange encoding and other details (see {{gid-post}}).
 
 * OPT10: Optionally, specify how the identifier of the sender's public key is included in the group request (see {{update-pub-key}}).
 
@@ -1712,7 +1712,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 * Supporting single Access Token for multiple groups/topics.
 
-* Added 'control_path' parameter in the Joining Request.
+* Added 'control_uri' parameter in the Joining Request.
 
 * Added 'peer_roles' parameter to support legal requesters/responders.
 
