@@ -496,7 +496,7 @@ The Interface Description (if=) Link Target Attribute value ace.group is registe
 
 * /ace-group/GROUPNAME/nodes/NODENAME/pub-key: one sub-resource to /ace-group/GROUPNAME/nodes/NODENAME is implemented for each node in the group the KDC manages. These resources are identified by the node name (in this example, the node name has value "NODENAME"). Each resource contains the individual public keying material for that node. These resources support the POST method.
 
-It is REQUIRED of the application profiles of this specification to define what operations (i.e. CoAP methods) are allowed on each resource, for each role defined in {{ssec-authorization-request}} according to REQ2 (REQ7aa).
+It is REQUIRED of the application profiles of this specification to define what operations (e.g. CoAP methods) are allowed on each resource, for each role defined in {{ssec-authorization-request}} according to REQ2 (REQ7aa).
 
 The details for the handlers of each resource are given in the following sections. These endpoints are used to perform the operations introduced in {{key-distr}}.
 
@@ -1650,7 +1650,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ7a: Register a Resource Type for the root url-path, which is used to discover the correct url to access at the KDC (see {{kdc-if}}).
 
-* REQ7aa: Define what operations (i.e. CoAP methods) are allowed on each resource, for each role defined in REQ2 (see {{token-post}}).
+* REQ7aa: Define what operations (e.g. CoAP methods) are allowed on each resource, for each role defined in REQ2 (see {{token-post}}).
 
 * REQ7b: Specify the exact encoding of group identifier (see {{ace-group-fetch}}).
 
