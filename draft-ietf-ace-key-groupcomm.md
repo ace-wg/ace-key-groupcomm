@@ -887,7 +887,7 @@ Otherwise, the handler verifies the signature contained in the 'client_cred_veri
 
 If verification succeeds, the handler replaces the old public key of the node NODENAME with the one specified in the 'client_cred' field of the request, and stores it as the new current public key of the node NODENAME, in the list of group members' public keys for the group identified by GROUPNAME.
 
-If COSE Keys are used as encoding of public keys in the group, the KDC MUST set the 'kid' key paramenter of the new current public key to the node identifier that the client has in the group. If an alternative encoding of public keys is used, the KDC MUST set the node identifier of the client in the new current public key as appropriate for that encoding.
+If COSE Keys are used as encoding of public keys in the group, the KDC MUST set the 'kid' key paramenter of the new current public key to the node identifier that the client has in the group. If an alternative encoding of public keys is used, the KDC MUST set the node identifier of the client in the new current public key as appropriate, if that encoding supports it.
 
 Then, the handler replies with a 2.04 (Changed) response, which does not include a payload.
 
