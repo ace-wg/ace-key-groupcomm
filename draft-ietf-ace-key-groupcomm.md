@@ -1356,7 +1356,7 @@ Furthermore, in case of forced eviction, the KDC removes the public key of the e
 
 Then, the KDC deletes the sub-resource ace-group/GROUPNAME/nodes/NODENAME associated to the evicted node. After that, the KDC MAY explicitly inform the evicted node, by means of the following methods.
 
-* If the evicted node implements the 'control_uri' resource specified in {{gid-post}}, the KDC sends a DEL request, targeting the URI specified in the 'control_uri' parameter of the Joining Request (see {{gid-post}}).
+* If the evicted node implements the 'control_uri' resource specified in {{gid-post}}, the KDC sends a DELETE request, targeting the URI specified in the 'control_uri' parameter of the Joining Request (see {{gid-post}}).
    
 * If the evicted node is observing its associated sub-resource at ace-group/GROUPNAME/nodes/NODENAME (see {{node-get}}), the KDC sends an unsolicited 4.04 (Not Found) response, which does not include the Observe option and indicates that the observed resource has been deleted (see Section 3.2 of {{RFC7641}}). Consistently, the KDC also removes the node's entry from the list of observers of the sub-resource.
 
