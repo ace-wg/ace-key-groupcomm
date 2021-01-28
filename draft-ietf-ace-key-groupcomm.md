@@ -539,21 +539,25 @@ The handler expects a request with payload formatted as a CBOR map which MAY con
 
 * 'scope', with value the specific resource at the KDC that the Client is authorized to access, i.e. group or topic name, and role(s). This value is a CBOR byte string wrapping one scope entry, as defined in {{ssec-authorization-request}}.
 
-* 'get_pub_keys', if the Client wishes to receive the public keys of the other nodes in the group from the KDC. This parameter may be present if the KDC stores the public keys of the nodes in the group and distributes them to the Client; it is useless to have here if the set of public keys of the members of the group is known in another way, e.g. it was provided by the AS. Note that including this parameter may result in a large message size for the following response, which can be inconvenient for resource-constrained devices. The parameter's value is either the CBOR simple value Null or a non-empty CBOR array containing two CBOR arrays:
+* 'get_pub_keys', if the Client wishes to receive the public keys of the other nodes in the group from the KDC. This parameter may be present if the KDC stores the public keys of the nodes in the group and distributes them to the Client; it is useless to have here if the set of public keys of the members of the group is known in another way, e.g. it was provided by the AS. Note that including this parameter may result in a large message size for the following response, which can be inconvenient for resource-constrained devices.
 
-  - The first array is non-empty. Each element of the first array contains one role or a combination of roles for the group identified by "GROUPNAME". The Client indicates that it wishes to receive the public keys of all group members having any of the single roles, or at least all of the roles indicated in any combinations of roles. For example, the array \["role1", "role2+role3"\] indicates that the Client wishes to receive the public keys of all group members that have at least "role1" or at least both "role2" and "role3".
+  The parameter's value is either the CBOR simple value Null, or a non-empty CBOR array containing the following three elements.
 
-  - The second array is empty.
+  - The first element, namely 'inclusion\_flag', encodes the CBOR simple value True.
+  
+  - The second element, namely 'role\_filter', is a non-empty CBOR array. Each element of the array contains one role or a combination of roles for the group identified by "GROUPNAME". The Client indicates that it wishes to receive the public keys of all group members having any of the single roles, or at least all of the roles indicated in any combination of roles. For example, the array \["role1", "role2+role3"\] indicates that the Client wishes to receive the public keys of all group members that have at least "role1" or at least both "role2" and "role3".
+
+  - The third element, namely 'id\_filter', is an empty CBOR array.
 
   If the Client wishes to receive all public keys of all group members, it encodes the 'get_pub_key' parameter as the CBOR simple value Null.
 
   The CDDL definition {{RFC8610}} of 'get_pub_keys' is given in {{cddl-ex-getpubkeys}}, using as example encoding: node identifier encoded as a CBOR byte string; role identifier encoded as a CBOR text string, and combination of roles encoded as a CBOR array of roles.
 
-  Note that the second array (array of node identifiers) is empty for this handler, because the joining node is not expected to filter based on node identifiers, but is not necessarily empty for the value of 'get_pub_keys' received by the handler of FETCH to ace-group/GROUPNAME/pub-key (see {{pubkey-fetch}}).
+  Note that the array of roles 'role\_filter' is non-empty for this handler, but this is not necessarily the case for other handlers using this parameter: if this array is empty, it means that the client is not filtering public keys based on roles.
+  
+  Also note that the array of node identifiers 'id\_filter' is empty for this handler, because the joining node is not expected or capable to express a filter based on node identifiers at this point in time. Consistently, the 'inclusion\_flag' element is set to the CBOR simple value True. However, the 'id\_filter' array is not necessarily empty for the value of 'get_pub_keys' received by the handler of FETCH to ace-group/GROUPNAME/pub-key (see {{pubkey-fetch}}).
 
-  Also note that the second array (array of roles) is non-empty for this handler, but that is not necessarily the case for other handlers using this parameter: if this array is empty it means that the client is not filtering public keys based on roles.
-
-  Finally, 'get_pub_keys' is never used as an array containing two empty arrays (in CBOR diagnostic notation: \[ \[ \], \[ \] \] ), so if this parameter is received as formatted in that way, it has to be considered malformed.
+  Finally, the 'get_pub_keys' parameter MUST NOT have the arrays 'role\_filter' and 'id\_filter' as both empty, i.e. in CBOR diagnostic notation: \[ bool, \[ \], \[ \] \]. Thus, if this parameter is received as formatted in that way, it has to be considered malformed.
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
 id = bstr
@@ -562,7 +566,9 @@ role = tstr
 
 comb_role = [ 2*role ]
 
-get_pub_keys = null / [ [ *(role / comb_role) ], [ *id ] ]
+inclusion = bool
+
+get_pub_keys = null / [ [ inclusion, *(role / comb_role) ], [ *id ] ]
 ~~~~~~~~~~~~~~~~~~~~
 {: #cddl-ex-getpubkeys title="CDLL definition of get_pub_keys, using as example node identifier encoded as bstr and role as tstr" artwork-align="center"}
 
@@ -747,11 +753,13 @@ The handler expects a request with payload formatted as a CBOR map, that MUST co
 
 * 'get_pub_keys', whose value is encoded as in {{gid-post}} with the following modification:
 
-  - The first array may be empty, if the Client does not wish to filter the requested public keys based on roles of group members.
+  - The element 'inclusion\_flag' encodes the CBOR simple value True if the third element 'id\_filter' specifies an empty CBOR array, or if the Client wishes to receive the public keys of the nodes having their node identifier specified in 'id\_filter'. Instead, this element encodes the CBOR simple value False if the Client wishes to receive the public keys of the nodes not having the node identifiers specified in the third element 'id\_filter'.
 
-  - The second array contains zero or more node identifiers of group members, for the group identified by "GROUPNAME". The Client indicates that it wishes to receive the public keys of all nodes having these node identifiers.
+  - The array 'role\_filter' may be empty, if the Client does not wish to filter the requested public keys based on the roles of the group members.
 
-  As mentioned, both arrays can not be empty at the same time.
+  - The array 'id\_filter' contains zero or more node identifiers of group members, for the group identified by "GROUPNAME". The Client indicates that it wishes to receive the public keys of the nodes having or not having these node identifiers, in case the 'inclusion\_flag' parameter encodes the CBOR simple value True or False, respectively.
+
+  As mentioned in {{gid-post}}, both arrays 'role\_filter' and 'id\_filter' MUST NOT be both empty at.
 
 The specific format of public keys as well as identifiers, roles and combination of roles of group members MUST be specified by the application profile (OPT1, REQ2, REQ9).
 
@@ -769,7 +777,7 @@ If the used encoding for public keys does not allow to specify a node identifier
 
 If the KDC does not store any public key associated with the specified node identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
-The handler MAY enforce one of the following policies, in order to handle possible node identifiers that are included in the 'get_pub_keys' parameter of the request but are not associated to any current group member. Such a policy MUST be specified by the application profile (REQ13).
+The handler MAY enforce one of the following policies, in order to handle possible node identifiers that are included in the 'id_filter' element of the 'get_pub_keys' parameter of the request but are not associated to any current group member. Such a policy MUST be specified by the application profile (REQ13).
 
 * The KDC silently ignores those node identifiers.
 
@@ -960,7 +968,7 @@ Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation,
          with PUB_KEY and SIG being CBOR byte strings):
   { "scope": << [ "group1", ["sender", "receiver"] ] >> ,
-    "get_pub_keys": [["sender"], []], "client_cred": PUB_KEY
+    "get_pub_keys": [true, ["sender"], []], "client_cred": PUB_KEY
     "cnonce": h'6df49c495409a9b5', "client_cred_verify": SIG }
 
 Response:
@@ -1194,7 +1202,7 @@ Uri-Path: "g1"
 Uri-Path: "pub-key"
 Content-Format: "application/ace-groupcomm+cbor"
 Payload:
-  { "get_pub_keys": [[], ["c3"]] }
+  { "get_pub_keys": [true, [], ["c3"]] }
 
 Response:
 
@@ -1688,7 +1696,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ12: Specify and register the application profile identifier (see {{gid-post}}).
 
-* REQ13: Specify policies at the KDC to handle ids that are not included in get_pub_keys (see {{pubkey-fetch}}).
+* REQ13: Specify policies at the KDC to handle ids that are not included in 'get_pub_keys' (see {{pubkey-fetch}}).
 
 * REQ14: If used, specify the format and content of 'group\_policies' and its entries. Specify the policies default values (see {{gid-post}}).
 
