@@ -43,6 +43,7 @@ normative:
   RFC8126:
   RFC8174:
   RFC7252:
+  RFC7967:
   RFC8747:
   I-D.ietf-cose-rfc8152bis-struct:
   I-D.ietf-cose-rfc8152bis-algs:
@@ -841,6 +842,12 @@ Additionally, the handler verifies that the node is a current member of the grou
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing both the group keying material and the individual keying material for the Client, or information enabling the Client to derive it. The payload of the response is formatted as a CBOR map. The format for the group keying material is the same as defined in the response of {{gid-get}}. The specific format of individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ15) and registered in {{iana-reg}}.
 
+Optionally, the KDC can make the sub-resource at ace-group/GROUPNAME/nodes/NODENAME also Observable {{RFC7641}} for the associated node. In case the KDC removes that node from the group without having been explicitly asked for it, this allows the KDC to send an unsolicited 4.04 (Not Found) response to the node as a notification of eviction from the group (see {{sec-node-removal}}).
+
+Note that the node could have been observing also the resource at ace-group/GROUPNAME, in order to be informed of changes in the keying material. In such a case, this method would result in largely overlapping notifications received for the resource at ace-group/GROUPNAME and the sub-resource at ace-group/GROUPNAME/nodes/NODENAME.
+   
+In order to mitigate this, a node that supports the No-Response option {{RFC7967}} can use it when starting the observation of the sub-resource at ace-group/GROUPNAME/nodes/NODENAME. In particular, the GET observation request can also include the No-Response option, with value set to 2 (Not interested in 2.xx responses).
+
 #### DELETE Handler {#node-delete}
 
 The DELETE handler removes the node identified by "NODENAME" from the group identified by "GROUPNAME".
@@ -856,7 +863,7 @@ The handler also verifies that the node sending the request and the node name us
 
 Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-If verification succeeds, the handler removes the client from the group identified by "GROUPNAME". That includes removing the public key of the client if the KDC keep tracks of that. Then, the handler delete the sub-resource nodes/NODENAME and returns a 2.02 (Deleted) message with empty payload.
+If verification succeeds, the handler removes the client from the group identified by "GROUPNAME". That includes removing the public key of the client if the KDC keep tracks of that, and possibly removing the evicted node from the list of observers of the resource at ace-group/GROUPNAME (if observable). Then, the handler deletes the sub-resource nodes/NODENAME and returns a 2.02 (Deleted) message with empty payload.
 
 ### ace-group/GROUPNAME/nodes/NODENAME/pub-key
 
@@ -1343,9 +1350,15 @@ A node may be evicted from the group in the following cases.
 
 3. The node's authorization to be a group member is not valid anymore, either because the access token has expired, or it has been revoked. If the AS provides Token introspection (see Section 5.7 of {{I-D.ietf-ace-oauth-authz}}), the KDC can optionally use it and check whether the node is still authorized for that group in that role.
 
-In either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
+   In either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
 
-In case of forced eviction, the KDC MAY explicitly inform the leaving node, if the Client implements the 'control_uri' resource specified in {{gid-post}}. To this end, the KDC MAY send a DEL request, targeting the URI specified in the 'control_uri' parameter of the Joining Request.
+Furthermore, in case of forced eviction, the KDC removes the public key of the evicted node if the KDC keep tracks of that, and possibly removes the evicted node from the list of observers of the resource at ace-group/GROUPNAME (if observable).
+
+Then, the KDC deletes the sub-resource ace-group/GROUPNAME/nodes/NODENAME associated to the evicted node. After that, the KDC MAY explicitly inform the evicted node, by means of the following methods.
+
+* If the evicted node implements the 'control_uri' resource specified in {{gid-post}}, the KDC sends a DEL request, targeting the URI specified in the 'control_uri' parameter of the Joining Request (see {{gid-post}}).
+   
+* If the evicted node is observing its associated sub-resource at ace-group/GROUPNAME/nodes/NODENAME (see {{node-get}}), the KDC sends an unsolicited 4.04 (Not Found) response, which does not include the Observe option and indicates that the observed resource has been deleted (see Section 3.2 of {{RFC7641}}). Consistently, the KDC also removes the node's entry from the list of observers of the sub-resource.
 
 # ACE Groupcomm Parameters {#params}
 
