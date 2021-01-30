@@ -1590,8 +1590,6 @@ This specification establishes the "ACE Scope Semantics" IANA Registry. The Regi
 
 The columns of this Registry are:
 
-* Name: This field contains the name of the scope semantics.
-
 * Value: The value to be used to identify this scope semantics. The value MUST be unique. The value can be a positive integer or a negative integer. Integer values between 0 and 255 are designated as Standards Track Document required. Integer values from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as expert review. Integer values less than -65536 are marked as private use.
 
 * Description: This field contains a brief description of the scope semantics.
