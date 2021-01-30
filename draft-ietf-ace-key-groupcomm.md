@@ -35,8 +35,6 @@ author:
         email: marco.tiloca@ri.se
 
 normative:
-
-  I-D.ietf-cbor-7049bis:
   RFC2119:
   RFC6749:
   RFC6838:
@@ -45,6 +43,7 @@ normative:
   RFC7252:
   RFC7967:
   RFC8747:
+  RFC8949:
   I-D.ietf-cose-rfc8152bis-struct:
   I-D.ietf-cose-rfc8152bis-algs:
   I-D.ietf-ace-oauth-authz:
@@ -85,7 +84,7 @@ This document defines message formats and procedures for requesting and distribu
 # Introduction {#intro}
 
 This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define the message exchanges used to request, distribute and renew the keying material in a group communication scenario, e.g. based on multicast {{I-D.ietf-core-groupcomm-bis}} or on publishing-subscribing {{I-D.ietf-core-coap-pubsub}}.
-The ACE framework is based on CBOR {{I-D.ietf-cbor-7049bis}}, so CBOR is the format used in this specification. However, using JSON {{RFC8259}} instead of CBOR is possible, using the conversion method specified in Sections 6.1 and 6.2 of {{I-D.ietf-cbor-7049bis}}.
+The ACE framework is based on CBOR {{RFC8949}}, so CBOR is the format used in this specification. However, using JSON {{RFC8259}} instead of CBOR is possible, using the conversion method specified in Sections 6.1 and 6.2 of {{RFC8949}}.
 
 Profiles that use group communication can build on this document, by defining a number of details such as the exact group communication protocol and security protocols used. The specific list of details a profile needs to define is shown in {{req}}.
 
