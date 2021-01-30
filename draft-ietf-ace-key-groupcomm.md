@@ -42,6 +42,7 @@ normative:
   RFC8174:
   RFC7252:
   RFC7967:
+  RFC8742:
   RFC8747:
   RFC8949:
   I-D.ietf-cose-rfc8152bis-struct:
@@ -226,7 +227,7 @@ The Authorization Request sent from the Client to the AS is defined in Section 5
    This value is a CBOR byte string, wrapping a CBOR array of one or more  entries.
 
    By default, each entry is encoded as specified by {{I-D.ietf-ace-aif}}. The object identifier Toid corresponds to the group name and MUST be encoded as a tstr. The permission set Tperm indicates the roles that the client wishes to take in the group. It is up to the application profiles to define Tperm (REQ2) and register Toid and Tperm to fit the use case. An example of scope using the AIF format is given in {{cddl-ex-0}}.
-
+   
    Otherwise, each scope entry can be defined as a CBOR array, which contains:
 
   - As first element, the identifier of the specific group or topic, encoded as a tstr.
@@ -258,8 +259,7 @@ scope_entry = AIF_Generic<gname, permissions>
 
 scope = << [ + scope_entry ] >>
 ~~~~~~~~~~~~~~~~~~~~
-{: #cddl-ex-0 title="Example CDLL definition of scope, using the default Authorization Information Format" artwork-align="center"}
-
+{: #cddl-ex-0 title="Example CDLL definition of scope, using the default Authorization Information Format"}
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
 gname = tstr
@@ -270,8 +270,7 @@ scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 
 scope = << [ + scope_entry ] >>
 ~~~~~~~~~~~~~~~~~~~~
-{: #cddl-ex title="CDLL definition of scope, using as example group name encoded as tstr and role as tstr" artwork-align="center"}
-
+{: #cddl-ex title="CDLL definition of scope, using as example group name encoded as tstr and role as tstr"}
 
 ## Authorization Response {#ssec-authorization-response}
 
@@ -290,8 +289,20 @@ The proof-of-possession access token (in 'access_token' above) MUST contain the 
 
 * an expiration time claim (see for example 'exp' defined in Section 3.1.4 of {{RFC8392}} for CWT);
 
-* a scope claim (see for example 'scope' registered in Section 8.13 of {{I-D.ietf-ace-oauth-authz}} for CWT). This claim has the same encoding as the 'scope' parameter above. Additionally, this claim has the same value of the 'scope' parameter if the parameter is present in the message, or it takes the value of 'scope' in the Authorization Request otherwise.
+* a scope claim (see for example 'scope' registered in Section 8.13 of {{I-D.ietf-ace-oauth-authz}} for CWT).
 
+   The scope specified in this claim is the same as in the 'scope' parameter in the Authorization Response, if the parameter is present in the message, or as in the 'scope' parameter of the Authorization Request otherwise.
+
+   By default, this claim has the same encoding as the 'scope' parameter in the Authorization Request, defined in {{ssec-authorization-request}}.
+
+   Optionally, an alternative extended format of scope defined in {{sec-extended-scope}} can be used. This format explicitly signals the semantics used to express the actual access control information, and according to which the scope has to be parsed. This enables a Resource Server to correctly process a received access token, also in case:
+   
+     - The Resource Server implements a KDC that supports multiple application profiles of this specification, using different scope semantics; and/or
+   
+     - The Resource Server implements further services beyond a KDC for group communication, using different scope semantics.
+
+    If the Authorization Server is aware that this applies to the Resource Server for which the access token is issued, the Authorization Server SHOULD use the extended format of scope defined in {{sec-extended-scope}}.
+    
 The access token MAY additionally contain other claims that the transport profile of ACE requires, or other optional parameters.
 
 When receiving an Authorization Request from a Client that was previously authorized, and for which the AS still owns a valid non-expired access token, the AS MAY reply with that token. Note that it is up to application profiles of ACE to make sure that re-posting the same token does not cause re-use of keying material between nodes (for example, that is done with the use of random nonces in {{I-D.ietf-ace-oscore-profile}}).
@@ -1252,6 +1263,71 @@ Then, the KDC deletes the sub-resource ace-group/GROUPNAME/nodes/NODENAME associ
    
 * If the evicted node is observing its associated sub-resource at ace-group/GROUPNAME/nodes/NODENAME (see {{node-get}}), the KDC sends an unsolicited 4.04 (Not Found) response, which does not include the Observe option and indicates that the observed resource has been deleted (see Section 3.2 of {{RFC7641}}). Consistently, the KDC also removes the node's entry from the list of observers of the sub-resource.
 
+# Extended Scope Format # {#sec-extended-scope}
+
+This section defines an extended format of scope, which additionally specifies the semantics used to express the same access control information from the original scope. This extended format is intended only for the 'scope' claim of access tokens (see {{ssec-authorization-response}}), where this is encoded as a CBOR byte string.
+
+As also discussed in {{ssec-authorization-response}}, this enables a Resource Server to unambiguously process a received access token, also in case the Resource Server runs multiple applications or application profiles that involve different scope semantics.
+
+Given the original scope using a semantics SEM and encoded as a CBOR byte string, the corresponding extended scope is encoded as a tagged CBOR byte string, wrapping a CBOR sequence {{RFC8742}} of two elements. In particular:
+
+* The first element of the sequence is a CBOR integer, and identifies the semantics SEM used for this scope. The value of this element has to be taken from the "Value" column of the "ACE Scope Semantics" registry defined in {{iana-scope-semantics}} of this specification.
+
+   When defining a new semantics for a binary scope, it is up to the applications and application profiles to define and register the corresponding integer identifier (REQ20).
+
+* The second element of the sequence is the original scope using the semantics SEM, encoded as a CBOR byte string.
+
+Finally, the CBOR byte string wrapping the CBOR sequence is tagged, and identified by the CBOR tag TBD_TAG "ACE Extended Scope Format", defined in {{iana-cbor-tags}} of this specification.
+
+The resulting tagged CBOR byte string is used as value of the 'scope' claim of the access token.
+
+{{cddl-ex-0-ext}} and {{cddl-ex-ext}} build on the examples in {{ssec-authorization-response}}, and show the corresponding extended scopes.
+
+~~~~~~~~~~~~~~~~~~~~ CDDL
+gname = tstr
+
+permissions = uint . bits roles
+
+roles = &(
+   Requester: 1,
+   Responder: 2,
+   Monitor: 3,
+   Verifier: 4
+)
+
+scope_entry = AIF_Generic<gname, permissions>
+
+scope = << [ + scope_entry ] >>
+
+semantics = int
+
+; This defines an array, the elements
+; of which are to be usedin a CBOR Sequence:
+sequence = [semantics, scope]
+
+extended_scope = #6.TBD_TAG(<< sequence >>)
+~~~~~~~~~~~~~~~~~~~~
+{: #cddl-ex-0-ext title="Example CDLL definition of scope, using the default Authorization Information Format"}
+
+~~~~~~~~~~~~~~~~~~~~ CDDL
+gname = tstr
+
+role = tstr
+
+scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
+
+scope = << [ + scope_entry ] >>
+
+semantics = int
+
+; This defines an array, the elements
+; of which are to be usedin a CBOR Sequence:
+sequence = [semantics, scope]
+
+extended_scope = #6.TBD_TAG(<< sequence >>)
+~~~~~~~~~~~~~~~~~~~~
+{: #cddl-ex-ext title="CDLL definition of scope, using as example group name encoded as tstr and role as tstr"}
+
 # ACE Groupcomm Parameters {#params}
 
 This specification defines a number of fields used during the second part of the message exchange, after the ACE Token POST exchange. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name. Note that the media type ace-groupcomm+cbor MUST be used when these fields are transported.
@@ -1442,7 +1518,7 @@ This Registry has been initially populated by the values in {{gkty}}. The specif
 
 ## ACE Groupcomm Profile Registry
 
-This specification establishes the "ACE Groupcomm Profile" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
+This specification establishes the "ACE Groupcomm Profile" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
 
 The columns of this Registry are:
 
@@ -1456,13 +1532,13 @@ The columns of this Registry are:
 
 ## ACE Groupcomm Policy Registry
 
-This specification establishes the "ACE Groupcomm Policy" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
+This specification establishes the "ACE Groupcomm Policy" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
 
 The columns of this Registry are:
 
 * Name: The name of the group communication policy.
 
-* CBOR label: The value to be used to identify this group communication policy.  Key map labels MUST be unique. The label can be a positive integer, a negative integer or a string.  Integer values between 0 and 255 and strings of length 1 are designated as Standards Track Document required. Integer values from 256 to 65535 and strings of length 2 are designated as Specification Required.  Integer values of greater than 65535 and strings of length greater than 2 are designated as expert review.  Integer values less than -65536 are marked as private use.
+* CBOR label: The value to be used to identify this group communication policy.  Key map labels MUST be unique. The label can be a positive integer, a negative integer or a string.  Integer values between 0 and 255 and strings of length 1 are designated as Standards Track Document required. Integer values from 256 to 65535 and strings of length 2 are designated as Specification Required.  Integer values greater than 65535 and strings of length greater than 2 are designated as expert review.  Integer values less than -65536 are marked as private use.
 
 * CBOR type: the CBOR type used to encode the value of this group communication policy.
 
@@ -1474,7 +1550,7 @@ This registry will be initially populated by the values in {{fig-ACE-Groupcomm-P
 
 ## Sequence Number Synchronization Method Registry
 
-This specification establishes the "Sequence Number Synchronization Method" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, be supplied as well.
+This specification establishes the "Sequence Number Synchronization Method" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
 
 The columns of this Registry are:
 
@@ -1495,6 +1571,32 @@ This specification registers the following entry to the "Interface Description (
 * Description: The 'ace group' interface is used to provision keying material and related informations and policies to members of a group using the Ace framework.
 
 * Reference: \[This Document\]
+
+## CBOR Tags Registry {#iana-cbor-tags}
+
+This specification registers the following entry to the "CBOR Tags" registry:
+
+* Tag : TBD_TAG
+
+* Data Item: byte string
+
+* Semantics: Extended ACE scope, including its semantics idenfifier
+
+* Reference: \[This Document\]
+
+## ACE Scope Semantics {#iana-scope-semantics}
+
+This specification establishes the "ACE Scope Semantics" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+
+The columns of this Registry are:
+
+* Name: This field contains the name of the scope semantics.
+
+* Value: The value to be used to identify this scope semantics. The value MUST be unique. The value can be a positive integer or a negative integer. Integer values between 0 and 255 are designated as Standards Track Document required. Integer values from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as expert review. Integer values less than -65536 are marked as private use.
+
+* Description: This field contains a brief description of the scope semantics.
+
+* Reference: This field contains a pointer to the public specification defining the scope semantics, if one exists.
 
 ## Expert Review Instructions {#review}
 
@@ -1564,7 +1666,9 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ18: Specify if 'mgt\_key\_material' used, and if yes specify its format and content (see {{gid-post}}). If the usage of ‘mgt_key_material’ is indicated and its format defined for a specific key management scheme, that format must explicitly indicate the key management scheme itself. If a new rekeying scheme is defined to be used for an existing ‘mgt_key_material’ in an existing profile, then that profile will have to be updated accordingly, especially with respect to the usage of ‘mgt_key_material’ related format and content.
 
-* REQ19: Define the initial value of the 'num' parameter (sse {{gid-post}}).
+* REQ19: Define the initial value of the 'num' parameter (see {{gid-post}}).
+
+* REQ20: Specify and register the identifier of newly defined semantics for binary scopes (see {{sec-extended-scope}}).
 
 * OPT1: Optionally, specify the encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used (see {{gid-post}}).
 
@@ -1587,7 +1691,7 @@ This section lists the requirements on application profiles of this specificatio
 * OPT9: Optionally, specify the functionalities implemented at the 'control_uri' resource hosted at the Client, including message exchange encoding and other details (see {{gid-post}}).
 
 * OPT10: Optionally, specify how the identifier of the sender's public key is included in the group request (see {{update-pub-key}}).
-
+   
 # Document Updates # {#sec-document-updates}
 
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
