@@ -295,7 +295,7 @@ The proof-of-possession access token (in 'access_token' above) MUST contain the 
 
    By default, this claim has the same encoding as the 'scope' parameter in the Authorization Request, defined in {{ssec-authorization-request}}.
 
-   Optionally, an alternative extended format of scope defined in {{sec-extended-scope}} can be used. This format explicitly signals the semantics used to express the actual access control information, and according to which the scope has to be parsed. This enables a Resource Server to correctly process a received access token, also in case:
+   Optionally, an alternative extended format of scope defined in {{sec-extended-scope}} can be used. This format explicitly signals the semantics used to express the actual access control information, and according to which this has to be parsed. This enables a Resource Server to correctly process a received access token, also in case:
    
      - The Resource Server implements a KDC that supports multiple application profiles of this specification, using different scope semantics; and/or
    
@@ -1265,7 +1265,7 @@ Then, the KDC deletes the sub-resource ace-group/GROUPNAME/nodes/NODENAME associ
 
 # Extended Scope Format # {#sec-extended-scope}
 
-This section defines an extended format of scope, which additionally specifies the semantics used to express the same access control information from the original scope. This extended format is intended only for the 'scope' claim of access tokens (see {{ssec-authorization-response}}), where this is encoded as a CBOR byte string.
+This section defines an extended format of scope, which additionally specifies the semantics used to express the same access control information from the original scope. This extended format is intended only for the 'scope' claim of access tokens (see {{ssec-authorization-response}}), where this takes as value a CBOR byte string.
 
 As also discussed in {{ssec-authorization-response}}, this enables a Resource Server to unambiguously process a received access token, also in case the Resource Server runs multiple applications or application profiles that involve different scope semantics.
 
@@ -1580,7 +1580,7 @@ This specification registers the following entry to the "CBOR Tags" registry:
 
 * Data Item: byte string
 
-* Semantics: Extended ACE scope, including its semantics idenfifier
+* Semantics: Extended ACE scope format, including its semantics idenfifier
 
 * Reference: \[This Document\]
 
