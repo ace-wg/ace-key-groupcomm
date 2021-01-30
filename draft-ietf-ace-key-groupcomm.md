@@ -382,11 +382,9 @@ The 'kdcchallenge' parameter is an OPTIONAL parameter of the Token Post response
 
 #  Keying Material Provisioning and Group Membership Management {#key-distr}
 
-This section defines the interface available at the KDC. Moreover, this section specifies how the clients can use this interface to join a group, leave a group, retrieve the group policies or the new keying material.
+This section defines the interface available at the KDC. Moreover, this section specifies how the clients can use this interface to join a group, leave a group, retrieve the group policies or the group keying material.
 
 During the first exchange with the KDC ("Joining") after posting the Token, the Client sends a request to the KDC, specifying the group it wishes to join (see {{ssec-key-distribution-exchange}}). Then, the KDC verifies the access token and that the Client is authorized to join that group. If so, it provides the Client with the keying material to securely communicate with the other members of the group.
-
-If they include a payload and specify a Content-Format, requests sent to the KDC and success responses from the KDC MUST have Content-Format set to application/ace-groupcomm+cbor, as defined in {{content-type}}.
 
 When the Client is already a group member, the Client can use the interface at the KDC to perform the following actions:
 
@@ -405,6 +403,18 @@ When the Client is already a group member, the Client can use the interface at t
 * The Client can request to leave the group. This is further discussed in {{ssec-group-leaving}}.
 
 Upon receiving a request from a Client, the KDC MUST check that it is storing a valid access token from that Client for the group name associated to the endpoint. If that is not the case, i.e. the KDC does not store a valid access token or this is not valid for that Client for the group name, the KDC MUST respond to the Client with a 4.01 (Unauthorized) error message.
+
+If they include a payload and specify a Content-Format, requests sent to the KDC and success responses from the KDC MUST have Content-Format set to application/ace-groupcomm+cbor, defined in {{content-type}}.
+
+Some error responses from the KDC can have Content-Format set to application/ace-groupcomm+cbor. In such a case, the paylod of the response MUST be a CBOR map, which includes the following fields.
+
+* 'error', with value a CBOR integer specifying the error occurred at the KDC. The value is taken from the "Value" column of the "ACE Groupcomm Errors" registry defined in {{iana-ace-groupcomm-errors}} of this specification. This field MUST be present.
+
+* 'error_description', with value a CBOR text string specifying a human-readable description of the error occurred at the KDC. This field MAY be present.
+
+CBOR labels for the 'error' and 'error_description' fields are defined in {{params}}.
+
+{{error-types}} of this specification defines an initial set of error identifiers, as possible values for the 'error' field. Application profiles of this specification MAY define additional value (OPT11).
 
 ## Interface at the KDC {#kdc-if}
 
@@ -667,7 +677,7 @@ The handler expects a GET request.
 
 The KDC verifies that the group name of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. The KDC also verifies that the roles the client is granted in the group allow it to perform this operation on this resource (REQ7aa). If either verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. This response MAY be an AS Request Creation Hints, as defined in Section 5.1.2 of {{I-D.ietf-ace-oauth-authz}}, in which case the content format MUST be set to application/ace+cbor.
 
-Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing the symmetric group keying material. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'gkty', 'key' and 'num' specified in {{gid-post}}.
 
@@ -737,7 +747,7 @@ The handler expects a GET request.
 
 The KDC verifies that the group name of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. The KDC also verifies that the roles the client is granted in the group allow it to perform this operation on this resource (REQ7aa). If either verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing the list of policies for the group identified by "GROUPNAME". The payload of the response is formatted as a CBOR map including only the parameter 'group_policies' defined in {{gid-post}} and specifying the current policies in the group. If the KDC does not store any policy, the payload is formatted as a zero-length CBOR byte string.
 
@@ -753,7 +763,7 @@ The handler expects a GET request.
 
 The KDC verifies that the group name of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. The KDC also verifies that the roles the client is granted in the group allow it to perform this operation on this resource (REQ7aa). If either verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
-Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing an integer that represents the version number of the symmetric group keying material. This number is incremented on the KDC every time the KDC updates the symmetric group keying material, before the new keying material is distributed. This number is stored in persistent storage.
 
@@ -773,7 +783,9 @@ The KDC verifies that the group name of the /ace-group/GROUPNAME path is a subse
 
 The handler also verifies that the node sending the request and the node name used in the Uri-Path match. If that is not the case, the handler responds with a 4.01 (Unauthorized) error response.
 
-Additionally, the handler verifies that the node is a current member of the group. If the verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. Also, the handler verifies that this operation is consistent with the set of roles that the node has in the group. If the verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message.
+Additionally, the handler verifies that the node is a current member of the group. If the verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
+
+Also, the handler verifies that this operation is consistent with the set of roles that the node has in the group. If the verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 1 ("Request inconsistent with the current roles").
 
 If the KDC is currently not able to serve this request, i.e. to generate new individual keying material for the requesting client, the KDC MUST respond with a 5.03 (Service Unavailable) error message.
 
@@ -788,7 +800,7 @@ The KDC verifies that the group name of the /ace-group/GROUPNAME path is a subse
 
 The handler also verifies that the node sending the request and the node name used in the Uri-Path match. If that is not the case, the handler responds with a 4.01 (Unauthorized) error response.
 
-Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing both the group keying material and the individual keying material for the Client, or information enabling the Client to derive it. The payload of the response is formatted as a CBOR map. The format for the group keying material is the same as defined in the response of {{gid-get}}. The specific format of individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ15) and registered in {{iana-reg}}.
 
@@ -811,7 +823,7 @@ KDC MUST respond with a 4.01 (Unauthorized) error message.
 
 The handler also verifies that the node sending the request and the node name used in the Uri-Path match. If that is not the case, the handler responds with a 4.01 (Unauthorized) error response.
 
-Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
+Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
 
 If verification succeeds, the handler removes the client from the group identified by "GROUPNAME". That includes removing the public key of the client if the KDC keep tracks of that, and possibly removing the evicted node from the list of observers of the resource at ace-group/GROUPNAME (if observable). Then, the handler deletes the sub-resource nodes/NODENAME and returns a 2.02 (Deleted) message with empty payload.
 
@@ -829,13 +841,17 @@ The handler verifies that the group name GROUPNAME is a subset of the 'scope' st
 
 The handler also verifies that the node sending the request and the node name used in the Uri-Path match. If that is not the case, the handler responds with a 4.01 (Unauthorized) error response.
 
-Additionally, the handler verifies that the node is a current member of the group. If the verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. Also, the handler verifies that this operation is consistent with the set of roles that the node has in the group. If the verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message.
+Additionally, the handler verifies that the node is a current member of the group. If the verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
+
+Also, the handler verifies that this operation is consistent with the set of roles that the node has in the group. If the verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 1 ("Request inconsistent with the current roles")
 
 If the request is not formatted correctly (i.e. required fields non received or received with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. If the request contains unknown or non-expected fields present, the handler MUST silently ignore them and continue processing. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT6).
 
-Otherwise, the handler checks that the public key specified in the 'client_cred' field has a valid format for the group identified by "GROUPNAME", i.e. it is encoded as expected and is compatible with the signature algorithm and possible associated parameters. If that cannot be successfully verified, the handler MUST respond with a 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT5).
+Otherwise, the handler checks that the public key specified in the 'client_cred' field has a valid format for the group identified by "GROUPNAME", i.e. it is encoded as expected and is compatible with the signature algorithm and possible associated parameters. If that cannot be successfully verified, the handler MUST respond with a 4.00 (Bad Request) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 2 ("Public key incompatible with the group configuration").
 
-Otherwise, the handler verifies the signature contained in the 'client_cred_verify' field of the request, using the public key specified in the 'client_cred' field. If the signature does not pass verification, the handler MUST respond with a 4.01 (Unauthorized) error message. If the KDC cannot retrieve the 'kdcchallenge' associated to this Client (see {{token-post}}), the KDC MUST respond with a 4.00 Bad Request error response, whose payload is a CBOR map including a newly generated 'kdcchallenge'. This error response MUST also have Content-Format application/ace+cbor.
+If the KDC cannot retrieve the 'kdcchallenge' associated to this Client (see {{token-post}}), the KDC MUST respond with a 4.00 Bad Request error response, whose payload is a CBOR map including a newly generated 'kdcchallenge'. This error response MUST also have Content-Format application/ace+cbor.
+
+Otherwise, the handler verifies the signature contained in the 'client_cred_verify' field of the request, using the public key specified in the 'client_cred' field. If the signature does not pass verification, the handler MUST respond with a 4.01 (Unauthorized) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 3 ("Invalid proof-of-possession signature").
 
 If verification succeeds, the handler replaces the old public key of the node NODENAME with the one specified in the 'client_cred' field of the request, and stores it as the new current public key of the node NODENAME, in the list of group members' public keys for the group identified by GROUPNAME.
 
@@ -1272,7 +1288,11 @@ Then, the KDC deletes the sub-resource ace-group/GROUPNAME/nodes/NODENAME associ
 
 * If the evicted node implements the 'control_uri' resource specified in {{gid-post}}, the KDC sends a DELETE request, targeting the URI specified in the 'control_uri' parameter of the Joining Request (see {{gid-post}}).
    
-* If the evicted node is observing its associated sub-resource at ace-group/GROUPNAME/nodes/NODENAME (see {{node-get}}), the KDC sends an unsolicited 4.04 (Not Found) response, which does not include the Observe option and indicates that the observed resource has been deleted (see Section 3.2 of {{RFC7641}}). Consistently, the KDC also removes the node's entry from the list of observers of the sub-resource.
+* If the evicted node is observing its associated sub-resource at ace-group/GROUPNAME/nodes/NODENAME (see {{node-get}}), the KDC sends an unsolicited 4.04 (Not Found) response, which does not include the Observe option and indicates that the observed resource has been deleted (see Section 3.2 of {{RFC7641}}).
+
+   The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 4 ("Group membership terminated").
+
+   Consistently, the KDC also removes the node's entry from the list of observers of the sub-resource.
 
 # Extended Scope Format # {#sec-extended-scope}
 
@@ -1341,7 +1361,9 @@ extended_scope = #6.TBD_TAG(<< sequence >>)
 
 # ACE Groupcomm Parameters {#params}
 
-This specification defines a number of fields used during the second part of the message exchange, after the ACE Token POST exchange. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name. Note that the media type ace-groupcomm+cbor MUST be used when these fields are transported.
+This specification defines a number of fields used during the second part of the message exchange, after the ACE Token POST exchange. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name.
+
+Note that the media type application/ace-groupcomm+cbor MUST be used when these fields are transported.
 
 
  Name         | CBOR Key | CBOR Type     |   Reference
@@ -1366,6 +1388,20 @@ This specification defines a number of fields used during the second part of the
  gid          |   TBD    | array   | {{ace-group-fetch}}
  gname        |   TBD    | array of text strings        | {{ace-group-fetch}}
  guri         |   TBD    | array of text strings   | {{ace-group-fetch}}
+ error         |   TBD    | int   | {{key-distr}}
+ error_description |   TBD    | text string   | {{key-distr}}
+
+# ACE Groupcomm Parameters {#error-types}
+
+This specification defines a number of values that the KDC can include as error identifiers, in the 'error' field of an error reponse with Content-Format application/ace-groupcomm+cbor.
+
+ Value        | Description |
+--------------|-------------|
+ 0            | Operation permitted only to group members |
+ 1            | Request inconsistent with the current roles |
+ 2            | Public key incompatible with the group configuration |
+ 3            | Invalid proof-of-possession signature |
+ 4            | Group membership terminated
 
 # Security Considerations {#sec-cons}
 
@@ -1607,6 +1643,20 @@ The columns of this Registry are:
 
 * Reference: This field contains a pointer to the public specification defining the scope semantics, if one exists.
 
+## ACE Groupcomm Errors {#iana-ace-groupcomm-errors}
+
+This specification establishes the "ACE Groupcomm Errors" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+
+The columns of this Registry are:
+
+* Value: The value to be used to identify the error. The value MUST be unique. The value can be a positive integer or a negative integer. Integer values between 0 and 255 are designated as Standards Track Document required. Integer values from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as expert review. Integer values less than -65536 are marked as private use.
+
+* Description: This field contains a brief description of the error.
+
+* Reference: This field contains a pointer to the public specification defining the error, if one exists.
+
+This Registry has been initially populated by the values in {{error-types}}. The Reference column for all of these entries refers to this document.
+
 ## Expert Review Instructions {#review}
 
 The IANA Registries established in this document are defined as expert review.
@@ -1700,6 +1750,8 @@ This section lists the requirements on application profiles of this specificatio
 * OPT9: Optionally, specify the functionalities implemented at the 'control_uri' resource hosted at the Client, including message exchange encoding and other details (see {{gid-post}}).
 
 * OPT10: Optionally, specify how the identifier of the sender's public key is included in the group request (see {{update-pub-key}}).
+   
+* OPT11: Optionally, specify additional identifiers of error types, as values of the 'error' field in an error response from the KDC.
    
 # Document Updates # {#sec-document-updates}
 
