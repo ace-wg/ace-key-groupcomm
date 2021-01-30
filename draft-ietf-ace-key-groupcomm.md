@@ -134,17 +134,6 @@ The full procedure can be separated in two phases: the first one follows the ACE
 ~~~~~~~~~~~
 {: #fig-roles title="Key Distribution Participants" artwork-align="center"}
 
-<!-- Peter 30-07: Figure 1 is not referenced in the text. I suggest a slightly different figure where dispatcher and KDC are endpoints of the RS, and for multicast the communication is directly between Client and group members without passing through the RS.
-
-Marco: I am not sure the change is consistent, since the KDC is an AS in pub-sub, i.e. not an RS or part of an RS. Also, in group OSCORE the KDC is the RS, not part of it.
-
-Marco: We have extended the definition of Dispatcher, clarifying the two main cases involving either a Broker (ACE RS) or a bus (multicast delivery). Does this help?
--->
-
-<!-- Peter 18-11: According to text both Dispatcher and KDC can be RS, but only Dispatcher has (RS) added in the figure 1.
-
-FP: Where is the text about Dispatcher being RS in the text? -->
-
 The following participants (see {{fig-roles}}) take part in the authorization and key distribution.
 
 * Client (C): node that wants to join the group communication. It can request write and/or read rights.
@@ -153,15 +142,7 @@ The following participants (see {{fig-roles}}) take part in the authorization an
 
 * Key Distribution Center (KDC): maintains the keying material to protect group communications, and provides it to Clients authorized to join a given group. During the first part of the exchange ({{sec-auth}}), it takes the role of the RS in the ACE Framework. During the second part ({{key-distr}}), which is not based on the ACE Framework, it distributes the keying material. In addition, it provides the latest keying material to group members when requested or, if required by the application, when membership changes.
 
-<!-- Peter 18-11: Page 4, bullet 3: remove last phrase “If required…. Changes.”. It does not add anything, does it?
-FP: modified text to shorten.
-  -->
-
 * Dispatcher: entity through which the Clients communicate with the group and which distributes messages to the group members. Examples of dispatchers are: the Broker node in a pub-sub setting; a relayer node for group communication that delivers group messages as multiple unicast messages to all group members; an implicit entity as in a multicast communication setting, where messages are transmitted to a multicast IP address and delivered on the transport channel.
-
-<!-- Marco 22-02: A KDC can be responsible for more groups, while every group is associated to only one KDC.
-FP: Proposal: let's add this sentence later. There is some considerations to be done about using a "cluster of KDC", but I don't want to overcomplicate v-00. Security considerations?
--->
 
 This document specifies a mechanism for:
 
@@ -236,11 +217,6 @@ Client                                            AS  KDC
 ~~~~~~~~~~~
 {: #fig-group-member-registration title="Message Flow of Join Authorization" artwork-align="center"}
 
-<!-- Peter 30-07: It would be nice if here the use of DTLS (or not) and the content format is specified: application/cbor or application/Cose+cbor
-
-[MT] This should be out of scope, as actually per the specific ACE profile in use.
--->
-
 ## Authorization Request {#ssec-authorization-request}
 
 The Authorization Request sent from the Client to the AS is defined in Section 5.6.1 of {{I-D.ietf-ace-oauth-authz}} and MAY contain the following parameters, which, if included, MUST have the corresponding values:
@@ -264,28 +240,7 @@ The Authorization Request sent from the Client to the AS is defined in Section 5
 
 * 'audience', with an identifier of a KDC.
 
-<!--
-Peter 30-07: Question: is this a certificate identifier, or the public key extracted from the certificate, or a hash?????
-
-Marco: It is just as per ACE. See Sections 3.2 and 3.4 of draft-ietf-ace-cwt-proof-of-possession-03
--->
-
 As defined in {{I-D.ietf-ace-oauth-authz}}, other additional parameters can be included if necessary.
-
-<!--
-Marco 27-02: “scope” should include a list of identifiers. One can ask authorization for joining multiple groups in a single Authorization Request, so getting a single Access Token.
-
-Jim 13-07: Section 3.1 - Can I get authorization for multiple items at a single time?
-
-FP: Is this something we really want to cover? I think this could open up to a number of comments and questions (how do you renew keying material for just one of these res, for example). Let's think a bit more about this.
--->
-
-<!-- Jim 13-07: Section 3.1 - Does it make sense to allow for multiple audiences to be on a single KDC?
-
-Marco: In principle yes, if you consider a logical audience as the GM/Broker at a single physical KDC.
-
-Should we discuss this in the draft?
--->
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
 gname = tstr
@@ -369,10 +324,6 @@ Note that the CBOR map specified as payload of the 2.01 (Created) response may i
 
 Application profiles of this specification MAY define alternative specific negotiations of parameter values for the signature algorithm and signature keys, if 'sign_info' is not used (OPT2a).
 
-<!--
-Note that this step could be merged with the following message from the Client to the KDC, namely Key Distribution Request.
--->
-
 ### 'sign_info' Parameter {#sign-info}
 
 The 'sign_info' parameter is an OPTIONAL parameter of the Token Post response message defined in Section 5.1.2. of {{I-D.ietf-ace-oauth-authz}}. This parameter contains information and parameters about the signature algorithm and the public keys to be used between the Client and the RS. Its exact content is application specific.
@@ -426,17 +377,6 @@ This section defines the interface available at the KDC. Moreover, this section 
 
 During the first exchange with the KDC ("Joining") after posting the Token, the Client sends a request to the KDC, specifying the group it wishes to join (see {{ssec-key-distribution-exchange}}). Then, the KDC verifies the access token and that the Client is authorized to join that group. If so, it provides the Client with the keying material to securely communicate with the other members of the group. Whenever used, the Content-Format in messages containing a payload is set to application/ace-groupcomm+cbor, as defined in {{content-type}}.
 
-<!-- Jim 13-07: Should one talk about the ability to use OBSERVE as part of
-key distribution?
-
-Marco: It was just briefly mentioned before and not really elaborated. Although it would work, it seems not useful to have it together with a proper rekeying scheme where the KDC takes the initiative anyway. This would result in much more network traffic and epoch-synchronization.
--->
-
-<!-- Jim 13-07: Section 4.x - I am having a hard time trying to figure out the difference between a group and a topic.  The text does not always seem to distinguish these well.
-
-Marco: We could just go for "group", as a collection of devices sharing the same keyign material (i.e. a security group). Then a group can be mapped to a topic of common interest for its members, such as in a pub-sub environment.
--->
-
 When the Client is already a group member, the Client can use the interface at the KDC to perform the following actions:
 
 * The Client can get the current keying material, for cases such as expiration, loss or suspected mismatch, due to e.g. reboot or missed group rekeying. This is described in {{update-keys}}.
@@ -452,25 +392,6 @@ When the Client is already a group member, the Client can use the interface at t
 * The Client can get the version number of the keying material currently used in the group. This is described in {{key-version}}.
 
 * The Client can request to leave the group. This is further discussed in {{ssec-group-leaving}}.
-
-<!--
-  Jim 14-06: Discuss that a Key Distribution Request/Response can be performed exactly in the same way also by an already member of the group. Mention the cases when this happens, e.g. believed lost of synchronization with the current group security context, crash and reboot and so on, so forced re-synchronization with the correct current security context.
-
-  TODO: Add a general description on when the following msgs are used:
-    - join new nodes
-    - member for rekeying (triggered by KDC)
-    - member after they forgot (crash)
--->
-
-<!-- Jim 13-07: Section 4.x  - cnf - text does not allow for key identifier
-
-Marco: In Section 4.2, we are indicating the key identifier in the optional 'kid' parameter of the COSE Key.
--->
-
-<!-- Jim 13-07: Section X.X - Define a new cnf method to hold the OSCORE context parameters - should it be a normal COSE_Key or something new just to makes sure that it is different.
-
-Marco: Isn't it ok as we are doing with the COSE Key in Section 4.2? Then it works quite fine in ace-oscoap-joining when considering the particular joining of OSCORE groups.
--->
 
 Upon receiving a request from a Client, the KDC MUST check that it is storing a valid access token from that Client for the group name associated to the endpoint. If that is not the case, i.e. the KDC does not store a valid access token or this is not valid for that Client for the group name, the KDC MUST respond to the Client with a 4.01 (Unauthorized) error message.
 
@@ -663,8 +584,6 @@ The exact format of the 'key' value MUST be defined in applications of this spec
 +----------+----------------+---------+-------------------------+
 ~~~~~~~~~~~
 {: #gkty title="Key Type Values" artwork-align="center"}
-
-<!-- FP Im confused why do we say this "The response MAY contain which if included MUST..." twice -->
 
 The response SHOULD contain the following parameter:
 
@@ -997,25 +916,6 @@ If the node is joining a group for the first time, and the KDC maintains the pub
 
 If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the response defined in {{gid-get}}. Application profiles may define alternative ways of retrieving the keying material, such as sending separate requests to different resources at the KDC ({{gid-get}}, {{pubkey-get}}, {{policies-get}}). After distributing the new group keying material, the KDC MUST increment the version number of the keying material.
 
-
-<!-- Jim 13-07: Section X.X - Define a new cnf method to hold the OSCORE context parameters - should it be a normal COSE_Key or something new just to makes sure that it is different.
-
-Marco: Isn't it ok as we are doing with the COSE Key here in Section 4.2? Then it works quite fine in ace-oscoap-joining when considering the particular joining of OSCORE groups. Also, OSCORE is ongly a particular case, while this document is general. Also, this phase where keying material is provisinoed is not even ACE anymore, so there is no need to really stick to a 'cnf' parameter.
--->
-
-<!-- Jim 13-07: Question - does somebody talk about doing key derivation for a new kid showing up and by the way where is the gid
-
-Marco: This seems very much related to Group OSCORE, rather than general message format. In fact, it's in oscore-groupcomm that we describe how a new Recipient Context is derived on demand when "a new kid shows up".
-
-Similarly for the Gid, this document keeps a high livel perspective. It's in ace-oscoap-join that we say how the current Group ID is provided to a joining node in the 'serverID' parameter of the COSE Key in the Join Response.
--->
-
-<!-- Jim 13-07: Seciton 4.2 - if you are using profile, then you should return it.
-
-Marco:  Why? This part is not even strictly ACE anymore. Also, the Client knows what kind of response to expect, since it is contacted a specific resource on the KDC in the first place.
--->
-
-
 ## Retrieval of Updated Keying Material {#update-keys}
 
 When any of the following happens, a node MUST stop using the owned group keying material to protect outgoing messages, and SHOULD stop using it to decrypt and verify incoming messages.
@@ -1027,17 +927,6 @@ When any of the following happens, a node MUST stop using the owned group keying
 * Upon receiving messages from other group members without being able to retrieve the keying material to correctly decrypt them. This may be due to rekeying messages previously sent by the KDC, that the Client was not able to receive or decrypt.
 
 In either case, if it wants to continue participating in the group communication, the node has to request the latest keying material from the KDC. To this end, the Client sends a CoAP GET request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, formatted as specified in {{node-get}}.
-
-<!-- Jim 13-07: Comment somewhere about getting strike zones setup correctly for a newly seen sender of messages. Ptr to OSCORE?
-
-Marco: Just expanded the second paragraph in Section 6.
-
-If this is about details on deriving Recipient Contexts, that's OSCORE specific and should not be here.
-
-If this is about retrieving the public key of a newly joined sender, that's actually a general requirement and is not strictly related to OSCORE.
-
-Is there any other convenient OSCORE thing which is reusable here and we are missing?
--->
 
 Note that policies can be set up, so that the Client sends a Key Re-Distribution request to the KDC only after a given number of received messages could not be decrypted (because of failed decryption processing or inability to retrieve the necessary keying material).
 
@@ -1138,10 +1027,6 @@ Payload (in CBOR diagnostic notation, with IND_KEY being
 {: #fig-renewal-req-resp-2 title="Example of Key Renewal Request-Response" artwork-align="center"}
 
 Note the difference between the Key Distribution Request and the Key Renewal Request: while the first one only triggers distribution (the renewal might have happened independently, e.g. because of expiration), the second one triggers the KDC to produce new individual keying material for the requesting node.
-
-<!--
-Furthermore, policies can be set up so that, upon receiving a Key Renewal Request, the KDC performs a complete group rekeying before or after replying to the client (OPT8).
--->
 
 ## Retrieval of Public Keys and Roles for Group Members {#sec-key-retrieval}
 
@@ -1339,14 +1224,6 @@ Payload(in CBOR diagnostic notation):
 
 A node can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/GROUPNAME/nodes/NODENAME at the KDC, where GROUPNAME is the group name and NODENAME is its node name, formatted as defined in {{node-delete}}
 
-<!-- Jim 13-07: Section 5.2 - What is the message to leave - can I leave one scope but not another?  Can I just give up a role?
-
-Marco: We should define an actual message, like the ones for retrieving updating keying material in Section 6. It can be like the one in Section 6.1, only with the second part of 'scope' present and encoded as an empty CBOR array.
-
-Marco: 'scope' encodes one group and some roles. So a node is supposed to leave that group altogether, with all its roles. If the node wants to stay in the group with less roles, it is just fine that is stops playing the roles it is not interested in anymore.
--->
-
-
 Alternatively, a node may be removed by the KDC, without having explicitly asked for it. This is further discussed in {{sec-node-removal}}.
 
 # Removal of a Node from the Group {#sec-node-removal}
@@ -1446,26 +1323,6 @@ Compared to a scenario where the transfer does not use block-wise, depending on 
 # IANA Considerations
 
 This document has the following actions for IANA.
-
-<!--
-## OSCORE Security Context Parameters Registry
-
-The following registrations are required for the OSCORE Security Context Parameters Registry specified in Section 9.2 of {{I-D.ietf-ace-oscore-profile}}:
-
-*  Name: cs_alg
-*  CBOR Label: TBD
-*  CBOR Type: tstr / int
-*  Registry: COSE Algorithm Values (ECDSA, EdDSSA)
-*  Description: OSCORE Counter Signature Algorithm Value
-*  Reference: \[\[this specification\]\]
-
-*  Name: exp
-*  CBOR Label: TBD
-*  CBOR Type: int / float
-*  Registry:
-*  Description: OSCORE Counter Signature Algorithm Value
-*  Reference: \[\[this specification\]\]
--->
 
 ## Media Type Registrations {#media-type}
 
