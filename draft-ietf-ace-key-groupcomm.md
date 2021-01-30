@@ -1391,7 +1391,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
  error         |   TBD    | int   | {{key-distr}}
  error_description |   TBD    | text string   | {{key-distr}}
 
-# ACE Groupcomm Parameters {#error-types}
+# ACE Error Identifiers {#error-types}
 
 This specification defines a number of values that the KDC can include as error identifiers, in the 'error' field of an error reponse with Content-Format application/ace-groupcomm+cbor.
 
