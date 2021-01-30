@@ -1580,7 +1580,7 @@ This specification registers the following entry to the "CBOR Tags" registry:
 
 * Data Item: byte string
 
-* Semantics: Extended ACE scope format, including its semantics idenfifier
+* Semantics: Extended ACE scope format, including the idenfifier of the used scope semantics.
 
 * Reference: \[This Document\]
 
