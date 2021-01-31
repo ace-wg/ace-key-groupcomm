@@ -701,9 +701,15 @@ The handler expects a request with payload formatted as a CBOR map, that MUST co
 
   - The array 'role\_filter' may be empty, if the Client does not wish to filter the requested public keys based on the roles of the group members.
 
-  - The array 'id\_filter' contains zero or more node identifiers of group members, for the group identified by "GROUPNAME". The Client indicates that it wishes to receive the public keys of the nodes having or not having these node identifiers, in case the 'inclusion\_flag' parameter encodes the CBOR simple value True or False, respectively.
+  - The array 'id\_filter' contains zero or more node identifiers of group members, for the group identified by "GROUPNAME". The Client indicates that it wishes to receive the public keys of the nodes having or not having these node identifiers, in case the 'inclusion\_flag' parameter encodes the CBOR simple value True or False, respectively. The array may be empty, if the Client does not wish to filter the requested public keys based on the node identifiers of the group members.
 
-  As mentioned in {{gid-post}}, both arrays 'role\_filter' and 'id\_filter' MUST NOT be both empty at.
+Note that, in case both the 'role\_filter' array and the 'id\_filter' array are not empty:
+
+* If the 'inclusion\_flag' encodes the CBOR simple value True, the handler returns the public keys of group members whose roles match with 'role\_filter' and/or having their node identifier specified in 'id\_filter'.
+
+* If the 'inclusion\_flag' encodes the CBOR simple value False, the handler returns the public keys of group members whose roles match with 'role\_filter' and, at the same time, not having their node identifier specified in 'id\_filter'.
+
+Finally, as mentioned in {{gid-post}}, both arrays 'role\_filter' and 'id\_filter' MUST NOT be both empty.
 
 The specific format of public keys as well as identifiers, roles and combination of roles of group members MUST be specified by the application profile (OPT1, REQ2, REQ9).
 
