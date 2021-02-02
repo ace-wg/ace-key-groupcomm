@@ -1017,7 +1017,9 @@ Payload (in CBOR diagnostic notation,
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.:
 
-* Can make the ace-group/GROUPNAME resource Observable {{RFC7641}}, and send notifications to observer Clients when the keying material is updated. In case the KDC deletes the group identified by "GROUPNAME", this also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination.
+* Can make the ace-group/GROUPNAME resource Observable {{RFC7641}}, and send notifications to observer Clients when the keying material is updated.
+
+In case the KDC deletes the group identified by "GROUPNAME", this also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 5 ("Group deleted").
 
 * Can send the payload of the Key Distribution Response in one or multiple multicast POST requests to the members of the group, using secure rekeying schemes such as {{RFC2093}}{{RFC2094}}{{RFC2627}}.
 
@@ -1408,6 +1410,7 @@ This specification defines a number of values that the KDC can include as error 
  2            | Public key incompatible with the group configuration |
  3            | Invalid proof-of-possession signature |
  4            | Group membership terminated
+ 5            | Group deleted
 
 # Security Considerations {#sec-cons}
 
