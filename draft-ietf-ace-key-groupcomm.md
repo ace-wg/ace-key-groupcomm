@@ -899,7 +899,7 @@ Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
   { "gid": [01, 02], "gname": ["group1", "group2"],
-    "guri": ["kdc.example.com/g1", "kdc.example.com/g2"] }
+    "guri": ["ace-group/g1", "ace-group/g2"] }
 ~~~~~~~~~~~
 {: #fig-ace-group-fetch-2 title="Example of Group Name and URI Retrieval Request-Response" artwork-align="center"}
 
