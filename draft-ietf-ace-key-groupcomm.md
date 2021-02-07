@@ -793,7 +793,7 @@ Additionally, the handler verifies that the node is a current member of the grou
 
 Also, the handler verifies that this operation is consistent with the set of roles that the node has in the group. If the verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 1 ("Request inconsistent with the current roles").
 
-If the KDC is currently not able to serve this request, i.e. to generate new individual keying material for the requesting client, the KDC MUST respond with a 5.03 (Service Unavailable) error message.
+If the KDC is currently not able to serve this request, i.e. to generate new individual keying material for the requesting client, the KDC MUST respond with a 5.03 (Service Unavailable) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 4 ("No available node identifiers").
 
 If all verifications succeed, the handler returns a 2.05 (Content) message containing newly-generated keying material for the Client, and/or, if the application profiles requires it (OPT9), starts the complete group rekeying.
 The payload of the response is formatted as a CBOR map. The specific format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ18) and registered in {{iana-reg}}.
@@ -1019,7 +1019,7 @@ Alternatively, the re-distribution of keying material can be initiated by the KD
 
 * Can make the ace-group/GROUPNAME resource Observable {{RFC7641}}, and send notifications to observer Clients when the keying material is updated.
 
-   In case the KDC deletes the group identified by "GROUPNAME", this also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 5 ("Group deleted").
+   In case the KDC deletes the group identified by "GROUPNAME", this also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 6 ("Group deleted").
 
 * Can send the payload of the Key Distribution Response in one or multiple multicast POST requests to the members of the group, using secure rekeying schemes such as {{RFC2093}}{{RFC2094}}{{RFC2627}}.
 
@@ -1298,7 +1298,7 @@ Then, the KDC deletes the sub-resource ace-group/GROUPNAME/nodes/NODENAME associ
    
 * If the evicted node is observing its associated sub-resource at ace-group/GROUPNAME/nodes/NODENAME (see {{node-get}}), the KDC sends an unsolicited 4.04 (Not Found) response, which does not include the Observe option and indicates that the observed resource has been deleted (see Section 3.2 of {{RFC7641}}).
 
-   The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 4 ("Group membership terminated").
+   The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 5 ("Group membership terminated").
 
    Consistently, the KDC also removes the node's entry from the list of observers of the sub-resource.
 
@@ -1409,8 +1409,9 @@ This specification defines a number of values that the KDC can include as error 
  1            | Request inconsistent with the current roles |
  2            | Public key incompatible with the group configuration |
  3            | Invalid proof-of-possession signature |
- 4            | Group membership terminated
- 5            | Group deleted
+ 4            | No available node identifiers |
+ 5            | Group membership terminated |
+ 6            | Group deleted |
 
 # Security Considerations {#sec-cons}
 
