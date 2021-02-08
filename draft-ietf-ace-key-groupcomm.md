@@ -450,7 +450,7 @@ This resource implements a FETCH handler.
 
 The FETCH handler receives group identifiers and returns the corresponding group names and GROUPNAME URIs.
 
-The handler expects a request with payload formatted as a CBOR map. The payload of this request is a CBOR Map that MUST contain the following fields:
+The handler expects a request with payload formatted as a CBOR map, which MUST contain the following fields:
 
 * 'gid', whose value is encoded as a CBOR array, containing one or more group identifiers. The exact encoding of group identifier MUST be specified by the application profile (REQ9). The Client indicates that it wishes to receive the group names and GROUPNAMEs of all groups having these identifiers.
 
@@ -476,7 +476,7 @@ This resource implements GET and POST handlers.
 
 The POST handler adds the public key of the client to the list of the group members' public keys and returns the symmetric group keying material for the group identified by "GROUPNAME". Note that the group joining exchange is done by the client via this operation, as described in {{ssec-key-distribution-exchange}}.
 
-The handler expects a request with payload formatted as a CBOR map which MAY contain the following fields, which, if included, MUST have the corresponding values:
+The handler expects a request with payload formatted as a CBOR map, which MAY contain the following fields, which, if included, MUST have the corresponding values:
 
 * 'scope', with value the specific resource at the KDC that the Client is authorized to access, i.e. group or topic name, and role(s). This value is a CBOR byte string wrapping one scope entry, as defined in {{ssec-authorization-request}}.
 
