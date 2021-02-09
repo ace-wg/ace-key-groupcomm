@@ -40,6 +40,7 @@ normative:
   RFC6838:
   RFC8126:
   RFC8174:
+  RFC8610:
   RFC7252:
   RFC7967:
   RFC8742:
@@ -64,7 +65,6 @@ informative:
   RFC2627:
   RFC7959:
   RFC8259:
-  RFC8610:
   RFC8613:
   RFC8392:
   RFC7641:
