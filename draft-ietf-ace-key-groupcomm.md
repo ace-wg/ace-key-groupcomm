@@ -1538,7 +1538,7 @@ Reference: \[this document\]
 ## ACE Groupcomm Parameters Registry {#iana-reg}
 
 This specification establishes the "ACE Groupcomm Parameters" IANA Registry. The
-Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
+Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
 
 The columns of this Registry are:
 
@@ -1556,7 +1556,7 @@ This Registry has been initially populated by the values in {{params}}. The Refe
 ## ACE Groupcomm Key Registry {#iana-key}
 
 This specification establishes the "ACE Groupcomm Key" IANA Registry. The
-Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
+Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
 
 The columns of this Registry are:
 
@@ -1575,7 +1575,7 @@ This Registry has been initially populated by the values in {{gkty}}. The specif
 
 ## ACE Groupcomm Profile Registry
 
-This specification establishes the "ACE Groupcomm Profile" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+This specification establishes the "ACE Groupcomm Profile" IANA Registry. The Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
 
 The columns of this Registry are:
 
@@ -1589,7 +1589,7 @@ The columns of this Registry are:
 
 ## ACE Groupcomm Policy Registry
 
-This specification establishes the "ACE Groupcomm Policy" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+This specification establishes the "ACE Groupcomm Policy" IANA Registry. The Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
 
 The columns of this Registry are:
 
@@ -1607,7 +1607,7 @@ This registry will be initially populated by the values in {{fig-ACE-Groupcomm-P
 
 ## Sequence Number Synchronization Method Registry
 
-This specification establishes the "Sequence Number Synchronization Method" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+This specification establishes the "Sequence Number Synchronization Method" IANA Registry. The Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
 
 The columns of this Registry are:
 
@@ -1643,7 +1643,7 @@ This specification registers the following entry to the "CBOR Tags" registry:
 
 ## ACE Scope Semantics {#iana-scope-semantics}
 
-This specification establishes the "ACE Scope Semantics" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+This specification establishes the "ACE Scope Semantics" IANA Registry. The Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
 
 The columns of this Registry are:
 
@@ -1655,7 +1655,7 @@ The columns of this Registry are:
 
 ## ACE Groupcomm Errors {#iana-ace-groupcomm-errors}
 
-This specification establishes the "ACE Groupcomm Errors" IANA Registry. The Registry has been created to use the "Expert Review Required" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+This specification establishes the "ACE Groupcomm Errors" IANA Registry. The Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
 
 The columns of this Registry are:
 
