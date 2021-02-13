@@ -466,7 +466,7 @@ Then, the handler returns a 2.05 (Content) message response with payload formatt
 
 If the KDC does not find any group associated with the specified group identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
-Note that the KDC only verifies that the node is authorized by the AS to access this resource. Nodes that are not members of the group but are authorized to do signature verifications on the group messages may be allowed to access this resource, if the application needs it.
+Note that the KDC only verifies that the node is authorized by the AS to access this resource. Nodes that are not members of the group but are authorized to do signature verification on the group messages may be allowed to access this resource, if the application needs it.
 
 ### ace-group/GROUPNAME
 
@@ -861,7 +861,7 @@ Otherwise, the handler verifies the signature contained in the 'client_cred_veri
 
 If verification succeeds, the handler replaces the old public key of the node NODENAME with the one specified in the 'client_cred' field of the request, and stores it as the new current public key of the node NODENAME, in the list of group members' public keys for the group identified by GROUPNAME.
 
-If COSE Keys are used as encoding of public keys in the group, the KDC MUST set the 'kid' key paramenter of the new current public key to the node identifier that the client has in the group. If an alternative encoding of public keys is used, the KDC MUST set the node identifier of the client in the new current public key as appropriate, if that encoding supports it.
+If COSE Keys are used as encoding of public keys in the group, the KDC MUST set the 'kid' key parameter of the new current public key to the node identifier that the client has in the group. If an alternative encoding of public keys is used, the KDC MUST set the node identifier of the client in the new current public key as appropriate, if that encoding supports it.
 
 Then, the handler replies with a 2.04 (Changed) response, which does not include a payload.
 
@@ -1031,7 +1031,7 @@ Note that these methods of KDC-initiated key distribution have different securit
 
 ## Requesting a Change of Keying Material {#new-keys}
 
-Beside possible expiration, the client may need to communicate to the KDC its need for the keying material to be renewed, e.g. due to exhaustion of AEAD nonces, if AEAD is used for protecting group communnication. Depending on the application profile (OPT9), this can result in renewal of individual keying material, group keying material, or both.
+Beside possible expiration, the client may need to communicate to the KDC its need for the keying material to be renewed, e.g. due to exhaustion of AEAD nonces, if AEAD is used for protecting group communication. Depending on the application profile (OPT9), this can result in renewal of individual keying material, group keying material, or both.
 
 For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
 
@@ -1345,7 +1345,7 @@ scope = << [ + scope_entry ] >>
 semantics = int
 
 ; This defines an array, the elements
-; of which are to be usedin a CBOR Sequence:
+; of which are to be used in a CBOR Sequence:
 sequence = [semantics, scope]
 
 extended_scope = #6.TBD_TAG(<< sequence >>)
@@ -1364,7 +1364,7 @@ scope = << [ + scope_entry ] >>
 semantics = int
 
 ; This defines an array, the elements
-; of which are to be usedin a CBOR Sequence:
+; of which are to be used in a CBOR Sequence:
 sequence = [semantics, scope]
 
 extended_scope = #6.TBD_TAG(<< sequence >>)
@@ -1405,7 +1405,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 
 # ACE Groupcomm Error Identifiers {#error-types}
 
-This specification defines a number of values that the KDC can include as error identifiers, in the 'error' field of an error reponse with Content-Format application/ace-groupcomm+cbor.
+This specification defines a number of values that the KDC can include as error identifiers, in the 'error' field of an error response with Content-Format application/ace-groupcomm+cbor.
 
  Value        | Description |
 --------------|-------------|
@@ -1510,7 +1510,7 @@ Reference: \[this document\]
 
 ## OAuth Parameters Registry {#iana-kinfo}
 
-   The following registrations are done for the OAuth ParametersRegistry following the procedure specified in section 11.2 of {{RFC6749}}:
+   The following registrations are done for the OAuth Parameters Registry following the procedure specified in section 11.2 of {{RFC6749}}:
 
    o  Parameter name: sign_info
    o  Parameter usage location: token request, token response
@@ -1629,7 +1629,7 @@ This specification registers the following entry to the "Interface Description (
 
 * Attribute Value: ace.group
 
-* Description: The 'ace group' interface is used to provision keying material and related informations and policies to members of a group using the Ace framework.
+* Description: The 'ace group' interface is used to provision keying material and related information and policies to members of a group using the Ace framework.
 
 * Reference: \[This Document\]
 
@@ -1641,7 +1641,7 @@ This specification registers the following entry to the "CBOR Tags" registry:
 
 * Data Item: byte string
 
-* Semantics: Extended ACE scope format, including the idenfifier of the used scope semantics.
+* Semantics: Extended ACE scope format, including the identifier of the used scope semantics.
 
 * Reference: \[This Document\]
 
