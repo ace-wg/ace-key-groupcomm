@@ -291,7 +291,7 @@ The proof-of-possession access token (in 'access_token' above) MUST contain the 
 
 * a scope claim (see for example 'scope' registered in Section 8.13 of {{I-D.ietf-ace-oauth-authz}} for CWT).
 
-   The scope specified in this claim is the same as in the 'scope' parameter in the Authorization Response, if the parameter is present in the message, or as in the 'scope' parameter of the Authorization Request otherwise.
+   This claim specifies the same access control information as in the 'scope' parameter of the Authorization Response, if the parameter is present in the message, or as in the 'scope' parameter of the Authorization Request otherwise.
 
    By default, this claim has the same encoding as the 'scope' parameter in the Authorization Request, defined in {{ssec-authorization-request}}.
 
@@ -557,7 +557,7 @@ The handler extracts the granted scope from the access token, and checks the req
 
 If the request does not include a 'scope' field, the KDC is expected to understand which group and role(s) the Client is requesting (e.g. there is only one the Client has been granted). If the KDC can not recognize which scope the Client is requesting, it MUST respond with a 4.00 (Bad Request) error message.
 
-The KDC verifies that the group name of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. The KDC also verifies that the roles the client is granted in the group allow it to perform this operation on this resource (REQ8). If either verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. This response MAY be an AS Request Creation Hints, as defined in Section 5.1.2 of {{I-D.ietf-ace-oauth-authz}}, in which case the content format MUST be set to application/ace+cbor.
+The KDC verifies that the group name of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. The KDC also verifies that the roles the client is granted in the group allow it to perform this operation on this resource (REQ8). If either verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. This response MAY be an AS Request Creation Hints, as defined in Section 5.3 of {{I-D.ietf-ace-oauth-authz}}, in which case the content format MUST be set to application/ace+cbor.
 
 If the request is not formatted correctly (i.e. required fields non received or received with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. The response MAY have Content-Format set to application/ace+cbor and have a CBOR map as payload. For instance, the CBOR map can include the 'sign_info_res' parameter, with 'pub_key_enc' set to Null if the Client sent its own public key and the KDC is not set to store public keys of the group members.
 
@@ -675,7 +675,7 @@ The GET handler returns the symmetric group keying material for the group identi
 
 The handler expects a GET request.
 
-The KDC verifies that the group name of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. The KDC also verifies that the roles the client is granted in the group allow it to perform this operation on this resource (REQ8). If either verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. This response MAY be an AS Request Creation Hints, as defined in Section 5.1.2 of {{I-D.ietf-ace-oauth-authz}}, in which case the content format MUST be set to application/ace+cbor.
+The KDC verifies that the group name of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. The KDC also verifies that the roles the client is granted in the group allow it to perform this operation on this resource (REQ8). If either verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. This response MAY be an AS Request Creation Hints, as defined in Section 5.3 of {{I-D.ietf-ace-oauth-authz}}, in which case the content format MUST be set to application/ace+cbor.
 
 Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
 
@@ -1308,7 +1308,7 @@ This section defines an extended format of binary encoded scope, which additiona
 
 As also discussed in {{ssec-authorization-response}}, this enables a Resource Server to unambiguously process a received access token, also in case the Resource Server runs multiple applications or application profiles that involve different scope semantics.
 
-The extended format is intended only for the 'scope' claim of access tokens (see {{ssec-authorization-response}}), for the cases where it takes as value a CBOR byte string, while it does not apply to the 'scope' parameter of token requests and token responses exchanged between a client and an Authorization Server.
+The extended format is intended only for the 'scope' claim of access tokens, for the cases where the claim takes as value a CBOR byte string. That is, the extended format does not apply to the 'scope' parameter included in ACE messages, i.e. the Authorization Request and Authorization Response exchanged between the client and the Authorization Server (see Sections 5.8.1 and 5.8.2 of {{I-D.ietf-ace-oauth-authz}}), the AS Request Creation Hints from the Resource Server (see Section 5.3 of {{I-D.ietf-ace-oauth-authz}}), and the Introspection Response from the Authorization Server (see Section 5.9.2 of {{I-D.ietf-ace-oauth-authz}}).
 
 The value of the 'scope' claim following the extended format is composed as follows. Given the original scope using a semantics SEM and encoded as a CBOR byte string, the corresponding extended scope is encoded as a tagged CBOR byte string, wrapping a CBOR sequence {{RFC8742}} of two elements. In particular:
 
