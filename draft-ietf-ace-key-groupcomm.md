@@ -1304,11 +1304,13 @@ Then, the KDC deletes the sub-resource ace-group/GROUPNAME/nodes/NODENAME associ
 
 # Extended Scope Format # {#sec-extended-scope}
 
-This section defines an extended format of scope, which additionally specifies the semantics used to express the same access control information from the original scope. This extended format is intended only for the 'scope' claim of access tokens (see {{ssec-authorization-response}}), where this takes as value a CBOR byte string.
+This section defines an extended format of binary encoded scope, which additionally specifies the semantics used to express the same access control information from the corresponding original scope.
 
 As also discussed in {{ssec-authorization-response}}, this enables a Resource Server to unambiguously process a received access token, also in case the Resource Server runs multiple applications or application profiles that involve different scope semantics.
 
-Given the original scope using a semantics SEM and encoded as a CBOR byte string, the corresponding extended scope is encoded as a tagged CBOR byte string, wrapping a CBOR sequence {{RFC8742}} of two elements. In particular:
+The extended format is intended only for the 'scope' claim of access tokens (see {{ssec-authorization-response}}), for the cases where it takes as value a CBOR byte string, while it does not apply to the 'scope' parameter of token requests and token responses exchanged between a client and an Authorization Server.
+
+The value of the 'scope' claim following the extended format is composed as follows. Given the original scope using a semantics SEM and encoded as a CBOR byte string, the corresponding extended scope is encoded as a tagged CBOR byte string, wrapping a CBOR sequence {{RFC8742}} of two elements. In particular:
 
 * The first element of the sequence is a CBOR integer, and identifies the semantics SEM used for this scope. The value of this element has to be taken from the "Value" column of the "ACE Scope Semantics" registry defined in {{iana-scope-semantics}} of this specification.
 
@@ -1319,6 +1321,8 @@ Given the original scope using a semantics SEM and encoded as a CBOR byte string
 Finally, the CBOR byte string wrapping the CBOR sequence is tagged, and identified by the CBOR tag TBD_TAG "ACE Extended Scope Format", defined in {{iana-cbor-tags}} of this specification.
 
 The resulting tagged CBOR byte string is used as value of the 'scope' claim of the access token.
+
+The usage of the extended scope format is not limited to application profiles of this specification or to applications based on group communication. Rather, it is generally applicable to any application and application profile where access control information in the access token is expressed as a binary encoded scope.
 
 {{cddl-ex-0-ext}} and {{cddl-ex-ext}} build on the examples in {{ssec-authorization-response}}, and show the corresponding extended scopes.
 
