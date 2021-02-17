@@ -1469,9 +1469,9 @@ This document has the following actions for IANA.
 
    Subtype name: ace-groupcomm+cbor
 
-   Required parameters: none
+   Required parameters: N/A
 
-   Optional parameters: none
+   Optional parameters: N/A
 
    Encoding considerations: Must be encoded as CBOR map containing the protocol parameters defined in \[this document\].
 
@@ -1483,7 +1483,9 @@ This document has the following actions for IANA.
 
    Applications that use this media type: The type is used by authorization servers, clients and resource servers that support the ACE groupcomm framework as specified in \[this document\].
 
-   Additional information: n/a
+   Fragment identifier considerations: N/A
+   
+   Additional information: N/A
 
    Person & email address to contact for further information:
    <iesg@ietf.org>
