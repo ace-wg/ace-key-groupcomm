@@ -50,6 +50,7 @@ normative:
   I-D.ietf-cose-rfc8152bis-algs:
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-core-oscore-groupcomm:
+  I-D.ietf-ace-aif:
   COSE.Algorithms:
     author:
       org: IANA
@@ -73,7 +74,6 @@ informative:
   I-D.ietf-ace-oscore-profile:
   I-D.ietf-ace-dtls-authorize:
   I-D.ietf-ace-mqtt-tls-profile:
-  I-D.ietf-ace-aif:
 
 
 --- abstract
