@@ -115,6 +115,10 @@ This document additionally uses the following terminology:
 
 * Application profile, that defines how applications enforce and use supporting security services they require. These services may include, for instance, provisioning, revocation and distribution of keying material. An application profile may define specific procedures and message formats.
 
+* Signature-only group, to indicate a group where group members use exclusively digital signatures to achieve source authentication.
+
+* Pairwise-only group, to indicate a group where group members never use digital signatures to achieve source authentication. Instead, they rather use exclusively pairwise symmetric keying material, derived from the group keying material and a static-static Diffie-Hellman secret. This practically limits communications in the group to be only one-to-one, rather than one-to-many. As an example, {{I-D.ietf-core-oscore-groupcomm}} can be used to secure communications in a group by using exclusively its "pairwise mode", without any recourse to digital signatures.
+
 # Overview
 
 The full procedure can be separated in two phases: the first one follows the ACE framework, between Client, AS and KDC; the second one is the key distribution between Client and KDC. After the two phases are completed, the Client is able to participate in the group communication, via a Dispatcher entity.
