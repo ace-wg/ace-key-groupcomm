@@ -626,7 +626,7 @@ Optionally, the response MAY contain the following parameters, which, if include
 
 * 'peer\_roles', MUST be present if 'pub\_keys' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, with n the number of public keys included in the 'pub\_keys' parameter (at most the number of members in the group). The i-th element of the array specifies the role (or CBOR array of roles) that the group member associated to the i-th public key in 'pub\_keys' has in the group. In particular, each array element is encoded as the role element of a scope entry, as defined in {{ssec-authorization-request}}.
 
-* 'peer\_identifiers', MUST be present if 'pub\_keys' is also present and, at the same time, the used encoding for public keys does not allow to specify a node identifier within the associated public key. Otherwise, it MUST NOT be present. This parameter is a CBOR array of n elements, with n the number of public keys included in the 'pub\_keys' parameter (at most the number of members in the group). The i-th element of the array specifies the node identifier that the group member associated to the i-th public key in 'pub\_keys' has in the group. In particular, the i-th array element is encoded as a CBOR byte string wrapping the node identifier of the group member.
+* 'peer\_identifiers', MUST be present if 'pub\_keys' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, with n the number of public keys included in the 'pub\_keys' parameter (at most the number of members in the group). The i-th element of the array specifies the node identifier that the group member associated to the i-th public key in 'pub\_keys' has in the group. In particular, the i-th array element is encoded as a CBOR byte string wrapping the node identifier of the group member.
 
 * 'group\_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policy" Registry. This specification defines the three elements "Sequence Number Synchronization Method", "Key Update Check Interval" and "Expiration Delta", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format and default value of included map entries (REQ17).
 
@@ -724,9 +724,17 @@ If verification succeeds, the handler identifies the public keys of the current 
 
   - the node identifier matches with one of those indicated in the request.
 
-Then, the handler returns a 2.05 (Content) message response with payload formatted as a CBOR map, containing the 'num', 'pub\_keys' and 'peer\_roles' parameters from {{gid-post}}. In particular, 'num' encodes the version number of the current group keying material, 'pub\_keys' encodes the list of public keys of the selected group members including the respective member identifiers, and 'peer\_roles' encodes their respective role (or CBOR array of roles) in the group. The specific format of public keys as well as of node identifiers of group members is specified by the application profile (OPT1, REQ12).
+Then, the handler returns a 2.05 (Content) message response with payload formatted as a CBOR map, containing only the following parameters from {{gid-post}}.
 
-If the used encoding for public keys does not allow to specify a node identifier within the associated public key, the response payload MUST include also the 'peer\_identifiers' parameter from {{gid-post}}. Otherwise, this parameter MUST NOT be included.
+* 'num', which encodes the version number of the current group keying material.
+
+* 'pub\_keys', which encodes the list of public keys of the selected group members.
+
+* 'peer\_roles', which encodes the role (or CBOR array of roles) that each of the selected group members has in the group.
+
+* 'peer\_identifiers', which encodes the node identifier that each of the selected group members has in the group.
+
+The specific format of public keys as well as of node identifiers of group members is specified by the application profile (OPT1, REQ12).
 
 If the KDC does not store any public key associated with the specified node identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
@@ -1111,7 +1119,8 @@ Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
   { "num": 5,
     "pub_keys": << [ PUB_KEY1, PUB_KEY2, PUB_KEY3 ] >>,
-    "peer_roles": ["sender", ["sender", "receiver"], "receiver"] }
+    "peer_roles": ["sender", ["sender", "receiver"], "receiver"],
+    "peer_identifiers": [ ID1, ID2, ID3 ] }
 ~~~~~~~~~~~
 {: #fig-public-key-3 title="Example of Public Key Exchange to Request All Members Public Keys" artwork-align="center"}
 
