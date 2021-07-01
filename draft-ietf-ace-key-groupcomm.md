@@ -568,7 +568,7 @@ If the request does not include a 'scope' field, the KDC is expected to understa
 
 The KDC verifies that the group name of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. The KDC also verifies that the roles the client is granted in the group allow it to perform this operation on this resource (REQ8). If either verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. This response MAY be an AS Request Creation Hints, as defined in {{Section 5.3 of I-D.ietf-ace-oauth-authz}}, in which case the content format MUST be set to application/ace+cbor.
 
-If the request is not formatted correctly (i.e. required fields non received or received with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. The response MAY have Content-Format set to application/ace+cbor and have a CBOR map as payload. For instance, the CBOR map can include the 'sign_info_res' parameter, with 'pub_key_enc' set to Null if the Client sent its own public key and the KDC is not set to store public keys of the group members.
+If the request is not formatted correctly (i.e. required fields non received or received with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. The response MAY have Content-Format set to application/ace-groupcomm+cbor and have a CBOR map as payload. For instance, the CBOR map can include a 'sign_info' parameter formatted as 'sign_info_res' defined in {{sign-info}}, with the 'pub_key_enc' element set to Null if the Client sent its own public key and the KDC is not set to store public keys of the group members.
 
 If the request contained unknown or non-expected fields present, the handler MUST silently drop them and continue processing. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT7).
 
@@ -1416,6 +1416,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
  peer_identifiers     |   TBD    | array   | {{gid-post}}
  group_policies      |   TBD    | map           | {{gid-post}}
  mgt_key_material    |   TBD    | byte string   | {{gid-post}}
+ sign_info | TBD | array | {{gid-post}}
  gid          |   TBD    | array   | {{ace-group-fetch}}
  gname        |   TBD    | array of text strings        | {{ace-group-fetch}}
  guri         |   TBD    | array of text strings   | {{ace-group-fetch}}
