@@ -600,9 +600,9 @@ If all verifications succeed, the handler:
   - Adds the retrieved public key of the node to the list of public keys stored for the group identified by "GROUPNAME"
   - Associates the node's public key with its access token and the group identified by "GROUPNAME", if such association did not already exist.
 
-* Returns a 2.01 (Created) message containing the symmetric group keying material, the group policies and all the public keys of the current members of the group, if the KDC manages those and the Client requested them.
+* Returns a 2.01 (Created) response, containing the symmetric group keying material, the group policies and the public keys of the current members of the group, if the KDC manages those and the Client requested them.
 
-The response message also contains the URI path to the sub-resource created for that node in a Location-Path CoAP option. The payload of the response is formatted as a CBOR map which MUST contain the following fields and values:
+The response message also contains the URI path to the sub-resource created for that node in a Location-Path CoAP option. The response MUST have Content-Format application/ace-groupcomm+cbor. The payload of the response is formatted as a CBOR map, which MUST contain the following fields and values.
 
 * 'gkty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key" Registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key" registry.
 
