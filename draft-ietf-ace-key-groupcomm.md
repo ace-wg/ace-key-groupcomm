@@ -628,7 +628,7 @@ Optionally, the response MAY contain the following parameters, which, if include
 
 * 'ace-groupcomm-profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. Applications of this specification MUST register an application profile identifier and the related value for this parameter in the "ACE Groupcomm Profile" Registry (REQ15).
 
-* 'pub\_keys', MUST be present if 'get\_pub\_keys' was present in the request, otherwise it MUST NOT be present. This parameter is a CBOR byte string, which encodes the public keys of all the group members paired with the respective member identifiers. The default encoding for public keys is COSE Keys, so the default encoding for 'pub\_keys' is a CBOR byte string wrapping a COSE\_KeySet (see {{I-D.ietf-cose-rfc8152bis-struct}}), which contains the public keys of all the members of the group. In particular, each COSE Key in the COSE\_KeySet includes the node identifier of the corresponding group member as value of its 'kid' key parameter. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT1). The specific format of the node identifiers of group members MUST be specified in the application profile (REQ12).
+* 'pub\_keys', MUST be present if 'get\_pub\_keys' was present in the request, otherwise it MUST NOT be present. This parameter is a CBOR array specifying the public keys of the group members, i.e., of all of them or of the ones selected according to the 'get\_pub\_keys' parameter in the request. In particular, each element of the array is a CBOR byte string, which wraps the original binary representation of a group member's public key. The specific format of public keys is specified by the application profile (REQ6).
 
 * 'peer\_roles', MUST be present if 'pub\_keys' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, with n the number of public keys included in the 'pub\_keys' parameter (at most the number of members in the group). The i-th element of the array specifies the role (or CBOR array of roles) that the group member associated to the i-th public key in 'pub\_keys' has in the group. In particular, each array element is encoded as the role element of a scope entry, as defined in {{ssec-authorization-request}}.
 
@@ -858,7 +858,7 @@ This resource implements a POST handler, if the KDC stores the public key of gro
 
 The POST handler is used to replace the stored public key of this client (identified by "NODENAME") with the one specified in the request at the KDC, for the group identified by "GROUPNAME".
 
-The handler expects a POST request with payload as specified in {{gid-post}}, with the difference that it includes only the parameters 'client_cred', 'cnonce' and 'client_cred_verify'. In particular, the PoP evidence included in 'client_cred_verify' is computed in the same way considered in {{gid-post}} and defined by the specific application profile (REQ20a), with a newly generated N_C nonce and the previously received N_S. The specific format of public keys is specified by the application profile (OPT1).
+The handler expects a POST request with payload as specified in {{gid-post}}, with the difference that it includes only the parameters 'client_cred', 'cnonce' and 'client_cred_verify'. In particular, the PoP evidence included in 'client_cred_verify' is computed in the same way considered in {{gid-post}} and defined by the specific application profile (REQ20a), with a newly generated N_C nonce and the previously received N_S. The specific format of public keys is specified by the application profile (REQ6).
 
 The handler verifies that the group name GROUPNAME is a subset of the 'scope' stored in the access token associated to the client identified by "NODENAME". The KDC also verifies that the roles the client is granted in the group allow it to perform this operation on this resource (REQ8). If either verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message.
 
@@ -961,7 +961,7 @@ Location-Path: "c101"
 Payload (in CBOR diagnostic notation,
          with KEY being a CBOR byte strings):
   { "gkty": 13, "key": KEY, "num": 12, "exp": 1609459200,
-    "pub_keys": << [ PUB_KEY1, PUB_KEY2 ] >>,
+    "pub_keys": [ PUB_KEY1, PUB_KEY2 ],
     "peer_roles": ["sender", ["sender", "receiver"]] }
 ~~~~~~~~~~~
 {: #fig-key-distr-join-2 title="Example of First Exchange for Group Joining" artwork-align="center"}
@@ -1124,7 +1124,7 @@ Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
   { "num": 5,
-    "pub_keys": << [ PUB_KEY1, PUB_KEY2, PUB_KEY3 ] >>,
+    "pub_keys": [ PUB_KEY1, PUB_KEY2, PUB_KEY3 ],
     "peer_roles": ["sender", ["sender", "receiver"], "receiver"],
     "peer_identifiers": [ ID1, ID2, ID3 ] }
 ~~~~~~~~~~~
@@ -1158,7 +1158,7 @@ Response:
 Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
-  { "pub_keys": << [ PUB_KEY3 ] >>,
+  { "pub_keys": [ PUB_KEY3 ],
     "peer_roles": ["receiver"] }
 ~~~~~~~~~~~
 {: #fig-public-key-4 title="Example of Public Key Exchange to Request Specific Members Public Keys" artwork-align="center"}
@@ -1411,7 +1411,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
  num          |   TBD    | int           | {{gid-post}}
  ace-groupcomm-profile |   TBD    | int           | {{gid-post}}
  exp          |   TBD    | int           | {{gid-post}}
- pub_keys     |   TBD    | byte string   | {{gid-post}}
+ pub_keys     |   TBD    | array   | {{gid-post}}
  peer_roles     |   TBD    | array   | {{gid-post}}
  peer_identifiers     |   TBD    | array   | {{gid-post}}
  group_policies      |   TBD    | map           | {{gid-post}}
@@ -1730,7 +1730,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ5: If used, specify the acceptable values for 'sign_key_parameters' (see {{token-post}}).
 
-* REQ6: If used, specify the acceptable values for 'pub_key_enc' (see {{token-post}}).
+* REQ6: Specify the acceptable formats of public keys and, if used, the acceptable values for 'pub_key_enc' (see {{token-post}}).
 
 * REQ7: Register a Resource Type for the root url-path, which is used to discover the correct url to access at the KDC (see {{kdc-if}}).
 
@@ -1768,8 +1768,6 @@ This section lists the requirements on application profiles of this specificatio
 * REQ22: Define the initial value of the 'num' parameter (see {{gid-post}}).
 
 * REQ23: Specify and register the identifier of newly defined semantics for binary scopes (see {{sec-extended-scope}}).
-
-* OPT1: Optionally, specify the encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used (see {{gid-post}}).
 
 * OPT2: Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' is not used (see {{token-post}}).
 
