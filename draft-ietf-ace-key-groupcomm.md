@@ -360,7 +360,7 @@ The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one 
 
 * The fourth element 'sign_key_parameters' is a CBOR array indicating the parameters of the key used with the signature algorithm, in the groups identified by the 'gname' values. Its content depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define the possible values and structure for the elements of this parameter (REQ5).
 
-* The fifth element 'pub_key_enc' parameter is either a CBOR integer indicating the encoding of public keys used in the groups identified by the 'gname' values, or has value Null indicating that the KDC does not act as repository of public keys for group members. Its acceptable integer values are taken from the "COSE Header Parameters" Registry {{COSE.Header.Parameters}}. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
+* The fifth element 'pub_key_enc' parameter is either a CBOR integer indicating the encoding of public keys used in the groups identified by the 'gname' values, or has value Null indicating that the KDC does not act as repository of public keys for group members. Its acceptable integer values are taken from the 'Label' column of the "COSE Header Parameters" Registry {{COSE.Header.Parameters}}. It is REQUIRED of the application profiles to define specific values to use for this parameter (REQ6).
 
 The CDDL notation {{RFC8610}} of the 'sign_info' parameter formatted as in the response is given below.
 
