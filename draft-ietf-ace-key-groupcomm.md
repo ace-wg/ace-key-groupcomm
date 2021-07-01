@@ -724,7 +724,7 @@ If verification succeeds, the handler identifies the public keys of the current 
 
   - the node identifier matches with one of those indicated in the request.
 
-Then, the handler returns a 2.05 (Content) message response with payload formatted as a CBOR map, containing only the 'pub\_keys' and 'peer\_roles' parameters from {{gid-post}}. In particular, 'pub\_keys' encodes the list of public keys of those group members including the respective member identifiers, while 'peer\_roles' encodes their respective role (or CBOR array of roles) in the group. The specific format of public keys as well as of node identifiers of group members is specified by the application profile (OPT1, REQ12).
+Then, the handler returns a 2.05 (Content) message response with payload formatted as a CBOR map, containing the 'num', 'pub\_keys' and 'peer\_roles' parameters from {{gid-post}}. In particular, 'num' encodes the version number of the current group keying material, 'pub\_keys' encodes the list of public keys of the selected group members including the respective member identifiers, and 'peer\_roles' encodes their respective role (or CBOR array of roles) in the group. The specific format of public keys as well as of node identifiers of group members is specified by the application profile (OPT1, REQ12).
 
 If the used encoding for public keys does not allow to specify a node identifier within the associated public key, the response payload MUST include also the 'peer\_identifiers' parameter from {{gid-post}}. Otherwise, this parameter MUST NOT be included.
 
@@ -1109,7 +1109,8 @@ Response:
 Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
-  { "pub_keys": << [ PUB_KEY1, PUB_KEY2, PUB_KEY3 ] >>,
+  { "num": 5,
+    "pub_keys": << [ PUB_KEY1, PUB_KEY2, PUB_KEY3 ] >>,
     "peer_roles": ["sender", ["sender", "receiver"], "receiver"] }
 ~~~~~~~~~~~
 {: #fig-public-key-3 title="Example of Public Key Exchange to Request All Members Public Keys" artwork-align="center"}
