@@ -155,11 +155,13 @@ This document specifies a mechanism for:
 
 * Authorizing a new node to join the group ({{sec-auth}}), and providing it with the group keying material to communicate with the other group members ({{key-distr}}).
 
+* Allowing a group member to retrieve group keying material ({{update-keys}} and {{new-keys}}).
+
+* Allowing a group member to retrieve public keys of other group members ({{sec-key-retrieval}}) and to provide an updated public key ({{update-pub-key}}).
+
 * Allowing a group member to leave the group ({{sec-node-removal}}).
 
 * Evicting a group member from the group ({{sec-node-removal}}).
-
-* Allowing a group member to retrieve keying material ({{update-keys}} and {{new-keys}}).
 
 * Renewing and re-distributing the group keying material (rekeying) upon a membership change in the group ({{ssec-group-leaving}} and {{sec-node-removal}}).
 
