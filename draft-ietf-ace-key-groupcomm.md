@@ -243,7 +243,7 @@ The Authorization Request sent from the Client to the AS is defined in {{Section
   - Optionally, as second element, the role (or CBOR array of roles) that the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s).
 
   In each entry, the encoding of the role identifiers is application specific, and part of the requirements for the application profile (REQ2).
-  In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT8).
+  In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7).
 
   An example of CDDL definition {{RFC8610}} of scope using the format above, with group name and role identifiers encoded as text strings is given in {{cddl-ex}}.
 
@@ -334,9 +334,9 @@ The KDC MUST store the 'kdcchallenge' value associated to the Client at least un
 
 If ’sign_info’ is included in the request, the KDC MAY include the ’sign_info’ parameter defined in {{sign-info}}, with the same encoding. Note that the field 'id' takes the value of the group name for which the 'sign_info_entry' applies to.
 
-Note that the CBOR map specified as payload of the 2.01 (Created) response may include further parameters, e.g. according to the signalled transport profile of ACE. Application profiles MAY define the additional parameters to use within this exchange (OPT3).
+Note that the CBOR map specified as payload of the 2.01 (Created) response may include further parameters, e.g. according to the signalled transport profile of ACE. Application profiles MAY define the additional parameters to use within this exchange (OPT2).
 
-Application profiles of this specification MAY define alternative specific negotiations of parameter values for the signature algorithm and signature keys, if 'sign_info' is not used (OPT2).
+Application profiles of this specification MAY define alternative specific negotiations of parameter values for the signature algorithm and signature keys, if 'sign_info' is not used (OPT1).
 
 ### 'sign_info' Parameter {#sign-info}
 
@@ -421,7 +421,7 @@ Some error responses from the KDC can have Content-Format set to application/ace
 
 CBOR labels for the 'error' and 'error_description' fields are defined in {{params}}.
 
-{{error-types}} of this specification defines an initial set of error identifiers, as possible values for the 'error' field. Application profiles of this specification MAY define additional value (OPT12).
+{{error-types}} of this specification defines an initial set of error identifiers, as possible values for the 'error' field. Application profiles of this specification MAY define additional value (OPT11).
 
 ## Interface at the KDC {#kdc-if}
 
@@ -541,9 +541,9 @@ get_pub_keys = null / [ [ inclusion, *(role / comb_role) ], [ *id ] ]
 
     If the token was not posted (e.g., if it is used directly to validate TLS instead), it is REQUIRED of the specific profile to define how the challenge N_S is generated (REQ21).
 
-* 'pub_keys_repos', which can be present if the format of the Client's public key in the 'client_cred' parameter is a certificate. In such a case, this parameter has as value the URI of the certificate. This parameter is encoded as a CBOR text string. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT4).
+* 'pub_keys_repos', which can be present if the format of the Client's public key in the 'client_cred' parameter is a certificate. In such a case, this parameter has as value the URI of the certificate. This parameter is encoded as a CBOR text string. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT3).
 
-* 'control_uri', with value a full URI, encoded as a CBOR text string. If 'control_uri' is supported by the Client, the Client acts as a CoAP server and hosts a resource at this specific URI. The KDC MAY use this URI to send CoAP requests to the Client (acting as CoAP server in this exchange), for example for individual provisioning of new keying material when performing a group rekeying (see {{update-keys}}), or to inform the Client of its removal from the group {{sec-node-removal}}. If the KDC does not implement mechanisms using this resource, it can just ignore this parameter. Other additional functionalities of this resource MAY be defined in application profiles of this specifications (OPT10). In particular, this resource is intended for communications concerning exclusively the group or topic specified in the 'scope' parameter.
+* 'control_uri', with value a full URI, encoded as a CBOR text string. If 'control_uri' is supported by the Client, the Client acts as a CoAP server and hosts a resource at this specific URI. The KDC MAY use this URI to send CoAP requests to the Client (acting as CoAP server in this exchange), for example for individual provisioning of new keying material when performing a group rekeying (see {{update-keys}}), or to inform the Client of its removal from the group {{sec-node-removal}}. If the KDC does not implement mechanisms using this resource, it can just ignore this parameter. Other additional functionalities of this resource MAY be defined in application profiles of this specifications (OPT9). In particular, this resource is intended for communications concerning exclusively the group or topic specified in the 'scope' parameter.
 
 ~~~~~~~~~~~~~~~~~~~~
 scope, N_S, and N_C expressed in CBOR diagnostic notation:
@@ -572,7 +572,7 @@ The KDC verifies that the group name of the /ace-group/GROUPNAME path is a subse
 
 If the request is not formatted correctly (i.e., required fields non received or received with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. The response MAY have Content-Format set to application/ace-groupcomm+cbor and have a CBOR map as payload. For instance, the CBOR map can include a 'sign_info' parameter formatted as 'sign_info_res' defined in {{sign-info}}, with the 'pub_key_enc' element set to Null if the Client sent its own public key and the KDC is not set to store public keys of the group members.
 
-If the request contained unknown or non-expected fields present, the handler MUST silently drop them and continue processing. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT6).
+If the request contained unknown or non-expected fields present, the handler MUST silently drop them and continue processing. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT5).
 
 If the KDC manages the group members' public keys, the handler checks if one is included in the 'client_cred' field. If so, the KDC retrieves the public key and performs the following actions.
 
@@ -588,7 +588,7 @@ If the KDC manages the group members' public keys, the handler checks if one is 
 
 If no public key is included in the 'client_cred' field, the handler checks if one public key is already associated to the received access token (see {{ssec-key-distribution-exchange}} for an example) and to the group identified by GROUPNAME.
 
-If an eligible public key for the Client is neither present in the 'client_cred' field nor already stored, it is RECOMMENDED that the handler stops the processing and responds with a 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT7).
+If an eligible public key for the Client is neither present in the 'client_cred' field nor already stored, it is RECOMMENDED that the handler stops the processing and responds with a 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT6).
 
 If all the verifications above succeed, the handler performs the following actions.
 
@@ -803,7 +803,7 @@ This resource implements GET, PUT and DELETE handlers.
 
 #### PUT Handler {#node-put}
 
-The PUT handler is used to get the KDC to produce and return individual keying material to protect outgoing messages for the node (identified by NODENAME) for the group identified by GROUPNAME. Application profiles MAY also use this handler to rekey the whole group. It is up to the application profiles to specify if this handler supports renewal of individual keying material, renewal of the group keying material or both (OPT9).
+The PUT handler is used to get the KDC to produce and return individual keying material to protect outgoing messages for the node (identified by NODENAME) for the group identified by GROUPNAME. Application profiles MAY also use this handler to rekey the whole group. It is up to the application profiles to specify if this handler supports renewal of individual keying material, renewal of the group keying material or both (OPT8).
 
 The handler expects a request with empty payload. In case the request has a non-empty payload, the KDC MUST respond with a 4.00 (Bad Request) error message.
 
@@ -817,7 +817,7 @@ Also, the handler verifies that this operation is consistent with the set of rol
 
 If the KDC is currently not able to serve this request, i.e., to generate new individual keying material for the requesting client, the KDC MUST respond with a 5.03 (Service Unavailable) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 4 ("No available node identifiers").
 
-If all verifications succeed, the handler returns a 2.05 (Content) message containing newly-generated keying material for the Client, and/or, if the application profiles requires it (OPT9), starts the complete group rekeying.
+If all verifications succeed, the handler returns a 2.05 (Content) message containing newly-generated keying material for the Client, and/or, if the application profiles requires it (OPT8), starts the complete group rekeying.
 The payload of the response is formatted as a CBOR map. The specific format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ18) and registered in {{iana-reg}}.
 
 #### GET Handler {#node-get}
@@ -873,7 +873,7 @@ Additionally, the handler verifies that the node is a current member of the grou
 
 Also, the handler verifies that this operation is consistent with the set of roles that the node has in the group. If the verification fails, the KDC MUST respond with a 4.00 (Bad Request) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 1 ("Request inconsistent with the current roles")
 
-If the request is not formatted correctly (i.e., required fields non received or received with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. If the request contains unknown or non-expected fields present, the handler MUST silently ignore them and continue processing. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT6).
+If the request is not formatted correctly (i.e., required fields non received or received with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. If the request contains unknown or non-expected fields present, the handler MUST silently ignore them and continue processing. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT5).
 
 If the KDC cannot retrieve the 'kdcchallenge' associated to this Client (see {{token-post}}), the KDC MUST respond with a 4.00 Bad Request error response, which MUST also have Content-Format application/ace-groupcomm+cbor. The payload of the error response is a CBOR map including a newly generated 'kdcchallenge' value. This is specified in the 'kdcchallenge' parameter, whose CBOR label is defined in {{params}}. In such a case the KDC MUST store the newly generated value as the 'kdcchallenge' value associated to this Client, possibly replacing the currently stored value.
 
@@ -998,7 +998,7 @@ In either case, if it wants to continue participating in the group communication
 
 Note that policies can be set up, so that the Client sends a Key Re-Distribution request to the KDC only after a given number of received messages could not be decrypted (because of failed decryption processing or inability to retrieve the necessary keying material).
 
-It is application dependent and pertaining to the particular message exchange (e.g., {{I-D.ietf-core-oscore-groupcomm}}) to set up these policies for instructing clients to retain incoming messages and for how long (OPT5). This allows clients to possibly decrypt such messages after getting updated keying material, rather than just consider them non valid messages to discard right away.
+It is application dependent and pertaining to the particular message exchange (e.g., {{I-D.ietf-core-oscore-groupcomm}}) to set up these policies for instructing clients to retain incoming messages and for how long (OPT4). This allows clients to possibly decrypt such messages after getting updated keying material, rather than just consider them non valid messages to discard right away.
 
 The same Key Distribution Request could also be sent by the Client without being triggered by a failed decryption of a message, if the Client wants to be sure that it has the latest group keying material. If that is the case, the Client will receive from the KDC the same group keying material it already has in memory.
 
@@ -1055,7 +1055,7 @@ Note that these methods of KDC-initiated key distribution have different securit
 
 ## Requesting a Change of Keying Material {#new-keys}
 
-Beside possible expiration, the client may need to communicate to the KDC its need for the keying material to be renewed, e.g., due to exhaustion of AEAD nonces, if AEAD is used for protecting group communication. Depending on the application profile (OPT9), this can result in renewal of individual keying material, group keying material, or both.
+Beside possible expiration, the client may need to communicate to the KDC its need for the keying material to be renewed, e.g., due to exhaustion of AEAD nonces, if AEAD is used for protecting group communication. Depending on the application profile (OPT8), this can result in renewal of individual keying material, group keying material, or both.
 
 For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
 
@@ -1218,7 +1218,7 @@ Payload: -
 If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a group member updating its own public key. To this end, the KDC uses the message format of the response defined in {{gid-get}}. Application profiles may define alternative ways of retrieving the keying material, such as sending separate requests to different resources at the KDC ({{gid-get}}, {{pubkey-get}}, {{policies-get}}).
 The KDC MUST increment the version number of the current keying material, before distributing the newly generated keying material to the group. After that, the KDC SHOULD store the distributed keying material in persistent storage.
 
-Additionally, after updating its own public key, a group member MAY send a number of the later requests including an identifier of the updated public key, to signal nodes that they need to retrieve it. How that is done depends on the group communication protocol used, and therefore is application profile specific (OPT11).
+Additionally, after updating its own public key, a group member MAY send a number of the later requests including an identifier of the updated public key, to signal nodes that they need to retrieve it. How that is done depends on the group communication protocol used, and therefore is application profile specific (OPT10).
 
 ## Retrieval of Group Policies {#policies}
 
@@ -1778,27 +1778,27 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ24: Specify and register the identifier of newly defined semantics for binary scopes (see {{sec-extended-scope}}).
 
-* OPT2: Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' is not used (see {{token-post}}).
+* OPT1: Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' is not used (see {{token-post}}).
 
-* OPT3: Optionally, specify the additional parameters used in the Token Post exchange (see {{token-post}}).
+* OPT2: Optionally, specify the additional parameters used in the Token Post exchange (see {{token-post}}).
 
-* OPT4: Optionally, specify the encoding of 'pub\_keys\_repos' if the default is not used (see {{gid-post}}).
+* OPT3: Optionally, specify the encoding of 'pub\_keys\_repos' if the default is not used (see {{gid-post}}).
 
-* OPT5: Optionally, specify policies that instruct clients to retain messages and for how long, if they are unsuccessfully decrypted (see {{update-keys}}). This makes it possible to decrypt such messages after getting updated keying material.
+* OPT4: Optionally, specify policies that instruct clients to retain messages and for how long, if they are unsuccessfully decrypted (see {{update-keys}}). This makes it possible to decrypt such messages after getting updated keying material.
 
-* OPT6: Optionally, specify possible or required payload formats for specific error cases.
+* OPT5: Optionally, specify possible or required payload formats for specific error cases.
 
-* OPT7: Optionally, specify the behavior of the handler in case of failure to retrieve a public key for the specific node (see {{gid-post}}).
+* OPT6: Optionally, specify the behavior of the handler in case of failure to retrieve a public key for the specific node (see {{gid-post}}).
 
-* OPT8: Optionally, specify CBOR values to use for abbreviating identifiers of roles in the group or topic (see {{ssec-authorization-request}}).
+* OPT7: Optionally, specify CBOR values to use for abbreviating identifiers of roles in the group or topic (see {{ssec-authorization-request}}).
 
-* OPT9: Optionally, specify for the KDC to perform group rekeying (together or instead of renewing individual keying material) when receiving a Key Renewal Request (see {{new-keys}}).
+* OPT8: Optionally, specify for the KDC to perform group rekeying (together or instead of renewing individual keying material) when receiving a Key Renewal Request (see {{new-keys}}).
 
-* OPT10: Optionally, specify the functionalities implemented at the 'control_uri' resource hosted at the Client, including message exchange encoding and other details (see {{gid-post}}).
+* OPT9: Optionally, specify the functionalities implemented at the 'control_uri' resource hosted at the Client, including message exchange encoding and other details (see {{gid-post}}).
 
-* OPT11: Optionally, specify how the identifier of the sender's public key is included in the group request (see {{update-pub-key}}).
+* OPT10: Optionally, specify how the identifier of the sender's public key is included in the group request (see {{update-pub-key}}).
    
-* OPT12: Optionally, specify additional identifiers of error types, as values of the 'error' field in an error response from the KDC.
+* OPT11: Optionally, specify additional identifiers of error types, as values of the 'error' field in an error response from the KDC.
 
 # Extensibility for Future COSE Algorithms # {#sec-future-cose-algs}
 
