@@ -1563,7 +1563,7 @@ Mappings Registry following the procedure specified in {{Section 8.10 of I-D.iet
 
 * Name: sign_info
 * CBOR Key: TBD (range -256 to 255)
-* Value Type: array
+* Value Type: simple value Null / array
 * Reference: \[\[This specification\]\]
 
 &nbsp;
