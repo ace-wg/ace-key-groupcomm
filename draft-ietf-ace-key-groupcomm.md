@@ -381,7 +381,7 @@ The CDDL notation {{RFC8610}} of the 'sign_info' parameter formatted as in the r
    gname = tstr
 ~~~~~~~~~~~
 
-This format is consistent with every counter signature algorithm currently considered in {{I-D.ietf-cose-rfc8152bis-algs}}, i.e., with algorithms that have only the COSE key type as their COSE capability. {{sec-future-cose-algs}} describes how the format of each 'sign_info_entry' can be generalized for possible future registered algorithms having a different set of COSE capabilities.
+This format is consistent with every signature algorithm currently considered in {{I-D.ietf-cose-rfc8152bis-algs}}, i.e., with algorithms that have only the COSE key type as their COSE capability. {{sec-future-cose-algs}} describes how the format of each 'sign_info_entry' can be generalized for possible future registered algorithms having a different set of COSE capabilities.
 
 ### 'kdcchallenge' Parameter {#kdcchallenge}
 
@@ -471,7 +471,7 @@ Then, the handler returns a 2.05 (Content) message response with payload formatt
 
 * 'guri', whose value is encoded as a CBOR array, containing zero or more URIs, each indicating a GROUPNAME resource.  The elements of this array are encoded as text strings. Each element of index i of this CBOR array corresponds to the element of group identifier i in the 'gid' array.
 
-If the KDC does not find any group associated with the specified group identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
+If the KDC does not find any group associated to the specified group identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
 Note that the KDC only verifies that the node is authorized by the AS to access this resource. Nodes that are not members of the group but are authorized to do signature verification on the group messages may be allowed to access this resource, if the application needs it.
 
@@ -745,9 +745,9 @@ Then, the handler returns a 2.05 (Content) message response with payload formatt
 
 * 'peer\_identifiers', which encodes the node identifier that each of the selected group members has in the group.
 
-The specific format of public keys as well as of node identifiers of group members is specified by the application profile (OPT1, REQ12).
+The specific format of public keys as well as of node identifiers of group members is specified by the application profile (REQ6, REQ12).
 
-If the KDC does not store any public key associated with the specified node identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
+If the KDC does not store any public key associated to the specified node identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
 The handler MAY enforce one of the following policies, in order to handle possible node identifiers that are included in the 'id_filter' element of the 'get_pub_keys' parameter of the request but are not associated to any current group member. Such a policy MUST be specified by the application profile (REQ16).
 
@@ -969,7 +969,8 @@ Payload (in CBOR diagnostic notation,
          with KEY being a CBOR byte strings):
   { "gkty": 13, "key": KEY, "num": 12, "exp": 1609459200,
     "pub_keys": [ PUB_KEY1, PUB_KEY2 ],
-    "peer_roles": ["sender", ["sender", "receiver"]] }
+    "peer_roles": ["sender", ["sender", "receiver"]],
+    "peer_identifiers": [ ID1, ID2 ] }
 ~~~~~~~~~~~
 {: #fig-key-distr-join-2 title="Example of First Exchange for Group Joining" artwork-align="center"}
 
@@ -982,7 +983,7 @@ To join the group, the Client sends a CoAP POST request to the /ace-group/GROUPN
 
 If the node is joining a group for the first time, and the KDC maintains the public keys of the group members, the Client is REQUIRED to send its own public key and proof-of-possession (PoP) evidence ("client_cred" and "client_cred_verify" in {{gid-post}}). The request is accepted only if both public key is provided and the PoP evidence is successfully verified. If a node re-joins a group with the same access token and the same public key, it can omit to send the public key and the PoP evidence, or just omit the PoP evidence, and the KDC will be able to retrieve its public key associated to its token for that group (if the key has been discarded, the KDC will reply with 4.00 Bad Request, as specified in {{gid-post}}). If a node re-joins a group but wants to update its own public key, it needs to send both its public key and the PoP evidence.
 
-If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the response defined in {{gid-get}}. Application profiles may define alternative ways of retrieving the keying material, such as sending separate requests to different resources at the KDC ({{gid-get}}, {{pubkey-get}}, {{policies-get}}). After distributing the new group keying material, the KDC MUST increment the version number of the keying material.
+If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the response defined in {{gid-get}}. Application profiles may define alternative ways of retrieving the keying material, such as sending separate requests to different resources at the KDC ({{gid-get}}, {{pubkey-get}}, {{policies-get}}). The KDC MUST increment the version number of the current keying material, before distributing the newly generated keying material to the group. After that, the KDC SHOULD store the distributed keying material in persistent storage.
 
 ## Retrieval of Updated Keying Material {#update-keys}
 
@@ -1158,7 +1159,7 @@ Uri-Path: "g1"
 Uri-Path: "pub-key"
 Content-Format: "application/ace-groupcomm+cbor"
 Payload:
-  { "get_pub_keys": [true, [], ["c3"]] }
+  { "get_pub_keys": [true, [], [ ID3 ]] }
 
 Response:
 
@@ -1166,7 +1167,8 @@ Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
   { "pub_keys": [ PUB_KEY3 ],
-    "peer_roles": ["receiver"] }
+    "peer_roles": [ "receiver" ],
+    "peer_identifiers": [ ID3 ] }
 ~~~~~~~~~~~
 {: #fig-public-key-4 title="Example of Public Key Exchange to Request Specific Members Public Keys" artwork-align="center"}
 
@@ -1302,7 +1304,7 @@ Alternatively, a node may be removed by the KDC, without having explicitly asked
 
 This section describes the different scenarios according to which a node ends up being removed from the group.
 
-If the application requires forward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members but the leaving node, using the message format of the Key Distribution Response (see {{update-keys}}). Application profiles may define alternative message formats. Before distributing the new group keying material, the KDC MUST increment the version number of the keying material.
+If the application requires forward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members but the leaving node, using the message format of the Key Distribution Response (see {{update-keys}}). Application profiles may define alternative message formats. The KDC MUST increment the version number of the current keying material, before distributing the newly generated keying material to the group. After that, the KDC SHOULD store the distributed keying material in persistent storage.
 
 Note that, after having left the group, a node may wish to join it again. Then, as long as the node is still authorized to join the group, i.e., it still has a valid access token, it can request to re-join the group directly to the KDC without needing to retrieve a new access token from the AS. This means that the KDC might decide to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
 
