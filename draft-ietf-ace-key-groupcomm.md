@@ -1563,14 +1563,14 @@ Mappings Registry following the procedure specified in {{Section 8.10 of I-D.iet
 
 * Name: sign_info
 * CBOR Key: TBD (range -256 to 255)
-* Value Type: simple value Null / array
+* Value Type: Simple value Null / array
 * Reference: \[\[This specification\]\]
 
 &nbsp;
 
 * Name: kdcchallenge
 * CBOR Key: TBD (range -256 to 255)
-* Value Type: byte string
+* Value Type: Byte string
 * Reference: \[\[This specification\]\]
 
 ## ACE Groupcomm Parameters Registry {#iana-reg}
