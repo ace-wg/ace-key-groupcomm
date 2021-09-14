@@ -340,19 +340,13 @@ Application profiles of this specification MAY define alternative specific negot
 
 ### 'sign_info' Parameter {#sign-info}
 
-The 'sign_info' parameter is an OPTIONAL parameter of the Token Post response message defined in {{Section 5.10.1. of I-D.ietf-ace-oauth-authz}}. This parameter contains information and parameters about the signature algorithm and the public keys to be used between the Client and the RS. Its exact content is application specific.
+The 'sign_info' parameter is an OPTIONAL parameter of the Token Post request message and the corresponding response message defined in {{Section 5.10.1. of I-D.ietf-ace-oauth-authz}}. This parameter allows to request for and to provide information about the signature algorithm and the public keys to be used between the Client and the RS. Its exact content is application specific.
 
 In this specification and in application profiles building on it, this parameter is used to ask and retrieve from the KDC information about the signature algorithm and related parameters used in the group.
 
-When used in the request, the 'sign_info' parameter encodes the CBOR simple value Null, to require information and parameters on the signature algorithm and on the public keys used.
+When used in the Token Post request sent to the KDC (see {{token-post}}), the 'sign_info' parameter encodes the CBOR simple value Null, to request information and parameters about the signature algorithm and the public keys used in the group.
 
-The CDDL notation {{RFC8610}} of the 'sign_info' parameter formatted as in the request is given below.
-
-~~~~~~~~~~~ CDDL
-   sign_info_req = nil
-~~~~~~~~~~~
-
-The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one or more elements. The number of elements is at most the number of groups that the client has been authorized to join. Each element contains information about signing parameters and keys for one or more group or topic, and is formatted as follows.
+When used in the following 2.01 (Created) from the KDC (see {{token-post}}), the 'sign_info' parameter is a CBOR array of one or more elements. The number of elements is at most the number of groups that the client has been authorized to join. Each element contains information about signing parameters and keys for one or more group or topic, and is formatted as follows.
 
 * The first element 'id' is a group name or an array of group names, associated to groups for which the next four elements apply. In the following, each specified group name is referred to as 'gname'.
 
@@ -364,10 +358,17 @@ The 'sign_info' parameter of the 2.01 (Created) response is a CBOR array of one 
 
 * The fifth element 'pub_key_enc' parameter is either a CBOR integer indicating the encoding of public keys used in the groups identified by the 'gname' values, or has value Null indicating that the KDC does not act as repository of public keys for group members. Its acceptable integer values are taken from the 'Label' column of the "COSE Header Parameters" Registry {{COSE.Header.Parameters}}. It is REQUIRED of the application profiles to define specific values to use for this parameter, consistently with the acceptable formats of public keys (REQ6).
 
-The CDDL notation {{RFC8610}} of the 'sign_info' parameter formatted as in the response is given below.
+The CDDL notation {{RFC8610}} of the 'sign_info' parameter is given below.
 
 ~~~~~~~~~~~ CDDL
-   sign_info_res = [ + sign_info_entry ]
+
+   sign_info = sign_info_req / sign_info_resp
+
+   sign_info_req  = nil                   ; used in the Token Post
+                                          ; request to the KDC
+   
+   sign_info_resp = [ + sign_info_entry ] ; used in the 2.01 response
+                                          ; to the Token Post request
 
    sign_info_entry =
    [
