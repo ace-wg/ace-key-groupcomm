@@ -320,7 +320,7 @@ This request differs from the one defined in {{I-D.ietf-ace-oauth-authz}}, becau
 
 The joining node MAY ask for this information from the KDC in the same message it uses to POST the token to the RS. In such a case, the message MUST have Content-Format set to application/ace+cbor defined in {{Section 8.16 of I-D.ietf-ace-oauth-authz}}. The message payload MUST be formatted as a CBOR map, which MUST include the access token. The CBOR map MAY additionally include the following parameter, which, if included, MUST have the corresponding values:
 
-* 'sign_info' defined in {{sign-info}}, encoding the CBOR simple value Null to require information about the signature algorithm, signature algorithm parameters, signature key parameters and on the exact encoding of public keys used in the group.
+* 'sign_info' defined in {{sign-info}}, encoding the CBOR simple value Null to require information about the signature algorithm, signature algorithm parameters, signature key parameters and on the exact encoding of public keys used in the groups that the client has been authorized to join.
 
 Alternatively, the joining node may retrieve this information by other means.
 
@@ -332,7 +332,7 @@ The payload of the 2.01 response is a CBOR map. If the access token contains a r
 
 The KDC MUST store the 'kdcchallenge' value associated to the Client at least until it receives a join request from it (see {{ssec-key-distribution-exchange}}), to be able to verify that the Client possesses its own private key. The same challenge MAY be reused several times by the Client, to generate a new proof of possession, e.g., in case of update of the public key, or to join a different group with a different signing key, so it is RECOMMENDED that the KDC keeps storing the 'kdcchallenge' after the first join is processed as well. If the KDC has already discarded the 'kdcchallenge', that will trigger an error response with a newly generated 'kdcchallenge' that the Client can use to restart the join process, as specified in {{ssec-key-distribution-exchange}}.
 
-If ’sign_info’ is included in the request, the KDC MAY include the ’sign_info’ parameter defined in {{sign-info}}, with the same encoding. Note that the field 'id' takes the value of the group name for which the 'sign_info_entry' applies to.
+If ’sign_info’ is included in the request, the KDC MAY include the ’sign_info’ parameter defined in {{sign-info}}. Note that the field 'id' takes the value of the group name for which the 'sign_info_entry' applies to.
 
 Note that the CBOR map specified as payload of the 2.01 (Created) response may include further parameters, e.g. according to the signalled transport profile of ACE. Application profiles MAY define the additional parameters to use within this exchange (OPT2).
 
@@ -344,9 +344,9 @@ The 'sign_info' parameter is an OPTIONAL parameter of the Token Post request mes
 
 In this specification and in application profiles building on it, this parameter is used to ask and retrieve from the KDC information about the signature algorithm and related parameters used in the group.
 
-When used in the Token Post request sent to the KDC (see {{token-post}}), the 'sign_info' parameter encodes the CBOR simple value Null, to request information and parameters about the signature algorithm and the public keys used in the group.
+When used in the Token Post request sent to the KDC (see {{token-post}}), the 'sign_info' parameter encodes the CBOR simple value Null, to request information and parameters about the signature algorithm and the public keys used in the groups that the client has been authorized to join.
 
-When used in the following 2.01 (Created) from the KDC (see {{token-post}}), the 'sign_info' parameter is a CBOR array of one or more elements. The number of elements is at most the number of groups that the client has been authorized to join. Each element contains information about signing parameters and keys for one or more group or topic, and is formatted as follows.
+When used in the following 2.01 (Created) response from the KDC (see {{token-post}}), the 'sign_info' parameter is a CBOR array of one or more elements. The number of elements is at most the number of groups that the client has been authorized to join. Each element contains information about signing parameters and keys for one or more group or topic, and is formatted as follows.
 
 * The first element 'id' is a group name or an array of group names, associated to groups for which the next four elements apply. In the following, each specified group name is referred to as 'gname'.
 
@@ -361,25 +361,24 @@ When used in the following 2.01 (Created) from the KDC (see {{token-post}}), the
 The CDDL notation {{RFC8610}} of the 'sign_info' parameter is given below.
 
 ~~~~~~~~~~~ CDDL
+sign_info = sign_info_req / sign_info_resp
 
-   sign_info = sign_info_req / sign_info_resp
-
-   sign_info_req  = nil                   ; used in the Token Post
-                                          ; request to the KDC
+sign_info_req  = nil                   ; used in the Token Post
+                                       ; request to the KDC
    
-   sign_info_resp = [ + sign_info_entry ] ; used in the 2.01 response
-                                          ; to the Token Post request
+sign_info_resp = [ + sign_info_entry ] ; used in the 2.01 response
+                                       ; to the Token Post request
 
-   sign_info_entry =
-   [
-     id : gname / [ + gname ],
-     sign_alg : int / tstr,
-     sign_parameters : [ any ],
-     sign_key_parameters : [ any ],
-     pub_key_enc = int / nil
-   ]
+sign_info_entry =
+[
+  id : gname / [ + gname ],
+  sign_alg : int / tstr,
+  sign_parameters : [ any ],
+  sign_key_parameters : [ any ],
+  pub_key_enc = int / nil
+]
 
-   gname = tstr
+gname = tstr
 ~~~~~~~~~~~
 
 This format is consistent with every signature algorithm currently defined in {{I-D.ietf-cose-rfc8152bis-algs}}, i.e., with algorithms that have only the COSE key type as their COSE capability. {{sec-future-cose-algs}} describes how the format of each 'sign_info_entry' can be generalized for possible future registered algorithms having a different set of COSE capabilities.
@@ -1820,22 +1819,22 @@ The format of each 'sign_info_entry' (see {{sign-info}}) is generalized as follo
 * The i-th array following 'sign_parameters', i.e., 'sign_capab_i' (i = 0, ..., N-1), is the array of COSE capabilities for the algorithm capability specified in 'sign_parameters'\[i\].
 
 ~~~~~~~~~~~ CDDL
-   sign_info_entry =
-   [
-     id : gname / [ + gname ],
-     sign_alg : int / tstr,
-     sign_parameters : [ alg_capab_1 : any,
-                         alg_capab_2 : any,
-                         ...,
-                         alg_capab_N : any],
-     sign_capab_1 : [ any ],
-     sign_capab_2 : [ any ],
-     ...,
-     sign_capab_N : [ any ],
-     pub_key_enc = int / nil
-   ]
+sign_info_entry =
+[
+  id : gname / [ + gname ],
+  sign_alg : int / tstr,
+  sign_parameters : [ alg_capab_1 : any,
+                      alg_capab_2 : any,
+                      ...,
+                      alg_capab_N : any],
+  sign_capab_1 : [ any ],
+  sign_capab_2 : [ any ],
+  ...,
+  sign_capab_N : [ any ],
+  pub_key_enc = int / nil
+]
 
-   gname = tstr
+gname = tstr
 ~~~~~~~~~~~
 {: #fig-sign-info-entry-general title="'sign_info_entry' with general format"}
 
