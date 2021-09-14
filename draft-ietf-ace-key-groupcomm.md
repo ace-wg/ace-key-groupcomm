@@ -90,7 +90,7 @@ This document defines message formats and procedures for requesting and distribu
 
 # Introduction {#intro}
 
-This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define the message exchanges used to request, distribute and renew the keying material in a group communication scenario, e.g., based on multicast {{I-D.ietf-core-groupcomm-bis}} or on publishing-subscribing {{I-D.ietf-core-coap-pubsub}}.
+This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define the message exchanges used to request, distribute and renew the keying material in a group communication scenario, e.g., based on multicast {{I-D.ietf-core-groupcomm-bis}} or on publish-subscribe messaging {{I-D.ietf-core-coap-pubsub}}.
 The ACE framework is based on CBOR {{RFC8949}}, so CBOR is the format used in this specification. However, using JSON {{RFC8259}} instead of CBOR is possible, using the conversion method specified in {{Sections 6.1 and 6.2 of RFC8949}}.
 
 Profiles that use group communication can build on this document, by defining a number of details such as the exact group communication protocol and security protocols used. The specific list of details a profile needs to define is shown in {{req}}.
@@ -117,7 +117,7 @@ This document uses names or identifiers for groups and nodes. Their different me
 
 This document additionally uses the following terminology:
 
-* Transport profile, to indicate a profile of ACE as per {{Section 5.8.4.3 of I-D.ietf-ace-oauth-authz}}. A transport profile specifies the communication protocol and communication security protocol between an ACE Client and Resource Server, as well as proof-of-possession methods, if it supports proof-of-possession access tokens, etc. Tranport profiles of ACE include, for instance, {{I-D.ietf-ace-oscore-profile}}, {{I-D.ietf-ace-dtls-authorize}} and {{I-D.ietf-ace-mqtt-tls-profile}}.
+* Transport profile, to indicate a profile of ACE as per {{Section 5.8.4.3 of I-D.ietf-ace-oauth-authz}}. A transport profile specifies the communication protocol and communication security protocol between an ACE Client and Resource Server, as well as proof-of-possession methods, if it supports proof-of-possession access tokens, etc. Transport profiles of ACE include, for instance, {{I-D.ietf-ace-oscore-profile}}, {{I-D.ietf-ace-dtls-authorize}} and {{I-D.ietf-ace-mqtt-tls-profile}}.
 
 * Application profile, that defines how applications enforce and use supporting security services they require. These services may include, for instance, provisioning, revocation and distribution of keying material. An application profile may define specific procedures and message formats.
 
@@ -234,7 +234,7 @@ The Authorization Request sent from the Client to the AS is defined in {{Section
 
    This value is a CBOR byte string, wrapping a CBOR array of one or more  entries.
 
-   By default, each entry is encoded as specified by {{I-D.ietf-ace-aif}}. The object identifier Toid corresponds to the group name and MUST be encoded as a tstr. The permission set Tperm indicates the roles that the client wishes to take in the group. It is up to the application profiles to define Tperm (REQ2) and register Toid and Tperm to fit the use case. An example of scope using the AIF format is given in {{cddl-ex-0}}.
+   By default, each entry is encoded as specified by {{I-D.ietf-ace-aif}}. The object identifier "Toid" corresponds to the group name and MUST be encoded as a tstr. The permission set "Tperm" indicates the roles that the client wishes to take in the group. It is up to the application profiles to define "Tperm" (REQ2) and register "Toid" and "Tperm" to fit the use case. An example of scope using the AIF format is given in {{cddl-ex-0}}.
    
    Otherwise, each scope entry can be defined as a CBOR array, which contains:
 
@@ -244,8 +244,8 @@ The Authorization Request sent from the Client to the AS is defined in {{Section
 
   In each entry, the encoding of the role identifiers is application specific, and part of the requirements for the application profile (REQ2).
   In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7).
-
-  An example of CDDL definition {{RFC8610}} of scope using the format above, with group name and role identifiers encoded as text strings is given in {{cddl-ex}}.
+  
+  {{cddl-ex}} provides an example of CDDL definition {{RFC8610}} of scope using the format above, with group name and role identifiers encoded as text strings.
 
 * 'audience', with an identifier of a KDC.
 
@@ -286,7 +286,7 @@ The Authorization Response sent from the AS to the Client is defined in {{Sectio
 
 Additionally, when included, the following parameter MUST have the corresponding values:
 
-* 'scope' has the same format and encoding of 'scope' in the Authorization Request, defined in {{ssec-authorization-request}}. If this parameter is not present, the granted scope is equal to the one requested in {{ssec-authorization-request}}}.
+* 'scope' has the same format and encoding of 'scope' in the Authorization Request, defined in {{ssec-authorization-request}}. If this parameter is not present, the granted scope is equal to the one requested in {{ssec-authorization-request}}.
 
 The proof-of-possession access token (in 'access_token' above) MUST contain the following parameters:
 
@@ -344,7 +344,7 @@ The 'sign_info' parameter is an OPTIONAL parameter of the Token Post response me
 
 In this specification and in application profiles building on it, this parameter is used to ask and retrieve from the KDC information about the signature algorithm and related parameters used in the group.
 
-When used in the request, the 'sign_info' encodes the CBOR simple value Null, to require information and parameters on the signature algorithm and on the public keys used.
+When used in the request, the 'sign_info' parameter encodes the CBOR simple value Null, to require information and parameters on the signature algorithm and on the public keys used.
 
 The CDDL notation {{RFC8610}} of the 'sign_info' parameter formatted as in the request is given below.
 
@@ -381,11 +381,11 @@ The CDDL notation {{RFC8610}} of the 'sign_info' parameter formatted as in the r
    gname = tstr
 ~~~~~~~~~~~
 
-This format is consistent with every signature algorithm currently considered in {{I-D.ietf-cose-rfc8152bis-algs}}, i.e., with algorithms that have only the COSE key type as their COSE capability. {{sec-future-cose-algs}} describes how the format of each 'sign_info_entry' can be generalized for possible future registered algorithms having a different set of COSE capabilities.
+This format is consistent with every signature algorithm currently defined in {{I-D.ietf-cose-rfc8152bis-algs}}, i.e., with algorithms that have only the COSE key type as their COSE capability. {{sec-future-cose-algs}} describes how the format of each 'sign_info_entry' can be generalized for possible future registered algorithms having a different set of COSE capabilities.
 
 ### 'kdcchallenge' Parameter {#kdcchallenge}
 
-The 'kdcchallenge' parameter is an OPTIONAL parameter of the Token Post response message defined in {{Section 5.10.1 of I-D.ietf-ace-oauth-authz}}. This parameter contains a challenge generated by the KDC and provided to the Client. The Client may use this challenge to prove possession of its own private key in the Joining Request (see the ‘client_cred_verify’ parameter in {{key-distr}}).
+The 'kdcchallenge' parameter is an OPTIONAL parameter of the Token Post response message defined in {{Section 5.10.1 of I-D.ietf-ace-oauth-authz}}. This parameter contains a challenge generated by the KDC and provided to the Client. The Client may use this challenge to prove possession of its own private key in the Joining Request (see the ‘client_cred_verify’ parameter in {{gid-post}}).
 
 #  Keying Material Provisioning and Group Membership Management {#key-distr}
 
@@ -717,13 +717,13 @@ The handler expects a request with payload formatted as a CBOR map, that MUST co
 
   - The array 'id\_filter' contains zero or more node identifiers of group members, for the group identified by GROUPNAME. The Client indicates that it wishes to receive the public keys of the nodes having or not having these node identifiers, in case the 'inclusion\_flag' parameter encodes the CBOR simple value True or False, respectively. The array may be empty, if the Client does not wish to filter the requested public keys based on the node identifiers of the group members.
 
-Note that, in case both the 'role\_filter' array and the 'id\_filter' array are not empty:
+Note that, in case both the 'role\_filter' array and the 'id\_filter' array are non-empty:
 
 * If the 'inclusion\_flag' encodes the CBOR simple value True, the handler returns the public keys of group members whose roles match with 'role\_filter' and/or having their node identifier specified in 'id\_filter'.
 
 * If the 'inclusion\_flag' encodes the CBOR simple value False, the handler returns the public keys of group members whose roles match with 'role\_filter' and, at the same time, not having their node identifier specified in 'id\_filter'.
 
-Finally, as mentioned in {{gid-post}}, both arrays 'role\_filter' and 'id\_filter' MUST NOT be both empty.
+Finally, as mentioned in {{gid-post}}, the arrays 'role\_filter' and 'id\_filter' MUST NOT both be empty.
 
 The specific format of public keys as well as identifiers, roles and combination of roles of group members MUST be specified by the application profile (OPT1, REQ2, REQ12).
 
@@ -954,7 +954,7 @@ Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation,
          with PUB_KEY and POP_EVIDENCE being CBOR byte strings):
   { "scope": << [ "group1", ["sender", "receiver"] ] >> ,
-    "get_pub_keys": [true, ["sender"], []], "client_cred": PUB_KEY
+    "get_pub_keys": [true, ["sender"], []], "client_cred": PUB_KEY,
     "cnonce": h'6df49c495409a9b5', "client_cred_verify": POP_EVIDENCE }
 
 Response:
@@ -1768,7 +1768,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ18: Specify the format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label (see {{node-get}}).
 
-* REQ19: Specify how the communication is secured between Client and KDC. Optionally, specify tranport profile of ACE {{I-D.ietf-ace-oauth-authz}} to use between Client and KDC (see {{ssec-key-distribution-exchange}}.
+* REQ19: Specify how the communication is secured between Client and KDC. Optionally, specify transport profile of ACE {{I-D.ietf-ace-oauth-authz}} to use between Client and KDC (see {{ssec-key-distribution-exchange}}.
 
 * REQ20: Specify the exact approaches used to compute and verify the PoP evidence to include in 'client_cred_verify', and which of those approaches is used in which case (see {{gid-post}}).
 
