@@ -1530,7 +1530,7 @@ This document has the following actions for IANA.
 
 ## CoAP Content-Formats Registry {#content-type}
 
-This specification registers the following entry to the "CoAP Content-Formats" registry, within the "CoRE Parameters" registry:
+This specification registers the following entry to the "CoAP Content-Formats" registry within the "CoRE Parameters" registry group:
 
 Media Type: application/ace-groupcomm+cbor
 
@@ -1659,7 +1659,7 @@ The columns of this Registry are:
 
 ## Interface Description (if=) Link Target Attribute Values Registry {#if-ace-group}
 
-This specification registers the following entry to the "Interface Description (if=) Link Target Attribute Values Registry" registry, within the "CoRE Parameters" registry:
+This specification registers the following entry to the "Interface Description (if=) Link Target Attribute Values Registry" registry within the "CoRE Parameters" registry group:
 
 * Attribute Value: ace.group
 
