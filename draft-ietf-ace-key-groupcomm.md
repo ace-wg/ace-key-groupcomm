@@ -1081,7 +1081,7 @@ Payload: -
 Response:
 
 Header: Content (Code=2.05)
-Content-Format: text/plain
+Content-Format: "application/ace-groupcomm+cbor"
 Payload(in CBOR diagnostic notation):
   13
 ~~~~~~~~~~~
