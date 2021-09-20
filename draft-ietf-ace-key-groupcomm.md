@@ -1007,7 +1007,7 @@ If verification succeeds, the handler returns a 2.05 (Content) message containin
 
 The specific format and meaning of group policies MUST be specified in the application profile (REQ17).
 
-#### Retrieve Group Policies {#policies}
+#### Retrieve the Group Policies {#policies}
 
 A node in the group can contact the KDC to retrieve the current group policies, by sending a CoAP GET request to the /ace-group/GROUPNAME/policies endpoint at the KDC, where GROUPNAME is the group name, and formatted as defined in {{policies-get}}
 
@@ -1059,7 +1059,7 @@ If verification succeeds, the handler returns a 2.05 (Content) message containin
 
 The payload of the response is formatted as a CBOR integer.
 
-#### Retrieve Keying Material Version {#key-version}
+#### Retrieve the Keying Material Version {#key-version}
 
 A node in the group can contact the KDC to request information about the version number of the symmetric group keying material, by sending a CoAP GET request to the /ace-group/GROUPNAME/num endpoint at the KDC, where GROUPNAME is the group name, formatted as defined in {{num-get}}. In particular, the version is incremented by the KDC every time the group keying material is renewed, before it's distributed to the group members.
 
