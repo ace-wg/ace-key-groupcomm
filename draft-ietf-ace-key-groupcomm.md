@@ -636,13 +636,17 @@ If no public key is included in the 'client_cred' field, the handler checks if o
 
 If an eligible public key for the Client is neither present in the 'client_cred' field nor already stored, it is RECOMMENDED that the handler stops the processing and responds with a 4.00 (Bad Request) error message. Applications profiles MAY define alternatives (OPT6).
 
-If all the verifications above succeed, the handler performs the following actions.
+If all the verifications above succeed, the KDC proceeds as follows.
+
+First, only in case the Client is not already a group member, the handler performs the following actions:
 
 * The handler adds the Client to the list of current members of the group.
 
-* The handler assigns a name identifier NODENAME to the Client, and creates a sub-resource to /ace-group/GROUPNAME/ at the KDC (e.g., "/ace-group/GROUPNAME/nodes/NODENAME").
+* The handler assigns a name NODENAME to the Client, and creates a sub-resource to /ace-group/GROUPNAME at the KDC, i.e., "/ace-group/GROUPNAME/nodes/NODENAME".
 
 * The handler associates the node identifier NODENAME to the access token and the secure session for the Client.
+
+Then, the handler performs the following actions.
 
 * If the KDC manages the group members' public keys:
 
@@ -650,9 +654,13 @@ If all the verifications above succeed, the handler performs the following actio
 
   - The handler adds the retrieved Client's public key to the stored list of public keys stored for the group identified by GROUPNAME. If such list already includes a public key for the Client, but a different public key is specified in the 'client_cred' field, then the handler MUST replace the old public key in the list with the one specified in the 'client_cred' field.
 
-* The handler returns a 2.01 (Created) response, containing the symmetric group keying material, the group policies and the public keys of the current members of the group, if the KDC manages those and the Client requested them.
+* The handler returns a success response, containing the symmetric group keying material; the group policies; and the public keys of the current members of the group, if the KDC manages those and the Client requested them.
 
-The response message also contains the URI path to the sub-resource created for that node in a Location-Path CoAP option. The response MUST have Content-Format application/ace-groupcomm+cbor. The payload of the response is formatted as a CBOR map, which MUST contain the following fields and values.
+The response message MUST have response code 2.01 (Created) if the Client has been added to the list of group members in this joining exchange (see above), or 2.04 (Changed) otherwise, i.e., if the Client is re-joining the group without having left it.
+  
+The response message MUST include the Location-Path CoAP option, specifying the URI path to the sub-resource associated to the client, i.e. "/ace-group/GROUPNAME/nodes/NODENAME".
+
+The response message MUST have Content-Format application/ace-groupcomm+cbor. The payload of the response is formatted as a CBOR map, which MUST contain the following fields and values.
 
 * 'gkty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key Types" Registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key Types" registry.
 
