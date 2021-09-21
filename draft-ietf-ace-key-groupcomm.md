@@ -320,7 +320,7 @@ This request differs from the one defined in {{I-D.ietf-ace-oauth-authz}}, becau
 
 The joining node MAY ask for this information from the KDC in the same message it uses to POST the token to the RS. In such a case, the message MUST have Content-Format set to application/ace+cbor defined in {{Section 8.16 of I-D.ietf-ace-oauth-authz}}. The message payload MUST be formatted as a CBOR map, which MUST include the access token. The CBOR map MAY additionally include the following parameter, which, if included, MUST have the corresponding values:
 
-* 'sign_info' defined in {{sign-info}}, encoding the CBOR simple value Null to require information about the signature algorithm, signature algorithm parameters, signature key parameters and on the exact encoding of public keys used in the groups that the client has been authorized to join.
+* 'sign_info' defined in {{sign-info}}, specifying the CBOR simple value 'null' (0xf6) to require information about the signature algorithm, signature algorithm parameters, signature key parameters and on the exact encoding of public keys used in the groups that the client has been authorized to join.
 
 Alternatively, the joining node may retrieve this information by other means.
 
@@ -344,19 +344,19 @@ The 'sign_info' parameter is an OPTIONAL parameter of the Token Post request mes
 
 In this specification and in application profiles building on it, this parameter is used to ask and retrieve from the KDC information about the signature algorithm and related parameters used in the group.
 
-When used in the Token Post request sent to the KDC (see {{token-post}}), the 'sign_info' parameter encodes the CBOR simple value Null, to request information and parameters about the signature algorithm and the public keys used in the groups that the client has been authorized to join.
+When used in the Token Post request sent to the KDC (see {{token-post}}), the 'sign_info' parameter specifies the CBOR simple value 'null' (0xf6), to request information and parameters about the signature algorithm and the public keys used in the groups that the client has been authorized to join.
 
 When used in the following 2.01 (Created) response from the KDC (see {{token-post}}), the 'sign_info' parameter is a CBOR array of one or more elements. The number of elements is at most the number of groups that the client has been authorized to join. Each element contains information about signing parameters and keys for one or more group or topic, and is formatted as follows.
 
 * The first element 'id' is a group name or an array of group names, associated to groups for which the next four elements apply. In the following, each specified group name is referred to as 'gname'.
 
-* The second element 'sign_alg' is an integer or a text string if the POST request included the 'sign_info' parameter with value Null, and indicates the signature algorithm used in the groups identified by the 'gname' values. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry {{COSE.Algorithms}}.
+* The second element 'sign_alg' is an integer or a text string if the POST request included the 'sign_info' parameter with value the CBOR simple value 'null' (0xf6), and indicates the signature algorithm used in the groups identified by the 'gname' values. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry {{COSE.Algorithms}}.
 
 * The third element 'sign_parameters' is a CBOR array indicating the parameters of the signature algorithm used in the groups identified by the 'gname' values. Its content depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define the possible values and structure for the elements of this parameter (REQ4).
 
 * The fourth element 'sign_key_parameters' is a CBOR array indicating the parameters of the key used with the signature algorithm, in the groups identified by the 'gname' values. Its content depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define the possible values and structure for the elements of this parameter (REQ5).
 
-* The fifth element 'pub_key_enc' parameter is either a CBOR integer indicating the encoding of public keys used in the groups identified by the 'gname' values, or has value Null indicating that the KDC does not act as repository of public keys for group members. Its acceptable integer values are taken from the 'Label' column of the "COSE Header Parameters" Registry {{COSE.Header.Parameters}}. It is REQUIRED of the application profiles to define specific values to use for this parameter, consistently with the acceptable formats of public keys (REQ6).
+* The fifth element 'pub_key_enc' parameter is either a CBOR integer indicating the encoding of public keys used in the groups identified by the 'gname' values, or has value the CBOR simple value 'null' (0xf6) indicating that the KDC does not act as repository of public keys for group members. Its acceptable integer values are taken from the 'Label' column of the "COSE Header Parameters" Registry {{COSE.Header.Parameters}}. It is REQUIRED of the application profiles to define specific values to use for this parameter, consistently with the acceptable formats of public keys (REQ6).
 
 The CDDL notation {{RFC8610}} of the 'sign_info' parameter is given below.
 
@@ -535,7 +535,7 @@ The handler expects a request with payload formatted as a CBOR map, which MAY co
 
 * 'get_pub_keys', if the Client wishes to receive the public keys of the other nodes in the group from the KDC. This parameter may be present if the KDC stores the public keys of the nodes in the group and distributes them to the Client; it is useless to have here if the set of public keys of the members of the group is known in another way, e.g., it was provided by the AS. Note that including this parameter may result in a large message size for the following response, which can be inconvenient for resource-constrained devices.
 
-  The parameter's value is either the CBOR simple value Null, or a non-empty CBOR array containing the following three elements.
+  The parameter's value is either the CBOR simple value 'null' (0xf6), or a non-empty CBOR array containing the following three elements.
 
   - The first element, namely 'inclusion\_flag', encodes the CBOR simple value True.
   
@@ -543,7 +543,7 @@ The handler expects a request with payload formatted as a CBOR map, which MAY co
 
   - The third element, namely 'id\_filter', is an empty CBOR array.
 
-  If the Client wishes to receive all public keys of all group members, it encodes the 'get_pub_key' parameter as the CBOR simple value Null.
+  If the Client wishes to receive all public keys of all group members, it specifies the 'get_pub_key' parameter with value the CBOR simple value 'null' (0xf6).
 
   The CDDL definition {{RFC8610}} of 'get_pub_keys' is given in {{cddl-ex-getpubkeys}}, using as example encoding: node identifier encoded as a CBOR byte string; role identifier encoded as a CBOR text string, and combination of roles encoded as a CBOR array of roles.
 
@@ -616,7 +616,7 @@ If the request does not include a 'scope' field, the KDC is expected to understa
 
 The KDC verifies that the group name of the /ace-group/GROUPNAME path is a subset of the 'scope' stored in the access token associated to this client. The KDC also verifies that the roles the client is granted in the group allow it to perform this operation on this resource (REQ8). If either verification fails, the KDC MUST respond with a 4.01 (Unauthorized) error message. This response MAY be an AS Request Creation Hints, as defined in {{Section 5.3 of I-D.ietf-ace-oauth-authz}}, in which case the content format MUST be set to application/ace+cbor.
 
-If the request is not formatted correctly (i.e., required fields non received or received with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. The response MAY have Content-Format set to application/ace-groupcomm+cbor and have a CBOR map as payload. For instance, the CBOR map can include a 'sign_info' parameter formatted as 'sign_info_res' defined in {{sign-info}}, with the 'pub_key_enc' element set to Null if the Client sent its own public key and the KDC is not set to store public keys of the group members.
+If the request is not formatted correctly (i.e., required fields non received or received with incorrect format), the handler MUST respond with a 4.00 (Bad Request) error message. The response MAY have Content-Format set to application/ace-groupcomm+cbor and have a CBOR map as payload. For instance, the CBOR map can include a 'sign_info' parameter formatted as 'sign_info_res' defined in {{sign-info}}, with the 'pub_key_enc' element set to the CBOR simple value 'null' (0xf6) if the Client sent its own public key and the KDC is not set to store public keys of the group members.
 
 If the request contained unknown or non-expected fields present, the handler MUST silently drop them and continue processing. Application profiles MAY define optional or mandatory payload formats for specific error cases (OPT5).
 
@@ -1620,7 +1620,7 @@ Mappings Registry following the procedure specified in {{Section 8.10 of I-D.iet
 
 * Name: sign_info
 * CBOR Key: TBD (range -256 to 255)
-* Value Type: Simple value Null / array
+* Value Type: Simple value null / array
 * Reference: \[\[This specification\]\]
 
 &nbsp;
