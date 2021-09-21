@@ -165,14 +165,19 @@ This document specifies a mechanism for:
 
 * Renewing and re-distributing the group keying material (rekeying) upon a membership change in the group ({{ssec-group-leaving}} and {{sec-node-removal}}).
 
-{{fig-flow}} provides a high level overview of the message flow for a node joining a group communication setting, which can be expanded as follows.
+{{fig-flow}} provides a high level overview of the message flow for a node joining a group. The message flow can be expanded as follows.
 
-1. The joining node requests an Access Token from the AS, in order to access a specific group-membership resource on the KDC and hence join the associated group. This exchange between Client and AS MUST be secured, as specified by the transport profile of ACE used between Client and KDC. The joining node will start or continue using a secure communication association with the KDC, according to the response from the AS.
+1. The joining node requests an access token from the AS, in order to access one or more group-membership resources at the KDC and hence join the associated groups.
 
-2. The joining node transfers authentication and authorization information to the KDC, by posting the obtained Access Token to the /authz-info endpoint at the KDC. This exchange, and all further communications between the Client and the KDC, MUST occur over the secure channel established as a result of the transport profile of ACE used between Client and KDC. After that, a joining node MUST have a secure communication association established with the KDC, before starting to join a group under that KDC.
-Possible ways to provide a secure communication association are described in the DTLS transport profile {{I-D.ietf-ace-dtls-authorize}} and OSCORE transport profile {{I-D.ietf-ace-oscore-profile}} of ACE.
+   This exchange between Client and AS MUST be secured, as specified by the transport profile of ACE used between Client and KDC. Based on the response from the AS, the joining node will establish or continue using a secure communication association with the KDC.
 
-3. The joining node starts the joining process to become a member of the group, by accessing the related group-membership resource at the KDC. At the end of the joining process, the joining node has received from the KDC the parameters and keying material to securely communicate with the other members of the group, and the KDC has stored the association between the authorization information from the access token and the secure session with the joining node.
+2. The joining node transfers authentication and authorization information to the KDC, by transferring the obtained access token. This is typically achieved by including the access token in a request sent to the /authz-info endpoint at the KDC.
+
+   Once this exchange is completed, the joining node MUST have a secure communication association established with the KDC, before joining a group under that KDC.
+
+   This exchange and the following secure communications between the Client and the KDC MUST occur in accordance with the transport profile of ACE used between Client and KDC, such as the DTLS transport profile {{I-D.ietf-ace-dtls-authorize}} and OSCORE transport profile {{I-D.ietf-ace-oscore-profile}} of ACE.
+
+3. The joining node starts the joining process to become a member of the group, by sending a request to the related group-membership resource at the KDC. At the end of the joining process, the joining node has received from the KDC the parameters and keying material to securely communicate with the other members of the group. Also, the KDC has stored the association between the authorization information from the access token and the secure session with the joining node.
 
 4. The joining node and the KDC maintain the secure association, to support possible future communications. These especially include key management operations, such as retrieval of updated keying material or participation to a group rekeying process.
 
@@ -180,25 +185,30 @@ Possible ways to provide a secure communication association are described in the
 
 
 ~~~~~~~~~~~
-            C                           AS  KDC                Group
-            |                           |    |                 Member
-          / |                           |    |                     |
-          | |   Authorization Request   |    |                     |
- Defined  | |-------------------------->|    |                     |
- in the   | |                           |    |                     |
-   ACE    | |   Authorization Response  |    |                     |
-framework | |<--------------------------|    |                     |
-          | |                                |                     |
-          \ |---------- Token Post --------->|                     |
-            |                                |                     |
-            |------- Joining Request ------->|                     |
-            |                                |                     |
-            |<------ Joining Response -------|-- Group Rekeying -->|
-            |                                |                     |
-            |                                     Dispatcher       |
-            |                                         |            |
-            |<===== Secure group communication =======|===========>|
-            |                                         |            |
+        C                             AS   KDC                 Group
+        |                              |   |                  Members
+      / |                              |   |                      |
+     |  |--- Authorization Request --->|   |                      |
+     |  |                              |   |                      |
+     |  |<-- Authorization Response ---|   |                      |
+(*) <   |                              |   |                      |
+     |  |                              |   |                      |
+     |  |---  Token Transfer Request ----->|                      |
+     |  |                                  |                      |
+     |  |<--- Token Transfer Response -----|                      |          
+      \ |                              |   |                      |
+        |                              |   |                      |
+        |------ Joining Request ------>|   |                      |
+        |                              |   |                      |
+        |<----- Joining Response ------|   | -- Group Rekeying -->|
+        |                              |   |                      |
+        |                              |   |                      |
+        |                                        Dispatcher       |
+        |                                            |            |
+        |<======= Secure group communication ========|===========>|
+        |                                            |            |
+            
+(*) Defined in the ACE framework
 ~~~~~~~~~~~
 {: #fig-flow title="Message Flow Upon New Node's Joining" artwork-align="center"}
 
@@ -206,23 +216,25 @@ framework | |<--------------------------|    |                     |
 
 This section describes in detail the format of messages exchanged by the participants when a node requests access to a given group. This exchange is based on ACE {{I-D.ietf-ace-oauth-authz}}.
 
-As defined in {{I-D.ietf-ace-oauth-authz}}, the Client requests from the AS an authorization to join the group through the KDC (see {{ssec-authorization-request}}). If the request is approved and authorization is granted, the AS provides the Client with a proof-of-possession access token and parameters to securely communicate with the KDC (see {{ssec-authorization-response}}).
+As defined in {{I-D.ietf-ace-oauth-authz}}, the Client requests the AS for the authorization to join the group through the KDC (see {{ssec-authorization-request}}). If the request is approved and authorization is granted, the AS provides the Client with a proof-of-possession access token and parameters to securely communicate with the KDC (see {{ssec-authorization-response}}).
 
-Communications between the Client and the AS MUST be secured, as defined by the transport profile of ACE used.
-The Content-Format used in the message depends on the used transport profile of ACE.
-For example, this can be application/ace+cbor for the first two messages and application/cwt for the third message, which are defined in the ACE framework. The transport profile of ACE also defines a number of details such as the communication and security protocols used with the KDC (see Appendix C of {{I-D.ietf-ace-oauth-authz}}).
+Communications between the Client and the AS MUST be secured, according to what is defined by the used transport profile of ACE. The Content-Format used in the message also depends on the used transport profile of ACE. For example, it can be application/ace+cbor for the first two messages and application/cwt for the third message, which are defined in the ACE framework.
+
+The transport profile of ACE also defines a number of details such as the communication and security protocols used with the KDC (see Appendix C of {{I-D.ietf-ace-oauth-authz}}).
 
 {{fig-group-member-registration}} gives an overview of the exchange described above.
 
 ~~~~~~~~~~~
-Client                                            AS  KDC
-   |                                               |   |
-   |---- Authorization Request: POST /token ------>|   |
-   |                                               |   |
-   |<--- Authorization Response: 2.01 (Created) ---|   |
-   |                                               |   |
-   |----- POST Token: POST /authz-info --------------->|
-   |                                                   |
+Client                                             AS    KDC
+   |                                                |     |
+   |---- Authorization Request: POST /token ------->|     |
+   |                                                |     |
+   |<--- Authorization Response: 2.01 (Created) ----|     |
+   |                                                |     |
+   |---- Token Transfer Request: POST /authz-info ------->|
+   |                                                |     |
+   |<--- Token Transfer Response: 2.01 (Created) -------->|
+   |                                                |     |
 ~~~~~~~~~~~
 {: #fig-group-member-registration title="Message Flow of Join Authorization" artwork-align="center"}
 
@@ -312,41 +324,45 @@ The access token MAY additionally contain other claims that the transport profil
 
 When receiving an Authorization Request from a Client that was previously authorized, and for which the AS still owns a valid non-expired access token, the AS MAY reply with that token. Note that it is up to application profiles of ACE to make sure that re-posting the same token does not cause re-use of keying material between nodes (for example, that is done with the use of random nonces in {{I-D.ietf-ace-oscore-profile}}).
 
-## Token Post {#token-post}
+## Token Transferring {#token-post}
 
-The Client sends a CoAP POST request including the access token to the KDC, as specified in {{Section 5.8.1 of I-D.ietf-ace-oauth-authz}}.
+The Client sends a Token Transfer Request to the KDC, i.e., a CoAP POST request including the access token and targeting the authz-info endpoint, as specified in {{Section 5.8.1 of I-D.ietf-ace-oauth-authz}}.
 
-This request differs from the one defined in {{I-D.ietf-ace-oauth-authz}}, because it allows to transport additional encoding information about the public keys in the group, used for source authentication, as well as any other group parameters.
+This request differs from the one defined in {{I-D.ietf-ace-oauth-authz}}, since it allows to transport additional information about the public keys used in the group to ensure source authentication, as well as possible additional group parameters.
 
-The joining node MAY ask for this information from the KDC in the same message it uses to POST the token to the RS. In such a case, the message MUST have Content-Format set to application/ace+cbor defined in {{Section 8.16 of I-D.ietf-ace-oauth-authz}}. The message payload MUST be formatted as a CBOR map, which MUST include the access token. The CBOR map MAY additionally include the following parameter, which, if included, MUST have the corresponding values:
+The joining node MAY ask for this information from the KDC through the same Token Transfer Request. In this case, the message MUST have Content-Format set to application/ace+cbor defined in {{Section 8.16 of I-D.ietf-ace-oauth-authz}}. The message payload MUST be formatted as a CBOR map, which MUST include the access token. The CBOR map MAY additionally include the following parameter, which, if included, MUST have the corresponding values:
 
 * 'sign_info' defined in {{sign-info}}, specifying the CBOR simple value 'null' (0xf6) to require information about the signature algorithm, signature algorithm parameters, signature key parameters and on the exact encoding of public keys used in the groups that the client has been authorized to join.
 
 Alternatively, the joining node may retrieve this information by other means.
 
-After successful verification, the Client is authorized to receive the group keying material from the KDC and join the group.
+After successful verification, the Client is authorized to receive the group keying material from the KDC and join the group. Hence, the KDC replies to the Client with a Token Transfer Response, i.e., a  CoAP 2.01 (Created) response.
 
-The KDC replies to the Client with a 2.01 (Created) response, using Content-Format "application/ace+cbor".
+The Token Transfer Response MUST have Content-Format "application/ace+cbor", and its payload is a CBOR map. Note that this deviates from what is defined in the ACE framework, where the response from the authz-info endpoint is defined as conveying no payload (see {{Section 5.10.1 of I-D.ietf-ace-oauth-authz}}).
 
-The payload of the 2.01 response is a CBOR map. If the access token contains a role that requires the Client to send its own public key to the KDC when joining the group, the CBOR map MUST include the parameter 'kdcchallenge' defined in {{kdcchallenge}}, specifying a dedicated challenge N_S generated by the KDC. The Client uses this challenge to prove possession of its own private key (see the 'client_cred_verify' parameter in {{key-distr}}). Note that the payload format of the response deviates from the one defined in the ACE framework (see {{Section 5.10.1 of I-D.ietf-ace-oauth-authz}}), which has no payload.
+If the access token contains a role that requires the Client to send its own public key to the KDC when joining the group, the CBOR map MUST include the parameter 'kdcchallenge' defined in {{kdcchallenge}}, specifying a dedicated challenge N_S generated by the KDC. The Client uses this challenge to prove possession of its own private key (see the 'client_cred_verify' parameter in {{key-distr}}).
 
 The KDC MUST store the 'kdcchallenge' value associated to the Client at least until it receives a join request from it (see {{ssec-key-distribution-exchange}}), to be able to verify that the Client possesses its own private key. The same challenge MAY be reused several times by the Client, to generate a new proof of possession, e.g., in case of update of the public key, or to join a different group with a different signing key, so it is RECOMMENDED that the KDC keeps storing the 'kdcchallenge' after the first join is processed as well. If the KDC has already discarded the 'kdcchallenge', that will trigger an error response with a newly generated 'kdcchallenge' that the Client can use to restart the join process, as specified in {{ssec-key-distribution-exchange}}.
 
-If ’sign_info’ is included in the request, the KDC MAY include the ’sign_info’ parameter defined in {{sign-info}}. Note that the field 'id' takes the value of the group name for which the 'sign_info_entry' applies to.
+If 'sign_info' is included in the request, the KDC MAY include the 'sign_info' parameter defined in {{sign-info}}. Note that the field 'id' takes the value of the group name for which the 'sign_info_entry' applies to.
 
-Note that the CBOR map specified as payload of the 2.01 (Created) response may include further parameters, e.g. according to the signalled transport profile of ACE. Application profiles MAY define the additional parameters to use within this exchange (OPT2).
+Note that the CBOR map specified as payload of the 2.01 (Created) response may include further parameters, e.g., according to the signalled transport profile of ACE. Application profiles MAY define the additional parameters to use within this exchange (OPT2).
 
 Application profiles of this specification MAY define alternative specific negotiations of parameter values for the signature algorithm and signature keys, if 'sign_info' is not used (OPT1).
 
+Note that the used transport profiles of ACE can allow to transfer the access token to the KDC by different means than the Token Transfer Request. An example is the DTLS transport profile of ACE (see {{Section 3.3.2 of I-D.ietf-ace-dtls-authorize}}).
+
 ### 'sign_info' Parameter {#sign-info}
 
-The 'sign_info' parameter is an OPTIONAL parameter of the Token Post request message and the corresponding response message defined in {{Section 5.10.1. of I-D.ietf-ace-oauth-authz}}. This parameter allows to request for and to provide information about the signature algorithm and the public keys to be used between the Client and the RS. Its exact content is application specific.
+The 'sign_info' parameter is an OPTIONAL parameter of the request and response messages exchanged between the Client and the authz-info endpoint at the RS, as defined in {{Section 5.10.1. of I-D.ietf-ace-oauth-authz}}.
 
-In this specification and in application profiles building on it, this parameter is used to ask and retrieve from the KDC information about the signature algorithm and related parameters used in the group.
+This parameter allows to ask for and to provide information about the signature algorithm and the public keys to be used between the Client and the RS. Its exact semantics and content are application specific.
 
-When used in the Token Post request sent to the KDC (see {{token-post}}), the 'sign_info' parameter specifies the CBOR simple value 'null' (0xf6), to request information and parameters about the signature algorithm and the public keys used in the groups that the client has been authorized to join.
+In this specification and in application profiles building on it, this parameter is used to ask for and provide information about the signature algorithm and related parameters used in the groups indicated by the transferred acces token, as per its 'scope' claim (see {{ssec-authorization-response}}).
 
-When used in the following 2.01 (Created) response from the KDC (see {{token-post}}), the 'sign_info' parameter is a CBOR array of one or more elements. The number of elements is at most the number of groups that the client has been authorized to join. Each element contains information about signing parameters and keys for one or more group or topic, and is formatted as follows.
+When used in the Token Transfer Request sent to the KDC (see {{token-post}}), the 'sign_info' parameter specifies the CBOR simple value 'null' (0xf6), to request information and parameters about the signature algorithm and the public keys used in the groups that the Client has been authorized to join - or to have a more restricted interaction as per its granted roles (e.g., the Client is an external signature verifier).
+
+When used in the following Token Transfer Response from the KDC (see {{token-post}}), the 'sign_info' parameter is a CBOR array of one or more elements. The number of elements is at most the number of groups that the client has been authorized to join - or to have a more restricted inteaction (see above). Each element contains information about signing parameters and keys for one or more groups, and is formatted as follows.
 
 * The first element 'id' is a group name or an array of group names, associated to groups for which the next four elements apply. In the following, each specified group name is referred to as 'gname'.
 
@@ -363,11 +379,11 @@ The CDDL notation {{RFC8610}} of the 'sign_info' parameter is given below.
 ~~~~~~~~~~~ CDDL
 sign_info = sign_info_req / sign_info_resp
 
-sign_info_req  = nil                   ; used in the Token Post
-                                       ; request to the KDC
+sign_info_req  = nil                   ; used in the Token Transfer
+                                       ; Request to the KDC
    
-sign_info_resp = [ + sign_info_entry ] ; used in the 2.01 response
-                                       ; to the Token Post request
+sign_info_resp = [ + sign_info_entry ] ; used in the Token Transfer
+                                       ; Response from the KDC
 
 sign_info_entry =
 [
@@ -385,7 +401,9 @@ This format is consistent with every signature algorithm currently defined in {{
 
 ### 'kdcchallenge' Parameter {#kdcchallenge}
 
-The 'kdcchallenge' parameter is an OPTIONAL parameter of the Token Post response message defined in {{Section 5.10.1 of I-D.ietf-ace-oauth-authz}}. This parameter contains a challenge generated by the KDC and provided to the Client. The Client may use this challenge to prove possession of its own private key in the Joining Request (see the ‘client_cred_verify’ parameter in {{gid-post}}).
+The 'kdcchallenge' parameter is an OPTIONAL parameter of response message returned from the authz-info endpoint at the RS, as defined in {{Section 5.10.1 of I-D.ietf-ace-oauth-authz}}. This parameter contains a challenge generated by the RS and provided to the Client.
+
+In this specification and in application profiles building on it, the Client may use this challenge to prove possession of its own private key in the Joining Request (see the 'client_cred_verify' parameter in {{gid-post}}).
 
 # KDC Functionalities {#key-distr}
 
@@ -393,7 +411,7 @@ This section describes the functionalities provided by the KDC, as related to th
 
 In particular, this section defines the interface available at the KDC; specifies the handlers of each resource provided by the KDC interface; and describes how Clients interact with those resources to join a group and to perform additional operations as group members.
 
-As most important operation after posting the Token, the Client can perform a "Joining" exchange with the KDC, by specifying the group it wishes to join (see {{ssec-key-distribution-exchange}}). Then, the KDC verifies the access token and that the Client is authorized to join the specified group. If so, the KDC provides the Client with the keying material to securely communicate with the other members of the group.
+As most important operation after trasferring the access token to the KDC, the Client can perform a "Joining" exchange with the KDC, by specifying the group it wishes to join (see {{ssec-key-distribution-exchange}}). Then, the KDC verifies the access token and that the Client is authorized to join the specified group. If so, the KDC provides the Client with the keying material to securely communicate with the other members of the group.
 
 Later on as a group member, the Client can also rely on the interface at the KDC to perform additional operations, consistently with the roles it has in the group.
 
@@ -577,7 +595,7 @@ get_pub_keys = null / [ inclusion, [ *(role / comb_role) ], [ *id ] ]
 
     - scope is the CBOR byte string either specified in the 'scope' parameter above, if present, or as a default scope that the handler is expected to understand, if omitted.
 
-    - N_S is the challenge received from the KDC in the 'kdcchallenge' parameter of the 2.01 (Created) response to the token POST request (see {{token-post}}), encoded as a CBOR byte string.
+    - N_S is the challenge received from the KDC in the 'kdcchallenge' parameter of the 2.01 (Created) response to the Token Transfer Request (see {{token-post}}), encoded as a CBOR byte string.
 
     - N_C is the nonce generated by the Client and specified in the 'cnonce' parameter above, encoded as a CBOR byte string.
 
@@ -585,7 +603,7 @@ get_pub_keys = null / [ inclusion, [ *(role / comb_role) ], [ *id ] ]
   
     A possible type of PoP evidence is a signature, that the Client computes by using its own private key, whose corresponding public key is specified in the 'client_cred' parameter. Application profiles of this specification MUST specify the exact approaches used to compute the PoP evidence to include in 'client_cred_verify', and MUST specify which of those approaches is used in which case (REQ20).
 
-    If the token was not posted (e.g., if it is used directly to validate TLS instead), it is REQUIRED of the specific profile to define how the challenge N_S is generated (REQ21).
+    If the token was not provided to the KDC through a Token Transfer Request (e.g., it is used directly to validate TLS instead), it is REQUIRED of the specific application profile to define how the challenge N_S is generated (REQ21).
 
 * 'pub_keys_repos', which can be present if the format of the Client's public key in the 'client_cred' parameter is a certificate. In such a case, this parameter has as value the URI of the certificate. This parameter is encoded as a CBOR text string. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT3).
 
@@ -622,7 +640,7 @@ If the request contained unknown or non-expected fields present, the handler MUS
 
 If the KDC manages the group members' public keys, the handler checks if one is included in the 'client_cred' field. If so, the KDC retrieves the public key and performs the following actions.
 
-* If the access token was posted but the KDC cannot retrieve the 'kdcchallenge' associated to this Client (see {{token-post}}), the KDC MUST respond with a 4.00 Bad Request error response, which MUST also have Content-Format application/ace-groupcomm+cbor. The payload of the error response is a CBOR map including a newly generated 'kdcchallenge' value. This is specified in the 'kdcchallenge' parameter, whose CBOR label is defined in {{params}}.
+* If the access token was provided through a Token Transfer Request (see {{token-post}}) but the KDC cannot retrieve the 'kdcchallenge' associated to this Client (see {{token-post}}), the KDC MUST respond with a 4.00 Bad Request error response, which MUST also have Content-Format application/ace-groupcomm+cbor. The payload of the error response is a CBOR map including a newly generated 'kdcchallenge' value. This is specified in the 'kdcchallenge' parameter, whose CBOR label is defined in {{params}}.
 
 * The KDC checks the public key to be valid for the group identified by GROUPNAME. That is, it checks that the public key is encoded according to the format used in the group, is intended for the public key algorithm used in the group, and is aligned with the possible associated parameters used in the group.
 
@@ -1458,7 +1476,7 @@ extended_scope = #6.TBD_TAG(<< sequence >>)
 
 # ACE Groupcomm Parameters {#params}
 
-This specification defines a number of fields used during the second part of the message exchange, after the ACE Token POST exchange. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name.
+This specification defines a number of fields used during the second part of the message exchange, after the exchange of Token Transfer Request and Response. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name.
 
 Note that the media type application/ace-groupcomm+cbor MUST be used when these fields are transported.
 
@@ -1829,7 +1847,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ20: Specify the exact approaches used to compute and verify the PoP evidence to include in 'client_cred_verify', and which of those approaches is used in which case (see {{gid-post}}).
 
-* REQ21: Specify how the nonce N_S is generated, if the token was not posted (e.g., if it is used directly to validate TLS instead).
+* REQ21: Specify how the nonce N_S is generated, if the token is not provided to the KDC through the Token Transfer Request to the authz-info endpoint (e.g., if it is used directly to validate TLS instead).
 
 * REQ22: Specify if 'mgt\_key\_material' used, and if yes specify its format and content (see {{gid-post}}). If the usage of ‘mgt_key_material’ is indicated and its format defined for a specific key management scheme, that format must explicitly indicate the key management scheme itself. If a new rekeying scheme is defined to be used for an existing ‘mgt_key_material’ in an existing profile, then that profile will have to be updated accordingly, especially with respect to the usage of ‘mgt_key_material’ related format and content.
 
@@ -1841,7 +1859,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * OPT1: Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' is not used (see {{token-post}}).
 
-* OPT2: Optionally, specify the additional parameters used in the Token Post exchange (see {{token-post}}).
+* OPT2: Optionally, specify the additional parameters used in the exchange of Token Transfer Request and Response (see {{token-post}}).
 
 * OPT3: Optionally, specify the encoding of 'pub\_keys\_repos' if the default is not used (see {{gid-post}}).
 
@@ -1865,7 +1883,7 @@ This section lists the requirements on application profiles of this specificatio
 
 As defined in {{Section 8.1 of I-D.ietf-cose-rfc8152bis-algs}}, future algorithms can be registered in the "COSE Algorithms" Registry {{COSE.Algorithms}} as specifying none or multiple COSE capabilities.
 
-To enable the seamless use of such future registered algorithms, this section defines a general, agile format for each 'sign_info_entry' of the 'sign_info' parameter in the Token Post response, see {{sign-info}}.
+To enable the seamless use of such future registered algorithms, this section defines a general, agile format for each 'sign_info_entry' of the 'sign_info' parameter in the Token Transfer Response, see {{sign-info}}.
 
 If any of the currently registered COSE algorithms is considered, using this general format yields the same structure of 'sign_info_entry' defined in this document, thus ensuring retro-compatibility.
 
