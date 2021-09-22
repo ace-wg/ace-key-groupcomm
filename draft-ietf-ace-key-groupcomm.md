@@ -453,8 +453,8 @@ If request messages sent to the KDC as well as success response messages from th
 
   This resource is not created if the group member does not have individual public keying material to use in the group, or if the KDC does not store the public keys of group members. 
   
-The KDC is expected to fully provide the interface defined above. It is otherwise REQUIRED of the application profiles of this specification to indicate which resources are not hosted, i.e., which parts of the KDC interface defined in this section are not supported (REQ25). Application profiles of this specification MAY extend the KDC interface, by defining additional resources and their handlers.
-
+The KDC is expected to fully provide the interface defined above. It is otherwise REQUIRED of the application profiles of this specification to indicate which resources are not hosted, i.e., which parts of the interface defined in this section are not supported by the KDC (REQ25). Application profiles of this specification MAY extend the KDC interface, by defining additional resources and their handlers.
+XXX
 It is REQUIRED of the application profiles of this specification to register a Resource Type for the root url-path (REQ7). This Resource Type can be used to discover the correct url to access at the KDC. This Resource Type can also be used at the GROUPNAME sub-resource, to indicate different application profiles for different groups.
 
 It is REQUIRED of the application profiles of this specification to define what operations (e.g., CoAP methods) are allowed on each resource, for each role defined in {{ssec-authorization-request}} according to REQ2 (REQ8).
@@ -1855,7 +1855,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ24: Specify and register the identifier of newly defined semantics for binary scopes (see {{sec-extended-scope}}).
 
-* REQ25: Specify if any functionality of the KDC interface as defined in this document is not supported (see {{kdc-if}}).
+* REQ25: Specify if any part of the KDC interface as defined in this document is not supported by the KDC (see {{kdc-if}}).YYY
 
 * OPT1: Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' is not used (see {{token-post}}).
 
