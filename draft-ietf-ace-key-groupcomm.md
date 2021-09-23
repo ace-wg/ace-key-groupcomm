@@ -181,7 +181,9 @@ This document specifies a mechanism for:
 
    This exchange and the following secure communications between the Client and the KDC MUST occur in accordance with the transport profile of ACE used between Client and KDC, such as the DTLS transport profile {{I-D.ietf-ace-dtls-authorize}} and OSCORE transport profile {{I-D.ietf-ace-oscore-profile}} of ACE.
 
-3. The joining node starts the joining process to become a member of the group, by sending a request to the related group-membership resource at the KDC. At the end of the joining process, the joining node has received from the KDC the parameters and keying material to securely communicate with the other members of the group. Also, the KDC has stored the association between the authorization information from the access token and the secure session with the joining node.
+3. The joining node starts the joining process to become a member of the group, by sending a request to the related group-membership resource at the KDC. Based on the application requirements and policies, the KDC may perform a group rekeying, by generating new group keying material and distributing it to the current group members through the rekeying scheme used in the group.
+
+   At the end of the joining process, the joining node has received from the KDC the parameters and group keying material to securely communicate with the other group members. Also, the KDC has stored the association between the authorization information from the access token and the secure session with the joining node.
 
 4. The joining node and the KDC maintain the secure association, to support possible future communications. These especially include key management operations, such as retrieval of updated keying material or participation to a group rekeying process.
 
@@ -189,28 +191,30 @@ This document specifies a mechanism for:
 
 
 ~~~~~~~~~~~
-        C                             AS   KDC                 Group
-        |                              |   |                  Members
-      / |                              |   |                      |
-     |  |--- Authorization Request --->|   |                      |
-     |  |                              |   |                      |
-     |  |<-- Authorization Response ---|   |                      |
-(*) <   |                              |   |                      |
-     |  |                              |   |                      |
-     |  |---  Token Transfer Request ----->|                      |
-     |  |                                  |                      |
-     |  |<--- Token Transfer Response -----|                      |          
-      \ |                              |   |                      |
-        |                              |   |                      |
-        |------ Joining Request ------>|   |                      |
-        |                              |   |                      |
-        |<----- Joining Response ------|   | -- Group Rekeying -->|
-        |                              |   |                      |
-        |                              |   |                      |
-        |                                        Dispatcher       |
-        |                                            |            |
-        |<======= Secure group communication ========|===========>|
-        |                                            |            |
+        C                            AS   KDC                  Group
+        |                             |   |                   Members
+      / |                             |   |                      |
+     |  |--- Authorization Request -->|   |                      |
+     |  |                             |   |                      |
+     |  |<-- Authorization Response --|   |                      |
+(*) <   |                             |   |                      |
+     |  |                             |   |                      |
+     |  |---  Token Transfer Request ---->|                      |
+     |  |                                 |                      |
+     |  |<--- Token Transfer Response-----|                      |          
+      \ |                             |   |                      |
+        |                             |   |                      |
+        |------ Joining Request ----->|   |                      |
+        |                             |   |                      |
+        |                             |   | -- Group rekeying -->|
+        |                             |   |      (optional)      |
+        |<----- Joining Response -----|   |                      |
+        |                             |   |                      |
+        |                             |   |                      |
+        |                             |   |       Dispatcher     |
+        |                                             |          |
+        |<======= Secure group communication =========|=========>|
+        |                                             |          |
             
 (*) Defined in the ACE framework
 ~~~~~~~~~~~
