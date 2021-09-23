@@ -254,11 +254,11 @@ Client                                             AS    KDC
 
 The Authorization Request sent from the Client to the AS is defined in {{Section 5.8.1 of I-D.ietf-ace-oauth-authz}} and MAY contain the following parameters, which, if included, MUST have the corresponding values:
 
-* 'scope', containing the identifier of the specific groups, or topics in the case of pub-sub, that the Client wishes to access, and optionally the roles that the Client wishes to take.
+* 'scope', specifying the identifier of the groups that the Client wishes to access, and optionally the roles that the Client wishes to take in those groups.
 
-   This value is a CBOR byte string, wrapping a CBOR array of one or more  entries.
+   This parameter has as value a CBOR byte string, wrapping a CBOR array of one or more  entries.
 
-   By default, each entry is encoded as specified by {{I-D.ietf-ace-aif}}. The object identifier "Toid" corresponds to the group name and MUST be encoded as a tstr. The permission set "Tperm" indicates the roles that the client wishes to take in the group. It is up to the application profiles to define "Tperm" (REQ2) and register "Toid" and "Tperm" to fit the use case. An example of scope using the AIF format is given in {{cddl-ex-0}}.
+   By default, each array entry is encoded as specified by {{I-D.ietf-ace-aif}}. The object identifier "Toid" corresponds to the group name and MUST be encoded as a tstr. The permission set "Tperm" indicates the roles that the client wishes to take in the group. It is up to the application profiles to define "Tperm" (REQ2) and register "Toid" and "Tperm" to fit the use case. An example of scope using the AIF format is given in {{cddl-ex-0}}.
    
    Otherwise, each scope entry can be defined as a CBOR array, which contains:
 
