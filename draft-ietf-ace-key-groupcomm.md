@@ -1895,7 +1895,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * OPT6: Optionally, specify the behavior of the handler in case of failure to retrieve a public key for the specific node (see {{gid-post}}).
 
-* OPT7: Optionally, if the textual format of 'scope' is used, specify CBOR values to use for abbreviating the roles identifiers in the group (see {{ssec-authorization-request}}).
+* OPT7: Optionally, if the textual format of 'scope' is used, specify CBOR values to use for abbreviating the role identifiers in the group (see {{ssec-authorization-request}}).
 
 * OPT8: Optionally, specify for the KDC to perform group rekeying (together or instead of renewing individual keying material) when receiving a Key Renewal Request (see {{new-keys}}).
 
