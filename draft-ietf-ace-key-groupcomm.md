@@ -252,26 +252,33 @@ Client                                             AS    KDC
 
 ## Authorization Request {#ssec-authorization-request}
 
-The Authorization Request sent from the Client to the AS is defined in {{Section 5.8.1 of I-D.ietf-ace-oauth-authz}} and MAY contain the following parameters, which, if included, MUST have the corresponding values:
+The Authorization Request sent from the Client to the AS is defined in {{Section 5.8.1 of I-D.ietf-ace-oauth-authz}} and MAY contain the following parameters, which, if included, MUST have format and value as specified below.
 
-* 'scope', specifying the identifier of the groups that the Client wishes to access, and optionally the roles that the Client wishes to take in those groups.
+* 'scope', specifying the name of the groups that the Client wishes to access, and optionally the roles that the Client wishes to take in those groups.
 
-   This parameter has as value a CBOR byte string, wrapping a CBOR array of one or more  entries.
+   This parameter is encoded as a CBOR byte string, which wraps a CBOR array of one or more scope entries. All the scope entries are specified according to a same format, i.e. either the AIF format or the textual format defined below.
 
-   By default, each array entry is encoded as specified by {{I-D.ietf-ace-aif}}. The object identifier "Toid" corresponds to the group name and MUST be encoded as a tstr. The permission set "Tperm" indicates the roles that the client wishes to take in the group. It is up to the application profiles to define "Tperm" (REQ2) and register "Toid" and "Tperm" to fit the use case. An example of scope using the AIF format is given in {{cddl-ex-0}}.
+   * If the AIF format is used, each scope entry is encoded as specified in {{I-D.ietf-ace-aif}}. The object identifier "Toid" corresponds to the group name and MUST be encoded as a CBOR text string. The permission set "Tperm" indicates the roles that the Client wishes to take in the group.
    
-   Otherwise, each scope entry can be defined as a CBOR array, which contains:
+      The AIF format is the default format for application profiles of this specification, and is preferable for those that aim to a compact encoding of scope. This is desirable especially for application profiles defining several roles, with the Client possibly requesting for multiple roles combined.
+      
+      {{cddl-ex-0}} shows an example in CDDL notation {{RFC8610}} where scope uses the AIF format.
+   
+   * If the textual format is used, each scope entry is a CBOR array formatted as follows.
 
-  - As first element, the identifier of the specific group, encoded as a tstr.
+     - As first element, the group name, encoded as a CBOR text string.
 
-  - Optionally, as second element, the role (or CBOR array of roles) that the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s).
+     - Optionally, as second element, the role or CBOR array of roles that the Client wishes to take in the group. This element is optional since roles may have been pre-assigned to the Client, as associated to its verifiable identity credentials. Alternatively, the application may have defined a single, well-known role for the target resource(s) and audience(s).
 
-  In each entry, the encoding of the role identifiers is application specific, and part of the requirements for the application profile (REQ2).
-  In particular, the application profile may specify CBOR values to use for abbreviating role identifiers (OPT7).
-  
-  {{cddl-ex}} provides an example of CDDL definition {{RFC8610}} of scope using the format above, with group name and role identifiers encoded as text strings.
+     {{cddl-ex}} shows an example in CDDL notation where scope uses the textual format, with group name and role identifiers encoded as CBOR text strings.
 
-* 'audience', with an identifier of a KDC.
+   It is REQUIRED of application profiles of this specificaton to specify the exact format and encoding of scope (REQ2). This includes defining the set of possible roles and their identifiers, as well as the corresponding encoding to use in the scope entries according to the used scope format.
+   
+   If the application profile uses the AIF format, it is also REQUIRED to register its specific instance of "Toid" and "Tperm", as well as the corresponding Media Type and Content-Format, as per the guidelines in {{I-D.ietf-ace-aif}} (REQ26).
+   
+   If the application profile uses the textual format, it MAY additionally specify CBOR values to use for abbreviating the role identifiers (OPT7).
+   
+* 'audience', with an identifier of the KDC.
 
 As defined in {{I-D.ietf-ace-oauth-authz}}, other additional parameters can be included if necessary.
 
@@ -291,7 +298,7 @@ scope_entry = AIF_Generic<gname, permissions>
 
 scope = << [ + scope_entry ] >>
 ~~~~~~~~~~~~~~~~~~~~
-{: #cddl-ex-0 title="Example CDLL definition of scope, using the default Authorization Information Format"}
+{: #cddl-ex-0 title="Example of scope using the AIF format"}
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
 gname = tstr
@@ -302,7 +309,7 @@ scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 
 scope = << [ + scope_entry ] >>
 ~~~~~~~~~~~~~~~~~~~~
-{: #cddl-ex title="CDLL definition of scope, using as example group name encoded as tstr and role as tstr"}
+{: #cddl-ex title="Example of scope using the textual format, with the group name and role identifiers encoded as text strings"}
 
 ## Authorization Response {#ssec-authorization-response}
 
@@ -1826,7 +1833,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ1: If the value of the GROUPNAME URI path and the group name in the access token scope (gname in {{ssec-authorization-response}}) don't match, specify the mechanism to map the GROUPNAME value in the URI to the group name (REQ1) (see {{kdc-if}}).
 
-* REQ2: Specify the encoding and value of roles, for scope entries of 'scope' (see {{ssec-authorization-request}}).
+* REQ2: Specify the exact format and encoding of 'scope'. This includes defining the set of possible roles and their identifiers, as well as the corresponding encoding to use in the scope entries according to the used scope format (see {{ssec-authorization-request}}).
 
 * REQ3: If used, specify the acceptable values for 'sign_alg' (see {{token-post}}).
 
@@ -1874,6 +1881,8 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ25: Specify if any part of the KDC interface as defined in this document is not supported by the KDC (see {{kdc-if}}).
 
+* REQ26: If the AIF format of 'scope' is used, register its specific instance of "Toid" and "Tperm", as well as the corresponding Media Type and Content-Format, as per the guidelines in {{I-D.ietf-ace-aif}}.
+
 * OPT1: Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' is not used (see {{token-post}}).
 
 * OPT2: Optionally, specify the additional parameters used in the exchange of Token Transfer Request and Response (see {{token-post}}).
@@ -1886,7 +1895,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * OPT6: Optionally, specify the behavior of the handler in case of failure to retrieve a public key for the specific node (see {{gid-post}}).
 
-* OPT7: Optionally, specify CBOR values to use for abbreviating identifiers of roles in the group (see {{ssec-authorization-request}}).
+* OPT7: Optionally, if the textual format of 'scope' is used, specify CBOR values to use for abbreviating the roles identifiers in the group (see {{ssec-authorization-request}}).
 
 * OPT8: Optionally, specify for the KDC to perform group rekeying (together or instead of renewing individual keying material) when receiving a Key Renewal Request (see {{new-keys}}).
 
