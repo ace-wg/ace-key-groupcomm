@@ -105,7 +105,11 @@ Readers are expected to be familiar with the terms and concepts described in  {{
 
 This document uses names or identifiers for groups and nodes. Their different meanings are summarized here:
 
-* Group: a set of nodes that share common keying material and security parameters used to protect their communications with one another. That is, the term refers to a "security group". This is not to be confused with an "application group", which has relevance at the application level and whose members share a common pool of resources or content.
+* Group: a set of nodes that share common keying material and security parameters used to protect their communications with one another. That is, the term refers to a "security group".
+
+   This is not to be confused with an "application group", which has relevance at the application level and whose members share a common pool of resources or content. Examples of application groups are the set of all nodes deployed in a same physical room, or the set of nodes registered to a pub-sub topic.
+   
+   The same security group might be associated to multiple application groups. Also, the same application group can be associated to multiple security groups. Further details and considerations on the mapping between the two types of group are out of the scope of this document.
 
 * Group name: the invariant once established identifier of a group. It is used in the interactions between Client, AS and RS to identify a group.
 
