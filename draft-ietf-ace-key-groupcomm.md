@@ -105,15 +105,17 @@ Readers are expected to be familiar with the terms and concepts described in  {{
 
 This document uses names or identifiers for groups and nodes. Their different meanings are summarized here:
 
-* "Group name" is the invariant once established identifier of the group. It is used in the communication between AS, RS and Client to identify the group.
+* Group: a set of nodes that share common keying material and security parameters used to protect their communications with one another. That is, the term refers to a "security group". This is not to be confused with an "application group", which has relevance at the application level and whose members share a common pool of resources or content.
 
-* "GROUPNAME" is the invariant once established text string used in URIs. GROUPNAME maps to the group name of a group, although it is not necessarily the same.
+* Group name: the invariant once established identifier of a group. It is used in the interactions between Client, AS and RS to identify a group.
 
-* "Group identifier" is the identifier of the group keying material. Opposite to group name and GROUPNAME, this identifier changes over time, when the keying material is updated.
+* GROUPNAME: the invariant once established text string used in URIs. GROUPNAME maps to the group name of a group, although it is not necessarily the same.
 
-* "Node name" is the invariant once established identifier of the node. It is used in the communication between AS, RS and Client to identify a member of the group.
+* Group identifier: the identifier of the group keying material used in a group. Unlike group name and GROUPNAME, this identifier changes over time, when the group keying material is updated.
 
-* "NODENAME" is the invariant once established text string used in URIs. NODENAME is used to identify a node in a group.
+* Node name: the invariant once established identifier of a node. It is used in the interactions between Client and RS and to identify a member of a group.
+
+* NODENAME: the invariant once established text string used in URIs. NODENAME is used to identify a node in a group.
 
 This document additionally uses the following terminology:
 
