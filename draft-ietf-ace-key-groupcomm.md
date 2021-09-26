@@ -345,9 +345,9 @@ When receiving an Authorization Request from a Client that was previously author
 
 ## Token Transferring {#token-post}
 
-The Client sends a Token Transfer Request to the KDC, i.e., a CoAP POST request including the access token and targeting the authz-info endpoint, as specified in {{Section 5.8.1 of I-D.ietf-ace-oauth-authz}}.
+The Client sends a Token Transfer Request to the KDC, i.e., a CoAP POST request including the access token and targeting the authz-info endpoint (see {{Section 5.10.1 of I-D.ietf-ace-oauth-authz}}).
 
-This request differs from the one defined in {{I-D.ietf-ace-oauth-authz}}, since it allows to transport additional information about the public keys used in the group to ensure source authentication, as well as possible additional group parameters.
+Note that this request deviates from the one defined in {{I-D.ietf-ace-oauth-authz}}, since it allows to ask the KDC for additional information concerning the public keys used in the group to ensure source authentication, as well as for possible additional group parameters.
 
 The joining node MAY ask for this information from the KDC through the same Token Transfer Request. In this case, the message MUST have Content-Format set to application/ace+cbor defined in {{Section 8.16 of I-D.ietf-ace-oauth-authz}}, and the message payload MUST be formatted as a CBOR map, which MUST include the access token. The CBOR map MAY additionally include the following parameter, which, if included, MUST have the corresponding values:
 
