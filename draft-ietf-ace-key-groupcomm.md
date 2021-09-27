@@ -690,7 +690,7 @@ Then, the handler performs the following actions.
 
 * If the KDC manages the group members' public keys:
 
-  - The handler associates the retrieved Client's public key to the node identifier NODENAME and to the access token.
+  - The handler associates the retrieved Client's public key to the tuple composed of the node name NODENAME, the group name GROUPNAME and the received access token.
 
   - The handler adds the retrieved Client's public key to the stored list of public keys stored for the group identified by GROUPNAME. If such list already includes a public key for the Client, but a different public key is specified in the 'client_cred' field, then the handler MUST replace the old public key in the list with the one specified in the 'client_cred' field.
 
