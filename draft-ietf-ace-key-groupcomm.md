@@ -1309,7 +1309,7 @@ The handler also verifies that the node sending the request and the node name us
 
 Additionally, the handler verifies that the node is a current member of the group. If verification fails, the KDC MUST respond with a 4.03 (Forbidden) error message. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
 
-If verification succeeds, the handler removes the client from the group identified by GROUPNAME. That includes removing the public key of the client if the KDC keep tracks of that, and possibly removing the evicted node from the list of observers of the resource at ace-group/GROUPNAME (if observable). Then, the handler deletes the sub-resource nodes/NODENAME and returns a 2.02 (Deleted) message with empty payload.
+If verification succeeds, the handler removes the client from the group identified by GROUPNAME, and removes the public key of the client if the KDC keep tracks of that. Also, if the client is registered as an observer of the group-membership resource at ace-group/GROUPNAME, the handler removes the node from the list of observers of that resource. Finally, if the sub-resource nodes/NODENAME was created for the client, the handler deletes that resource and returns a 2.02 (Deleted) message with empty payload.
 
 #### Leave the Group ## {#ssec-group-leaving}
 
@@ -1419,7 +1419,7 @@ A node may be evicted from the group in the following cases.
 
    In either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
 
-Furthermore, in case of forced eviction, the KDC removes the public key of the evicted node if the KDC keep tracks of that, and possibly removes the evicted node from the list of observers of the resource at ace-group/GROUPNAME (if observable).
+Furthermore, in case of forced eviction, the KDC removes the public key of the evicted node if the KDC keep tracks of that. Also, if the evicted node is registered as an observer of the group-membership resource at ace-group/GROUPNAME, the KDC removes the node from the list of observers of that resource.
 
 Then, the KDC deletes the sub-resource ace-group/GROUPNAME/nodes/NODENAME associated to the evicted node. After that, the KDC MAY explicitly inform the evicted node, by means of the following methods.
 
@@ -1428,8 +1428,6 @@ Then, the KDC deletes the sub-resource ace-group/GROUPNAME/nodes/NODENAME associ
 * If the evicted node is observing its associated sub-resource at ace-group/GROUPNAME/nodes/NODENAME (see {{node-get}}), the KDC sends an unsolicited 4.04 (Not Found) response, which does not include the Observe option and indicates that the observed resource has been deleted (see {{Section 3.2 of RFC7641}}).
 
    The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 5 ("Group membership terminated").
-
-   Consistently, the KDC also removes the node's entry from the list of observers of the sub-resource.
 
 # Extended Scope Format # {#sec-extended-scope}
 
