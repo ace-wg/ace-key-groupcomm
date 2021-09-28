@@ -350,7 +350,7 @@ The Client sends a Token Transfer Request to the KDC, i.e., a CoAP POST request 
 
 Note that this request deviates from the one defined in {{I-D.ietf-ace-oauth-authz}}, since it allows to ask the KDC for additional information concerning the public keys used in the group to ensure source authentication, as well as for possible additional group parameters.
 
-The joining node MAY ask for this information from the KDC through the same Token Transfer Request. In this case, the message MUST have Content-Format set to application/ace+cbor defined in {{Section 8.16 of I-D.ietf-ace-oauth-authz}}, and the message payload MUST be formatted as a CBOR map, which MUST include the access token. The CBOR map MAY additionally include the following parameter, which, if included, MUST have the corresponding values:
+The joining node MAY ask for this information from the KDC through the same Token Transfer Request. In this case, the message MUST have Content-Format set to application/ace+cbor defined in {{Section 8.16 of I-D.ietf-ace-oauth-authz}}, and the message payload MUST be formatted as a CBOR map, which MUST include the access token. The CBOR map MAY additionally include the following parameter, which, if included, MUST have format and value as specified below.
 
 * 'sign_info' defined in {{sign-info}}, specifying the CBOR simple value 'null' (0xf6) to request information about the signature algorithm, signature algorithm parameters, signature key parameters and about the exact encoding of public keys used in the groups that the client has been authorized to join.
 
@@ -571,7 +571,7 @@ This resource implements the POST and GET and handlers.
 
 The POST handler adds the public key of the client to the list of the group members' public keys and returns the symmetric group keying material for the group identified by GROUPNAME. Note that the group joining exchange is done by the client via this operation, as described in {{ssec-key-distribution-exchange}}.
 
-The handler expects a request with payload formatted as a CBOR map, which MAY contain the following fields, which, if included, MUST have the format and values specified below.
+The handler expects a request with payload formatted as a CBOR map, which MAY contain the following fields, which, if included, MUST have format and value as specified below.
 
 * 'scope', with value the specific group that the Client is attempting to join, i.e., the group name, and the roles it wishes to have in the group. This value is a CBOR byte string wrapping one scope entry, as defined in {{ssec-authorization-request}}.
 
@@ -723,7 +723,7 @@ The response SHOULD contain the following parameter:
 
 * 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what specified for NumericDate in {{Section 2 of RFC7519}}. Group members MUST stop using the keying material to protect outgoing messages and retrieve new keying material at the time indicated in this field.
 
-Optionally, the response MAY contain the following parameters, which, if included, MUST have the corresponding values:
+Optionally, the response MAY contain the following parameters, which, if included, MUST have format and value as specified below.
 
 * 'ace-groupcomm-profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. Applications of this specification MUST register an application profile identifier and the related value for this parameter in the "ACE Groupcomm Profiles" Registry (REQ15).
 
@@ -736,38 +736,41 @@ Optionally, the response MAY contain the following parameters, which, if include
 * 'group\_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policies" Registry. This specification defines the three elements "Sequence Number Synchronization Methods", "Key Update Check Interval" and "Expiration Delta", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format and default value of included map entries (REQ17).
 
 ~~~~~~~~~~~
-+--------------+-------+----------|---------------------|------------+
-|      Name    | CBOR  |   CBOR   |    Description      | Reference  |
-|              | label |   type   |                     |            |
-|--------------+-------+----------|---------------------|------------|
-| Sequence     | TBD1  | tstr/int | Method for a re-    | [[this     |
-| Number       |       |          | cipient node to     | document]] |
-| Synchroniza- |       |          | synchronize with    |            |
-| tion Method  |       |          | sequence numbers    |            |
-|              |       |          | of a sender node.   |            |
-|              |       |          | Its value is taken  |            |
-|              |       |          | from the 'Value'    |            |
-|              |       |          | column of the       |            |
-|              |       |          | Sequence Number     |            |
-|              |       |          | Synchronization     |            |
-|              |       |          | Method registry     |            |
-|              |       |          |                     |            |
-| Key Update   | TBD2  |   int    | Polling interval    | [[this     |
-| Check        |       |          | in seconds, to      | document]] |
-| Interval     |       |          | check for new       |            |
-|              |       |          | keying material at  |            |
-|              |       |          | the KDC             |            |
-|              |       |          |                     |            |
-| Expiration   | TBD3  |   uint   | Number of seconds   | [[this     |
-| Delta        |       |          | from 'exp' until    | document]] |
-|              |       |          | the specified UTC   |            |
-|              |       |          | date/time after     |            |
-|              |       |          | which group members |            |
-|              |       |          | MUST stop using the |            |
-|              |       |          | keying material to  |            |
-|              |       |          | verify incoming     |            |
-|              |       |          | messages.           |            |
-+--------------+-------+----------|---------------------|------------+
++--------------+-------+----------+----------------------+------------+
+|      Name    | CBOR  |   CBOR   |     Description      | Reference  |
+|              | label |   type   |                      |            |
++--------------+-------+----------+----------------------+------------+
+| Sequence     | TBD1  | tstr/int | Method for recipient | [[this     |
+| Number       |       |          | group members to     | document]] |
+| Synchroniza- |       |          | synchronize with     |            |
+| tion Method  |       |          | sequence numbers of  |            |
+|              |       |          | of sender group      |            |
+|              |       |          | members. Its value   |            |
+|              |       |          | is taken from the    |            |
+|              |       |          | 'Value' column of    |            |
+|              |       |          | the Sequence Number  |            |
+|              |       |          | Synchronization      |            |
+|              |       |          | Method registry      |            |
++--------------+-------+----------+----------------------+------------+
+| Key Update   | TBD2  |   int    | Polling interval in  | [[this     |
+| Check        |       |          | seconds, for  group  | document]] |
+| Interval     |       |          | members to check at  |            |
+|              |       |          | the KDC if the       |            |
+|              |       |          | latest group keying  |            |
+|              |       |          | material is the one  |            |
+|              |       |          | that they own        |            |
++--------------+-------+----------+----------------------+------------+
+| Expiration   | TBD3  |   uint   | Number of seconds    | [[this     |
+| Delta        |       |          | from 'exp' until the | document]] |
+|              |       |          | specified UTC        |            |
+|              |       |          | date/time after      |            |
+|              |       |          | which group members  |            |
+|              |       |          | MUST stop using the  |            |
+|              |       |          | group keying         |            |
+|              |       |          | material they own to |            |
+|              |       |          | verify incoming      |            |
+|              |       |          | messages             |            |
++--------------+-------+----------|----------------------|------------+
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Policies title="ACE Groupcomm Policies" artwork-align="center"}
 
