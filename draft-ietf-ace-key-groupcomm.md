@@ -904,7 +904,7 @@ Note that this resource handler, as the FETCH handler for the same resource, onl
 
 #### Retrieve All Public Keys in the Group {#sec-key-retrieval-all}
 
-In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to request public keys and roles of all the group members, by sending a CoAP GET request to the /ace-group/GROUPNAME/pub-key endpoint at the KDC, where GROUPNAME is the group name, and formatted as defined in {{pubkey-get}}.
+In case the KDC maintains the public keys of group members, a node in the group can contact the KDC to request the public keys, roles and node identifiers of all the current group members, by sending a CoAP GET request to the /ace-group/GROUPNAME/pub-key endpoint at the KDC, where GROUPNAME is the group name, and formatted as defined in {{pubkey-get}}.
 
 {{fig-public-key-3}} gives an overview of the exchanges mentioned above, while {{fig-public-key-4}} shows an example of such an exchange.
 
@@ -949,7 +949,7 @@ The handler expects a request with payload formatted as a CBOR map, that MUST co
 
 * 'get_pub_keys', whose value is encoded as in {{gid-post}} with the following modifications.
 
-  - The arrays 'role\_filter' and 'id\_filter' MUST NOT both be empty, i.e., in CBOR diagnostic notation: \[ bool, \[ \], \[ \] \]. If the 'get_pub_keys' parameter has such a format, the request MUST be considered malformed.
+  - The arrays 'role\_filter' and 'id\_filter' MUST NOT both be empty, i.e., in CBOR diagnostic notation: \[ bool, \[ \], \[ \] \]. If the 'get_pub_keys' parameter has such a format, the request MUST be considered malformed. Note that a group member can retrieve the public keys of all the current group members by sending a GET request to the same KDC resource instead (see {{sec-key-retrieval-all}}).
 
   - The element 'inclusion\_flag' encodes the CBOR simple value True if the third element 'id\_filter' specifies an empty CBOR array, or if the Client wishes to receive the public keys of the nodes having their node identifier specified in 'id\_filter' (i.e, selection by inclusive filtering). Instead, this element encodes the CBOR simple value False if the Client wishes to receive the public keys of the nodes not having the node identifiers specified in the third element 'id\_filter' (i.e., selection by exclusive filtering).
 
