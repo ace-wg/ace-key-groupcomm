@@ -1558,7 +1558,9 @@ When rekeying the group, the KDC provides the new group keying material to the c
 
 In particular, the KDC must renew the group keying material latest upon its expiration. Before then, the KDC may also renew the group keying material on a regular or periodical fashion.
 
-Furthermore, the KDC should renew the keying material upon a group membership change. Note that the considerations above about dealing with replayed messages still hold, even in case the KDC rekeys the group upon every single joining of a new group member.
+Furthermore, the KDC should renew the group keying material upon a group membership change. Since the minimum number of group members is one, the KDC should provide also a Client joining an empty group with new keying material never used before in that group. Similarly, the KDC should provide new group keying material also to a Client that remains the only member in the group after the leaving of other group members.
+
+Note that the considerations above about dealing with replayed messages still hold, even in case the KDC rekeys the group upon every single joining of a new group member.
 
 The KDC may enforce a rekeying policy that takes into account the overall time required to rekey the group, as well as the expected rate of changes in the group membership.
 
