@@ -396,7 +396,7 @@ When used in the following Token Transfer Response from the KDC (see {{token-pos
 
 * The fourth element 'sign_key_parameters' is a CBOR array indicating the parameters of the key used with the signature algorithm, in the groups identified by the 'gname' values. Its content depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define the possible values and structure for the elements of this parameter (REQ5).
 
-* The fifth element 'pub_key_enc' parameter is either a CBOR integer indicating the encoding of public keys used in the groups identified by the 'gname' values, or has value the CBOR simple value 'null' (0xf6) indicating that the KDC does not act as repository of public keys for group members. Its acceptable integer values are taken from the 'Label' column of the "COSE Header Parameters" Registry {{COSE.Header.Parameters}}. It is REQUIRED of the application profiles to define specific values to use for this parameter, consistently with the acceptable formats of public keys (REQ6).
+* The fifth element 'pub_key_enc' parameter is either a CBOR integer indicating the encoding of public keys used in the groups identified by the 'gname' values, or has value the CBOR simple value 'null' (0xf6) indicating that the KDC does not act as repository of public keys for group members. Its acceptable integer values are taken from the 'Label' column of the "COSE Header Parameters" registry {{COSE.Header.Parameters}}. It is REQUIRED of the application profiles to define specific values to use for this parameter, consistently with the acceptable formats of public keys (REQ6).
 
 The CDDL notation {{RFC8610}} of the 'sign_info' parameter is given below.
 
@@ -702,7 +702,7 @@ The response message MUST include the Location-Path CoAP option, specifying the 
 
 The response message MUST have Content-Format application/ace-groupcomm+cbor. The payload of the response is formatted as a CBOR map, which MUST contain the following fields and values.
 
-* 'gkty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key Types" Registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key Types" registry.
+* 'gkty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key Types" registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key Types" registry.
 
 * 'key', containing the keying material for the group communication, or information required to derive it.
 
@@ -725,7 +725,7 @@ The response SHOULD contain the following parameter:
 
 Optionally, the response MAY contain the following parameters, which, if included, MUST have format and value as specified below.
 
-* 'ace-groupcomm-profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. Applications of this specification MUST register an application profile identifier and the related value for this parameter in the "ACE Groupcomm Profiles" Registry (REQ15).
+* 'ace-groupcomm-profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. Applications of this specification MUST register an application profile identifier and the related value for this parameter in the "ACE Groupcomm Profiles" registry (REQ15).
 
 * 'pub\_keys', MUST be present if 'get\_pub\_keys' was present in the request, otherwise it MUST NOT be present. This parameter is a CBOR array specifying the public keys of the group members, i.e., of all of them or of the ones selected according to the 'get\_pub\_keys' parameter in the request. In particular, each element of the array is a CBOR byte string, with value the original binary representation of a group member's public key. It is REQUIRED of the application profiles to define the specific formats of public keys that are acceptable to use in the group (REQ6).
 
@@ -733,7 +733,7 @@ Optionally, the response MAY contain the following parameters, which, if include
 
 * 'peer\_identifiers', MUST be present if 'pub\_keys' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, with n the number of public keys included in the 'pub\_keys' parameter (at most the number of members in the group). The i-th element of the array specifies the node identifier that the group member associated to the i-th public key in 'pub\_keys' has in the group. In particular, the i-th array element is encoded as a CBOR byte string, with value the node identifier of the group member.
 
-* 'group\_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policies" Registry. This specification defines the three elements "Sequence Number Synchronization Methods", "Key Update Check Interval" and "Expiration Delta", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format and default value of included map entries (REQ17).
+* 'group\_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policies" registry. This specification defines the three elements "Sequence Number Synchronization Methods", "Key Update Check Interval" and "Expiration Delta", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format and default value of included map entries (REQ17).
 
 ~~~~~~~~~~~
 +--------------+-------+----------+----------------------+------------+
@@ -1519,7 +1519,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
  pub_keys_repos   |   TBD    | text string         | {{gid-post}}
  control_uri | TBD | text string | {{gid-post}}
  gkty          |   TBD    | integer / text string   | {{gid-post}}
- key          |   TBD    | see "ACE Groupcomm Key Types" Registry     | {{gid-post}}
+ key          |   TBD    | see "ACE Groupcomm Key Types" registry     | {{gid-post}}
  num          |   TBD    | int           | {{gid-post}}
  ace-groupcomm-profile |   TBD    | int           | {{gid-post}}
  exp          |   TBD    | int           | {{gid-post}}
@@ -1649,7 +1649,7 @@ Reference: \[this document\]
 
 ## OAuth Parameters {#iana-kinfo}
 
-   The following registrations are done for the OAuth Parameters Registry following the procedure specified in {{Section 11.2 of RFC6749}}:
+   The following registrations are done for the OAuth Parameters registry following the procedure specified in {{Section 11.2 of RFC6749}}:
 
 *  Parameter name: sign_info
 *  Parameter usage location: client-rs request, rs-client response
@@ -1666,7 +1666,7 @@ Reference: \[this document\]
 ## OAuth Parameters CBOR Mappings {#iana-kinfo-map}
 
 The following registrations are done for the OAuth Parameters CBOR
-Mappings Registry following the procedure specified in {{Section 8.10 of I-D.ietf-ace-oauth-authz}}:
+Mappings registry following the procedure specified in {{Section 8.10 of I-D.ietf-ace-oauth-authz}}:
 
 * Name: sign_info
 * CBOR Key: TBD (range -256 to 255)
@@ -1682,10 +1682,10 @@ Mappings Registry following the procedure specified in {{Section 8.10 of I-D.iet
 
 ## ACE Groupcomm Parameters {#iana-reg}
 
-This specification establishes the "ACE Groupcomm Parameters" IANA Registry. The
-Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
+This specification establishes the "ACE Groupcomm Parameters" IANA registry. The
+registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
 
-The columns of this Registry are:
+The columns of this registry are:
 
 * Name: This is a descriptive name that enables easier reference to
   the item. The name MUST be unique. It is not used in the encoding.
@@ -1696,33 +1696,33 @@ The columns of this Registry are:
 
 * Reference: This contains a pointer to the public specification for the item.
 
-This Registry has been initially populated by the values in {{params}}. The Reference column for all of these entries refers to sections of this document.
+This registry has been initially populated by the values in {{params}}. The Reference column for all of these entries refers to sections of this document.
 
 ## ACE Groupcomm Key Types {#iana-key}
 
-This specification establishes the "ACE Groupcomm Key Types" IANA Registry. The
-Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
+This specification establishes the "ACE Groupcomm Key Types" IANA registry. The
+registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}.
 
-The columns of this Registry are:
+The columns of this registry are:
 
 * Name: This is a descriptive name that enables easier reference to
   the item. The name MUST be unique. It is not used in the encoding.
 
 * Key Type Value: This is the value used to identify the keying material. These values MUST be unique.  The value can be a positive integer, a negative integer, or a text string.
 
-* Profile: This field may contain one or more descriptive strings of application profiles to be used with this item. The values should be taken from the Name column of the "ACE Groupcomm Profiles" Registry.
+* Profile: This field may contain one or more descriptive strings of application profiles to be used with this item. The values should be taken from the Name column of the "ACE Groupcomm Profiles" registry.
 
 * Description: This field contains a brief description of the keying material.
 
 * References: This contains a pointer to the public specification for the format of the keying material, if one exists.
 
-This Registry has been initially populated by the values in {{gkty}}. The specification column for all of these entries will be this document.
+This registry has been initially populated by the values in {{gkty}}. The specification column for all of these entries will be this document.
 
 ## ACE Groupcomm Profiles
 
-This specification establishes the "ACE Groupcomm Profiles" IANA Registry. The Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+This specification establishes the "ACE Groupcomm Profiles" IANA registry. The registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
 
-The columns of this Registry are:
+The columns of this registry are:
 
 * Name: The name of the application profile, to be used as value of the profile attribute.
 
@@ -1734,9 +1734,9 @@ The columns of this Registry are:
 
 ## ACE Groupcomm Policies
 
-This specification establishes the "ACE Groupcomm Policies" IANA Registry. The Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+This specification establishes the "ACE Groupcomm Policies" IANA registry. The registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
 
-The columns of this Registry are:
+The columns of this registry are:
 
 * Name: The name of the group communication policy.
 
@@ -1752,9 +1752,9 @@ This registry will be initially populated by the values in {{fig-ACE-Groupcomm-P
 
 ## Sequence Number Synchronization Methods
 
-This specification establishes the "Sequence Number Synchronization Methods" IANA Registry. The Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+This specification establishes the "Sequence Number Synchronization Methods" IANA registry. The registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
 
-The columns of this Registry are:
+The columns of this registry are:
 
 * Name: The name of the sequence number synchronization method.
 
@@ -1766,7 +1766,7 @@ The columns of this Registry are:
 
 ## Interface Description (if=) Link Target Attribute Values {#if-ace-group}
 
-This specification registers the following entry to the "Interface Description (if=) Link Target Attribute Values Registry" registry within the "CoRE Parameters" registry group:
+This specification registers the following entry to the "Interface Description (if=) Link Target Attribute Values registry" registry within the "CoRE Parameters" registry group:
 
 * Attribute Value: ace.group
 
@@ -1788,9 +1788,9 @@ This specification registers the following entry to the "CBOR Tags" registry:
 
 ## ACE Scope Semantics {#iana-scope-semantics}
 
-This specification establishes the "ACE Scope Semantics" IANA Registry. The Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+This specification establishes the "ACE Scope Semantics" IANA registry. The registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
 
-The columns of this Registry are:
+The columns of this registry are:
 
 * Value: The value to be used to identify this scope semantics. The value MUST be unique. The value can be a positive integer or a negative integer. Integer values between 0 and 255 are designated as Standards Track Document required. Integer values from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as expert review. Integer values less than -65536 are marked as private use.
 
@@ -1800,9 +1800,9 @@ The columns of this Registry are:
 
 ## ACE Groupcomm Errors {#iana-ace-groupcomm-errors}
 
-This specification establishes the "ACE Groupcomm Errors" IANA Registry. The Registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the Registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+This specification establishes the "ACE Groupcomm Errors" IANA registry. The registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
 
-The columns of this Registry are:
+The columns of this registry are:
 
 * Value: The value to be used to identify the error. The value MUST be unique. The value can be a positive integer or a negative integer. Integer values between 0 and 255 are designated as Standards Track Document required. Integer values from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as expert review. Integer values less than -65536 are marked as private use.
 
@@ -1810,7 +1810,7 @@ The columns of this Registry are:
 
 * Reference: This field contains a pointer to the public specification defining the error, if one exists.
 
-This Registry has been initially populated by the values in {{error-types}}. The Reference column for all of these entries refers to this document.
+This registry has been initially populated by the values in {{error-types}}. The Reference column for all of these entries refers to this document.
 
 ## Expert Review Instructions {#review}
 
@@ -1914,7 +1914,7 @@ This section lists the requirements on application profiles of this specificatio
 
 # Extensibility for Future COSE Algorithms # {#sec-future-cose-algs}
 
-As defined in {{Section 8.1 of I-D.ietf-cose-rfc8152bis-algs}}, future algorithms can be registered in the "COSE Algorithms" Registry {{COSE.Algorithms}} as specifying none or multiple COSE capabilities.
+As defined in {{Section 8.1 of I-D.ietf-cose-rfc8152bis-algs}}, future algorithms can be registered in the "COSE Algorithms" registry {{COSE.Algorithms}} as specifying none or multiple COSE capabilities.
 
 To enable the seamless use of such future registered algorithms, this section defines a general, agile format for each 'sign_info_entry' of the 'sign_info' parameter in the Token Transfer Response, see {{sign-info}}.
 
@@ -2024,13 +2024,13 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 * Extended security considerations (Sections 10.1 and 10.2).
 
-* New "ACE Public Key Encoding" IANA Registry (Section 11.2).
+* New "ACE Public Key Encoding" IANA registry (Section 11.2).
 
-* New "ACE Groupcomm Parameters" IANA Registry (Section 11.3), populated with the entries in Section 8.
+* New "ACE Groupcomm Parameters" IANA registry (Section 11.3), populated with the entries in Section 8.
 
-* New "Ace Groupcomm Request Type" IANA Registry (Section 11.4), populated with the values in Section 9.
+* New "Ace Groupcomm Request Type" IANA registry (Section 11.4), populated with the values in Section 9.
 
-* New "ACE Groupcomm Policy" IANA Registry (Section 11.7) populated with two entries "Sequence Number Synchronization Method" and "Key Update Check Interval" (Section 4.2).
+* New "ACE Groupcomm Policy" IANA registry (Section 11.7) populated with two entries "Sequence Number Synchronization Method" and "Key Update Check Interval" (Section 4.2).
 
 * Improved list of requirements for application profiles (Appendix A).
 
@@ -2056,7 +2056,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 * Extended security considerations (Section 10).
 
-* New IANA registries "ACE Groupcomm Key Registry", "ACE Groupcomm Profile Registry", "ACE Groupcomm Policy Registry" and "Sequence Number Synchronization Method Registry" (Section 11).
+* New IANA registries "ACE Groupcomm Key registry", "ACE Groupcomm Profile registry", "ACE Groupcomm Policy registry" and "Sequence Number Synchronization Method registry" (Section 11).
 
 * Added appendix about requirements for application profiles of ACE on group communication (Appendix A).
 
