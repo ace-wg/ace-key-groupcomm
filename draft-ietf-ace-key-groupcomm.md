@@ -1262,11 +1262,9 @@ Note that this handler is not intended to accommodate requests from a group memb
 
 #### Request to Change Individual Keying Material {#new-keys}
 
-Beside possible expiration, the client may need to communicate to the KDC its need for the keying material to be renewed, e.g., due to exhaustion of AEAD nonces, if AEAD is used for protecting group communication. Depending on the application profile (OPT8), this can result in renewal of individual keying material, group keying material, or both.
+A Client may ask the KDC for new, individual keying material. For instance, this can be due to the expiration of such individual keying material, or to the exhaustion of AEAD nonces, if an AEAD encryption algorithm is used for protecting communications in the group. An example of individual keying material can simply be an individual encryption key associated to the Client. Hence, the Client may ask for a new individual encryption key, or for new input material to derive it.
 
-For example, if the Client uses an individual key to protect outgoing traffic and has to renew it, the node may request a new one, or new input material to derive it, without renewing the whole group keying material.
-
-To this end, the client performs a Key Renewal Request/Response exchange with the KDC, i.e., it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group name and NODENAME is its node name, and formatted as defined in {{node-get}}.
+To this end, the Client performs a Key Renewal Request/Response exchange with the KDC, i.e., it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group name and NODENAME is its node name, and formatted as defined in {{node-get}}.
 
 {{fig-renewal-req-resp}} gives an overview of the exchange described above, while {{fig-renewal-req-resp-2}} shows an example.
 
@@ -1303,7 +1301,9 @@ Payload (in CBOR diagnostic notation, with IND_KEY being
 ~~~~~~~~~~~
 {: #fig-renewal-req-resp-2 title="Example of Key Renewal Request-Response" artwork-align="center"}
 
-Note the difference between the Key Distribution Request and the Key Renewal Request: while the first one only triggers distribution (the renewal might have happened independently, e.g., because of expiration), the second one triggers the KDC to produce new individual keying material for the requesting node.
+Note the difference between the Key Renewal Request in this section and the Key Distribution Request in {{update-keys}}. The former asks the KDC for new individual keying material, while the latters asks the KDC for the current group keying material together with the current individual keying material.
+
+As discussed in {{node-put}}, application profiles of this specification may define alternative outcomes for the Key Renewal Request-Response exchange (OPT8), where the provisioning of new individual keying material is replaced by or combined with the execution of a whole group rekeying. 
 
 ### DELETE Handler {#node-delete}
 
