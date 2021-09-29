@@ -629,7 +629,11 @@ get_pub_keys = null / [ inclusion_flag, role_filter, id_filter]
 
 * 'pub_keys_repos', which can be present if the format of the Client's public key in the 'client_cred' parameter is a certificate. In such a case, this parameter has as value the URI of the certificate. This parameter is encoded as a CBOR text string. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT3).
 
-* 'control_uri', with value a full URI, encoded as a CBOR text string. If 'control_uri' is supported by the Client, the Client acts as a CoAP server and hosts a resource at this specific URI. The KDC MAY use this URI to send CoAP requests to the Client (acting as CoAP server in this exchange), for example for individual provisioning of new keying material when performing a group rekeying (see {{update-keys}}), or to inform the Client of its removal from the group {{sec-node-removal}}. If the KDC does not implement mechanisms using this resource, it can just ignore this parameter. Other additional functionalities of this resource MAY be defined in application profiles of this specifications (OPT9). In particular, this resource is intended for communications concerning exclusively the group whose group name is specified in the 'scope' parameter.
+* 'control_uri', with value a full URI, encoded as a CBOR text string. A default url-path is /ace-group/GROUPNAME/node, although implementations can use different ones instead. The URI MUST NOT have url-path ace-group/GROUPNAME.
+
+   If 'control_uri' is specified in the Joining Request, the Client acts as a CoAP server and hosts a resource at this specific URI. The KDC MAY use this URI to send CoAP requests to the Client (acting as CoAP server in this exchange), for example for one-to-one provisioning of new group keying material when performing a group rekeying (see {{update-keys}}), or to inform the Client of its removal from the group {{sec-node-removal}}.
+   
+   In particular, this resource is intended for communications concerning exclusively the group whose group name GROUPNAME is specified in the 'scope' parameter. If the KDC does not implement mechanisms using this resource for that group, it can ignore this parameter. Other additional functionalities of this resource MAY be defined in application profiles of this specifications (OPT9).
 
 ~~~~~~~~~~~~~~~~~~~~
 scope, N_S, and N_C expressed in CBOR diagnostic notation:
@@ -647,7 +651,7 @@ PoP input =
   0x4f 826667726F7570316673656E646572
     48 018a278f7faab55a 48 25a8991cd700ac01
 ~~~~~~~~~~~~~~~~~~~~
-{: #fig-client-cred-input title="Example of PoP input to compute 'client_cred_verify' using CBOR encoding" artwork-align="center"}
+{: #fig-client-cred-input title="Example of PoP input to compute 'client_cred_verify' using CBOR encoding"}
 
 
 The handler extracts the granted scope from the access token, and checks the requested one against the token one. If the requested one is not a subset of the token one, the KDC MUST respond with a 4.03 (Forbidden) error message.
