@@ -499,6 +499,34 @@ CBOR labels for the 'error' and 'error_description' fields are defined in {{para
 
 {{error-types}} of this specification defines an initial set of error identifiers, as possible values for the 'error' field. Application profiles of this specification MAY define additional value (OPT11).
 
+### Operations Supported by Clients {#client-operations}
+
+It is expected that a Client minimally supports the following set of operations and corresponding interactions with the KDC.
+
+* FETCH request to ace-group/ , in order to retrieve group names associated to group identifiers.
+
+* POST and GET requests to ace-group/GROUPNAME/ , in order to join a group (POST) and later retrieve the current group key material as a group member (GET).
+
+* GET and FETCH requests to ace-group/GROUPNAME/pub-key , in order to retrieve the public keys of all the other group members (GET) or only some of them by filtering (FETCH). While retrieving public keys remains possible by using GET requests, retrieval by filtering allows to greatly limit the size of exchanged messages.
+
+* GET request to ace-group/GROUPNAME/num , in order to retrieve the current version of the group key material as a group member.
+
+* DELETE request to ace-group/GROUPNAME/nodes/NODENAME , in order to leave the group.
+
+In addition, some Clients may rather not support the following set of operations and corresponding interactions with the KDC. This can be specified, for instance, in compliance documents defining minimalistic Clients and their capabilities in specific deployments. In turn, these might also have to consider the used application profile of this specification.
+
+* GET request to ace-group/GROUPNAME/active , in order to check the current status of the group.
+
+* GET request to ace-group/GROUPNAME/policies , in order to retrieve the current group policies as a group member, in addition to when joining the group.
+
+TODO: Add the upcoming GET request to ace-group/GROUPNAME/gm-pub-key
+
+* GET request to ace-group/GROUPNAME/nodes/NODENAME, in order to retrieve the current group keying material and individual keying material. The former can also be retrieved through a GET request to ace-group/GROUPNAME/ (see above). The latter would not be possible to re-obtain as a group member.
+
+* PUT request to ace-group/GROUPNAME/nodes/NODENAME , in order to ask for new individual keying material. The Client would have to alternatively re-join the group through a POST request to ace-group/GROUPNAME/ (see above). Furthermore, depending on its role in the group or on the application profile of this specification, the Client might simply not be associated to any individual keying material.
+
+* POST request to ace-group/GROUPNAME/nodes/NODENAME/pub-key , in order to provide the KDC with a new public key. The Client would have to alternatively re-join the group through a POST request to ace-group/GROUPNAME/ (see above). Furthermore, depending on its role in the group, the Client might simply not have an associated public key to provide.
+
 ## /ace-group
 
 This resource implements the FETCH handler.
