@@ -1508,9 +1508,9 @@ extended_scope = #6.TBD_TAG(<< sequence >>)
 
 # ACE Groupcomm Parameters {#params}
 
-This specification defines a number of fields used during the second part of the message exchange, after the exchange of Token Transfer Request and Response. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name.
+This specification defines a number of parameters used during the second part of the message exchange, after the exchange of Token Transfer Request and Response. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name.
 
-Note that the media type application/ace-groupcomm+cbor MUST be used when these fields are transported.
+Note that the media type application/ace-groupcomm+cbor MUST be used when these parameters are transported in the respective message fields.
 
 
  Name         | CBOR Key | CBOR Type     |   Reference
@@ -1539,6 +1539,40 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
  gname        |   TBD    | array of text strings        | {{ace-group-fetch}}
  guri         |   TBD    | array of text strings   | {{ace-group-fetch}}
  kdcchallenge | TBD | byte string | {{node-pub-key-post}}
+
+The KDC is expected to support and understand all the parameters above. Instead, a Client can support and understand only a subset of such parameters, depending on the roles it expects to take in the joined groups or on other conditions defined in application profiles of this specification.
+
+In the following, the parameters are categorized according to the support expected by Clients. That is, a Client that supports a parameter is able to: i) use and specify it in a request message to the KDC; and ii) understand and process it if specified in a response message from the KDC. It is REQUIRED of application profiles of this specification to sort their newly defined parameters according to the same categorization (REQ27).
+
+Note that the actual use of a parameter and its inclusion in a message depends on the specific exchange, the specific Client and group involved, as well as what is defined in the used application profile of this specification.
+ 
+A Client MUST support the following parameters.
+
+* 'scope', 'gkty', 'key', 'num', 'exp', 'gid', 'gname', 'guri', 'pub_keys', 'peer_identifiers', 'ace_groupcomm_profile', 'control_uri'.
+ 
+A Client SHOULD support the following parameter.
+ 
+* 'get_pub_keys'. That is, not supporting this parameter would yield the inconvenient and undesirable behavior where: i) the Client does not ask for the other group members' public keys upon joining the group (see {{ssec-key-distribution-exchange}}); and ii) later on as a group member, the Client only retrieves the public keys of all group members (see {{sec-key-retrieval-all}}).
+
+A Client MAY support the following parameters. Application profiles of this specification MAY define that Clients must or should support these parameters instead (OPT12).
+
+* 'error', 'error_description'.
+
+The following conditional parameters are relevant only if specific conditions hold. It is REQUIRED of application profiles of this specification to define whether Clients must, should or may support these parameters, and under which circumstances (REQ28).
+
+* 'client_cred', 'cnonce', 'client_cred_verify'. These parameters are relevant for a Client that has a public key to use in a joined group.
+
+* 'kdcchallenge'. This parameter is relevant for a Client that has a public key to use in a joined group and that provides the access token to the KDC through a Token Transfer Request (see {{token-post}}).
+
+* 'pub_keys'repo'. This parameter is relevant for a Client that has a public key to use in a joined group and that makes it available from a key repository different than the KDC.
+
+* 'group_policies'. This parameter is relevant for a Client that is interested in the specific policies used in a group, but it does not know them or cannot become aware of them before joining that group.
+
+* 'peer_roles'. This parameter is relevant for a Client that has to know about the roles of other group members, especially when retrieving and handling their corresponding public keys.
+
+* 'mgt_key_material'. This parameter is relevant for a Client that supports any advanced rekeying scheme possibly used in the group, such as based on one-to-many rekeying messages sent over multicast.
+
+TODO: Add the upcoming 'rekeying_scheme', 'mgt_group_uri', 'kdc_cred', 'kdcnonce' and 'kdc_cred_verify'.
 
 # ACE Groupcomm Error Identifiers {#error-types}
 
@@ -1894,9 +1928,17 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ24: Specify and register the identifier of newly defined semantics for binary scopes (see {{sec-extended-scope}}).
 
+<!-- START NEW REQUIREMENTS -->
+
 * REQ25: Specify if any part of the KDC interface as defined in this document is not supported by the KDC (see {{kdc-if}}).
 
 * REQ26: If the AIF format of 'scope' is used, register its specific instance of "Toid" and "Tperm", as well as the corresponding Media Type and Content-Format, as per the guidelines in {{I-D.ietf-ace-aif}}.
+
+* REQ27: Sort newly defined parameters according to the same categorization defined in {{params}}.
+
+* REQ28: Define whether Clients must, should or may support the conditional parameters defined in {{params}}, and under which circumstances.
+
+<!-- END NEW REQUIREMENTS -->
 
 * OPT1: Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' is not used (see {{token-post}}).
 
@@ -1919,6 +1961,12 @@ This section lists the requirements on application profiles of this specificatio
 * OPT10: Optionally, specify how the identifier of the sender's public key is included in the group request (see {{update-pub-key}}).
    
 * OPT11: Optionally, specify additional identifiers of error types, as values of the 'error' field in an error response from the KDC.
+
+<!-- START NEW REQUIREMENTS -->
+
+* OPT12: Optionally, specify if Clients must or should support any of the parameters defined as optional in this specification (see {{params}}).
+
+<!-- END NEW REQUIREMENTS -->
 
 # Extensibility for Future COSE Algorithms # {#sec-future-cose-algs}
 
