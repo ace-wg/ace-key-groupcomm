@@ -817,7 +817,11 @@ Optionally, the response MAY contain the following parameters, which, if include
 
    A possible type of PoP evidence is a signature, that the KDC computes by using its own private key, whose corresponding public key is specified in the 'kdc_cred' parameter. Application profiles of this specification MUST specify the exact approaches used by the KDC to compute the PoP evidence to include in 'kdc_cred_verify', and MUST specify which of those approaches is used in which case (REQ30).
 
-* 'mgt_key_material', encoded as a CBOR byte string and containing the administrative keying material to participate in the group rekeying performed by the KDC. The application profile MUST define if this field is used, and if used then MUST specify the exact format and content which depend on the specific rekeying scheme used in the group. If the usage of ‘mgt_key_material’ is indicated and its format defined for a specific key management scheme, that format must explicitly indicate the key management scheme itself. If a new rekeying scheme is defined to be used for an existing ‘mgt_key_material’ in an existing profile, then that profile will have to be updated accordingly, especially with respect to the usage of ‘mgt_key_material’ related format and content (REQ22).
+* 'rekeying_scheme', identifying the specific rekeying scheme used in the group. This information is relevant when an advanced group rekeying scheme is used, such as one relying on one-to-many messages sent by the KDC and intended to multiple group members, e.g., over multicast. This parameter is encoded as a CBOR integer, whose value is taken from the "ACE Groupcomm Rekeying Schemes" registry defined in TBD of this specification.
+XXX
+* 'mgt_key_material', encoded as a CBOR byte string and containing the specific administrative keying material that the joining node requires to participate in the group rekeying performed by the KDC. This parameter MUST be present if the 'rekeying_scheme' parameter is present.
+
+   Separate specifications are required to define how the group rekeying scheme indicated in the 'rekeying_scheme' parameter is used by an application profile of this specification. This includes defining the format of the administrative keying material to specify in 'mgt_key_material', consistently with the group rekeying scheme and the application profile in question.
 
 If the Joining Response includes the 'kdc_cred_verify' parameter, the Client verifies the conveyed PoP evidence and considers the group joining unsuccessful in case of failed verification. Application profiles of this specification MUST specify the exact approaches used by the Client to verify the PoP evidence in 'kdc_cred_verify', and MUST specify which of those approaches is used in which case (REQ30).
 
@@ -1677,7 +1681,7 @@ A Client SHOULD support the following parameter.
  
 * 'get_pub_keys'. That is, not supporting this parameter would yield the inconvenient and undesirable behavior where: i) the Client does not ask for the other group members' public keys upon joining the group (see {{ssec-key-distribution-exchange}}); and ii) later on as a group member, the Client only retrieves the public keys of all group members (see {{sec-key-retrieval-all}}).
 
-A Client MAY support the following parameters. Application profiles of this specification MAY define that Clients must or should support these parameters instead (OPT12).
+A Client MAY support the following optional parameters. Application profiles of this specification MAY define that Clients must or should support these parameters instead (OPT12).
 
 * 'error', 'error_description'.
 
@@ -1696,9 +1700,11 @@ The following conditional parameters are relevant only if specific conditions ho
 * 'kdc_nonce', 'kdc_cred', 'kdc_cred_verify'. These parameters are relevant for a Client that joins a group for which, as per the used application profile of this specification, the KDC has an associated public key and this is required
 for the correct group operation.
 
-* 'mgt_key_material'. This parameter is relevant for a Client that supports any advanced rekeying scheme possibly used in the group, such as based on one-to-many rekeying messages sent over multicast.
+* 'rekeying_scheme'. This parameter is relevant for a Client that supports an advanced rekeying scheme possibly used in the group, such as based on one-to-many rekeying messages sent over multicast.
 
-TODO: Add the upcoming 'rekeying_scheme', 'mgt_group_uri'.
+* 'mgt_key_material'. This parameter is relevant for a Client that supports an advanced rekeying scheme possibly used in the group, such as based on one-to-many rekeying messages sent over multicast.
+
+TODO: Add the upcoming 'mgt_group_uri'.
 
 # ACE Groupcomm Error Identifiers {#error-types}
 
@@ -2047,8 +2053,6 @@ This section lists the requirements on application profiles of this specificatio
 * REQ20: Specify the exact approaches used to compute and verify the PoP evidence to include in 'client_cred_verify', and which of those approaches is used in which case (see {{gid-post}}).
 
 * REQ21: Specify how the nonce N_S is generated, if the token is not provided to the KDC through the Token Transfer Request to the authz-info endpoint (e.g., if it is used directly to validate TLS instead).
-
-* REQ22: Specify if 'mgt\_key\_material' used, and if yes specify its format and content (see {{gid-post}}). If the usage of ‘mgt_key_material’ is indicated and its format defined for a specific key management scheme, that format must explicitly indicate the key management scheme itself. If a new rekeying scheme is defined to be used for an existing ‘mgt_key_material’ in an existing profile, then that profile will have to be updated accordingly, especially with respect to the usage of ‘mgt_key_material’ related format and content.
 
 * REQ23: Define the initial value of the 'num' parameter (see {{gid-post}}).
 
