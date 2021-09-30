@@ -768,7 +768,7 @@ Optionally, the response MAY contain the following parameters, which, if include
 
 ~~~~~~~~~~~
 +--------------+-------+----------+----------------------+------------+
-|      Name    | CBOR  |   CBOR   |     Description      | Reference  |
+|     Name     | CBOR  |   CBOR   |     Description      | Reference  |
 |              | label |   type   |                      |            |
 +--------------+-------+----------+----------------------+------------+
 | Sequence     | TBD1  | tstr/int | Method for recipient | [[this     |
@@ -817,11 +817,25 @@ Optionally, the response MAY contain the following parameters, which, if include
 
    A possible type of PoP evidence is a signature, that the KDC computes by using its own private key, whose corresponding public key is specified in the 'kdc_cred' parameter. Application profiles of this specification MUST specify the exact approaches used by the KDC to compute the PoP evidence to include in 'kdc_cred_verify', and MUST specify which of those approaches is used in which case (REQ30).
 
-* 'rekeying_scheme', identifying the specific rekeying scheme used in the group. This information is relevant when an advanced group rekeying scheme is used, such as one relying on one-to-many messages sent by the KDC and intended to multiple group members, e.g., over multicast. This parameter is encoded as a CBOR integer, whose value is taken from the "ACE Groupcomm Rekeying Schemes" registry defined in TBD of this specification.
-XXX
-* 'mgt_key_material', encoded as a CBOR byte string and containing the specific administrative keying material that the joining node requires to participate in the group rekeying performed by the KDC. This parameter MUST be present if the 'rekeying_scheme' parameter is present.
+* 'rekeying_scheme', identifying the rekeying scheme that the KDC uses to provide new group keying meterial to the group members. This parameter is encoded as a CBOR integer, whose value is taken from the "Value" column of the "ACE Groupcomm Rekeying Schemes" registry defined in {{iana-ace-groupcomm-rekeying-schemes}} of this specification.
 
-   Separate specifications are required to define how the group rekeying scheme indicated in the 'rekeying_scheme' parameter is used by an application profile of this specification. This includes defining the format of the administrative keying material to specify in 'mgt_key_material', consistently with the group rekeying scheme and the application profile in question.
+   Application profiles of this specification MAY define a default group rekeying scheme, to refer to in case the 'rekeying_scheme' parameter is not included in the Joining Response (OPT13).
+
+~~~~~~~~~~~
++-------+----------------+-------------------------------+-----------+
+| Value |      Name      |          Description          | Reference |
++-------+----------------+-------------------------------+-----------+
+|   0   | Point-to-Point | The KDC individually targets  | [this     |
+|       |                | each node to rekey, using the | document] |
+|       |                | pairwise secure communication |           |
+|       |                | association with that node    |           |
++-------+----------------+-------------------------------+-----------+
+~~~~~~~~~~~
+{: #rekeying-scheme-0 title="Group Rekeying Schemes" artwork-align="center"}
+   
+* 'mgt_key_material', encoded as a CBOR byte string and containing the specific administrative keying material that the joining node requires in order to participate in the group rekeying process performed by the KDC. This parameter MUST NOT be present if the 'rekeying_scheme' parameter is not present. Some simple rekeying scheme may not require specific administrative keying material to be provided, e.g., the basic "Point-to-Point" group rekeying scheme (see TBD).
+
+   It is expected from separate documents to define how the group rekeying scheme indicated in the 'rekeying_scheme' parameter is used by an application profile of this specification. This includes defining the format of the administrative keying material to specify in 'mgt_key_material', consistently with the group rekeying scheme and the application profile in question.
 
 If the Joining Response includes the 'kdc_cred_verify' parameter, the Client verifies the conveyed PoP evidence and considers the group joining unsuccessful in case of failed verification. Application profiles of this specification MUST specify the exact approaches used by the Client to verify the PoP evidence in 'kdc_cred_verify', and MUST specify which of those approaches is used in which case (REQ30).
 
@@ -899,7 +913,9 @@ Additionally, the handler verifies that the node is a current member of the grou
 
 If verification succeeds, the handler returns a 2.05 (Content) message containing the symmetric group keying material. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'gkty', 'key' and 'num' specified in {{gid-post}}.
 
-The payload MAY also include the parameters 'ace-groupcomm-profile', 'exp', and 'mgt_key_material' parameters specified in {{gid-post}}.
+Each of the following parameters specified in {{gid-post}} MUST also be included in the payload of the response, if they are included in the payload of the Joining Responses sent for the group: 'rekeying_scheme', 'mgt_key_material'.
+
+The payload MAY also include the parameters 'ace-groupcomm-profile' and 'exp' parameters specified in {{gid-post}}.
 
 #### Retrieve Group Keying Material {#ssec-key-material-retrieval}
 
@@ -1639,7 +1655,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 
  Name         | CBOR Key | CBOR Type     |   Reference
 --------------|----------|---------------|---------------
- error         |   TBD    | int   | {{key-distr}}
+ error         |   TBD    | integer   | {{key-distr}}
  error_description |   TBD    | text string   | {{key-distr}}
  scope        |   TBD    | byte string   | {{gid-post}}
  get_pub_keys |   TBD    | array / simple value null  | {{gid-post}}, {{pubkey-fetch}}
@@ -1650,8 +1666,8 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
  control_uri | TBD | text string | {{gid-post}}
  gkty          |   TBD    | integer / text string   | {{gid-post}}
  key          |   TBD    | see "ACE Groupcomm Key Types" registry     | {{gid-post}}
- num          |   TBD    | int           | {{gid-post}}
- ace-groupcomm-profile |   TBD    | int           | {{gid-post}}
+ num          |   TBD    | integer           | {{gid-post}}
+ ace-groupcomm-profile |   TBD    | integer           | {{gid-post}}
  exp          |   TBD    | int           | {{gid-post}}
  pub_keys     |   TBD    | array   | {{gid-post}}
  peer_roles     |   TBD    | array   | {{gid-post}}
@@ -1659,7 +1675,8 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
  group_policies      |   TBD    | map           | {{gid-post}}
  kdc_nonce | TBD | byte string | {{gid-post}}
  kdc_cred | TBD | byte string | {{gid-post}}
- kdc_cred_verify | TBD | byte string | {{gid-post}}
+ kdc_cred_verify | TBD | integer | {{gid-post}}
+ rekeying_scheme | TBD | byte string | {{gid-post}}
  mgt_key_material    |   TBD    | byte string   | {{gid-post}}
  sign_info | TBD | array | {{gid-post}}
  gid          |   TBD    | array   | {{ace-group-fetch}}
@@ -1700,7 +1717,9 @@ The following conditional parameters are relevant only if specific conditions ho
 * 'kdc_nonce', 'kdc_cred', 'kdc_cred_verify'. These parameters are relevant for a Client that joins a group for which, as per the used application profile of this specification, the KDC has an associated public key and this is required
 for the correct group operation.
 
-* 'rekeying_scheme'. This parameter is relevant for a Client that supports an advanced rekeying scheme possibly used in the group, such as based on one-to-many rekeying messages sent over multicast.
+* 'rekeying_scheme'. This parameter is relevant for a Client that joins a group without knowing the used rekeying scheme in advance, using an application profile of this specification that does not define a default rekeying scheme to use.
+
+that supports an advanced rekeying scheme possibly used in the group, such as based on one-to-many rekeying messages sent over multicast.
 
 * 'mgt_key_material'. This parameter is relevant for a Client that supports an advanced rekeying scheme possibly used in the group, such as based on one-to-many rekeying messages sent over multicast.
 
@@ -1854,6 +1873,28 @@ Mappings registry following the procedure specified in {{Section 8.10 of I-D.iet
 * Value Type: Byte string
 * Reference: \[\[This specification\]\]
 
+## Interface Description (if=) Link Target Attribute Values {#if-ace-group}
+
+This specification registers the following entry to the "Interface Description (if=) Link Target Attribute Values registry" registry within the "CoRE Parameters" registry group:
+
+* Attribute Value: ace.group
+
+* Description: The 'ace group' interface is used to provision keying material and related information and policies to members of a group using the Ace framework.
+
+* Reference: \[This Document\]
+
+## CBOR Tags {#iana-cbor-tags}
+
+This specification registers the following entry to the "CBOR Tags" registry:
+
+* Tag : TBD_TAG
+
+* Data Item: byte string
+
+* Semantics: Extended ACE scope format, including the identifier of the used scope semantics.
+
+* Reference: \[This Document\]
+
 ## ACE Groupcomm Parameters {#iana-reg}
 
 This specification establishes the "ACE Groupcomm Parameters" IANA registry. The
@@ -1938,28 +1979,6 @@ The columns of this registry are:
 
 * Reference: This field contains a pointer to the public specification describing the sequence number synchronization method.
 
-## Interface Description (if=) Link Target Attribute Values {#if-ace-group}
-
-This specification registers the following entry to the "Interface Description (if=) Link Target Attribute Values registry" registry within the "CoRE Parameters" registry group:
-
-* Attribute Value: ace.group
-
-* Description: The 'ace group' interface is used to provision keying material and related information and policies to members of a group using the Ace framework.
-
-* Reference: \[This Document\]
-
-## CBOR Tags {#iana-cbor-tags}
-
-This specification registers the following entry to the "CBOR Tags" registry:
-
-* Tag : TBD_TAG
-
-* Data Item: byte string
-
-* Semantics: Extended ACE scope format, including the identifier of the used scope semantics.
-
-* Reference: \[This Document\]
-
 ## ACE Scope Semantics {#iana-scope-semantics}
 
 This specification establishes the "ACE Scope Semantics" IANA registry. The registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
@@ -1985,6 +2004,22 @@ The columns of this registry are:
 * Reference: This field contains a pointer to the public specification defining the error, if one exists.
 
 This registry has been initially populated by the values in {{error-types}}. The Reference column for all of these entries refers to this document.
+
+## ACE Groupcomm Rekeying Schemes {#iana-ace-groupcomm-rekeying-schemes}
+
+This specification establishes the "ACE Groupcomm Rekeying Schemes" IANA registry. The registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
+
+The columns of this registry are:
+
+* Value: The value to be used to identify the group rekeying scheme. The value MUST be unique. The value can be a positive integer or a negative integer. Integer values between 0 and 255 are designated as Standards Track Document required. Integer values from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as expert review. Integer values less than -65536 are marked as private use.
+
+* Name: The name of the group rekeying scheme.
+
+* Description: This field contains a brief description of the group rekeying scheme.
+
+* Reference: This field contains a pointer to the public specification defining the group rekeying scheme, if one exists.
+
+This registry has been initially populated by the value in {{rekeying-scheme-0}}.
 
 ## Expert Review Instructions {#review}
 
@@ -2099,6 +2134,8 @@ This section lists the requirements on application profiles of this specificatio
 <!-- START NEW REQUIREMENTS -->
 
 * OPT12: Optionally, specify if Clients must or should support any of the parameters defined as optional in this specification (see {{params}}).
+
+* OPT13: Optionally, define a default group rekeying scheme, to refer to in case the 'rekeying_scheme' parameter is not included in the Joining Response (see {{gid-post}}).
 
 <!-- END NEW REQUIREMENTS -->
 
