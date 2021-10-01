@@ -837,6 +837,14 @@ Optionally, the response MAY contain the following parameters, which, if include
 
    It is expected from separate documents to define how the group rekeying scheme indicated in the 'rekeying_scheme' parameter is used by an application profile of this specification. This includes defining the format of the administrative keying material to specify in 'mgt_key_material', consistently with the group rekeying scheme and the application profile in question.
 
+* 'control_group_uri', with value a full URI, encoded as a CBOR text string. The URI MUST specify addressing information intended to reach all the members in the group. For example, this can be a multicast IP address, optionally together with a port number (which defaults to 5683 if omitted). A default url-path is /ace-group/GROUPNAME, although implementations can use different ones instead. The URI MUST NOT have url-path ace-group/GROUPNAME/node.
+
+   If 'control_group_uri' is included in the Joining Response, the Clients supporting this parameter act as CoAP servers, host a resource at this specific URI, and listen to the specified addressing information.
+   
+   The KDC MAY use this URI to send one-to-many CoAP requests to the Client group members (acting as CoAP servers in this exchange), for example for one-to-many provisioning of new group keying material when performing a group rekeying (see {{update-keys}}), or to inform the Clients of their removal from the group {{sec-node-removal}}.
+   
+   In particular, this resource is intended for communications concerning exclusively the group whose group name GROUPNAME is specified in the 'scope' parameter. If the KDC does not implement mechanisms using this resource for that group, it can ignore this parameter. Other additional functionalities of this resource MAY be defined in application profiles of this specifications (OPT14).
+
 If the Joining Response includes the 'kdc_cred_verify' parameter, the Client verifies the conveyed PoP evidence and considers the group joining unsuccessful in case of failed verification. Application profiles of this specification MUST specify the exact approaches used by the Client to verify the PoP evidence in 'kdc_cred_verify', and MUST specify which of those approaches is used in which case (REQ30).
 
 Specific application profiles that build on this document MUST specify the communication protocol that members of the group use to communicate with each other (REQ13) and how exactly the keying material is used to protect the group communication (REQ14).
@@ -1657,6 +1665,9 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 --------------|----------|---------------|---------------
  error         |   TBD    | integer   | {{key-distr}}
  error_description |   TBD    | text string   | {{key-distr}}
+ gid          |   TBD    | array   | {{ace-group-fetch}}
+ gname        |   TBD    | array of text strings        | {{ace-group-fetch}}
+ guri         |   TBD    | array of text strings   | {{ace-group-fetch}}
  scope        |   TBD    | byte string   | {{gid-post}}
  get_pub_keys |   TBD    | array / simple value null  | {{gid-post}}, {{pubkey-fetch}}
  client_cred  |   TBD    | byte string   | {{gid-post}}
@@ -1678,10 +1689,8 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
  kdc_cred_verify | TBD | integer | {{gid-post}}
  rekeying_scheme | TBD | byte string | {{gid-post}}
  mgt_key_material    |   TBD    | byte string   | {{gid-post}}
+ control_group_uri | TBD | text string | {{gid-post}}
  sign_info | TBD | array | {{gid-post}}
- gid          |   TBD    | array   | {{ace-group-fetch}}
- gname        |   TBD    | array of text strings        | {{ace-group-fetch}}
- guri         |   TBD    | array of text strings   | {{ace-group-fetch}}
  kdcchallenge | TBD | byte string | {{node-pub-key-post}}
 
 The KDC is expected to support and understand all the parameters above. Instead, a Client can support and understand only a subset of such parameters, depending on the roles it expects to take in the joined groups or on other conditions defined in application profiles of this specification.
@@ -1719,11 +1728,9 @@ for the correct group operation.
 
 * 'rekeying_scheme'. This parameter is relevant for a Client that joins a group without knowing the used rekeying scheme in advance, using an application profile of this specification that does not define a default rekeying scheme to use.
 
-that supports an advanced rekeying scheme possibly used in the group, such as based on one-to-many rekeying messages sent over multicast.
-
 * 'mgt_key_material'. This parameter is relevant for a Client that supports an advanced rekeying scheme possibly used in the group, such as based on one-to-many rekeying messages sent over multicast.
 
-TODO: Add the upcoming 'mgt_group_uri'.
+* 'control_group_uri'. This parameter is relevant for a Client that supports the hosting of local resources each associated to a group (hence acting as CoAP server) and the reception of one-to-many requests sent to those resources by the KDC (e.g., over IP multicast), targeting multiple members of the corresponding group. Examples of related management operations that the KDC can perform by this means are the eviction of group members and the execution of a group rekeying process through an advanced rekeying scheme, such as based on one-to-many rekeying messages.
 
 # ACE Groupcomm Error Identifiers {#error-types}
 
@@ -2136,6 +2143,8 @@ This section lists the requirements on application profiles of this specificatio
 * OPT12: Optionally, specify if Clients must or should support any of the parameters defined as optional in this specification (see {{params}}).
 
 * OPT13: Optionally, define a default group rekeying scheme, to refer to in case the 'rekeying_scheme' parameter is not included in the Joining Response (see {{gid-post}}).
+
+* OPT14: Optionally, specify the functionalities implemented at the 'control_group_uri' resource hosted at the Client, including message exchange encoding and other details (see {{gid-post}}).
 
 <!-- END NEW REQUIREMENTS -->
 
