@@ -501,7 +501,7 @@ CBOR labels for the 'error' and 'error_description' fields are defined in {{para
 
 ### Operations Supported by Clients {#client-operations}
 
-It is expected that a Client minimally supports the following set of operations and corresponding interactions with the KDC.
+It is expected that a Client minimally supports the following set of primary operations and corresponding interactions with the KDC.
 
 * FETCH request to ace-group/ , in order to retrieve group names associated to group identifiers.
 
@@ -513,7 +513,7 @@ It is expected that a Client minimally supports the following set of operations 
 
 * DELETE request to ace-group/GROUPNAME/nodes/NODENAME , in order to leave the group.
 
-In addition, some Clients may rather not support the following set of operations and corresponding interactions with the KDC. This can be specified, for instance, in compliance documents defining minimalistic Clients and their capabilities in specific deployments. In turn, these might also have to consider the used application profile of this specification.
+In addition, some Clients may rather not support the following set of secondary operations and corresponding interactions with the KDC. This can be specified, for instance, in compliance documents defining minimalistic Clients and their capabilities in specific deployments. In turn, these might also have to consider the used application profile of this specification.
 
 * GET request to ace-group/GROUPNAME/kdc-pub-key , in order to retrieve the current public key of the KDC, in addition to when joining the group. This is relevant only if the KDC has an associated public key and this is required
 for the correct group operation.
@@ -525,6 +525,8 @@ for the correct group operation.
 * PUT request to ace-group/GROUPNAME/nodes/NODENAME , in order to ask for new individual keying material. The Client would have to alternatively re-join the group through a POST request to ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group or on the application profile of this specification, the Client might simply not be associated to any individual keying material.
 
 * POST request to ace-group/GROUPNAME/nodes/NODENAME/pub-key , in order to provide the KDC with a new public key. The Client would have to alternatively re-join the group through a POST request to ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group, the Client might simply not have an associated public key to provide.
+
+It is REQUIRED of application profiles of this specification to categorize possible newly defined operations for Clients into primary operations and secondary operations, and to provide accompanying considerations (REQ31).
 
 ## /ace-group
 
@@ -2113,6 +2115,8 @@ This section lists the requirements on application profiles of this specificatio
 * REQ29: Define whether the KDC has a public key and if this has to be provided through the 'kdc_cred' parameter, see {{gid-post}}.
 
 * REQ30: Specify the exact approaches used to compute and verify the PoP evidence to include in 'kdc_cred_verify', and which of those approaches is used in which case (see {{gid-post}}).
+
+* REQ31: Categorize possible newly defined operations for Clients into primary operations expected to be minimally supported and secondary operations, and provide accompanying considerations (see {{client-operations}}).
 
 <!-- END NEW REQUIREMENTS -->
 
