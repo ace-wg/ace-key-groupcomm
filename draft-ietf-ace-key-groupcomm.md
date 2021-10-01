@@ -133,18 +133,18 @@ This document additionally uses the following terminology:
 The full procedure can be separated in two phases: the first one follows the ACE framework, between Client, AS and KDC; the second one is the key distribution between Client and KDC. After the two phases are completed, the Client is able to participate in the group communication, via a Dispatcher entity.
 
 ~~~~~~~~~~~
-+------------+                  +-----------+
-|     AS     |                  |    KDC    |
-|            |        .-------->|           |
-+------------+       /          +-----------+
++------------+               +-----------+
+|     AS     |               |    KDC    |
+|            |        .----->|           |
++------------+       /       +-----------+
       ^             /
       |            /
-      v           /                           +-----------+
-+------------+   /      +------------+        |+-----------+
-|   Client   |<-'       | Dispatcher |        ||+-----------+
-|            |<-------->|            |<------->||   Group   |
-+------------+          +------------+         +|  members  |
-                                                +-----------+
+      v           /                                 +-----------+
++------------+   /           +------------+         |+-----------+
+|   Client   |<-'            | Dispatcher |         ||+-----------+
+|            |<------------->|            |<------->|||   Group   |
++------------+               +------------+         |||  members  |
+                                                    +++-----------+
 ~~~~~~~~~~~
 {: #fig-roles title="Key Distribution Participants" artwork-align="center"}
 
@@ -196,7 +196,7 @@ This document specifies a mechanism for:
 
 
 ~~~~~~~~~~~
-        C                            AS   KDC                  Group
+        C                            AS  KDC                   Group
         |                             |   |                   Members
       / |                             |   |                      |
      |  |--- Authorization Request -->|   |                      |
@@ -209,11 +209,11 @@ This document specifies a mechanism for:
      |  |<--- Token Transfer Response-----|                      |          
       \ |                             |   |                      |
         |                             |   |                      |
-        |------ Joining Request ----->|   |                      |
+        |------ Joining Request --------->|                      |
         |                             |   |                      |
         |                             |   | -- Group rekeying -->|
         |                             |   |      (optional)      |
-        |<----- Joining Response -----|   |                      |
+        |<----- Joining Response ---------|                      |
         |                             |   |                      |
         |                             |   |                      |
         |                             |   |       Dispatcher     |
@@ -590,7 +590,7 @@ Payload (in CBOR diagnostic notation):
   { "gid": [01, 02], "gname": ["group1", "group2"],
     "guri": ["ace-group/g1", "ace-group/g2"] }
 ~~~~~~~~~~~
-{: #fig-ace-group-fetch-2 title="Example of Group Name and URI Retrieval Request-Response" artwork-align="center"}
+{: #fig-ace-group-fetch-2 title="Example of Group Name and URI Retrieval Request-Response"}
 
 ## /ace-group/GROUPNAME
 
@@ -634,7 +634,7 @@ id_filter = [ *id ]
 
 get_pub_keys = null / [ inclusion_flag, role_filter, id_filter]
 ~~~~~~~~~~~~~~~~~~~~
-{: #cddl-ex-getpubkeys title="CDLL definition of get_pub_keys, using as example node identifier encoded as bstr and role as tstr" artwork-align="center"}
+{: #cddl-ex-getpubkeys title="CDLL definition of get_pub_keys, using as example node identifier encoded as bstr and role as tstr"}
 
 * 'client_cred', encoded as a CBOR byte string, with value the original binary representation of the Client's public key. This parameter is used if the KDC is managing (collecting from/distributing to the Client) the public keys of the group members, and if the Client's role in the group will require for it to send messages to one or more group members. It is REQUIRED of the application profiles to define the specific formats that are acceptable to use for encoding public keys in the group (REQ6).
 
@@ -666,17 +666,17 @@ get_pub_keys = null / [ inclusion_flag, role_filter, id_filter]
 
 ~~~~~~~~~~~~~~~~~~~~
 scope, N_S, and N_C expressed in CBOR diagnostic notation:
-      scope = h'826667726F7570316673656E646572'
-      N_S = h'018a278f7faab55a'
-      N_C = h'25a8991cd700ac01'
+  scope = h'826667726F7570316673656E646572'
+  N_S   = h'018a278f7faab55a'
+  N_C   = h'25a8991cd700ac01'
 
 
-scope, N_S, and N_C  as CBOR encoded byte strings:
-      scope = 0x4f826667726F7570316673656E646572
-      N_S = 0x48018a278f7faab55a
-      N_C = 0x4825a8991cd700ac01
+scope, N_S, and N_C as CBOR encoded byte strings:
+  scope = 0x4f826667726F7570316673656E646572
+  N_S   = 0x48018a278f7faab55a
+  N_C   = 0x4825a8991cd700ac01
 
-PoP input =
+PoP input:
   0x4f 826667726F7570316673656E646572
     48 018a278f7faab55a 48 25a8991cd700ac01
 ~~~~~~~~~~~~~~~~~~~~
@@ -963,7 +963,7 @@ Payload (in CBOR diagnostic notation,
          with KEY being a CBOR byte strings):
   { "gkty": 13, "key": KEY, "num": 12 }
 ~~~~~~~~~~~
-{: #fig-retrieve-key-material-2 title="Example of Key Distribution Request-Response" artwork-align="center"}
+{: #fig-retrieve-key-material-2 title="Example of Key Distribution Request-Response"}
 
 ## /ace-group/GROUPNAME/pub-key
 
@@ -1016,7 +1016,7 @@ Payload (in CBOR diagnostic notation):
     "peer_roles": ["sender", ["sender", "receiver"], "receiver"],
     "peer_identifiers": [ ID1, ID2, ID3 ] }
 ~~~~~~~~~~~
-{: #fig-public-key-4 title="Example of Public Key Exchange to Request the Public Keys of all the Group Members" artwork-align="center"}
+{: #fig-public-key-4 title="Example of Public Key Exchange to Request the Public Keys of all the Group Members"}
 
 ### FETCH Handler {#pubkey-fetch}
 
@@ -1112,8 +1112,7 @@ Payload (in CBOR diagnostic notation):
     "peer_roles": [ "receiver" ],
     "peer_identifiers": [ ID3 ] }
 ~~~~~~~~~~~
-{: #fig-public-key-2 title="Example of Public Key Exchange to Request the Public Keys of Specific Group Members" artwork-align="center"}
-
+{: #fig-public-key-2 title="Example of Public Key Exchange to Request the Public Keys of Specific Group Members"}
 
 ## ace-group/GROUPNAME/kdc-pub-key
 
@@ -1162,32 +1161,28 @@ Member                                                         KDC
 {: #fig-kdc-pub-key-req-resp title="Message Flow of KDC Public Key Request-Response" artwork-align="center"}
 
 ~~~~~~~~~~~
-   Request:
+Request:
 
-   Header: GET (Code=0.01)
-   Uri-Host: "kdc.example.com"
-   Uri-Path: "ace-group"
-   Uri-Path: "g1"
-   Uri-Path: "kdc-pub-key"
-   Payload: -
+Header: GET (Code=0.01)
+Uri-Host: "kdc.example.com"
+Uri-Path: "ace-group"
+Uri-Path: "g1"
+Uri-Path: "kdc-pub-key"
+Payload: -
 
-   Response:
+Response:
 
-   Header: Content (Code=2.05)
-   Content-Format: "application/ace-groupcomm+cbor"
-   Payload (in CBOR diagnostic notation, with PUB_KEY_KDC
-            and POP_EVIDENCE being CBOR byte strings):
-     {
-       "kdc_nonce": h'25a8991cd700ac01',
-       "kdc_cred": PUB_KEY_KDC,
-       "kdc_cred_verify": POP_EVIDENCE
-     }
+Header: Content (Code=2.05)
+Content-Format: "application/ace-groupcomm+cbor"
+Payload (in CBOR diagnostic notation, with PUB_KEY_KDC
+         and POP_EVIDENCE being CBOR byte strings):
+  {
+    "kdc_nonce": h'25a8991cd700ac01',
+    "kdc_cred": PUB_KEY_KDC,
+    "kdc_cred_verify": POP_EVIDENCE
+  }
 ~~~~~~~~~~~
 {: #fig-kdc-pub-key-req-resp-ex title="Example of KDC Public Key Request-Response"}
-
-
-
-
 
 ## /ace-group/GROUPNAME/policies
 
@@ -1239,7 +1234,7 @@ Content-Format: "application/ace-groupcomm+cbor"
 Payload(in CBOR diagnostic notation):
   { "group_policies": {"exp-delta": 120} }
 ~~~~~~~~~~~
-{: #fig-policies-2 title="Example of Policies Request-Response" artwork-align="center"}
+{: #fig-policies-2 title="Example of Policies Request-Response"}
 
 ## /ace-group/GROUPNAME/num
 
@@ -1291,7 +1286,7 @@ Content-Format: "application/ace-groupcomm+cbor"
 Payload(in CBOR diagnostic notation):
   13
 ~~~~~~~~~~~
-{: #fig-version-2 title="Example of Version Request-Response" artwork-align="center"}
+{: #fig-version-2 title="Example of Version Request-Response"}
 
 ## /ace-group/GROUPNAME/nodes/NODENAME
 
@@ -1368,7 +1363,7 @@ Payload (in CBOR diagnostic notation,
          for individual keying material):
   { "gkty": 13, "key": KEY, "num": 12, "ind-key": IND_KEY }
 ~~~~~~~~~~~
-{: #fig-key-redistr-req-resp-2 title="Example of Key Distribution Request-Response" artwork-align="center"}
+{: #fig-key-redistr-req-resp-2 title="Example of Key Distribution Request-Response"}
 
 Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.,:
 
@@ -1451,7 +1446,7 @@ Payload (in CBOR diagnostic notation, with IND_KEY being
          label for individual keying material):
   { "ind-key": IND_KEY }
 ~~~~~~~~~~~
-{: #fig-renewal-req-resp-2 title="Example of Key Renewal Request-Response" artwork-align="center"}
+{: #fig-renewal-req-resp-2 title="Example of Key Renewal Request-Response"}
 
 Note the difference between the Key Renewal Request in this section and the Key Distribution Request in {{update-keys}}. The former asks the KDC for new individual keying material, while the latters asks the KDC for the current group keying material together with the current individual keying material.
 
@@ -1554,7 +1549,7 @@ Response:
 Header: Changed (Code=2.04)
 Payload: -
 ~~~~~~~~~~~
-{: #fig-pub-key-update-req-resp-2 title="Example of Public Key Update Request-Response" artwork-align="center"}
+{: #fig-pub-key-update-req-resp-2 title="Example of Public Key Update Request-Response"}
 
 If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a group member updating its own public key. To this end, the KDC uses the message format of the response defined in {{gid-get}}. Application profiles may define alternative ways of retrieving the keying material, such as sending separate requests to different resources at the KDC ({{gid-get}}, {{pubkey-get}}, {{policies-get}}).
 The KDC MUST increment the version number of the current keying material, before distributing the newly generated keying material to the group. After that, the KDC SHOULD store the distributed keying material in persistent storage.
