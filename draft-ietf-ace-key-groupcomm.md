@@ -1703,7 +1703,7 @@ Note that the actual use of a parameter and its inclusion in a message depends o
  
 A Client MUST support the following parameters.
 
-* 'scope', 'gkty', 'key', 'num', 'exp', 'gid', 'gname', 'guri', 'pub_keys', 'peer_identifiers', 'ace_groupcomm_profile', 'control_uri'.
+* 'scope', 'gkty', 'key', 'num', 'exp', 'gid', 'gname', 'guri', 'pub_keys', 'peer_identifiers', 'ace_groupcomm_profile', 'control_uri', 'rekeying_scheme'.
  
 A Client SHOULD support the following parameter.
  
@@ -1728,9 +1728,7 @@ The following conditional parameters are relevant only if specific conditions ho
 * 'kdc_nonce', 'kdc_cred', 'kdc_cred_verify'. These parameters are relevant for a Client that joins a group for which, as per the used application profile of this specification, the KDC has an associated public key and this is required
 for the correct group operation.
 
-* 'rekeying_scheme'. This parameter is relevant for a Client that joins a group without knowing the used rekeying scheme in advance, using an application profile of this specification that does not define a default rekeying scheme to use.
-
-* 'mgt_key_material'. This parameter is relevant for a Client that supports an advanced rekeying scheme possibly used in the group, such as based on one-to-many rekeying messages sent over multicast.
+* 'mgt_key_material'. This parameter is relevant for a Client that supports an advanced rekeying scheme possibly used in the group, such as based on one-to-many rekeying messages sent over IP multicast.
 
 * 'control_group_uri'. This parameter is relevant for a Client that supports the hosting of local resources each associated to a group (hence acting as CoAP server) and the reception of one-to-many requests sent to those resources by the KDC (e.g., over IP multicast), targeting multiple members of the corresponding group. Examples of related management operations that the KDC can perform by this means are the eviction of group members and the execution of a group rekeying process through an advanced rekeying scheme, such as based on one-to-many rekeying messages.
 
