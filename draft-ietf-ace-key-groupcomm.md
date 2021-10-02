@@ -1826,7 +1826,7 @@ This document has the following actions for IANA.
 
 ## Media Type Registrations {#media-type}
 
-   This specification registers the 'application/ace-groupcomm+cbor' media type for messages of the protocols defined in this document following the ACE exchange and carrying parameters encoded in CBOR. This registration follows the procedures specified in {{RFC6838}}.
+This specification registers the 'application/ace-groupcomm+cbor' media type for messages of the protocols defined in this document following the ACE exchange and carrying parameters encoded in CBOR. This registration follows the procedures specified in {{RFC6838}}.
 
    Type name: application
 
@@ -1863,7 +1863,7 @@ This document has the following actions for IANA.
 
 ## CoAP Content-Formats {#content-type}
 
-This specification registers the following entry to the "CoAP Content-Formats" registry within the "CoRE Parameters" registry group:
+IANA is asked to register the following entry to the "CoAP Content-Formats" registry within the "CoRE Parameters" registry group.
 
 Media Type: application/ace-groupcomm+cbor
 
@@ -1875,7 +1875,7 @@ Reference: \[this document\]
 
 ## OAuth Parameters {#iana-kinfo}
 
-   The following registrations are done for the OAuth Parameters registry following the procedure specified in {{Section 11.2 of RFC6749}}:
+IANA is asked to register the following entries in the "OAuth Parameters" registry following the procedure specified in {{Section 11.2 of RFC6749}}.
 
 *  Parameter name: sign_info
 *  Parameter usage location: client-rs request, rs-client response
@@ -1891,8 +1891,8 @@ Reference: \[this document\]
 
 ## OAuth Parameters CBOR Mappings {#iana-kinfo-map}
 
-The following registrations are done for the OAuth Parameters CBOR
-Mappings registry following the procedure specified in {{Section 8.10 of I-D.ietf-ace-oauth-authz}}:
+IANA is asked to register the following entries in the "OAuth Parameters CBOR
+Mappings" registry following the procedure specified in {{Section 8.10 of I-D.ietf-ace-oauth-authz}}.
 
 * Name: sign_info
 * CBOR Key: TBD (range -256 to 255)
@@ -1908,7 +1908,7 @@ Mappings registry following the procedure specified in {{Section 8.10 of I-D.iet
 
 ## Interface Description (if=) Link Target Attribute Values {#if-ace-group}
 
-This specification registers the following entry to the "Interface Description (if=) Link Target Attribute Values registry" registry within the "CoRE Parameters" registry group:
+IANA is asked to register the following entry in the "Interface Description (if=) Link Target Attribute Values" registry within the "CoRE Parameters" registry group.
 
 * Attribute Value: ace.group
 
@@ -1918,7 +1918,7 @@ This specification registers the following entry to the "Interface Description (
 
 ## CBOR Tags {#iana-cbor-tags}
 
-This specification registers the following entry to the "CBOR Tags" registry:
+IANA is asked to register the following entry in the "CBOR Tags" registry.
 
 * Tag : TBD_TAG
 
