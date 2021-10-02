@@ -483,22 +483,6 @@ It is REQUIRED of the application profiles of this specification to register a R
 
 It is REQUIRED of the application profiles of this specification to define what specific actions (e.g., CoAP methods) are allowed on each resource provided by the KDC interface, depending on whether the Client is a current group member; the roles that a Client is authorized to take as per the obtained access token (see {{ssec-authorization-request}}); and the roles that the Client has as current group member (REQ8).
 
-### Error Handling {#kdc-if-errors}
-
-Upon receiving a request from a Client, the KDC MUST check that it is storing a valid access token from that Client. In case the KDC does not store any such valid access token, the KDC MUST respond to the Client with a 4.01 (Unauthorized) error message.
-
-Unless the request targets the /ace-group resource, the KDC MUST especially check that it is storing a valid access token from that Client for the group with name GROUPNAME associated to the endpoint. In case the KDC stores a valid access token but this does not allow the Client to access the group associated to the endpoint, the KDC MUST respond to the Client with a 4.03 (Forbidden) error message.
-
-Some error responses from the KDC can have Content-Format set to application/ace-groupcomm+cbor. In such a case, the paylod of the response MUST be a CBOR map, which includes the following fields.
-
-* 'error', with value a CBOR integer specifying the error occurred at the KDC. The value is taken from the "Value" column of the "ACE Groupcomm Errors" registry defined in {{iana-ace-groupcomm-errors}} of this specification. This field MUST be present.
-
-* 'error_description', with value a CBOR text string specifying a human-readable description of the error occurred at the KDC. This field MAY be present.
-
-CBOR labels for the 'error' and 'error_description' fields are defined in {{params}}.
-
-{{error-types}} of this specification defines an initial set of error identifiers, as possible values for the 'error' field. Application profiles of this specification MAY define additional value (OPT11).
-
 ### Operations Supported by Clients {#client-operations}
 
 It is expected that a Client minimally supports the following set of primary operations and corresponding interactions with the KDC.
@@ -527,6 +511,22 @@ for the correct group operation.
 * POST request to ace-group/GROUPNAME/nodes/NODENAME/pub-key , in order to provide the KDC with a new public key. The Client would have to alternatively re-join the group through a POST request to ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group, the Client might simply not have an associated public key to provide.
 
 It is REQUIRED of application profiles of this specification to categorize possible newly defined operations for Clients into primary operations and secondary operations, and to provide accompanying considerations (REQ31).
+
+### Error Handling {#kdc-if-errors}
+
+Upon receiving a request from a Client, the KDC MUST check that it is storing a valid access token from that Client. In case the KDC does not store any such valid access token, the KDC MUST respond to the Client with a 4.01 (Unauthorized) error message.
+
+Unless the request targets the /ace-group resource, the KDC MUST especially check that it is storing a valid access token from that Client for the group with name GROUPNAME associated to the endpoint. In case the KDC stores a valid access token but this does not allow the Client to access the group associated to the endpoint, the KDC MUST respond to the Client with a 4.03 (Forbidden) error message.
+
+Some error responses from the KDC can have Content-Format set to application/ace-groupcomm+cbor. In such a case, the paylod of the response MUST be a CBOR map, which includes the following fields.
+
+* 'error', with value a CBOR integer specifying the error occurred at the KDC. The value is taken from the "Value" column of the "ACE Groupcomm Errors" registry defined in {{iana-ace-groupcomm-errors}} of this specification. This field MUST be present.
+
+* 'error_description', with value a CBOR text string specifying a human-readable diagnostic description of the error occurred at the KDC, written in English. The diagnostic text is intended for software engineers as well as for device and network operators, in order to aid debugging and provide context for possible intervention. The diagnostic message SHOULD be logged by the KDC. This field MAY be present, and it is unlikely relevant in an unattended setup where human intervention is not expected.
+
+CBOR labels for the 'error' and 'error_description' fields are defined in {{params}}, where both parameters are defined as OPTIONAL to support for Clients. A Client supporting the 'error' parameter and able to understand the specified error may use that information to determine what actions to take next.
+
+{{error-types}} of this specification defines an initial set of error identifiers, as possible values for the 'error' field. Application profiles of this specification inherit this initial set or error identifiers and MAY define additional value (OPT11).
 
 ## /ace-group
 
@@ -1742,6 +1742,24 @@ This specification defines a number of values that the KDC can include as error 
  4            | No available node identifiers |
  5            | Group membership terminated |
  6            | Group deleted |
+
+A Client supporting the 'error' parameter (see {{kdc-if-errors}} and {{params}}) and able to understand the specified error may use that information to determine what actions to take next. If it is included in the error response and supported by the Client, the 'error_description' parameter may provide additional context.
+
+In particular, the following guidelines apply, and application profiles of this specification can define more detailed actions for the Client to take when learning that a specific error has occurred.
+
+* In case of error 0, the Client should stop sending the request in question to the KDC. Rather, the Client should first join the targeted group. If it has not happened already, this first requires the Client to obtain an appropriate access token authorizing access to the group and provide it to the KDC.
+
+* In case of error 1, the Client as a group member should re-join the group with all the roles needed to perform the operation in question. This might require the Client to first obtain a new access token and provide it to the KDC, if the current access token does not authorize to take those roles in the group. For operations admitted to a Client which is not a group member (e.g., an external signature verifier), the Client should first obtain a new access token authorizing to also have the missing roles.
+
+* In case of error 2, the Client has to obtain or self-generate a different asymmetric key pair, as aligned to the publick key algorithms, parameters and encoding used in the targeted group. After that, the Client should provide its new consistent public key to the KDC.
+
+* In case of error 3, the Client should ensure to be computing its proof-of-possession evidence by correctly using the parameters and procedures defined in the used application profile of this specification. In an unattended setup, it might be not possible for a Client to autonomously diagnose the error and take an effective next action to address it.
+
+* In case of error 4, the Client should wait for a certain (pre-configured) amount of time, before trying re-sending its request to the KDC.
+
+* In case of error 5, the Client may try joining the group again. This might require the Client to first obtain a new access token and provide it to the KDC, e.g., if the current access token has expired.
+
+* In case of error 6, the Client should clean up its state regarding the group, just like if it has left the group with no intention to re-join it.
 
 # Security Considerations {#sec-cons}
 
