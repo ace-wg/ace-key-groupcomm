@@ -1733,15 +1733,26 @@ for the correct group operation.
 
 This specification defines a number of values that the KDC can include as error identifiers, in the 'error' field of an error response with Content-Format application/ace-groupcomm+cbor.
 
- Value        | Description |
---------------|-------------|
- 0            | Operation permitted only to group members |
- 1            | Request inconsistent with the current roles |
- 2            | Public key incompatible with the group configuration |
- 3            | Invalid proof-of-possession evidence |
- 4            | No available node identifiers |
- 5            | Group membership terminated |
- 6            | Group deleted |
+~~~~~~~~~~~
++-------+------------------------------------------------------+
+| Value |                   Description                        |
++-------+------------------------------------------------------+
+|   0   | Operation permitted only to group members            |
++-------+------------------------------------------------------+
+|   1   | Request inconsistent with the current roles          |
++-------+------------------------------------------------------+
+|   2   | Public key incompatible with the group configuration |
++-------+------------------------------------------------------+
+|   3   | Invalid proof-of-possession evidence                 |
++-------+------------------------------------------------------+
+|   4   | No available node identifiers                        |
++-------+------------------------------------------------------+
+|   5   | Group membership terminated                          |
++-------+------------------------------------------------------+
+|   6   | Group deleted                                        |
++-------+------------------------------------------------------+
+~~~~~~~~~~~
+{: #fig-ACE-Groupcomm-Error Identifiers title="ACE Groupcomm Error Identifiers" artwork-align="center"}
 
 A Client supporting the 'error' parameter (see {{kdc-if-errors}} and {{params}}) and able to understand the specified error may use that information to determine what actions to take next. If it is included in the error response and supported by the Client, the 'error_description' parameter may provide additional context.
 
