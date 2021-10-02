@@ -1659,39 +1659,74 @@ This specification defines a number of parameters used during the second part of
 
 Note that the media type application/ace-groupcomm+cbor MUST be used when these parameters are transported in the respective message fields.
 
-
- Name         | CBOR Key | CBOR Type     |   Reference
---------------|----------|---------------|---------------
- error         |   TBD    | integer   | {{key-distr}}
- error_description |   TBD    | text string   | {{key-distr}}
- gid          |   TBD    | array   | {{ace-group-fetch}}
- gname        |   TBD    | array of text strings        | {{ace-group-fetch}}
- guri         |   TBD    | array of text strings   | {{ace-group-fetch}}
- scope        |   TBD    | byte string   | {{gid-post}}
- get_pub_keys |   TBD    | array / simple value null  | {{gid-post}}, {{pubkey-fetch}}
- client_cred  |   TBD    | byte string   | {{gid-post}}
- cnonce       |   TBD    | byte string   | {{gid-post}}
- client_cred_verify |   TBD    | byte string   | {{gid-post}}
- pub_keys_repos   |   TBD    | text string         | {{gid-post}}
- control_uri | TBD | text string | {{gid-post}}
- gkty          |   TBD    | integer / text string   | {{gid-post}}
- key          |   TBD    | see "ACE Groupcomm Key Types" registry     | {{gid-post}}
- num          |   TBD    | integer           | {{gid-post}}
- ace-groupcomm-profile |   TBD    | integer           | {{gid-post}}
- exp          |   TBD    | int           | {{gid-post}}
- pub_keys     |   TBD    | array   | {{gid-post}}
- peer_roles     |   TBD    | array   | {{gid-post}}
- peer_identifiers     |   TBD    | array   | {{gid-post}}
- group_policies      |   TBD    | map           | {{gid-post}}
- kdc_nonce | TBD | byte string | {{gid-post}}
- kdc_cred | TBD | byte string | {{gid-post}}
- kdc_cred_verify | TBD | integer | {{gid-post}}
- rekeying_scheme | TBD | byte string | {{gid-post}}
- mgt_key_material    |   TBD    | byte string   | {{gid-post}}
- control_group_uri | TBD | text string | {{gid-post}}
- sign_info | TBD | array | {{gid-post}}
- kdcchallenge | TBD | byte string | {{node-pub-key-post}}
-
+~~~~~~~~~~~
++-----------------------+------+-----------------+-----------------+
+| Name                  | CBOR | CBOR Type       | Reference       |
+|                       | Key  |                 |                 |
++-----------------------+------+-----------------+-----------------+
+| error                 | TBD  | int             | [this document] |
++-----------------------+------+-----------------+-----------------+
+| error_description     | TBD  | tstr            | [this document] |
++-----------------------+------+-----------------+-----------------+
+| gid                   | TBD  | array           | [this document] |
++-----------------------+------+-----------------+-----------------+
+| gname                 | TBD  | array of tstr   | [this document] |
++-----------------------+------+-----------------+-----------------+
+| guri                  | TBD  | array of tstr   | [this document] |
++-----------------------+------+-----------------+-----------------+
+| scope                 | TBD  | bstr            | [this document] |
++-----------------------+------+-----------------+-----------------+
+| get_pub_keys          | TBD  | array / nil     | [this document] |
++-----------------------+------+-----------------+-----------------+
+| client_cred           | TBD  | bstr            | [this document] |
++-----------------------+------+-----------------+-----------------+
+| cnonce                | TBD  | bstr            | [this document] |
++-----------------------+------+-----------------+-----------------+
+| client_cred_verify    | TBD  | bstr            | [this document] |
++-----------------------+------+-----------------+-----------------+
+| pub_keys_repos        | TBD  | tstr            | [this document] |
++-----------------------+------+-----------------+-----------------+
+| control_uri           | TBD  | tstr            | [this document] |
++-----------------------+------+-----------------+-----------------+
+| gkty                  | TBD  | int / tstr      | [this document] |
++-----------------------+------+-----------------+-----------------+
+| key                   | TBD  | See the "ACE    | [this document] |
+|                       |      | Groupcomm Key   |                 |
+|                       |      | Types" registry |                 |
++-----------------------+------+-----------------+-----------------+
+| num                   | TBD  | int             | [this document] |
++-----------------------+------+-----------------+-----------------+
+| ace-groupcomm-profile | TBD  | int             | [this document] |
++-----------------------+------+-----------------+-----------------+
+| exp                   | TBD  | int             | [this document] |
++-----------------------+------+-----------------+-----------------+
+| pub_keys              | TBD  | array           | [this document] |
++-----------------------+------+-----------------+-----------------+
+| peer_roles            | TBD  | array           | [this document] |
++-----------------------+------+-----------------+-----------------+
+| peer_identifiers      | TBD  | array           | [this document] |
++-----------------------+------+-----------------+-----------------+
+| group_policies        | TBD  | map             | [this document] |
++-----------------------+------+-----------------+-----------------+
+| kdc_cred              | TBD  | bstr            | [this document] |
++-----------------------+------+-----------------+-----------------+
+| kdc_nonce             | TBD  | bstr            | [this document] |
++-----------------------+------+-----------------+-----------------+
+| kdc_cred_verify       | TBD  | bstr            | [this document] |
++-----------------------+------+-----------------+-----------------+
+| rekeying_scheme       | TBD  | int             | [this document] |
++-----------------------+------+-----------------+-----------------+
+| mgt_key_material      | TBD  | bstr            | [this document] |
++-----------------------+------+-----------------+-----------------+
+| control_group_uri     | TBD  | tstr            | [this document] |
++-----------------------+------+-----------------+-----------------+
+| sign_info             | TBD  | array           | [this document] |
++-----------------------+------+-----------------+-----------------+
+| kdcchallenge          | TBD  | bstr            | [this document] |
++-----------------------+------+-----------------+-----------------+
+~~~~~~~~~~~
+{: #fig-ACE-Groupcomm-Parameters title="ACE Groupcomm Parameters" artwork-align="center"}
+ 
 The KDC is expected to support and understand all the parameters above. Instead, a Client can support and understand only a subset of such parameters, depending on the roles it expects to take in the joined groups or on other conditions defined in application profiles of this specification.
 
 In the following, the parameters are categorized according to the support expected by Clients. That is, a Client that supports a parameter is able to: i) use and specify it in a request message to the KDC; and ii) understand and process it if specified in a response message from the KDC. It is REQUIRED of application profiles of this specification to sort their newly defined parameters according to the same categorization (REQ27).
