@@ -2115,7 +2115,7 @@ Expert reviewers should take into consideration the following points:
 
 This section lists the requirements on application profiles of this specification, for the convenience of application profile designers.
 
-* REQ1: Specify the exact format and encoding of 'scope'. This includes defining the set of possible roles and their identifiers, as well as the corresponding encoding to use in the scope entries according to the used scope format (see {{ssec-authorization-request}}).
+* REQ1: Specify the format and encoding of 'scope'. This includes defining the set of possible roles and their identifiers, as well as the corresponding encoding to use in the scope entries according to the used scope format (see {{ssec-authorization-request}}).
 
 * REQ2: If the AIF format of 'scope' is used, register its specific instance of "Toid" and "Tperm", as well as the corresponding Media Type and Content-Format, as per the guidelines in {{I-D.ietf-ace-aif}}.
 
@@ -2137,17 +2137,17 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ11: Categorize possible newly defined operations for Clients into primary operations expected to be minimally supported and secondary operations, and provide accompanying considerations (see {{client-operations}}).
 
-* REQ12: Specify the exact encoding of group identifier (see {{ace-group-fetch}}).
+* REQ12: Specify the encoding of group identifier (see {{ace-group-fetch}}).
 
-* REQ13: Specify the exact approaches used to compute and verify the PoP evidence to include in 'client_cred_verify', and which of those approaches is used in which case (see {{gid-post}}).
+* REQ13: Specify the approaches used to compute and verify the PoP evidence to include in 'client_cred_verify', and which of those approaches is used in which case (see {{gid-post}}).
 
 * REQ14: Specify how the nonce N_S is generated, if the token is not provided to the KDC through the Token Transfer Request to the authz-info endpoint (e.g., if it is used directly to validate TLS instead).
 
 * REQ15: Define the initial value of the 'num' parameter (see {{gid-post}}).
 
-* REQ16: Specify the exact format of the 'key' value (see {{gid-post}}).
+* REQ16: Specify the format of the 'key' parameter (see {{gid-post}}).
 
-* REQ17: Specify the acceptable values of 'gkty' (see {{gid-post}}).
+* REQ17: Specify the acceptable values of the 'gkty' parameter (see {{gid-post}}).
 
 * REQ18: Specify and register the application profile identifier (see {{gid-post}}).
 
@@ -2155,7 +2155,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ20: Define whether the KDC has a public key and if this has to be provided through the 'kdc_cred' parameter, see {{gid-post}}.
 
-* REQ21: Specify the exact approaches used to compute and verify the PoP evidence to include in 'kdc_cred_verify', and which of those approaches is used in which case (see {{gid-post}}).
+* REQ21: Specify the approaches used to compute and verify the PoP evidence to include in 'kdc_cred_verify', and which of those approaches is used in which case (see {{gid-post}}).
 
 * REQ22: Specify the communication protocol the members of the group must use (e.g., multicast CoAP).
 
@@ -2171,7 +2171,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ28: Specify and register the identifier of newly defined semantics for binary scopes (see {{sec-extended-scope}}).
 
-* REQ29: Sort newly defined parameters according to the same categorization defined in {{params}}.
+* REQ29: Categorize newly defined parameters according to the same criteria of {{params}}.
 
 * REQ30: Define whether Clients must, should or may support the conditional parameters defined in {{params}}, and under which circumstances.
 
