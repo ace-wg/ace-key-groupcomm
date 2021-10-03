@@ -598,7 +598,7 @@ This resource implements the POST and GET and handlers.
 
 ### POST Handler {#gid-post}
 
-The POST handler adds the public key of the Client to the list of the group members' public keys and returns the symmetric group keying material for the group identified by GROUPNAME. Note that the group joining exchange is done by the Client via this operation, as described in {{ssec-key-distribution-exchange}}.
+The POST handler processes the Joining Request sent by a Client to join a group, and returns a Joining Response as successful result of the joining process. (see {{ssec-key-distribution-exchange}}). At a high level, the POST handler adds the Client to the list of current group members, adds the public key of the Client to the list of the group members' public keys, and returns the symmetric group keying material for the group identified by GROUPNAME.
 
 The handler expects a request with payload formatted as a CBOR map, which MAY contain the following fields, which, if included, MUST have format and value as specified below.
 
