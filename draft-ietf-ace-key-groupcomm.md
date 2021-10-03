@@ -1539,7 +1539,7 @@ The KDC MUST increment the version number of the current keying material, before
 
 Additionally, after updating its own public key, a group member MAY send a number of the later requests including an identifier of the updated public key, to signal nodes that they need to retrieve it. How that is done depends on the group communication protocol used, and therefore is application profile specific (OPT13).
 
-# Removal of a Node from the Group {#sec-node-removal}
+# Removal of a Group Member {#sec-node-removal}
 
 This section describes the different scenarios according to which a node ends up being removed from the group.
 
@@ -1567,6 +1567,10 @@ Then, the KDC deletes the sub-resource ace-group/GROUPNAME/nodes/NODENAME associ
 
    The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 5 ("Group membership terminated").
 
+# Group Rekeying Process {#sec-group-rekeying}
+   
+TBD
+   
 # Extended Scope Format # {#sec-extended-scope}
 
 This section defines an extended format of binary encoded scope, which additionally specifies the semantics used to express the same access control information from the corresponding original scope.
