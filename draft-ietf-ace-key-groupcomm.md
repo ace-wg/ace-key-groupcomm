@@ -443,7 +443,7 @@ Later on as a group member, the Client can also rely on the interface at the KDC
 
 The KDC provides its interface by hosting the following resources. Note that the root url-path "ace-group" used hereafter is a default name; implementations are not required to use this name, and can define their own instead. The Interface Description (if=) Link Target Attribute value "ace.group" is registered in {{if-ace-group}} and can be used to describe this interface.
 
-If request messages sent to the KDC as well as success response messages from the KDC include a payload and specify a Content-Format, those messages MUST have Content-Format set to application/ace-groupcomm+cbor, defined in {{content-type}}.
+If request messages sent to the KDC as well as success response messages from the KDC include a payload and specify a Content-Format, those messages MUST have Content-Format set to application/ace-groupcomm+cbor, defined in {{content-type}}. CBOR labels for the message parameters are defined in {{params}}.
 
 * /ace-group : this resource is invariant once established, and indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same resource, those applications will collide, and a mechanism will be needed to differentiate the endpoints.
 
@@ -547,7 +547,7 @@ Some error responses from the KDC can have Content-Format set to application/ace
 
 * 'error_description', with value a CBOR text string specifying a human-readable diagnostic description of the error occurred at the KDC, written in English. The diagnostic text is intended for software engineers as well as for device and network operators, in order to aid debugging and provide context for possible intervention. The diagnostic message SHOULD be logged by the KDC. This field MAY be present, and it is unlikely relevant in an unattended setup where human intervention is not expected.
 
-CBOR labels for the 'error' and 'error_description' fields are defined in {{params}}, where both parameters are defined as OPTIONAL to support for Clients. A Client supporting the 'error' parameter and able to understand the specified error may use that information to determine what actions to take next.
+The 'error' and 'error_description' fields are defined as OPTIONAL to support for Clients (see {{params}}). A Client supporting the 'error' parameter and able to understand the specified error may use that information to determine what actions to take next.
 
 {{error-types}} of this specification defines an initial set of error identifiers, as possible values for the 'error' field. Application profiles of this specification inherit this initial set or error identifiers and MAY define additional value (OPT5).
 
@@ -711,7 +711,7 @@ The handler considers the scope specified in the access token associated to the 
 
 If the KDC manages the group members' public keys, the handler checks if one is included in the 'client_cred' field. If so, the KDC retrieves the public key and performs the following actions.
 
-* If the access token was provided through a Token Transfer Request (see {{token-post}}) but the KDC cannot retrieve the 'kdcchallenge' associated to this Client (see {{token-post}}), the KDC MUST reply with a 4.00 Bad Request error response, which MUST also have Content-Format application/ace-groupcomm+cbor. The payload of the error response is a CBOR map including a newly generated 'kdcchallenge' value. This is specified in the 'kdcchallenge' parameter, whose CBOR label is defined in {{params}}.
+* If the access token was provided through a Token Transfer Request (see {{token-post}}) but the KDC cannot retrieve the 'kdcchallenge' associated to this Client (see {{token-post}}), the KDC MUST reply with a 4.00 Bad Request error response, which MUST also have Content-Format application/ace-groupcomm+cbor. The payload of the error response is a CBOR map including a newly generated 'kdcchallenge' value. This is specified in the 'kdcchallenge' parameter.
 
 * The KDC checks the public key to be valid for the group identified by GROUPNAME. That is, it checks that the public key is encoded according to the format used in the group, is intended for the public key algorithm used in the group, and is aligned with the possible associated parameters used in the group.
 
@@ -737,6 +737,8 @@ First, only in case the Client is not already a group member, the handler perfor
 
 * The handler associates the node identifier NODENAME to the access token and the secure session for the Client.
 
+* If the application requires backward security or if the used application profile prescribes so, the KDC MUST generate new group keying material and securely distribute it to the current group members (see {{sec-group-rekeying}}).
+
 Then, the handler performs the following actions.
 
 * If the KDC manages the group members' public keys:
@@ -745,13 +747,13 @@ Then, the handler performs the following actions.
 
   - The handler adds the retrieved Client's public key to the stored list of public keys stored for the group identified by GROUPNAME. If such list already includes a public key for the Client, but a different public key is specified in the 'client_cred' field, then the handler MUST replace the old public key in the list with the one specified in the 'client_cred' field.
 
-* The handler returns a success response, containing the symmetric group keying material; the group policies; and the public keys of the current members of the group, if the KDC manages those and the Client requested them.
+* The handler returns a successful Joining Response, containing the symmetric group keying material; the group policies; and the public keys of the current members of the group, if the KDC manages those and the Client requested them.
 
-The response message MUST have response code 2.01 (Created) if the Client has been added to the list of group members in this joining exchange (see above), or 2.04 (Changed) otherwise, i.e., if the Client is re-joining the group without having left it.
+The Joining Response MUST have response code 2.01 (Created) if the Client has been added to the list of group members in this joining exchange (see above), or 2.04 (Changed) otherwise, i.e., if the Client is re-joining the group without having left it.
   
-The response message MUST include the Location-Path CoAP option, specifying the URI path to the sub-resource associated to the Client, i.e. "/ace-group/GROUPNAME/nodes/NODENAME".
+The Joining Response message MUST include the Location-Path CoAP option, specifying the URI path to the sub-resource associated to the Client, i.e. "/ace-group/GROUPNAME/nodes/NODENAME".
 
-The response message MUST have Content-Format application/ace-groupcomm+cbor. The payload of the response is formatted as a CBOR map, which MUST contain the following fields and values.
+The Joining Response message MUST have Content-Format application/ace-groupcomm+cbor. The payload of the response is formatted as a CBOR map, which MUST contain the following fields and values.
 
 * 'gkty', identifying the key type of the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key Types" registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key Types" registry.
 
@@ -871,8 +873,6 @@ If the Joining Response includes the 'kdc_cred_verify' parameter, the Client ver
 
 Specific application profiles that build on this document MUST specify the communication protocol that members of the group use to communicate with each other (REQ22) and how exactly the keying material is used to protect the group communication (REQ23).
 
-CBOR labels for these fields are defined in {{params}}.
-
 #### Join the Group {#ssec-key-distribution-exchange}
 
 {{fig-key-distr-join}} gives an overview of the Joining exchange between Client and KDC, when the Client first joins a group, while {{fig-key-distr-join-2}} shows an example.
@@ -928,8 +928,6 @@ To join the group, the Client sends a CoAP POST request to the /ace-group/GROUPN
 If the node is joining a group for the first time, and the KDC maintains the public keys of the group members, the Client is REQUIRED to send its own public key and proof-of-possession (PoP) evidence in the Joining Request (see the 'client_cred' and 'client_cred_verify' parameters in {{gid-post}}). The request is accepted only if both public key is provided and the PoP evidence is successfully verified.
 
 If a node re-joins a group as authorized by the same access token and using the same public key, it can omit the public key and the PoP evidence, or just the PoP evidence, from the Joining Request. Then, the KDC will be able to retrieve the node's public key associated to the access token for that group. If the public key has been discarded, the KDC replies with 4.00 (Bad Request) error response, as specified in {{gid-post}}. If a node re-joins a group but wants to update its own public key, it needs to include both its public key and the PoP evidence in the Joining Request like when it joined the group for the first time.
-
-If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group. To this end, the KDC uses the message format of the response defined in {{gid-get}}. Application profiles may define alternative ways of retrieving the keying material, such as sending separate requests to different resources at the KDC ({{gid-get}}, {{pubkey-get}}, {{policies-get}}). The KDC MUST increment the version number of the current keying material, before distributing the newly generated keying material to the group. After that, the KDC SHOULD store the distributed keying material in persistent storage.
 
 ### GET Handler {#gid-get}
 
@@ -1366,20 +1364,6 @@ Payload (in CBOR diagnostic notation,
 ~~~~~~~~~~~
 {: #fig-key-redistr-req-resp-2 title="Example of Key Distribution Request-Response"}
 
-Alternatively, the re-distribution of keying material can be initiated by the KDC, which e.g.,:
-
-* Can make the ace-group/GROUPNAME resource Observable {{RFC7641}}, and send notifications to observer Clients when the keying material is updated.
-
-   In case the KDC deletes the group identified by GROUPNAME, this also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 6 ("Group deleted").
-
-* Can send the payload of the Key Distribution Response in one or multiple multicast POST requests to the members of the group, using secure rekeying schemes such as {{RFC2093}}{{RFC2094}}{{RFC2627}}.
-
-* Can send unicast POST requests to each Client over a secure channel, with the same payload as the Key Distribution Response. When sending such requests, the KDC can target the URI path provided by the intended recipient upon joining the group, as specified in the 'control_uri' parameter of the Joining Request (see {{gid-post}}).
-
-* Can act as a publisher in a pub-sub scenario, and update the keying material by publishing on a specific topic on a broker, which all the members of the group are subscribed to.
-
-Note that these methods of KDC-initiated key distribution have different security properties and require different security associations.
-
 ### PUT Handler {#node-put}
 
 The PUT handler processes requests from a Client that asks for new individual keying material, as required to process messages exchanged in the group.
@@ -1455,13 +1439,13 @@ The handler expects a DELETE request with empty payload.
 
 In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
 
-If all verification succeeds, the handler removes the Client from the group identified by GROUPNAME, and removes the public key of the Client if the KDC keep tracks of that. Also, if the Client is registered as an observer of the group-membership resource at ace-group/GROUPNAME, the handler removes the node from the list of observers of that resource. Finally, if the sub-resource nodes/NODENAME was created for the Client, the handler deletes that resource and replies with a 2.02 (Deleted) response with empty payload.
+If all verification succeeds, the handler performs the actions defined in {{sec-node-removal}} and replies with a 2.02 (Deleted) response with empty payload.
 
 #### Leave the Group ## {#ssec-group-leaving}
 
-A node can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/GROUPNAME/nodes/NODENAME at the KDC, where GROUPNAME is the group name and NODENAME is its node name, formatted as defined in {{node-delete}}
+A Client can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/GROUPNAME/nodes/NODENAME at the KDC, where GROUPNAME is the group name and NODENAME is its node name, formatted as defined in {{node-delete}}
 
-Alternatively, a node may be removed by the KDC, without having explicitly asked for it. This is further discussed in {{sec-node-removal}}.
+Note that, after having left the group, the Client may wish to join it again. Then, as long as the Client is still authorized to join the group, i.e., the associated access token is still valid, the Client can request to re-join the group directly to the KDC (see {{ssec-key-distribution-exchange}}), without having to retrieve a new access token from the AS.
 
 ## /ace-group/GROUPNAME/nodes/NODENAME/pub-key
 
@@ -1475,7 +1459,7 @@ The handler expects a POST request with payload as specified in {{gid-post}}, wi
 
 In addition to what is defined in {{kdc-if-errors}} and at the beginning of {{node-subresource}}, the handler verifies that this operation is consistent with the set of roles that the node has in the group. If the verification fails, the KDC MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 1 ("Request inconsistent with the current roles").
 
-If the KDC cannot retrieve the 'kdcchallenge' associated to this Client (see {{token-post}}), the KDC MUST reply with a 4.00 (Bad Request) error response, which MUST also have Content-Format application/ace-groupcomm+cbor. The payload of the error response is a CBOR map including a newly generated 'kdcchallenge' value. This is specified in the 'kdcchallenge' parameter, whose CBOR label is defined in {{params}}. In such a case the KDC MUST store the newly generated value as the 'kdcchallenge' value associated to this Client, possibly replacing the currently stored value.
+If the KDC cannot retrieve the 'kdcchallenge' associated to this Client (see {{token-post}}), the KDC MUST reply with a 4.00 (Bad Request) error response, which MUST also have Content-Format application/ace-groupcomm+cbor. The payload of the error response is a CBOR map including a newly generated 'kdcchallenge' value. This is specified in the 'kdcchallenge' parameter. In such a case the KDC MUST store the newly generated value as the 'kdcchallenge' value associated to this Client, possibly replacing the currently stored value.
 
 Otherwise, the handler checks that the public key specified in the 'client_cred' field is valid for the group identified by GROUPNAME. That is, the handler checks that the public key is encoded according to the format used in the group, is intended for the public key algorithm used in the group, and is aligned with the possible associated parameters used in the group. If that cannot be successfully verified, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 2 ("Public key incompatible with the group configuration").
 
@@ -1541,36 +1525,38 @@ Additionally, after updating its own public key, a group member MAY send a numbe
 
 # Removal of a Group Member {#sec-node-removal}
 
-This section describes the different scenarios according to which a node ends up being removed from the group.
+A Client identified by NODENAME may be removed from a group identified by GROUPNAME where it is a member, due to the following reasons.
 
-If the application requires forward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members but the leaving node, using the message format of the Key Distribution Response (see {{update-keys}}). Application profiles may define alternative message formats. The KDC MUST increment the version number of the current keying material, before distributing the newly generated keying material to the group. After that, the KDC SHOULD store the distributed keying material in persistent storage.
-
-Note that, after having left the group, a node may wish to join it again. Then, as long as the node is still authorized to join the group, i.e., it still has a valid access token, it can request to re-join the group directly to the KDC without needing to retrieve a new access token from the AS. This means that the KDC might decide to keep track of nodes with valid access tokens, before deleting all information about the leaving node.
-
-A node may be evicted from the group in the following cases.
-
-1. The node explicitly asks to leave the group, as defined in {{ssec-group-leaving}}.
+1. The Client explicitly asks to leave the group, as defined in {{ssec-group-leaving}}.
 
 2. The node has been found compromised or is suspected so.
 
-3. The node's authorization to be a group member is not valid anymore, either because the access token has expired, or it has been revoked. If the AS provides Token introspection (see {{Section 5.9 of I-D.ietf-ace-oauth-authz}}), the KDC can optionally use it and check whether the node is still authorized for that group in that role.
+3. The Client's authorization to be a group member with the current roles is not valid anymore, i.e., the access token has expired or has been revoked. If the AS provides token introspection (see {{Section 5.9 of I-D.ietf-ace-oauth-authz}}), the KDC can optionally use it and check whether the Client is still authorized.
 
-   In either case, once aware that a node is not authorized anymore, the KDC has to remove the unauthorized node from the list of group members, if the KDC keeps track of that.
+In either case, the KDC performs the following actions.
 
-Furthermore, in case of forced eviction, the KDC removes the public key of the evicted node if the KDC keep tracks of that. Also, if the evicted node is registered as an observer of the group-membership resource at ace-group/GROUPNAME, the KDC removes the node from the list of observers of that resource.
+* The KDC removes the Client from the list of current members or the group.
 
-Then, the KDC deletes the sub-resource ace-group/GROUPNAME/nodes/NODENAME associated to the evicted node. After that, the KDC MAY explicitly inform the evicted node, by means of the following methods.
+* In case of forced eviction, i.e., for cases 2 and 3 above, the KDC deletes the public key of the removed Client, if it acts as repository of public keys for group members.
 
-* If the evicted node implements the 'control_uri' resource specified in {{gid-post}}, the KDC sends a DELETE request, targeting the URI specified in the 'control_uri' parameter of the Joining Request (see {{gid-post}}).
+* If the removed Client is registered as an observer of the group-membership resource at ace-group/GROUPNAME, the KDC removes the Client from the list of observers of that resource.
+
+* If the sub-resource nodes/NODENAME was created for the removed Client, the KDC deletes that sub-resource.
+
+   In case of forced eviction, i.e., for cases 2 and 3 above, the KDC MAY explicitly inform the removed Client, by means of the following methods.
+
+   - If the evicted Client implements the 'control_uri' resource specified in {{gid-post}}, the KDC sends a DELETE request, targeting the URI specified in the 'control_uri' parameter of the Joining Request (see {{gid-post}}).
    
-* If the evicted node is observing its associated sub-resource at ace-group/GROUPNAME/nodes/NODENAME (see {{node-get}}), the KDC sends an unsolicited 4.04 (Not Found) error response, which does not include the Observe option and indicates that the observed resource has been deleted (see {{Section 3.2 of RFC7641}}).
+   - If the evicted Client is observing its associated sub-resource at ace-group/GROUPNAME/nodes/NODENAME (see {{node-get}}), the KDC sends an unsolicited 4.04 (Not Found) error response, which does not include the Observe option and indicates that the observed resource has been deleted (see {{Section 3.2 of RFC7641}}).
 
-   The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 5 ("Group membership terminated").
+      The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 5 ("Group membership terminated").
+
+* If the application requires forward security or the used application profile requires so, the KDC MUST generate new group keying material and securely distribute it to all the current group members except the leaving node (see {{sec-group-rekeying}}).
 
 # Group Rekeying Process {#sec-group-rekeying}
    
 TBD
-   
+
 # Extended Scope Format # {#sec-extended-scope}
 
 This section defines an extended format of binary encoded scope, which additionally specifies the semantics used to express the same access control information from the corresponding original scope.
@@ -1828,7 +1814,7 @@ The KDC also needs to have a congestion control mechanism in place, in order to 
 
 ## Update of Keying Material
 
-A group member can receive a message shortly after the group has been rekeyed, and new keying material has been distributed by the KDC. In the following two cases, this may result in misaligned keying material between the group members.
+A group member can receive a message shortly after the group has been rekeyed, and new keying material has been distributed by the KDC (see {{sec-group-rekeying}}). In the following two cases, this may result in misaligned keying material between the group members.
 
 In the first case, the sender protects a message using the old group keying material. However, the recipient receives the message after having received the new group keying material, hence not being able to correctly process it. A possible way to ameliorate this issue is to preserve the old, recent group keying material for a maximum amount of time defined by the application, during which it is used solely for processing incoming messages. By doing so, the recipient can still temporarily process received messages also by using the old, retained group keying material. Note that a former (compromised) group member can take advantage of this by sending messages protected with the old, retained group keying material. Therefore, a conservative application policy should not admit the storage of old group keying material. Eventually, the sender will have obtained the new group keying material too, and can possibly re-send the message protected with such keying material.
 
