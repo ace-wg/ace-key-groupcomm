@@ -48,6 +48,7 @@ normative:
   RFC8949:
   I-D.ietf-cose-rfc8152bis-struct:
   I-D.ietf-cose-rfc8152bis-algs:
+  I-D.ietf-cose-countersign:
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-core-oscore-groupcomm:
   I-D.ietf-ace-aif:
@@ -96,7 +97,7 @@ The ACE framework is based on CBOR {{RFC8949}}, so CBOR is the format used in th
 
 Profiles that use group communication can build on this document, by defining a number of details such as the exact group communication protocol and security protocols used. The specific list of details a profile needs to define is shown in {{req}}.
 
-If the application requires backward and forward security, new keying material is generated and distributed to the group upon membership changes. A key management scheme performs the actual distribution of the new keying material to the group. In particular, the key management scheme rekeys the current group members when a new node joins the group, and the remaining group members when a node leaves the group. Rekeying mechanisms can be based on {{RFC2093}}, {{RFC2094}} and {{RFC2627}}.
+If the application requires backward and forward security, new keying material is generated and distributed to the group upon membership changes (rekeying). A group rekeying scheme performs the actual distribution of the new keying material to the group. In particular, the group rekeying scheme rekeys the current group members when a new node joins the group, and the remaining group members when a node leaves the group. Approaches to group rekeying can be based on efficient schemes such as {{RFC2093}}, {{RFC2094}} and {{RFC2627}}.
 
 ## Terminology
 
@@ -104,7 +105,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 Readers are expected to be familiar with the terms and concepts described in  {{I-D.ietf-ace-oauth-authz}}{{I-D.ietf-cose-rfc8152bis-struct}}{{I-D.ietf-cose-rfc8152bis-algs}}, such as Authorization Server (AS) and Resource Server (RS).
 
-This document uses names or identifiers for groups and nodes. Their different meanings are summarized here:
+This document uses names or identifiers for groups and nodes. Their different meanings are summarized here:.
 
 * Group: a set of nodes that share common keying material and security parameters used to protect their communications with one another. That is, the term refers to a "security group".
 
@@ -112,15 +113,17 @@ This document uses names or identifiers for groups and nodes. Their different me
    
    The same security group might be associated to multiple application groups. Also, the same application group can be associated to multiple security groups. Further details and considerations on the mapping between the two types of group are out of the scope of this document.
 
-* Group name: the invariant once established identifier of a group. It is used in the interactions between Client, AS and RS to identify a group.
+* Key Distribution Center (KDC): the node responsible for managing one or multiple groups, with particular reference to the group membership and the keying material to use for protecting group communications.
+   
+* Group name: the invariant once established identifier of a group. It is used in the interactions between Client, AS and RS to identify a group. A group name is always unique among the group names of the existing groups under the same KDC.
 
-* GROUPNAME: the invariant once established text string used in URIs. GROUPNAME maps to the group name of a group, although it is not necessarily the same.
+* GROUPNAME: the invariant once established text string used in URIs. GROUPNAME uniquely maps to the group name of a group, although they do not necessarily coincide.
 
 * Group identifier: the identifier of the group keying material used in a group. Unlike group name and GROUPNAME, this identifier changes over time, when the group keying material is updated.
 
-* Node name: the invariant once established identifier of a node. It is used in the interactions between Client and RS and to identify a member of a group.
+* Node name: the invariant once established identifier of a node. It is used in the interactions between Client and RS and to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.
 
-* NODENAME: the invariant once established text string used in URIs. NODENAME is used to identify a node in a group.
+* NODENAME: the invariant once established text string used in URIs to identify a member a group. Its value coincides with the node name of the associated group member.
 
 This document additionally uses the following terminology:
 
@@ -793,7 +796,7 @@ Optionally, the response MAY contain the following parameters, which, if include
 |     Name     | CBOR  |   CBOR   |     Description      | Reference  |
 |              | label |   type   |                      |            |
 +--------------+-------+----------+----------------------+------------+
-| Sequence     | TBD1  | tstr/int | Method for recipient | [[this     |
+| Sequence     | TBD   | tstr/int | Method for recipient | [[this     |
 | Number       |       |          | group members to     | document]] |
 | Synchroniza- |       |          | synchronize with     |            |
 | tion Method  |       |          | sequence numbers of  |            |
@@ -805,7 +808,7 @@ Optionally, the response MAY contain the following parameters, which, if include
 |              |       |          | Synchronization      |            |
 |              |       |          | Method registry      |            |
 +--------------+-------+----------+----------------------+------------+
-| Key Update   | TBD2  |   int    | Polling interval in  | [[this     |
+| Key Update   | TBD   | int      | Polling interval in  | [[this     |
 | Check        |       |          | seconds, for  group  | document]] |
 | Interval     |       |          | members to check at  |            |
 |              |       |          | the KDC if the       |            |
@@ -813,7 +816,7 @@ Optionally, the response MAY contain the following parameters, which, if include
 |              |       |          | material is the one  |            |
 |              |       |          | that they own        |            |
 +--------------+-------+----------+----------------------+------------+
-| Expiration   | TBD3  |   uint   | Number of seconds    | [[this     |
+| Expiration   | TBD   | uint     | Number of seconds    | [[this     |
 | Delta        |       |          | from 'exp' until the | document]] |
 |              |       |          | specified UTC        |            |
 |              |       |          | date/time after      |            |
@@ -841,8 +844,6 @@ Optionally, the response MAY contain the following parameters, which, if include
 
 * 'rekeying_scheme', identifying the rekeying scheme that the KDC uses to provide new group keying meterial to the group members. This parameter is encoded as a CBOR integer, whose value is taken from the "Value" column of the "ACE Groupcomm Rekeying Schemes" registry defined in {{iana-ace-groupcomm-rekeying-schemes}} of this specification.
 
-   Application profiles of this specification MAY define a default group rekeying scheme, to refer to in case the 'rekeying_scheme' parameter is not included in the Joining Response (OPT9).
-
 ~~~~~~~~~~~
 +-------+----------------+-------------------------------+-----------+
 | Value |      Name      |          Description          | Reference |
@@ -853,15 +854,17 @@ Optionally, the response MAY contain the following parameters, which, if include
 |       |                | association with that node    |           |
 +-------+----------------+-------------------------------+-----------+
 ~~~~~~~~~~~
-{: #rekeying-scheme-0 title="Group Rekeying Schemes" artwork-align="center"}
-   
-* 'mgt_key_material', encoded as a CBOR byte string and containing the specific administrative keying material that the joining node requires in order to participate in the group rekeying process performed by the KDC. This parameter MUST NOT be present if the 'rekeying_scheme' parameter is not present and the application profile does not specify a default group rekeying scheme to use in the group. Some simple rekeying scheme may not require specific administrative keying material to be provided, e.g., the basic "Point-to-Point" group rekeying scheme (see TBD).
-   
-   In more advanced group rekeying schemes, the administrative keying material can be composed of multiple keys organized, for instance, into a logical tree hierarchy, whose root key is the only administrative key shared by all the group members. In such a case, each group member is exclusively associated to one leaf key in the hierarchy, and owns only the administrative keys from the associated leaf key all the way up along the path to the root key.
-   
-   It is expected from separate documents to define how the group rekeying scheme possibly indicated in the 'rekeying_scheme' parameter is used by an application profile of this specification. This includes defining the format of the administrative keying material to specify in 'mgt_key_material', consistently with the group rekeying scheme and the application profile in question.
+{: #rekeying-scheme-0 title="ACE Groupcomm Rekeying Schemes" artwork-align="center"}
 
-* 'control_group_uri', with value a full URI, encoded as a CBOR text string. The URI MUST specify addressing information intended to reach all the members in the group. For example, this can be a multicast IP address, optionally together with a port number (which defaults to 5683 if omitted). A default url-path is /ace-group/GROUPNAME, although implementations can use different ones instead. The URI MUST NOT have url-path ace-group/GROUPNAME/node.
+   Application profiles of this specification MAY define a default group rekeying scheme, to refer to in case the 'rekeying_scheme' parameter is not included in the Joining Response (OPT9).
+   
+* 'mgt_key_material', encoded as a CBOR byte string and containing the specific administrative keying material that the joining node requires in order to participate in the group rekeying process performed by the KDC. This parameter MUST NOT be present if the 'rekeying_scheme' parameter is not present and the application profile does not specify a default group rekeying scheme to use in the group. Some simple rekeying scheme may not require specific administrative keying material to be provided, e.g., the basic "Point-to-Point" group rekeying scheme (see {{point-to-point-rekeying}}).
+   
+   In more advanced group rekeying schemes, the administrative keying material can be composed of multiple keys organized, for instance, into a logical tree hierarchy, whose root key is the only administrative key shared by all the group members. In such a case, each group member is exclusively associated to one leaf key in the hierarchy, and owns only the administrative keys from the associated leaf key all the way up along the path to the root key. That is, different group members can be provided with a different subset of the overall administrative keying material.
+   
+   It is expected from separate documents to define how the advanced group rekeying scheme possibly indicated in the 'rekeying_scheme' parameter is used by an application profile of this specification. This includes defining the format of the administrative keying material to specify in 'mgt_key_material', consistently with the group rekeying scheme and the application profile in question.
+
+* 'control_group_uri', with value a full URI, encoded as a CBOR text string. The URI MUST specify addressing information intended to reach all the members in the group. For example, this can be a multicast IP address, optionally together with a port number (which defaults to 5683 if omitted). The URI MUST include GROUPNAME in the url-path. A default url-path is /ace-group/GROUPNAME, although implementations can use different ones instead. The URI MUST NOT have url-path ace-group/GROUPNAME/node.
 
    If 'control_group_uri' is included in the Joining Response, the Clients supporting this parameter act as CoAP servers, host a resource at this specific URI, and listen to the specified addressing information.
    
@@ -1554,8 +1557,116 @@ In either case, the KDC performs the following actions.
 * If the application requires forward security or the used application profile requires so, the KDC MUST generate new group keying material and securely distribute it to all the current group members except the leaving node (see {{sec-group-rekeying}}).
 
 # Group Rekeying Process {#sec-group-rekeying}
+
+A group rekeying is started and driven by the KDC. The KDC is not intended to accommodate explicit requests from group members to trigger a group rekeying. That is, the scheduling and execution of a group rekeying is an exclusive prerogative of the KDC. Reasons that can trigger a group rekeying are a change in the group membership, the current group keying material approaching its expiration time, or a regularly scheduled update of the group keying material.
+
+The KDC MUST increment the version number NUM of the current keying material, before distributing the newly generated keying material with version number NUM+1 to the group. Once completed the group rekeying, the KDC MUST delete the old keying material and SHOULD store the newly distributed keying material in persistent storage.
+
+Distributing the new group keying material requires the KDC to send multiple rekeying messages to the group members. Depending on the rekeying scheme used in the group and the reason that has triggered the rekeying process, each rekeying message can be intended to one or multiple group members, hereafter referred to as target group members. The KDC MUST support at least the "Point-to-Point" group rekeying scheme in {{point-to-point-rekeying}} and MAY support additional ones.
+
+The payload of a rekeying message is formatted as a CBOR map, which MUST include at least the information specified in the Key Distribution Response message (see {{gid-get}}), i.e., the parameters 'gkty', 'key' and 'num' defined in {{gid-post}}. The CBOR map MAY include the parameter 'exp', as well as the parameter 'mgt_key_material' specifying new administrative keying material for the target group members, if relevant for the used rekeying scheme.
+
+A rekeying message may include additional information, depending on the rekeying scheme used in the group, the reason that has triggered the rekeying process and the specific target group members. In particular, if the group rekeying is performed due to one or multiple Clients that have joined the group and the KDC acts as repository of public keys of the group members, then a rekeying message MAY also include the public keys that those Clients use in the group, together with the roles and node identifier that the corresponding Client has in the group. It is RECOMMENDED to specify this information by means of the parameters 'pub_keys', 'peer_roles' and 'peer_identifiers', like done in the Joining Response message (see {{gid-post}}).
+
+The complete format of a rekeying message, including the encoding and content of the 'mgt_key_material' parameter, has to be defined in separate specifications aimed at profiling the used rekeying scheme in the context of the used application profile of this specification. As a particular case, an application profile of this specification MAY define additional information to include in rekeying messages for the "Point-to-Point" group rekeying scheme in {{point-to-point-rekeying}} (OPT14).
+
+Consistently with the used group rekeying scheme, the actual delivery of rekeying messages can occur through different approaches, as discussed in the following.
+
+## Point-to-Point Group Rekeying {#point-to-point-rekeying}
+
+This approach consists in the KDC sending one individual rekeying message to each target group member. In particular, the rekeying message is protected by means of the security association between the KDC and the target group member in question, as per the used application profile of this specification and the used transport profile of ACE.
+
+This is the approach taken by the basic "Point-to-Point" group rekeying scheme, that the KDC can explicitly signal in the Joining Response (see {{gid-post}}), through the 'rekeying_scheme' parameter specifying the value 0.
+
+When taking this approach in the group identified by GROUPNAME, the KDC can practically deliver the rekeying messages to the target group members in different, co-existing ways.
+
+* The KDC SHOULD make the ace-group/GROUPNAME resource Observable {{RFC7641}}. Thus, upon performing a group rekeying, the KDC can distribute the new group keying material through individual notification responses sent to the target group members that are also observing that resource.
+
+   In case the KDC deletes the group, this also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 6 ("Group deleted").
+
+* If a target group member specified a URI in the 'control_uri' parameter of the Joining Request upon joining the group (see {{gid-post}}), the KDC can provide that group member with the new group keying material by sending a unicast POST request to that URI.
+
+   A Client that does not plan to observe the ace-group/GROUPNAME resource at the KDC SHOULD provide a URI in the 'control_uri' parameter of the Joining Request upon joining the group.
+
+If the KDC has to send a rekeying message to a target group member, but this did not include the 'control_uri' parameter in the Joining Request and is not a registered observer for the ace-group/GROUPNAME resource, then that target group member would not be able to participate to the group rekeying. Later on, after having repeatedly failed to successfully exchange secure messages in the group, that group member can retrieve the current group keying material from the KDC, by sending a GET request to ace-group/GROUPNAME or ace-group/GROUPNAME/nodes/NODENAME (see {{gid-get}} and {{node-get}}, respectively).
+
+## One-to-Many Group Rekeying {#one-to-many-rekeying}
+
+This section provides high-level recommendations on how the KDC can rekey a group by means of a more efficient and scalable group rekeying scheme, e.g., {{RFC2093}}{{RFC2094}}{{RFC2627}}. That is, each rekeying message might be, and likely is, intended to multiple target group members, and thus can be delivered to the whole group, although possible to decrypt only for the actual target group members.
+
+This yields an overall lower number of rekeying messages, thus potentially reducing the overall time required to rekey the group. On the other hand, it requires the KDC to provide and use additional administrative keying material to protect the rekeying messages, and to additionally sign them to ensure source authentication (see {{one-to-many-rekeying-protection}}). Typically, this pays off in large-scale groups, where the introduced performance overhead is less than what experienced by rekeying the group in a point-to-point fashion (see {{point-to-point-rekeying}}).
+
+The exact set of rekeying messages to send, their content and format, the administrative keying material to use to protect them, as well as the set of target group members depend on the specific group rekeying scheme, and are typically affected by the reason that has triggered the group rekeying. Details about the data content and format of rekeying messages have to be defined by separate documents profiling the use of the group rekeying scheme, in the context of the used application profile of this specification.
+
+When one of these group rekeying schemes is used, the KDC provides a number of related information to a Client joining the group in the Joining Response message (see {{gid-post}}). In particular, 'rekeying_scheme' identifies the rekeying scheme used in the group (if no default can be assumed); 'control_group_uri', if present, specifies a URI with a multicast address where the KDC will send the rekeying messages for that group; 'mgt_key_material' specifies a subset of the administrative keying material intended for that particular joining Client to have, as used to protect the rekeying messages sent to the group when intended also to that joining Client.
+
+Rekeying messages can be protected at the application layer, by using COSE and the administrative keying material as prescribed by the specific group rekeying scheme (see {{one-to-many-rekeying-protection}}). After that, the delivery of protected rekeying messages to the intended target group members can occur in different ways, such as the following ones.
+
+* Over multicast - In this case, the KDC simply sends a rekeying message as a CoAP request addressed to the multicast URI specified in the 'control_group_uri' parameter of the Joining Response (see {{gid-post}}).
+
+   If a particular rekeying message is intended to a single target group member, the KDC may alternatively protect the message using the security association with that group member, and deliver the message like when using the "Point-to-Point" group rekeying scheme (see {{point-to-point-rekeying}}).
+
+* Through a pub-sub communication model - In this case, the KDC acts as publisher and publishes each rekeying message to a specific "rekeying topic", which is associated to the group and is hosted at a broker server. Following their group joining, the group members subscribe to the rekeying topic at the broker, thus receiving the group rekeying messages as they are published by the KDC.
+
+   In order to make such message delivery more efficient, the rekeying topic associated to a group can be further organized into subtopics. For instance, the KDC can use a particular subtopic to address a particular set of target group members during the rekeying process, as possibly aligned to a similar organization of the administrative keying material (e.g., a key hierarchy).
    
-TBD
+   The setup of rekeying topics at the broker as well as the discovery of the topics at the broker for group members are application specific. A possible way is for the KDC to provide such information in the Joining Response message (see {{gid-post}}), by means of a new parameter analogous to 'control_group_uri' and specifying the URI(s) of the rekeying topic(s) that a group member has to subscribe to at the broker.
+
+### Protection of Rekeying Messages {#one-to-many-rekeying-protection}
+
+When using a group rekeying scheme relying on one-to-many rekeying messages, the actual data content of each rekeying message is prepared according to what the rekeying scheme prescribes.
+
+Then, the KDC can protect the rekeying message as defined below. The used encryption algorithm which SHOULD be the same one used to protect communications in the group. The method defined below assumes that the following holds for the management keying material specified in the 'mgt_key_material' parameter of the Joining Response (see {{gid-post}}).
+
+* The included symmetric encryption keys are accompanied by a corresponding and unique key identifier assigned by the KDC.
+
+* A Base IV is also included, with the same size of the AEAD nonce considered by the encryption algorithm to use.
+
+First, the KDC computes a COSE_Encrypt0 object as follows.
+
+* The encryption key to use is selected from the administrative keying material, as defined by the rekeying scheme used in the group.
+
+* The plaintext is the actual data content of the rekeying message.
+
+* The Additional Authenticated Data (AAD) is empty, unless otherwise specified by separate documents profiling the use of the group rekeying scheme.
+
+* Since the KDC is the only sender of rekeying messages, the AEAD nonce can be computed as follows, where NONCE_SIZE is the size in bytes of the AEAD nonce. Separate documents profiling the use of the group rekeying scheme may define alternative ways to compute the AEAD nonce.
+
+   The KDC considers the following values.
+   
+   - COUNT, as a 1-byte unsigned integer associated to the used encryption key. Its value is set to 0 when starting to perform a new group rekeying instance, and is incremented after each use of the encryption key.
+   
+   - NEW_NUM, as the version number of the new group keying material to distribute in this rekeying instance, left-padded with zeroes to exactly NONCE_SIZE - 1.
+   
+   Then, the KDC computes a Partial IV as the byte string concatenation of COUNT and NEW_NUM, in this order. Finally, the AEAD nonce is computed as the XOR between the Base IV and the Partial IV.
+
+* The protected header of the COSE_Encrypt0 object MUST include the following parameters.
+
+   - 'alg', specifying the used encryption algorithm.
+
+   - 'kid', specifying the identifier of the encryption key from the administrative keying material used to protect this rekeying message.
+   
+* The unprotected header of the COSE_Encrypt0 object MUST include the 'Partial IV' parameter, with value the Partial IV computed above.
+   
+In order to ensure source authentication, each rekeying message protected with the administrative keying material MUST be signed by the KDC. To this end, the KDC computes a countersignature of the COSE_Encrypt0 object, as described in {{Sections 3.2 and 3.3 of I-D.ietf-cose-countersign}}. In particular, the following applies when computing the countersignature.
+
+* The Countersign_structure contains the context text string "CounterSignature0".
+
+* The private key of the KDC is used as signing key.
+   
+* The payload is the ciphertext of the COSE_Encrypt0 object.
+
+* The Additional Authenticated Data (AAD) is empty, unless otherwise specified by separate documents profiling the use of a group rekeying scheme.
+
+* The protected header of the signing object MUST include the parameter 'alg', specifying the used signature algorithm.
+
+If source authentication of messages exchanged in the group is also ensured by means of signatures, then rekeying messages MUST be signed using the same signature algorithm and related parameters. Also, the KDC's public key used for signature verification MUST me provided in the Joining Response through the 'kdc_cred' parameter, together with the corresponding proof-of-possession (PoP) evidence in the 'kdc_cred_verify' parameter.
+
+If source authentication of messages exchanged in the group is not ensured by means of signatures, then the KDC MUST provide its public key together with a corresponding PoP evidence as part of the management keying material specified in the 'mgt_key_material' parameter of the Joining Response (see {{gid-post}}). It is RECOMMENDED to specify this information by using the same format and encoding used for the parameters 'kdc_cred', 'kdc_nonce' and 'kdc_cred_verify' in the Joining Response. It is up to separate documents profiling the use of the group rekeying scheme to specify such details.
+
+After that, the KDC specifies the computed countersignature in the 'COSE_Countersignature0' header parameter of the COSE_Encrypt0 object.
+
+Finally, the KDC specifies the COSE_Encrypt0 object as payload of a CoAP request, which is sent to the target group members as per the used message delivery method.
 
 # Extended Scope Format # {#sec-extended-scope}
 
@@ -1714,7 +1825,7 @@ A Client SHOULD support the following parameter.
  
 * 'get_pub_keys'. That is, not supporting this parameter would yield the inconvenient and undesirable behavior where: i) the Client does not ask for the other group members' public keys upon joining the group (see {{ssec-key-distribution-exchange}}); and ii) later on as a group member, the Client only retrieves the public keys of all group members (see {{sec-key-retrieval-all}}).
 
-A Client MAY support the following optional parameters. Application profiles of this specification MAY define that Clients must or should support these parameters instead (OPT14).
+A Client MAY support the following optional parameters. Application profiles of this specification MAY define that Clients must or should support these parameters instead (OPT15).
 
 * 'error', 'error_description'.
 
@@ -2178,7 +2289,9 @@ This section lists the requirements on application profiles of this specificatio
 
 * OPT13: Optionally, specify how the identifier of the sender's public key is included in the group request (see {{update-pub-key}}).
 
-* OPT14: Optionally, specify if Clients must or should support any of the parameters defined as optional in this specification (see {{params}}).
+* OPT14: Optionally, define additional information to include in rekeying messages for the "Point-to-Point" group rekeying scheme (see {{sec-group-rekeying}}).
+
+* OPT15: Optionally, specify if Clients must or should support any of the parameters defined as optional in this specification (see {{params}}).
 
 # Extensibility for Future COSE Algorithms # {#sec-future-cose-algs}
 
