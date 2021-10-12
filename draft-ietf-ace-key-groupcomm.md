@@ -1040,7 +1040,7 @@ The handler MAY enforce one of the following policies, in order to handle possib
 
 * The KDC retains public keys of group members for a given amount of time after their leaving, before discarding them. As long as such public keys are retained, the KDC provides them to a requesting Client.
 
-   If the KDC adopts this policy, the application profile MUST also specify the amount of time during which the KDC retains the public key of a former group member after its leaving, possibly according to a per-member basis.
+   If the KDC adopts this policy, the application profile MUST also specify the amount of time during which the KDC retains the public key of a former group member after its leaving, possibly on a per-member basis.
 
 Note that this resource handler only verifies that the node is authorized by the AS to access this resource. Nodes that are not members of the group but are authorized to do signature verifications on the group messages may be allowed to access this resource, if the application needs it.
 
