@@ -1917,45 +1917,63 @@ In particular, the following guidelines apply, and application profiles of this 
 
 # Security Considerations {#sec-cons}
 
-When a Client receives a message from a sender for the first time since joining the group, it needs to have a mechanism in place to avoid replayed messages, e.g., Appendix B.2 of {{RFC8613}} or Appendix E of {{I-D.ietf-core-oscore-groupcomm}}. Such a mechanism aids the recipient Client also in case the Client rebooted and lost the security state used to protect previous group communications with that sender.
+Security considerations are inherited from the ACE framework {{I-D.ietf-ace-oauth-authz}}, and from the specific transport profile of ACE used between the Clients and the KDC, e.g., {{I-D.ietf-ace-dtls-authorize}} and {{I-D.ietf-ace-oscore-profile}}.
 
-If the KDC has renewed the group keying material upon the Client's joining, and the time interval between the end of the rekeying process and the Client's joining is sufficiently small, then the Client is also on the safe side, since it would not accept replayed messages protected with the old group keying material previous to its group joining.
+Furthermore, the following security considerations apply.
 
-When rekeying the group, the KDC provides the new group keying material to the current group members through the rekeying scheme used in the group.
+## Secure Communication in the Group {#sec-cons-communication}
+
+When a group member receives a message from a certain sender for the first time since joining the group, it needs to have a mechanism in place to avoid replayed messages, e.g., {{Section B.2 of RFC8613}} or {{Section E of I-D.ietf-core-oscore-groupcomm}}. Such a mechanism aids the recipient group member also in case it has rebooted and lost the security state used to protect previous group communications with that sender.
+
+By its nature, the KDC is invested with a large amount of trust, since it acts as generator and provider of the symmetric keying material used to protect communications in each of its groups. While details depend on the specific communication and security protocols used in the group, the KDC is in the position to decrypt messages exchanged in the group as if it was also a group member, as long as those are protected through commonly shared group keying material.
+
+A compromised KDC would thus put the attacker in the same position, which also means that:
+
+* The attacker can generate and control new group keying material, hence possibly rekeying the group and evicting certain group members as part of a broader attack.
+
+* The attacker can actively participate to communications in a group even without been authorized to join it, and can allow further unauthorized entities to do so.
+
+* The attacker can build erroneous associations between node identifiers and group members' public keys.
+
+On the other hand, as long as the security protocol used in the group ensures source authentication of messages (e.g., by means of signatures), the KDC is not able to impersonate group members since it does now own their private keys.
+
+Further security considerations are specific of the communication and security protocols used in the group, and thus have to be provided by those protocols and complemented by the application profiles of this specification using them.
+
+## Update of Group Keying Material {#sec-cons-rekeying}
+
+Due to different reasons, the KDC can generate new group keying material and provide it to the group members (rekeying) through the rekeying scheme used in the group, as discussed in {{sec-group-rekeying}}.
 
 In particular, the KDC must renew the group keying material latest upon its expiration. Before then, the KDC may also renew the group keying material on a regular or periodical fashion.
 
-Furthermore, the KDC should renew the group keying material upon a group membership change. Since the minimum number of group members is one, the KDC should provide also a Client joining an empty group with new keying material never used before in that group. Similarly, the KDC should provide new group keying material also to a Client that remains the only member in the group after the leaving of other group members.
+The KDC should renew the group keying material upon a group membership change. Since the minimum number of group members is one, the KDC should provide also a Client joining an empty group with new keying material never used before in that group. Similarly, the KDC should provide new group keying material also to a Client that remains the only member in the group after the leaving of other group members.
 
-Note that the considerations above about dealing with replayed messages still hold, even in case the KDC rekeys the group upon every single joining of a new group member.
+Note that the considerations in {{sec-cons-communication}} about dealing with replayed messages still hold, even in case the KDC rekeys the group upon every single joining of a new group member. However, if the KDC has renewed the group keying material upon a group member's joining, and the time interval between the end of the rekeying process and that member's joining is sufficiently small, then that group member is also on the safe side, since it would not accept replayed messages protected with the old group keying material previous to its joining.
 
-The KDC may enforce a rekeying policy that takes into account the overall time required to rekey the group, as well as the expected rate of changes in the group membership.
-
-That is, the KDC may not rekey the group at each and every group membership change, for instance if members' joining and leaving occur frequently and performing a group rekeying takes too long. Instead, the KDC might rekey the group after a minimum number of group members have joined or left within a given time interval, or after a maximum amount of time since the last group rekeying was completed, or yet during predictable network inactivity periods.
+The KDC may enforce a rekeying policy that takes into account the overall time required to rekey the group, as well as the expected rate of changes in the group membership. That is, the KDC may not rekey the group at each and every group membership change, for instance if members' joining and leaving occur frequently and performing a group rekeying takes too long. Instead, the KDC might rekey the group after a minimum number of group members have joined or left within a given time interval, or after a maximum amount of time since the last group rekeying was completed, or yet during predictable network inactivity periods.
 
 However, this would result in the KDC not constantly preserving backward and forward security in the group. That is:
 
 * Newly joining group members would be able to access the keying material used before their joining, and thus they could access past group communications if they have recorded old exchanged messages. This might still be acceptable for some applications and in situations where the new group members are freshly deployed through strictly controlled procedures.
 
-* The leaving group members would remain able to access upcoming group communications, as protected with the current keying material that has not been updated. This is typically undesirable, especially if the leaving group member is compromised or suspected to be, and it might have an impact or compromise the security properties of the protocols used in the group to protect the exchanged messages.
+* The leaving group members would remain able to access upcoming group communications, as protected with the current keying material that has not been updated. This is typically undesirable, especially if the leaving group member is compromised or suspected to be, and it might have an impact or compromise the security properties of the protocols used in the group to protect messages exchanged among the group member.
 
-The KDC should renew the group keying material in case it has rebooted, even in case it stores the whole group keying material in persistent storage. This assumes that the secure associations with the current group members as well as any additional keying material required to rekey the group are also stored in persistent storage.
+The KDC should renew the group keying material in case it has rebooted, even in case it stores the whole group keying material in persistent storage. This assumes that the secure associations with the current group members as well as any administrative keying material required to rekey the group are also stored in persistent storage.
 
-However, if the KDC relies on Observe notifications to distribute the new group keying material, the KDC would have lost all the current ongoing Observations with the group members after rebooting, and the group members would continue using the old group keying material. Therefore, the KDC will rather rely on each group member asking for the new group keying material, or, if implemented, the KDC can provide the new group keying material to the group members, by targeting the respective 'control_uri' resource.
+However, if the KDC relies on Observe notifications to distribute the new group keying material, the KDC would have lost all the current ongoing Observations with the group members after rebooting, and the group members would continue using the old group keying material. Therefore, the KDC will rather rely on each group member asking for the new group keying material (see {{ssec-key-material-retrieval}} and {{update-keys}}), or rather perform a group rekeying by actively sending rekeying messages to group members as discussed in {{sec-group-rekeying}}.
 
 The KDC needs to have a mechanism in place to detect DoS attacks from nodes repeatedly performing actions that might trigger a group rekeying. Such actions can include leaving and/or re-joining the group at high rates, or often asking the KDC for new indidivual keying material. Ultimately, the KDC can resort to removing these nodes from the group and (temperorarily) preventing them from joining the group again.
 
 The KDC also needs to have a congestion control mechanism in place, in order to avoid network congestion upon distributing new group keying material. For example, CoAP and Observe give guidance on such mechanisms, see {{Section 4.7 of RFC7252}} and {{Section 4.5.1 of RFC7641}}.
 
-## Update of Keying Material
+A node that has left the group should not expect any of its outgoing messages to be successfully processed, if received by other nodes after its leaving, due to a possible group rekeying occurred before the message reception.
+
+### Misalignment of Group Keying Material
 
 A group member can receive a message shortly after the group has been rekeyed, and new keying material has been distributed by the KDC (see {{sec-group-rekeying}}). In the following two cases, this may result in misaligned keying material between the group members.
 
 In the first case, the sender protects a message using the old group keying material. However, the recipient receives the message after having received the new group keying material, hence not being able to correctly process it. A possible way to ameliorate this issue is to preserve the old, recent group keying material for a maximum amount of time defined by the application, during which it is used solely for processing incoming messages. By doing so, the recipient can still temporarily process received messages also by using the old, retained group keying material. Note that a former (compromised) group member can take advantage of this by sending messages protected with the old, retained group keying material. Therefore, a conservative application policy should not admit the storage of old group keying material. Eventually, the sender will have obtained the new group keying material too, and can possibly re-send the message protected with such keying material.
 
 In the second case, the sender protects a message using the new group keying material, but the recipient receives that message before having received the new group keying material. Therefore, the recipient would not be able to correctly process the message and hence discards it. If the recipient receives the new group keying material shortly after that and the application at the sender endpoint performs retransmissions, the former will still be able to receive and correctly process the message. In any case, the recipient should actively ask the KDC for the latest group keying material according to an application-defined policy, for instance after a given number of unsuccessfully decrypted incoming messages.
-
-A node that has left the group should not expect any of its outgoing messages to be successfully processed, if received after its leaving, due to a possible group rekeying occurred before the message reception.
 
 ## Block-Wise Considerations
 
