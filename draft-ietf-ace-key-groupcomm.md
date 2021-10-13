@@ -92,12 +92,17 @@ This document defines how to use the Authentication and Authorization for Constr
 
 # Introduction {#intro}
 
-This document expands the ACE framework {{I-D.ietf-ace-oauth-authz}} to define the message exchanges used to request, distribute and renew the keying material in a group communication scenario, e.g., based on multicast {{I-D.ietf-core-groupcomm-bis}} or on publish-subscribe messaging {{I-D.ietf-core-coap-pubsub}}.
-The ACE framework is based on CBOR {{RFC8949}}, so CBOR is the format used in this specification. However, using JSON {{RFC8259}} instead of CBOR is possible, using the conversion method specified in {{Sections 6.1 and 6.2 of RFC8949}}.
+This document builds on the Authentication and Authorization for Constrained Environments (ACE) framework and defines how to request, distribute and renew keying material and configuration parameters to protect message exchanges in a group communication environment.
 
-Profiles that use group communication can build on this document, by defining a number of details such as the exact group communication protocol and security protocols used. The specific list of details a profile needs to define is shown in {{req}}.
+Candidate group members acting as Clients and authorized to join a group can interact with the Key Distribution Center (KDC) acting as Resource Server and responsible for that group, in order to obtain the necessary keying material and parameters to communicate with other group members. 
 
-If the application requires backward and forward security, new keying material is generated and distributed to the group upon membership changes (rekeying). A group rekeying scheme performs the actual distribution of the new keying material to the group. In particular, the group rekeying scheme rekeys the current group members when a new node joins the group, and the remaining group members when a node leaves the group. Approaches to group rekeying can be based on efficient schemes such as {{RFC2093}}, {{RFC2094}} and {{RFC2627}}.
+In particular, this document defines the operations and interface available at the KDC, as well as general message formats for the interactions between Clients and KDC. At the same time, communications in the group can rely on different approaches, e.g., based on multicast {{I-D.ietf-core-groupcomm-bis}} or on publish-subscribe messaging {{I-D.ietf-core-coap-pubsub}}, and can be protected in different ways.
+
+Therefore, this document delegates details on the communication and security approaches used in a group to separate application profiles. These are specialized instances of this document, targeting a particular group communication approach and defining how communications in the group are protected, as well as the specific keying material and configuration parameters provided to group members. In order to ensure consistency and aid the development of such application profiles, this document defines a number of related compliance requirements (see {{req}}).
+
+If the application requires backward and forward security, new keying material is generated and distributed to the group upon membership changes (rekeying). A group rekeying scheme performs the actual distribution of the new keying material, by rekeying the current group members when a new Client joins the group, and the remaining group members when a Client leaves the group. This can rely on different approaches, including efficient group rekeying schemes such as {{RFC2093}}, {{RFC2094}} and {{RFC2627}}.
+
+Consistently with what is recommeded in the ACE framework, this document uses CBOR {{RFC8949}} for data encoding. However, using JSON {{RFC8259}} instead of CBOR is possible, by relying on the conversion method specified in {{Sections 6.1 and 6.2 of RFC8949}}.
 
 ## Terminology
 
