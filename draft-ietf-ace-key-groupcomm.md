@@ -2375,6 +2375,60 @@ gname = tstr
 
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
+## Version -13 to -14 ## {#sec-13-14}
+
+* Clarified scope and goal of the document in abstract and introduction.
+
+* Overall clarifications on semantics of operations and parameters.
+
+* Major restructuring in the presentation of the KDC interface.
+
+* Revised error handling, also removing redundant text.
+
+* Imported parameters and KDC resource about the KDC's public key from draft-ietf-ace-key-groupcomm-oscore.
+
+* New parameters 'group_rekeying_scheme' and 'control_group_uri'.
+
+* Provided example of administrative keying material transported in 'mgt_key_material'.
+
+* Reasoned categorization of parameters, as expected support by ACE Clients.
+
+* Reasoned categorization of KDC functionalities, as minimally/optional to support for ACE Clients.
+
+* Guidelines on enhanced error responses using 'error' and 'error_description'.
+
+* New section on group rekeying, discussing at a high-level a basic one-to-one approach and possible one-to-many approaches.
+
+* Revised and expanded security considerations, also about the KDC.
+
+* Updated list of requirements for application profiles.
+
+* Several further clarifications and editorial improvements.
+
+## Version -05 to -13 ## {#sec-05-13}
+
+* Incremental revision of the KDC interface.
+
+* Removed redundancy in parameters about signature algorithm and signature keys.
+
+* Node identifiers always indicated with 'peer_identifiers'.
+
+* Format of public keys changed from raw COSE Keys to be certificates, CWTs or CWT Claims Set (CCS). Adapted parameter 'pub_key_enc'.
+
+* Parameters and functionalities imported from draft-ietf-key-groupcomm-oscore where early defined.
+
+* Possible provisioning of the KDC's Diffie-Hellman public key in response to the Token transferring to /authz-info.
+
+* Generalized proof-of-possession evidence, to be not necessarily a signature.
+
+* Public keys of group members may be retrieved filtering by role and/or node identifier.
+
+* Enhanced error handling with error code and error description.
+
+* Extended "typed" format for the 'scope' claim, optional to use.
+
+* Editorial improvements.
+
 ## Version -04 to -05 ## {#sec-04-05}
 
 * Updated uppercase/lowercase URI segments for KDC resources.
