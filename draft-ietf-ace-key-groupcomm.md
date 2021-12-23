@@ -114,7 +114,7 @@ Readers are expected to be familiar with:
 
 * The terms and concepts described in CoAP {{RFC7252}}. Unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol".
 
-* The terms and concepts described in CBOR {{RFC8949}} and COSE {{I-D.ietf-cose-rfc8152bis-struct}}{{I-D.ietf-cose-rfc8152bis-algs}}{{I-D.ietf-cose-countersign}}.
+* The terms and concepts described in CBOR {{RFC8949}} and COSE {{I-D.ietf-cose-rfc8152bis-struct}} {{I-D.ietf-cose-rfc8152bis-algs}} {{I-D.ietf-cose-countersign}}.
 
 A principal interested to participate in group communication as well as already participating as a group member is interchangeably denoted as "Client" or "node".
 
@@ -386,7 +386,7 @@ The KDC MUST store the 'kdcchallenge' value associated to the Client at least un
 
 The same 'kdcchallenge' value MAY be reused several times by the Client, to generate a new PoP evidence, e.g., in case the Client provides the Group Manager with a new public key while being a group member (see {{update-pub-key}}), or joins a different group where it intends to use a different public key. Therefore, it is RECOMMENDED that the KDC keeps storing the 'kdcchallenge' value after the first join is processed as well. If the KDC has already discarded the 'kdcchallenge' value, that will trigger an error response with a newly generated 'kdcchallenge' value that the Client can use to restart the join process, as specified in {{ssec-key-distribution-exchange}}.
 
-If 'sign_info' is included in the Token Transfer Request, the KDC SHOULD include the 'sign_info' parameter in the Token Transfer Response, as per the format defined in {{sign-info}}. Note that the field 'id' of each 'sign_info_entry' specifies the name, or array of group names, for which that 'sign_info_entry' applies to. As an exception, the KDC MAY NOT include the 'sign_info' parameter in the Token Transfer Response even if 'sign_info' is included in the Token Transfer Request, in case none of the groups that the Client is authorized to join uses signatures to achieve source authentication.
+If 'sign_info' is included in the Token Transfer Request, the KDC SHOULD include the 'sign_info' parameter in the Token Transfer Response, as per the format defined in {{sign-info}}. Note that the field 'id' of each 'sign_info_entry' specifies the name, or array of group names, for which that 'sign_info_entry' applies to. As an exception, the KDC MAY omit the 'sign_info' parameter in the Token Transfer Response even if 'sign_info' is included in the Token Transfer Request, in case none of the groups that the Client is authorized to join uses signatures to achieve source authentication.
 
 Note that the CBOR map specified as payload of the 2.01 (Created) response may include further parameters, e.g., according to the used transport profile of ACE. Application profiles of this specification MAY define additional parameters to use within this exchange (OPT2).
 
@@ -824,7 +824,7 @@ Optionally, the response MAY contain the following parameters, which, if include
 |              |       |          | Method registry      |            |
 +--------------+-------+----------+----------------------+------------+
 | Key Update   | TBD   | int      | Polling interval in  | [[this     |
-| Check        |       |          | seconds, for  group  | document]] |
+| Check        |       |          | seconds, for group   | document]] |
 | Interval     |       |          | members to check at  |            |
 |              |       |          | the KDC if the       |            |
 |              |       |          | latest group keying  |            |
@@ -2374,6 +2374,10 @@ gname = tstr
 # Document Updates # {#sec-document-updates}
 
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
+
+## Version -14 to -15 ## {#sec-14-15}
+
+* Fixed nits.
 
 ## Version -13 to -14 ## {#sec-13-14}
 
