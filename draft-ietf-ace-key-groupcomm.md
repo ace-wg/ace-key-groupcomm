@@ -423,7 +423,7 @@ When used in the following Token Transfer Response from the KDC (see {{token-pos
 
 * The fourth element 'sign_key_parameters' is a CBOR array indicating the parameters of the key used with the signature algorithm, in the groups identified by the 'gname' values. Its content depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define the possible values and structure for the elements of this parameter (REQ5).
 
-* The fifth element 'pub_key_enc' parameter is either a CBOR integer indicating the format of authentication credentials used in the groups identified by the 'gname' values, or has value the CBOR simple value "null" (0xf6) indicating that the KDC does not act as repository of authentication credentials for group members. Its acceptable integer values are taken from the 'Label' column of the "COSE Header Parameters" registry {{COSE.Header.Parameters}}. It is REQUIRED of the application profiles to define specific values to use for this parameter, consistently with the acceptable formats of authentication credentials (REQ6).
+* The fifth element 'cred_fmt' parameter is either a CBOR integer indicating the format of authentication credentials used in the groups identified by the 'gname' values, or has value the CBOR simple value "null" (0xf6) indicating that the KDC does not act as repository of authentication credentials for group members. Its acceptable integer values are taken from the 'Label' column of the "COSE Header Parameters" registry {{COSE.Header.Parameters}}. It is REQUIRED of the application profiles to define specific values to use for this parameter, consistently with the acceptable formats of authentication credentials (REQ6).
 
 The CDDL notation {{RFC8610}} of the 'sign_info' parameter is given below.
 
@@ -442,7 +442,7 @@ sign_info_entry =
   sign_alg : int / tstr,
   sign_parameters : [ any ],
   sign_key_parameters : [ any ],
-  pub_key_enc = int / nil
+  cred_fmt = int / nil
 ]
 
 gname = tstr
@@ -652,23 +652,23 @@ The handler expects a request with payload formatted as a CBOR map, which MAY co
 
 * 'scope', with value the specific group that the Client is attempting to join, i.e., the group name, and the roles it wishes to have in the group. This value is a CBOR byte string wrapping one scope entry, as defined in {{ssec-authorization-request}}.
 
-* 'get_pub_keys', if the Client wishes to receive the authentication credentials of the current group members from the KDC. This parameter may be included in the Join Request if the KDC stores the authentication credentials of the group members, while it is not useful to include it if the Client obtains those authentication credentials through alternative means, e.g., from the AS. Note that including this parameter might result in a following Join Response of large size, which can be inconvenient for resource-constrained devices.
+* 'get_creds', if the Client wishes to receive the authentication credentials of the current group members from the KDC. This parameter may be included in the Join Request if the KDC stores the authentication credentials of the group members, while it is not useful to include it if the Client obtains those authentication credentials through alternative means, e.g., from the AS. Note that including this parameter might result in a following Join Response of large size, which can be inconvenient for resource-constrained devices.
 
-  If the Client wishes to retrieve the authentication credentials of all the current group members, the 'get_pub_keys' parameter MUST encode the CBOR simple value "null" (0xf6). Otherwise, the 'get_pub_keys' parameter MUST encode a non-empty CBOR array, containing the following three elements formatted as defined below.
+  If the Client wishes to retrieve the authentication credentials of all the current group members, the 'get_creds' parameter MUST encode the CBOR simple value "null" (0xf6). Otherwise, the 'get_creds' parameter MUST encode a non-empty CBOR array, containing the following three elements formatted as defined below.
 
-  - The first element, namely 'inclusion\_flag', encodes the CBOR simple value "true" (0xf5). That is, the Client indicates that it wishes to receive the authentication credentials of all group members having their node identifier specified in the third element of the 'get_pub_keys' array, namely 'id\_filter' (see below).
+  - The first element, namely 'inclusion\_flag', encodes the CBOR simple value "true" (0xf5). That is, the Client indicates that it wishes to receive the authentication credentials of all group members having their node identifier specified in the third element of the 'get_creds' array, namely 'id\_filter' (see below).
 
-  - The second element, namely 'role\_filter', is a non-empty CBOR array. Each element of the array contains one role or a combination of roles for the group identified by GROUPNAME. That is, when the Join Request includes a non-Null 'get_pub_keys' parameter, the Client filters authentication credentials based on node identifiers.
+  - The second element, namely 'role\_filter', is a non-empty CBOR array. Each element of the array contains one role or a combination of roles for the group identified by GROUPNAME. That is, when the Join Request includes a non-Null 'get_creds' parameter, the Client filters authentication credentials based on node identifiers.
 
      In particular, the Client indicates that it wishes to retrieve the authentication credentials of all the group members having any of the single roles, or at least all of the roles indicated in any combination of roles. For example, the array \["role1", "role2+role3"\] indicates that the Client wishes to receive the authentication credentials of all group members that have at least "role1" or at least both "role2" and "role3".
 
-  - The third element, namely 'id\_filter', is an empty CBOR array. That is, when the Join Request includes a non-Null 'get_pub_keys' parameter, the Client does not filter authentication credentials based on node identifiers.
+  - The third element, namely 'id\_filter', is an empty CBOR array. That is, when the Join Request includes a non-Null 'get_creds' parameter, the Client does not filter authentication credentials based on node identifiers.
 
-     In fact, when first joining the group, the Client is not expected or capable to express a filter based on node identifiers of other group members. Instead, when already a group member and sending a Join Request to re-join, the Client is not expected to include the 'get_pub_keys' parameter in the Join Request altogether, since it can rather retrieve authentication credentials associated with specific group identifiers as defined in {{sec-key-retrieval}}.
+     In fact, when first joining the group, the Client is not expected or capable to express a filter based on node identifiers of other group members. Instead, when already a group member and sending a Join Request to re-join, the Client is not expected to include the 'get_creds' parameter in the Join Request altogether, since it can rather retrieve authentication credentials associated with specific group identifiers as defined in {{sec-key-retrieval}}.
 
-  The CDDL definition {{RFC8610}} of 'get_pub_keys' is given in {{cddl-ex-getpubkeys}}, using as example encoding: node identifier encoded as a CBOR byte string; role identifier encoded as a CBOR text string, and combination of roles encoded as a CBOR array of roles.
+  The CDDL definition {{RFC8610}} of 'get_creds' is given in {{cddl-ex-getpubkeys}}, using as example encoding: node identifier encoded as a CBOR byte string; role identifier encoded as a CBOR text string, and combination of roles encoded as a CBOR array of roles.
 
-  Note that, for this handler, 'inclusion\_flag' is always set to true, the array of roles 'role\_filter' is always non-empty, while the array of node identifiers 'id\_filter' is always empty. However, this is not necessarily the case for other handlers using the 'get_pub_keys' parameter.
+  Note that, for this handler, 'inclusion\_flag' is always set to true, the array of roles 'role\_filter' is always non-empty, while the array of node identifiers 'id\_filter' is always empty. However, this is not necessarily the case for other handlers using the 'get_creds' parameter.
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
 inclusion_flag = bool
@@ -680,9 +680,9 @@ role_filter = [ *(role / comb_role) ]
 id = bstr
 id_filter = [ *id ]
 
-get_pub_keys = null / [ inclusion_flag, role_filter, id_filter]
+get_creds = null / [ inclusion_flag, role_filter, id_filter]
 ~~~~~~~~~~~~~~~~~~~~
-{: #cddl-ex-getpubkeys title="CDLL definition of get_pub_keys, using as example node identifier encoded as bstr and role as tstr"}
+{: #cddl-ex-getpubkeys title="CDLL definition of get_creds, using as example node identifier encoded as bstr and role as tstr"}
 
 * 'client_cred', encoded as a CBOR byte string, with value the original binary representation of the Client's authentication credential. This parameter is used if the KDC is managing (collecting from/distributing to the Client) the authentication credentials of the group members, and if the Client's role in the group will require for it to send messages to one or more group members. It is REQUIRED of the application profiles to define the specific formats that are acceptable to use for authentication credentials in the group (REQ6).
 
@@ -704,7 +704,7 @@ get_pub_keys = null / [ inclusion_flag, role_filter, id_filter]
 
     If the token was not provided to the KDC through a Token Transfer Request (e.g., it is used directly to validate TLS instead), it is REQUIRED of the specific application profile to define how the challenge N_S is generated (REQ15).
 
-* 'pub_keys_repos', which can be present if the format of the Client's authentication credential in the 'client_cred' parameter is a certificate. In such a case, this parameter has as value the URI of the certificate. This parameter is encoded as a CBOR text string. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT6).
+* 'creds_repo', which can be present if the format of the Client's authentication credential in the 'client_cred' parameter is a certificate. In such a case, this parameter has as value the URI of the certificate. This parameter is encoded as a CBOR text string. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT6).
 
 * 'control_uri', with value a full URI, encoded as a CBOR text string. A default url-path is /ace-group/GROUPNAME/node, although implementations can use different ones instead. The URI MUST NOT have url-path ace-group/GROUPNAME.
 
@@ -750,7 +750,7 @@ If no authentication credential is included in the 'client_cred' field, the hand
 
 If an eligible authentication credential for the Client is neither present in the 'client_cred' field nor retrieved from the stored ones at the KDC, it is RECOMMENDED that the handler stops the processing and replies with a 4.00 (Bad Request) error response. Applications profiles MAY define alternatives (OPT8).
 
-If, regardless the reason, the KDC replies with a 4.00 (Bad Request) error response, this response MAY have Content-Format set to application/ace-groupcomm+cbor and have a CBOR map as payload. For instance, the CBOR map can include a 'sign_info' parameter formatted as 'sign_info_res' defined in {{sign-info}}, with the 'pub_key_enc' element set to the CBOR simple value "null" (0xf6) if the Client sent its own authentication credential and the KDC is not set to store authentication credentials of the group members.
+If, regardless the reason, the KDC replies with a 4.00 (Bad Request) error response, this response MAY have Content-Format set to application/ace-groupcomm+cbor and have a CBOR map as payload. For instance, the CBOR map can include a 'sign_info' parameter formatted as 'sign_info_res' defined in {{sign-info}}, with the 'cred_fmt' element set to the CBOR simple value "null" (0xf6) if the Client sent its own authentication credential and the KDC is not set to store authentication credentials of the group members.
 
 If all the verifications above succeed, the KDC proceeds as follows.
 
@@ -805,11 +805,11 @@ Optionally, the response MAY contain the following parameters, which, if include
 
 * 'ace-groupcomm-profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. Applications of this specification MUST register an application profile identifier and the related value for this parameter in the "ACE Groupcomm Profiles" registry (REQ19).
 
-* 'pub\_keys', MUST be present if 'get\_pub\_keys' was present in the request, otherwise it MUST NOT be present. This parameter is a CBOR array specifying the authentication credentials of the group members, i.e., of all of them or of the ones selected according to the 'get\_pub\_keys' parameter in the request. In particular, each element of the array is a CBOR byte string, with value the original binary representation of a group member's authentication credential. It is REQUIRED of the application profiles to define the specific formats of authentication credentials that are acceptable to use in the group (REQ6).
+* 'creds', MUST be present if 'get\_creds' was present in the request, otherwise it MUST NOT be present. This parameter is a CBOR array specifying the authentication credentials of the group members, i.e., of all of them or of the ones selected according to the 'get\_creds' parameter in the request. In particular, each element of the array is a CBOR byte string, with value the original binary representation of a group member's authentication credential. It is REQUIRED of the application profiles to define the specific formats of authentication credentials that are acceptable to use in the group (REQ6).
 
-* 'peer\_roles', MUST be present if 'pub\_keys' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, with n the number of authentication credentials included in the 'pub\_keys' parameter (at most the number of members in the group). The i-th element of the array specifies the role (or CBOR array of roles) that the group member associated with the i-th authentication credential in 'pub\_keys' has in the group. In particular, each array element is encoded as the role element of a scope entry, as defined in {{ssec-authorization-request}}.
+* 'peer\_roles', MUST be present if 'creds' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, with n the number of authentication credentials included in the 'creds' parameter (at most the number of members in the group). The i-th element of the array specifies the role (or CBOR array of roles) that the group member associated with the i-th authentication credential in 'creds' has in the group. In particular, each array element is encoded as the role element of a scope entry, as defined in {{ssec-authorization-request}}.
 
-* 'peer\_identifiers', MUST be present if 'pub\_keys' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, with n the number of authentication credentials included in the 'pub\_keys' parameter (at most the number of members in the group). The i-th element of the array specifies the node identifier that the group member associated with the i-th authentication credential in 'pub\_keys' has in the group. In particular, the i-th array element is encoded as a CBOR byte string, with value the node identifier of the group member.
+* 'peer\_identifiers', MUST be present if 'creds' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, with n the number of authentication credentials included in the 'creds' parameter (at most the number of members in the group). The i-th element of the array specifies the node identifier that the group member associated with the i-th authentication credential in 'creds' has in the group. In particular, the i-th array element is encoded as a CBOR byte string, with value the node identifier of the group member.
 
 * 'group\_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policies" registry. This specification defines the three elements "Sequence Number Synchronization Methods", "Key Update Check Interval" and "Expiration Delta", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format and default value of included map entries (REQ20).
 
@@ -928,7 +928,7 @@ Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation,
          with PUB_KEY and POP_EVIDENCE being CBOR byte strings):
   { "scope": << [ "group1", ["sender", "receiver"] ] >> ,
-    "get_pub_keys": [true, ["sender"], []], "client_cred": PUB_KEY,
+    "get_creds": [true, ["sender"], []], "client_cred": PUB_KEY,
     "cnonce": h'6df49c495409a9b5', "client_cred_verify": POP_EVIDENCE }
 
 Response:
@@ -942,7 +942,7 @@ Location-Path: "c101"
 Payload (in CBOR diagnostic notation,
          with KEY being a CBOR byte strings):
   { "gkty": 13, "key": KEY, "num": 12, "exp": 1609459200,
-    "pub_keys": [ PUB_KEY1, PUB_KEY2 ],
+    "creds": [ PUB_KEY1, PUB_KEY2 ],
     "peer_roles": ["sender", ["sender", "receiver"]],
     "peer_identifiers": [ ID1, ID2 ] }
 ~~~~~~~~~~~
@@ -1018,9 +1018,9 @@ The FETCH handler receives identifiers of group members for the group identified
 
 The handler expects a request with payload formatted as a CBOR map, that MUST contain the following field.
 
-* 'get_pub_keys', whose value is encoded as in {{gid-post}} with the following modifications.
+* 'get_creds', whose value is encoded as in {{gid-post}} with the following modifications.
 
-  - The arrays 'role\_filter' and 'id\_filter' MUST NOT both be empty, i.e., in CBOR diagnostic notation: \[ bool, \[ \], \[ \] \]. If the 'get_pub_keys' parameter has such a format, the request MUST be considered malformed, and the KDC MUST reply with a 4.00 (Bad Request) error response.
+  - The arrays 'role\_filter' and 'id\_filter' MUST NOT both be empty, i.e., in CBOR diagnostic notation: \[ bool, \[ \], \[ \] \]. If the 'get_creds' parameter has such a format, the request MUST be considered malformed, and the KDC MUST reply with a 4.00 (Bad Request) error response.
 
      Note that a group member can retrieve the authentication credentials of all the current group members by sending a GET request to the same KDC resource instead (see {{sec-key-retrieval-all}}).
 
@@ -1048,7 +1048,7 @@ If all verifications succeed, the handler returns a 2.05 (Content) message respo
 
 * 'num', which encodes the version number of the current group keying material.
 
-* 'pub\_keys', which encodes the list of authentication credentials of the selected group members.
+* 'creds', which encodes the list of authentication credentials of the selected group members.
 
 * 'peer\_roles', which encodes the role (or CBOR array of roles) that each of the selected group members has in the group.
 
@@ -1058,7 +1058,7 @@ The specific format of authentication credentials as well as of node identifiers
 
 If the KDC does not store any authentication credential associated with the specified node identifiers, the handler returns a response with payload formatted as a CBOR byte string of zero length.
 
-The handler MAY enforce one of the following policies, in order to handle possible node identifiers that are included in the 'id_filter' element of the 'get_pub_keys' parameter of the request but are not associated with any current group member. Such a policy MUST be specified by the application profile (REQ26).
+The handler MAY enforce one of the following policies, in order to handle possible node identifiers that are included in the 'id_filter' element of the 'get_creds' parameter of the request but are not associated with any current group member. Such a policy MUST be specified by the application profile (REQ26).
 
 * The KDC silently ignores those node identifiers.
 
@@ -1097,14 +1097,14 @@ Uri-Path: "g1"
 Uri-Path: "pub-key"
 Content-Format: "application/ace-groupcomm+cbor"
 Payload:
-  { "get_pub_keys": [true, [], [ ID3 ]] }
+  { "get_creds": [true, [], [ ID3 ]] }
 
 Response:
 
 Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
-  { "pub_keys": [ PUB_KEY3 ],
+  { "creds": [ PUB_KEY3 ],
     "peer_roles": [ "receiver" ],
     "peer_identifiers": [ ID3 ] }
 ~~~~~~~~~~~
@@ -1151,7 +1151,7 @@ Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
   { "num": 5,
-    "pub_keys": [ PUB_KEY1, PUB_KEY2, PUB_KEY3 ],
+    "creds": [ PUB_KEY1, PUB_KEY2, PUB_KEY3 ],
     "peer_roles": ["sender", ["sender", "receiver"], "receiver"],
     "peer_identifiers": [ ID1, ID2, ID3 ] }
 ~~~~~~~~~~~
@@ -1595,7 +1595,7 @@ Distributing the new group keying material requires the KDC to send multiple rek
 
 Each rekeying message MUST have Content-Format set to application/ace-groupcomm+cbor and its payload formatted as a CBOR map, which MUST include at least the information specified in the Key Distribution Response message (see {{gid-get}}), i.e., the parameters 'gkty', 'key' and 'num' defined in {{gid-post}}. The CBOR map MAY include the parameter 'exp', as well as the parameter 'mgt_key_material' specifying new administrative keying material for the target group members, if relevant for the used rekeying scheme.
 
-A rekeying message may include additional information, depending on the rekeying scheme used in the group, the reason that has triggered the rekeying process and the specific target group members. In particular, if the group rekeying is performed due to one or multiple Clients that have joined the group and the KDC acts as repository of authentication credentials of the group members, then a rekeying message MAY also include the authentication credentials that those Clients use in the group, together with the roles and node identifier that the corresponding Client has in the group. It is RECOMMENDED to specify this information by means of the parameters 'pub_keys', 'peer_roles' and 'peer_identifiers', like done in the Join Response message (see {{gid-post}}).
+A rekeying message may include additional information, depending on the rekeying scheme used in the group, the reason that has triggered the rekeying process and the specific target group members. In particular, if the group rekeying is performed due to one or multiple Clients that have joined the group and the KDC acts as repository of authentication credentials of the group members, then a rekeying message MAY also include the authentication credentials that those Clients use in the group, together with the roles and node identifier that the corresponding Client has in the group. It is RECOMMENDED to specify this information by means of the parameters 'creds', 'peer_roles' and 'peer_identifiers', like done in the Join Response message (see {{gid-post}}).
 
 The complete format of a rekeying message, including the encoding and content of the 'mgt_key_material' parameter, has to be defined in separate specifications aimed at profiling the used rekeying scheme in the context of the used application profile of this specification. As a particular case, an application profile of this specification MAY define additional information to include in rekeying messages for the "Point-to-Point" group rekeying scheme in {{point-to-point-rekeying}} (OPT14).
 
@@ -1799,7 +1799,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 +-----------------------+------+-----------------+------------+
 | scope                 | TBD  | bstr            | [RFC-XXXX] |
 +-----------------------+------+-----------------+------------+
-| get_pub_keys          | TBD  | array / nil     | [RFC-XXXX] |
+| get_creds             | TBD  | array / nil     | [RFC-XXXX] |
 +-----------------------+------+-----------------+------------+
 | client_cred           | TBD  | bstr            | [RFC-XXXX] |
 +-----------------------+------+-----------------+------------+
@@ -1807,7 +1807,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 +-----------------------+------+-----------------+------------+
 | client_cred_verify    | TBD  | bstr            | [RFC-XXXX] |
 +-----------------------+------+-----------------+------------+
-| pub_keys_repos        | TBD  | tstr            | [RFC-XXXX] |
+| creds_repo            | TBD  | tstr            | [RFC-XXXX] |
 +-----------------------+------+-----------------+------------+
 | control_uri           | TBD  | tstr            | [RFC-XXXX] |
 +-----------------------+------+-----------------+------------+
@@ -1823,7 +1823,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 +-----------------------+------+-----------------+------------+
 | exp                   | TBD  | int             | [RFC-XXXX] |
 +-----------------------+------+-----------------+------------+
-| pub_keys              | TBD  | array           | [RFC-XXXX] |
+| creds                 | TBD  | array           | [RFC-XXXX] |
 +-----------------------+------+-----------------+------------+
 | peer_roles            | TBD  | array           | [RFC-XXXX] |
 +-----------------------+------+-----------------+------------+
@@ -1860,11 +1860,11 @@ Note that the actual use of a parameter and its inclusion in a message depends o
 
 A Client MUST support the following parameters.
 
-* 'scope', 'gkty', 'key', 'num', 'exp', 'gid', 'gname', 'guri', 'pub_keys', 'peer_identifiers', 'ace_groupcomm_profile', 'control_uri', 'rekeying_scheme'.
+* 'scope', 'gkty', 'key', 'num', 'exp', 'gid', 'gname', 'guri', 'creds', 'peer_identifiers', 'ace_groupcomm_profile', 'control_uri', 'rekeying_scheme'.
 
 A Client SHOULD support the following parameter.
 
-* 'get_pub_keys'. That is, not supporting this parameter would yield the inconvenient and undesirable behavior where: i) the Client does not ask for the other group members' authentication credentials upon joining the group (see {{ssec-key-distribution-exchange}}); and ii) later on as a group member, the Client only retrieves the authentication credentials of all group members (see {{sec-key-retrieval-all}}).
+* 'get_creds'. That is, not supporting this parameter would yield the inconvenient and undesirable behavior where: i) the Client does not ask for the other group members' authentication credentials upon joining the group (see {{ssec-key-distribution-exchange}}); and ii) later on as a group member, the Client only retrieves the authentication credentials of all group members (see {{sec-key-retrieval-all}}).
 
 A Client MAY support the following optional parameters. Application profiles of this specification MAY define that Clients must or should support these parameters instead (OPT15).
 
@@ -1876,7 +1876,7 @@ The following conditional parameters are relevant only if specific conditions ho
 
 * 'kdcchallenge'. This parameter is relevant for a Client that has an authentication credential to use in a joined group and that provides the access token to the KDC through a Token Transfer Request (see {{token-post}}).
 
-* 'pub_keys_repo'. This parameter is relevant for a Client that has an authentication credential to use in a joined group and that makes it available from a key repository different than the KDC.
+* 'creds_repo'. This parameter is relevant for a Client that has an authentication credential to use in a joined group and that makes it available from a key repository different than the KDC.
 
 * 'group_policies'. This parameter is relevant for a Client that is interested in the specific policies used in a group, but it does not know them or cannot become aware of them before joining that group.
 
@@ -2272,7 +2272,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ5: If used, specify the acceptable values for 'sign_key_parameters' (see {{token-post}}).
 
-* REQ6: Specify the acceptable formats for authentication credentials and, if used, the acceptable values for 'pub_key_enc' (see {{token-post}}).
+* REQ6: Specify the acceptable formats for authentication credentials and, if used, the acceptable values for 'cred_fmt' (see {{token-post}}).
 
 * REQ7: If the value of the GROUPNAME URI path and the group name in the access token scope (gname in {{ssec-authorization-response}}) are not required to coincide, specify the mechanism to map the GROUPNAME value in the URI to the group name (see {{kdc-if}}).
 
@@ -2312,7 +2312,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ25: Specify the format of the identifiers of group members (see {{gid-post}}).
 
-* REQ26: Specify policies at the KDC to handle ids that are not included in 'get_pub_keys' (see {{pubkey-fetch}}).
+* REQ26: Specify policies at the KDC to handle ids that are not included in 'get_creds' (see {{pubkey-fetch}}).
 
 * REQ27: Specify the format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label (see {{node-get}}).
 
@@ -2334,7 +2334,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * OPT5: Optionally, specify additional identifiers of error types, as values of the 'error' field in an error response from the KDC.
 
-* OPT6: Optionally, specify the encoding of 'pub\_keys\_repos' if the default is not used (see {{gid-post}}).
+* OPT6: Optionally, specify the encoding of 'creds\_repo' if the default is not used (see {{gid-post}}).
 
 * OPT7: Optionally, specify the functionalities implemented at the 'control_uri' resource hosted at the Client, including message exchange encoding and other details (see {{gid-post}}).
 
@@ -2383,7 +2383,7 @@ sign_info_entry =
   sign_capab_2 : [ any ],
   ...,
   sign_capab_N : [ any ],
-  pub_key_enc = int / nil
+  cred_fmt = int / nil
 ]
 
 gname = tstr
@@ -2397,6 +2397,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 ## Version -15 to -16 ## {#sec-15-16}
 
 * Distinction between authentication credentials and public keys.
+
+* Consistent renaming of parameters and URI paths.
 
 * Updated format of scope entries when using AIF.
 
