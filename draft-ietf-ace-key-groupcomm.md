@@ -280,7 +280,7 @@ The Authorization Request sent from the Client to the AS is defined in {{Section
 
    This parameter is encoded as a CBOR byte string, which wraps a CBOR array of one or more scope entries. All the scope entries are specified according to a same format, i.e. either the AIF format or the textual format defined below.
 
-   * If the AIF format is used, each scope entry is encoded as specified in {{I-D.ietf-ace-aif}}. The object identifier "Toid" corresponds to the group name and MUST be encoded as a CBOR text string. The permission set "Tperm" indicates the roles that the Client wishes to take in the group.
+   * If the AIF format is used, each scope entry is encoded as per {{I-D.ietf-ace-aif}}. If a scope entry expresses a set of roles to take in a group as per this document, the object identifier "Toid" specifies the group name and MUST be encoded as a CBOR text string, while the permission set "Tperm" specifies the roles that the Client wishes to take in the group.
 
       The AIF format is the default format for application profiles of this specification, and is preferable for those that aim to a compact encoding of scope. This is desirable especially for application profiles defining several roles, with the Client possibly requesting for multiple roles combined.
 
@@ -2389,6 +2389,8 @@ gname = tstr
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 ## Version -15 to -16 ## {#sec-15-16}
+
+* Updated format of scope entries when using AIF.
 
 * Editorial fixes.
 
