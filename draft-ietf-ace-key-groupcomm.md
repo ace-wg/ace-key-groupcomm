@@ -430,7 +430,7 @@ The CDDL notation {{RFC8610}} of the 'sign_info' parameter is given below.
 ~~~~~~~~~~~ CDDL
 sign_info = sign_info_req / sign_info_resp
 
-sign_info_req  = nil                   ; in the Token Transfer
+sign_info_req  = null                  ; in the Token Transfer
                                        ; Request to the KDC
 
 sign_info_resp = [ + sign_info_entry ] ; in the Token Transfer
@@ -442,7 +442,7 @@ sign_info_entry =
   sign_alg : int / tstr,
   sign_parameters : [ any ],
   sign_key_parameters : [ any ],
-  cred_fmt = int / nil
+  cred_fmt = int / null
 ]
 
 gname = tstr
@@ -1783,70 +1783,71 @@ This specification defines a number of parameters used during the second part of
 Note that the media type application/ace-groupcomm+cbor MUST be used when these parameters are transported in the respective message fields.
 
 ~~~~~~~~~~~
-+-----------------------+------+-----------------+------------+
-| Name                  | CBOR | CBOR Type       | Reference  |
-|                       | Key  |                 |            |
-+-----------------------+------+-----------------+------------+
-| error                 | TBD  | int             | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| error_description     | TBD  | tstr            | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| gid                   | TBD  | array           | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| gname                 | TBD  | array of tstr   | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| guri                  | TBD  | array of tstr   | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| scope                 | TBD  | bstr            | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| get_creds             | TBD  | array / nil     | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| client_cred           | TBD  | bstr            | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| cnonce                | TBD  | bstr            | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| client_cred_verify    | TBD  | bstr            | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| creds_repo            | TBD  | tstr            | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| control_uri           | TBD  | tstr            | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| gkty                  | TBD  | int / tstr      | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| key                   | TBD  | See the "ACE    | [RFC-XXXX] |
-|                       |      | Groupcomm Key   |            |
-|                       |      | Types" registry |            |
-+-----------------------+------+-----------------+------------+
-| num                   | TBD  | int             | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| ace-groupcomm-profile | TBD  | int             | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| exp                   | TBD  | int             | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| creds                 | TBD  | array           | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| peer_roles            | TBD  | array           | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| peer_identifiers      | TBD  | array           | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| group_policies        | TBD  | map             | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| kdc_cred              | TBD  | bstr            | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| kdc_nonce             | TBD  | bstr            | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| kdc_cred_verify       | TBD  | bstr            | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| rekeying_scheme       | TBD  | int             | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| mgt_key_material      | TBD  | bstr            | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| control_group_uri     | TBD  | tstr            | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| sign_info             | TBD  | array           | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
-| kdcchallenge          | TBD  | bstr            | [RFC-XXXX] |
-+-----------------------+------+-----------------+------------+
++-----------------------+------+---------------------+------------+
+| Name                  | CBOR | CBOR Type           | Reference  |
+|                       | Key  |                     |            |
++-----------------------+------+---------------------+------------+
+| error                 | TBD  | int                 | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| error_description     | TBD  | tstr                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| gid                   | TBD  | array               | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| gname                 | TBD  | array of tstr       | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| guri                  | TBD  | array of tstr       | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| scope                 | TBD  | bstr                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| get_creds             | TBD  | array /             | [RFC-XXXX] |
+|                       |      | Simple value "null" |            |
++-----------------------+------+---------------------+------------+
+| client_cred           | TBD  | bstr                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| cnonce                | TBD  | bstr                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| client_cred_verify    | TBD  | bstr                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| creds_repo            | TBD  | tstr                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| control_uri           | TBD  | tstr                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| gkty                  | TBD  | int / tstr          | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| key                   | TBD  | See the "ACE        | [RFC-XXXX] |
+|                       |      | Groupcomm Key       |            |
+|                       |      | Types" registry     |            |
++-----------------------+------+---------------------+------------+
+| num                   | TBD  | int                 | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| ace-groupcomm-profile | TBD  | int                 | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| exp                   | TBD  | int                 | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| creds                 | TBD  | array               | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| peer_roles            | TBD  | array               | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| peer_identifiers      | TBD  | array               | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| group_policies        | TBD  | map                 | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| kdc_cred              | TBD  | bstr                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| kdc_nonce             | TBD  | bstr                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| kdc_cred_verify       | TBD  | bstr                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| rekeying_scheme       | TBD  | int                 | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| mgt_key_material      | TBD  | bstr                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| control_group_uri     | TBD  | tstr                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| sign_info             | TBD  | array               | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
+| kdcchallenge          | TBD  | bstr                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Parameters title="ACE Groupcomm Parameters" artwork-align="center"}
 
@@ -2383,7 +2384,7 @@ sign_info_entry =
   sign_capab_2 : [ any ],
   ...,
   sign_capab_N : [ any ],
-  cred_fmt = int / nil
+  cred_fmt = int / null
 ]
 
 gname = tstr
