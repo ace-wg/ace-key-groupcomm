@@ -1,4 +1,6 @@
 ---
+v: 3
+
 title: Key Provisioning for Group Communication using ACE
 abbrev: Key Provisioning for Group Communication
 docname: draft-ietf-ace-key-groupcomm-latest
@@ -6,6 +8,7 @@ docname: draft-ietf-ace-key-groupcomm-latest
 ipr: trust200902
 wg: ACE Working Group
 cat: std
+submissiontype: IETF
 
 coding: utf-8
 pi:
@@ -83,6 +86,8 @@ informative:
   I-D.ietf-ace-mqtt-tls-profile:
   I-D.tiloca-core-oscore-discovery:
 
+entity:
+  SELF: "[RFC-XXXX]"
 
 --- abstract
 
@@ -811,8 +816,8 @@ Optionally, the response MAY contain the following parameters, which, if include
 |     Name     | CBOR  |   CBOR   |     Description      | Reference  |
 |              | label |   type   |                      |            |
 +--------------+-------+----------+----------------------+------------+
-| Sequence     | TBD   | tstr/int | Method for recipient | [[this     |
-| Number       |       |          | group members to     | document]] |
+| Sequence     | TBD   | tstr/int | Method for recipient | [RFC-XXXX] |
+| Number       |       |          | group members to     |            |
 | Synchroniza- |       |          | synchronize with     |            |
 | tion Method  |       |          | sequence numbers of  |            |
 |              |       |          | of sender group      |            |
@@ -823,16 +828,16 @@ Optionally, the response MAY contain the following parameters, which, if include
 |              |       |          | Synchronization      |            |
 |              |       |          | Method registry      |            |
 +--------------+-------+----------+----------------------+------------+
-| Key Update   | TBD   | int      | Polling interval in  | [[this     |
-| Check        |       |          | seconds, for group   | document]] |
+| Key Update   | TBD   | int      | Polling interval in  | [RFC-XXXX] |
+| Check        |       |          | seconds, for group   |            |
 | Interval     |       |          | members to check at  |            |
 |              |       |          | the KDC if the       |            |
 |              |       |          | latest group keying  |            |
 |              |       |          | material is the one  |            |
 |              |       |          | that they own        |            |
 +--------------+-------+----------+----------------------+------------+
-| Expiration   | TBD   | uint     | Number of seconds    | [[this     |
-| Delta        |       |          | from 'exp' until the | document]] |
+| Expiration   | TBD   | uint     | Number of seconds    | [RFC-XXXX] |
+| Delta        |       |          | from 'exp' until the |            |
 |              |       |          | specified UTC        |            |
 |              |       |          | date/time after      |            |
 |              |       |          | which group members  |            |
@@ -844,6 +849,8 @@ Optionally, the response MAY contain the following parameters, which, if include
 +--------------+-------+----------|----------------------|------------+
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Policies title="ACE Groupcomm Policies" artwork-align="center"}
+
+Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
 
 * 'kdc_cred', encoded as a CBOR byte string, with value the original binary representation of the KDC's public key. This parameter is used if the KDC has an associated public key and this is required for the correct group operation. It is REQUIRED of application profiles to define whether the KDC has a public key and if this has to be provided through the 'kdc_cred' parameter (REQ8).
 
@@ -860,19 +867,21 @@ Optionally, the response MAY contain the following parameters, which, if include
 * 'rekeying_scheme', identifying the rekeying scheme that the KDC uses to provide new group keying meterial to the group members. This parameter is encoded as a CBOR integer, whose value is taken from the "Value" column of the "ACE Groupcomm Rekeying Schemes" registry defined in {{iana-ace-groupcomm-rekeying-schemes}} of this specification.
 
 ~~~~~~~~~~~
-+-------+----------------+-------------------------------+-----------+
-| Value |      Name      |          Description          | Reference |
-+-------+----------------+-------------------------------+-----------+
-|   0   | Point-to-Point | The KDC individually targets  | [this     |
-|       |                | each node to rekey, using the | document] |
-|       |                | pairwise secure communication |           |
-|       |                | association with that node    |           |
-+-------+----------------+-------------------------------+-----------+
++-------+----------------+-------------------------------+------------+
+| Value |      Name      |          Description          | Reference  |
++-------+----------------+-------------------------------+------------+
+|   0   | Point-to-Point | The KDC individually targets  | [RFC-XXXX] |
+|       |                | each node to rekey, using the |            |
+|       |                | pairwise secure communication |            |
+|       |                | association with that node    |            |
++-------+----------------+-------------------------------+------------+
 ~~~~~~~~~~~
 {: #rekeying-scheme-0 title="ACE Groupcomm Rekeying Schemes" artwork-align="center"}
 
    Application profiles of this specification MAY define a default group rekeying scheme, to refer to in case the 'rekeying_scheme' parameter is not included in the Joining Response (OPT9).
-   
+
+Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
+
 * 'mgt_key_material', encoded as a CBOR byte string and containing the specific administrative keying material that the joining node requires in order to participate in the group rekeying process performed by the KDC. This parameter MUST NOT be present if the 'rekeying_scheme' parameter is not present and the application profile does not specify a default group rekeying scheme to use in the group. Some simple rekeying scheme may not require specific administrative keying material to be provided, e.g., the basic "Point-to-Point" group rekeying scheme (see {{point-to-point-rekeying}}).
    
    In more advanced group rekeying schemes, the administrative keying material can be composed of multiple keys organized, for instance, into a logical tree hierarchy, whose root key is the only administrative key shared by all the group members. In such a case, each group member is exclusively associated to one leaf key in the hierarchy, and owns only the administrative keys from the associated leaf key all the way up along the path to the root key. That is, different group members can be provided with a different subset of the overall administrative keying material.
@@ -1768,73 +1777,75 @@ This specification defines a number of parameters used during the second part of
 Note that the media type application/ace-groupcomm+cbor MUST be used when these parameters are transported in the respective message fields.
 
 ~~~~~~~~~~~
-+-----------------------+------+-----------------+-----------------+
-| Name                  | CBOR | CBOR Type       | Reference       |
-|                       | Key  |                 |                 |
-+-----------------------+------+-----------------+-----------------+
-| error                 | TBD  | int             | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| error_description     | TBD  | tstr            | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| gid                   | TBD  | array           | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| gname                 | TBD  | array of tstr   | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| guri                  | TBD  | array of tstr   | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| scope                 | TBD  | bstr            | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| get_pub_keys          | TBD  | array / nil     | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| client_cred           | TBD  | bstr            | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| cnonce                | TBD  | bstr            | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| client_cred_verify    | TBD  | bstr            | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| pub_keys_repos        | TBD  | tstr            | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| control_uri           | TBD  | tstr            | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| gkty                  | TBD  | int / tstr      | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| key                   | TBD  | See the "ACE    | [this document] |
-|                       |      | Groupcomm Key   |                 |
-|                       |      | Types" registry |                 |
-+-----------------------+------+-----------------+-----------------+
-| num                   | TBD  | int             | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| ace-groupcomm-profile | TBD  | int             | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| exp                   | TBD  | int             | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| pub_keys              | TBD  | array           | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| peer_roles            | TBD  | array           | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| peer_identifiers      | TBD  | array           | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| group_policies        | TBD  | map             | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| kdc_cred              | TBD  | bstr            | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| kdc_nonce             | TBD  | bstr            | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| kdc_cred_verify       | TBD  | bstr            | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| rekeying_scheme       | TBD  | int             | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| mgt_key_material      | TBD  | bstr            | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| control_group_uri     | TBD  | tstr            | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| sign_info             | TBD  | array           | [this document] |
-+-----------------------+------+-----------------+-----------------+
-| kdcchallenge          | TBD  | bstr            | [this document] |
-+-----------------------+------+-----------------+-----------------+
++-----------------------+------+-----------------+------------+
+| Name                  | CBOR | CBOR Type       | Reference  |
+|                       | Key  |                 |            |
++-----------------------+------+-----------------+------------+
+| error                 | TBD  | int             | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| error_description     | TBD  | tstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| gid                   | TBD  | array           | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| gname                 | TBD  | array of tstr   | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| guri                  | TBD  | array of tstr   | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| scope                 | TBD  | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| get_pub_keys          | TBD  | array / nil     | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| client_cred           | TBD  | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| cnonce                | TBD  | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| client_cred_verify    | TBD  | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| pub_keys_repos        | TBD  | tstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| control_uri           | TBD  | tstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| gkty                  | TBD  | int / tstr      | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| key                   | TBD  | See the "ACE    | [RFC-XXXX] |
+|                       |      | Groupcomm Key   |            |
+|                       |      | Types" registry |            |
++-----------------------+------+-----------------+------------+
+| num                   | TBD  | int             | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| ace-groupcomm-profile | TBD  | int             | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| exp                   | TBD  | int             | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| pub_keys              | TBD  | array           | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| peer_roles            | TBD  | array           | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| peer_identifiers      | TBD  | array           | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| group_policies        | TBD  | map             | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| kdc_cred              | TBD  | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| kdc_nonce             | TBD  | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| kdc_cred_verify       | TBD  | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| rekeying_scheme       | TBD  | int             | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| mgt_key_material      | TBD  | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| control_group_uri     | TBD  | tstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| sign_info             | TBD  | array           | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| kdcchallenge          | TBD  | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Parameters title="ACE Groupcomm Parameters" artwork-align="center"}
- 
+
+Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
+
 The KDC is expected to support and understand all the parameters above. Instead, a Client can support and understand only a subset of such parameters, depending on the roles it expects to take in the joined groups or on other conditions defined in application profiles of this specification.
 
 In the following, the parameters are categorized according to the support expected by Clients. That is, a Client that supports a parameter is able to: i) use and specify it in a request message to the KDC; and ii) understand and process it if specified in a response message from the KDC. It is REQUIRED of application profiles of this specification to sort their newly defined parameters according to the same categorization (REQ29).
@@ -1985,6 +1996,8 @@ Compared to a scenario where the transfer does not use Block-Wise, depending on 
 
 This document has the following actions for IANA.
 
+Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
+
 ## Media Type Registrations {#media-type}
 
 This specification registers the 'application/ace-groupcomm+cbor' media type for messages of the protocols defined in this document following the ACE exchange and carrying parameters encoded in CBOR. This registration follows the procedures specified in {{RFC6838}}.
@@ -1997,15 +2010,15 @@ This specification registers the 'application/ace-groupcomm+cbor' media type for
 
    Optional parameters: N/A
 
-   Encoding considerations: Must be encoded as CBOR map containing the protocol parameters defined in \[this document\].
+   Encoding considerations: Must be encoded as CBOR map containing the protocol parameters defined in {{&SELF}}.
 
    Security considerations: See {{sec-cons}} of this document.
 
    Interoperability considerations: n/a
 
-   Published specification: \[this document\]
+   Published specification: {{&SELF}}
 
-   Applications that use this media type: The type is used by Authorization Servers, Clients and Resource Servers that support the ACE groupcomm framework as specified in \[this document\].
+   Applications that use this media type: The type is used by Authorization Servers, Clients and Resource Servers that support the ACE groupcomm framework as specified in {{&SELF}}.
 
    Fragment identifier considerations: N/A
    
@@ -2032,7 +2045,7 @@ Encoding: -
 
 ID: TBD
 
-Reference: \[this document\]
+Reference: {{&SELF}}
 
 ## OAuth Parameters {#iana-kinfo}
 
@@ -2041,14 +2054,14 @@ IANA is asked to register the following entries in the "OAuth Parameters" regist
 *  Parameter name: sign_info
 *  Parameter usage location: client-rs request, rs-client response
 *  Change Controller: IESG
-*  Specification Document(s): \[\[This specification\]\]
+*  Specification Document(s): {{&SELF}}
 
 &nbsp;
 
 *  Parameter name: kdcchallenge
 *  Parameter usage location: rs-client response
 *  Change Controller: IESG
-*  Specification Document(s): \[\[This specification\]\]
+*  Specification Document(s): {{&SELF}}
 
 ## OAuth Parameters CBOR Mappings {#iana-kinfo-map}
 
@@ -2058,14 +2071,14 @@ Mappings" registry following the procedure specified in {{Section 8.10 of I-D.ie
 * Name: sign_info
 * CBOR Key: TBD (range -256 to 255)
 * Value Type: Simple value null / array
-* Reference: \[\[This specification\]\]
+* Reference: {{&SELF}}
 
 &nbsp;
 
 * Name: kdcchallenge
 * CBOR Key: TBD (range -256 to 255)
 * Value Type: Byte string
-* Reference: \[\[This specification\]\]
+* Reference: {{&SELF}}
 
 ## Interface Description (if=) Link Target Attribute Values {#if-ace-group}
 
@@ -2075,7 +2088,7 @@ IANA is asked to register the following entry in the "Interface Description (if=
 
 * Description: The 'ace group' interface is used to provision keying material and related information and policies to members of a group using the Ace framework.
 
-* Reference: \[This Document\]
+* Reference: {{&SELF}}
 
 ## CBOR Tags {#iana-cbor-tags}
 
@@ -2087,7 +2100,7 @@ IANA is asked to register the following entry in the "CBOR Tags" registry.
 
 * Semantics: Extended ACE scope format, including the identifier of the used scope semantics.
 
-* Reference: \[This Document\]
+* Reference: {{&SELF}}
 
 ## ACE Groupcomm Parameters {#iana-reg}
 
@@ -2375,6 +2388,10 @@ gname = tstr
 
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
+## Version -15 to -16 ## {#sec-15-16}
+
+* Editorial fixes.
+
 ## Version -14 to -15 ## {#sec-14-15}
 
 * Fixed nits.
@@ -2544,7 +2561,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 # Acknowledgments
 {: numbered="no"}
 
-The following individuals were helpful in shaping this document: Christian Amsuess, Carsten Bormann, Rikard Hoeglund, Ben Kaduk, Watson Ladd, John Mattsson, Daniel Migault, Jim Schaad, Ludwig Seitz, Goeran Selander, Cigdem Sengul and Peter van der Stok.
+The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}} and {{{Peter van der Stok}}}.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; by the H2020 project SIFIS-Home (Grant agreement 952652); and by the EIT-Digital High Impact Initiative ACTIVE.
 
