@@ -2258,7 +2258,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ1: Specify the format and encoding of 'scope'. This includes defining the set of possible roles and their identifiers, as well as the corresponding encoding to use in the scope entries according to the used scope format (see {{ssec-authorization-request}}).
 
-* REQ2: If the AIF format of 'scope' is used, register its specific instance of "Toid" and "Tperm", as well as the corresponding Media Type and Content-Format, as per the guidelines in {{I-D.ietf-ace-aif}}.
+* REQ2: If the AIF format of 'scope' is used, register its specific instance of "Toid" and "Tperm" as Media Type parameters and a corresponding Content-Format, as per the guidelines in {{I-D.ietf-ace-aif}}.
 
 * REQ3: If used, specify the acceptable values for 'sign_alg' (see {{token-post}}).
 
