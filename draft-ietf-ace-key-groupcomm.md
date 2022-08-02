@@ -462,7 +462,7 @@ This section describes the functionalities provided by the KDC, as related to th
 
 In particular, this section defines the interface available at the KDC; specifies the handlers of each resource provided by the KDC interface; and describes how Clients interact with those resources to join a group and to perform additional operations as group members.
 
-As most important operation after trasferring the access token to the KDC, the Client can perform a "Joining" exchange with the KDC, by specifying the group it requests to join (see {{ssec-key-distribution-exchange}}). Then, the KDC verifies the access token and that the Client is authorized to join the specified group. If so, the KDC provides the Client with the keying material to securely communicate with the other members of the group.
+As most important operation after trasferring the access token to the KDC, the Client can perform a Join Request-Response exchange with the KDC, by specifying the group it requests to join (see {{ssec-key-distribution-exchange}}). Then, the KDC verifies the access token and that the Client is authorized to join the specified group. If so, the KDC provides the Client with the keying material to securely communicate with the other members of the group.
 
 Later on as a group member, the Client can also rely on the interface at the KDC to perform additional operations, consistently with the roles it has in the group.
 
@@ -610,13 +610,13 @@ In case the joining node only knows the group identifier of the group it wishes 
 
 
 ~~~~~~~~~~~
-Client                                                     KDC
-   |                                                        |
-   |-------- Group Name and URI Retrieval Request: -------->|
-   |                   FETCH /ace-group                     |
-   |                                                        |
-   |<-Group Name and URI Retrieval Response: 2.05 (Content)-|
-   |                                                        |
+Client                                                         KDC
+   |                                                            |
+   |------------ Group Name and URI Retrieval Request: -------->|
+   |                      FETCH /ace-group                      |
+   |                                                            |
+   |<-- Group Name and URI Retrieval Response: 2.05 (Content) --|
+   |                                                            |
 ~~~~~~~~~~~
 {: #fig-ace-group-fetch title="Message Flow of Group Name and URI Retrieval Request-Response" artwork-align="center"}
 
@@ -774,7 +774,7 @@ Then, the handler performs the following actions.
 
 * The handler returns a successful Join Response as defined below, containing the symmetric group keying material; the group policies; and the authentication credentials of the current members of the group, if the KDC manages those and the Client requested them.
 
-The Join Response MUST have response code 2.01 (Created) if the Client has been added to the list of group members in this joining exchange (see above), or 2.04 (Changed) otherwise, i.e., if the Client is re-joining the group without having left it.
+The Join Response MUST have response code 2.01 (Created) if the Client has been added to the list of group members in this join exchange (see above), or 2.04 (Changed) otherwise, i.e., if the Client is re-joining the group without having left it.
 
 The Join Response message MUST include the Location-Path CoAP option, specifying the URI path to the sub-resource associated with the Client, i.e. "/ace-group/GROUPNAME/nodes/NODENAME".
 
@@ -904,7 +904,7 @@ Specific application profiles that build on this document MUST specify the commu
 
 #### Join the Group {#ssec-key-distribution-exchange}
 
-{{fig-key-distr-join}} gives an overview of the Joining exchange between Client and KDC, when the Client first joins a group, while {{fig-key-distr-join-2}} shows an example.
+{{fig-key-distr-join}} gives an overview of the join exchange between Client and KDC, when the Client first joins a group, while {{fig-key-distr-join-2}} shows an example.
 
 ~~~~~~~~~~~
 Client                                                     KDC
@@ -914,7 +914,7 @@ Client                                                     KDC
    |<------------ Join Response: 2.01 (Created) ----------- |
    | Location-Path = "/ace-group/GROUPNAME/nodes/NODENAME"  |
 ~~~~~~~~~~~
-{: #fig-key-distr-join title="Message Flow of the Joining Exchange" artwork-align="center"}
+{: #fig-key-distr-join title="Message Flow of the Join Request-Response" artwork-align="center"}
 
 
 ~~~~~~~~~~~
@@ -946,9 +946,9 @@ Payload (in CBOR diagnostic notation,
     "peer_roles": ["sender", ["sender", "receiver"]],
     "peer_identifiers": [ ID1, ID2 ] }
 ~~~~~~~~~~~
-{: #fig-key-distr-join-2 title="Example of First Exchange for Group Joining" artwork-align="center"}
+{: #fig-key-distr-join-2 title="Example of First Join Request-Response for Group Joining" artwork-align="center"}
 
-If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel (REQ24). This can be achieved, for instance, by using a transport profile of ACE. The Joining exchange MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications that must be secured.
+If not previously established, the Client and the KDC MUST first establish a pairwise secure communication channel (REQ24). This can be achieved, for instance, by using a transport profile of ACE. The join exchange MUST occur over that secure channel. The Client and the KDC MAY use that same secure channel to protect further pairwise communications that must be secured.
 
 The secure communication protocol is REQUIRED to establish the secure channel between Client and KDC by using the proof-of-possession key bound to the access token. As a result, the proof-of-possession to bind the access token to the Client is performed by using the proof-of-possession key bound to the access token for establishing secure communication between the Client and the KDC.
 
@@ -976,7 +976,7 @@ The payload MAY also include the parameters 'ace-groupcomm-profile' and 'exp' pa
 
 A node in the group can contact the KDC to retrieve the current group keying material, by sending a CoAP GET request to the /ace-group/GROUPNAME endpoint at the KDC, where GROUPNAME is the group name.
 
-{{fig-retrieve-key-material}} gives an overview of the Joining exchange between Client and KDC, when the Client first joins a group, while {{fig-retrieve-key-material-2}} shows an example.
+{{fig-retrieve-key-material}} gives an overview of the join exchange between Client and KDC, when the Client first joins a group, while {{fig-retrieve-key-material-2}} shows an example.
 
 ~~~~~~~~~~~
 Client                                                              KDC
@@ -1084,7 +1084,7 @@ Client                                                      KDC
    |<-- Authentication Credential Response: 2.05 (Created) --|
    |                                                         |
 ~~~~~~~~~~~
-{: #fig-public-key-1 title="Message Flow of Authentication Credential Exchange to Request the Authentication Credentials of Specific Group Members" artwork-align="center"}
+{: #fig-public-key-1 title="Message Flow of Authentication Credential Request-Response to Obtain the Authentication Credentials of Specific Group Members" artwork-align="center"}
 
 
 ~~~~~~~~~~~
@@ -1108,7 +1108,7 @@ Payload (in CBOR diagnostic notation):
     "peer_roles": [ "receiver" ],
     "peer_identifiers": [ ID3 ] }
 ~~~~~~~~~~~
-{: #fig-public-key-2 title="Example of Authentication Credential Exchange to Request the Authentication Credentials of Specific Group Members"}
+{: #fig-public-key-2 title="Example of Authentication Credential Request-Response to Obtain the Authentication Credentials of Specific Group Members"}
 
 ### GET Handler {#pubkey-get}
 
@@ -1133,7 +1133,7 @@ Client                                                      KDC
    |<-- Authentication Credential Response: 2.05 (Content) --|
    |                                                         |
 ~~~~~~~~~~~
-{: #fig-public-key-3 title="Message Flow of Authentication Credential Exchange to Request the Authentication Credentials of all the Group Members" artwork-align="center"}
+{: #fig-public-key-3 title="Message Flow of Authentication Credential Request-Response to Obtain the Authentication Credentials of all the Group Members" artwork-align="center"}
 
 ~~~~~~~~~~~
 Request:
@@ -1155,7 +1155,7 @@ Payload (in CBOR diagnostic notation):
     "peer_roles": ["sender", ["sender", "receiver"], "receiver"],
     "peer_identifiers": [ ID1, ID2, ID3 ] }
 ~~~~~~~~~~~
-{: #fig-public-key-4 title="Example of Authentication Credential Exchange to Request the Authentication Credentials of all the Group Members"}
+{: #fig-public-key-4 title="Example of Authentication Credential Request-Response to Obtain the Authentication Credentials of all the Group Members"}
 
 ## ace-group/GROUPNAME/kdc-pub-key
 
@@ -1196,7 +1196,7 @@ Member                                                         KDC
   |<-- KDC Authentication Credential Response: 2.05 (Content) --|
   |                                                             |
 ~~~~~~~~~~~
-{: #fig-kdc-pub-key-req-resp title="Message Flow of KDC Authentication Credential Request-Response" artwork-align="center"}
+{: #fig-kdc-pub-key-req-resp title="Message Flow of KDC Authentication Credential Request-Response to Obtain the Authentication Credential of the KDC" artwork-align="center"}
 
 ~~~~~~~~~~~
 Request:
@@ -1220,7 +1220,7 @@ Payload (in CBOR diagnostic notation, with PUB_KEY_KDC
     "kdc_cred_verify": POP_EVIDENCE
   }
 ~~~~~~~~~~~
-{: #fig-kdc-pub-key-req-resp-ex title="Example of KDC Authentication Credential Request-Response"}
+{: #fig-kdc-pub-key-req-resp-ex title="Example of KDC Authentication Credential Request-Response to Obtain the Authentication Credential of the KDC"}
 
 ## /ace-group/GROUPNAME/policies
 
@@ -1425,7 +1425,7 @@ Note that this handler is not intended to accommodate requests from a group memb
 
 A Client may ask the KDC for new, individual keying material. For instance, this can be due to the expiration of such individual keying material, or to the exhaustion of AEAD nonces, if an AEAD encryption algorithm is used for protecting communications in the group. An example of individual keying material can simply be an individual encryption key associated with the Client. Hence, the Client may ask for a new individual encryption key, or for new input material to derive it.
 
-To this end, the Client performs a Key Renewal Request/Response exchange with the KDC, i.e., it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group name and NODENAME is its node name, and formatted as defined in {{node-get}}.
+To this end, the Client performs a Key Renewal Request-Response exchange with the KDC, i.e., it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group name and NODENAME is its node name, and formatted as defined in {{node-get}}.
 
 {{fig-renewal-req-resp}} gives an overview of the exchange described above, while {{fig-renewal-req-resp-2}} shows an example.
 
@@ -1512,7 +1512,7 @@ Then, the handler replies with a 2.04 (Changed) response, which does not include
 
 In case the KDC maintains the authentication credentials of group members, a node in the group can contact the KDC to upload a new authentication credential to use in the group, and replace the currently stored one.
 
-To this end, the Client performs an Authentication Credential Update Request/Response exchange with the KDC, i.e., it sends a CoAP POST request to the /ace-group/GROUPNAME/nodes/NODENAME/pub-key endpoint at the KDC, where GROUPNAME is the group name and NODENAME is its node name.
+To this end, the Client performs an Authentication Credential Update Request-Response exchange with the KDC, i.e., it sends a CoAP POST request to the /ace-group/GROUPNAME/nodes/NODENAME/pub-key endpoint at the KDC, where GROUPNAME is the group name and NODENAME is its node name.
 
 The request is formatted as specified in {{node-pub-key-post}}.
 
