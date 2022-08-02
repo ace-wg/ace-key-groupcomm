@@ -379,7 +379,7 @@ Note that this request deviates from the one defined in {{I-D.ietf-ace-oauth-aut
 
 The joining node MAY ask for this information from the KDC through the same Token Transfer Request. In this case, the message MUST have Content-Format set to application/ace+cbor defined in {{Section 8.16 of I-D.ietf-ace-oauth-authz}}, and the message payload MUST be formatted as a CBOR map, which MUST include the access token. The CBOR map MAY additionally include the following parameter, which, if included, MUST have format and value as specified below.
 
-* 'sign_info' defined in {{sign-info}}, specifying the CBOR simple value 'null' (0xf6) to request information about the signature algorithm, signature algorithm parameters, signature key parameters and about the exact format of authentication credentials used in the groups that the Client has been authorized to join.
+* 'sign_info' defined in {{sign-info}}, specifying the CBOR simple value "null" (0xf6) to request information about the signature algorithm, signature algorithm parameters, signature key parameters and about the exact format of authentication credentials used in the groups that the Client has been authorized to join.
 
 Alternatively, such information may be pre-configured on the joining node, or may be retrieved by alternative means. For example, the joining node may have performed an early group discovery process and obtained the link to the associated group-membership resource at the KDC, together with attributes descriptive of the group configuration (see, e.g., {{I-D.tiloca-core-oscore-discovery}}).
 
@@ -411,19 +411,19 @@ This parameter allows the Client and the RS to exchange information about a sign
 
 In this specification and in application profiles building on it, this parameter is used to exchange information about the signature algorithm and about authentication credentials to be used with it, in the groups indicated by the transferred acces token as per its 'scope' claim (see {{ssec-authorization-response}}).
 
-When used in the Token Transfer Request sent to the KDC (see {{token-post}}), the 'sign_info' parameter specifies the CBOR simple value 'null' (0xf6). This is done to ask for information about the signature algorithm and about the authentication credentials used in the groups that the Client has been authorized to join - or to have a more restricted interaction as per its granted roles (e.g., the Client is an external signature verifier).
+When used in the Token Transfer Request sent to the KDC (see {{token-post}}), the 'sign_info' parameter specifies the CBOR simple value "null" (0xf6). This is done to ask for information about the signature algorithm and about the authentication credentials used in the groups that the Client has been authorized to join - or to have a more restricted interaction as per its granted roles (e.g., the Client is an external signature verifier).
 
 When used in the following Token Transfer Response from the KDC (see {{token-post}}), the 'sign_info' parameter is a CBOR array of one or more elements. The number of elements is at most the number of groups that the Client has been authorized to join - or to have a more restricted interaction (see above). Each element contains information about signing parameters and about authentication credentials for one or more groups, and is formatted as follows.
 
 * The first element 'id' is a group name or an array of group names, associated with groups for which the next four elements apply. In the following, each specified group name is referred to as 'gname'.
 
-* The second element 'sign_alg' is an integer or a text string if the POST request included the 'sign_info' parameter with value the CBOR simple value 'null' (0xf6), and indicates the signature algorithm used in the groups identified by the 'gname' values. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry {{COSE.Algorithms}}.
+* The second element 'sign_alg' is an integer or a text string if the POST request included the 'sign_info' parameter with value the CBOR simple value "null" (0xf6), and indicates the signature algorithm used in the groups identified by the 'gname' values. It is REQUIRED of the application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry {{COSE.Algorithms}}.
 
 * The third element 'sign_parameters' is a CBOR array indicating the parameters of the signature algorithm used in the groups identified by the 'gname' values. Its content depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define the possible values and structure for the elements of this parameter (REQ4).
 
 * The fourth element 'sign_key_parameters' is a CBOR array indicating the parameters of the key used with the signature algorithm, in the groups identified by the 'gname' values. Its content depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define the possible values and structure for the elements of this parameter (REQ5).
 
-* The fifth element 'pub_key_enc' parameter is either a CBOR integer indicating the format of authentication credentials used in the groups identified by the 'gname' values, or has value the CBOR simple value 'null' (0xf6) indicating that the KDC does not act as repository of authentication credentials for group members. Its acceptable integer values are taken from the 'Label' column of the "COSE Header Parameters" registry {{COSE.Header.Parameters}}. It is REQUIRED of the application profiles to define specific values to use for this parameter, consistently with the acceptable formats of authentication credentials (REQ6).
+* The fifth element 'pub_key_enc' parameter is either a CBOR integer indicating the format of authentication credentials used in the groups identified by the 'gname' values, or has value the CBOR simple value "null" (0xf6) indicating that the KDC does not act as repository of authentication credentials for group members. Its acceptable integer values are taken from the 'Label' column of the "COSE Header Parameters" registry {{COSE.Header.Parameters}}. It is REQUIRED of the application profiles to define specific values to use for this parameter, consistently with the acceptable formats of authentication credentials (REQ6).
 
 The CDDL notation {{RFC8610}} of the 'sign_info' parameter is given below.
 
@@ -654,9 +654,9 @@ The handler expects a request with payload formatted as a CBOR map, which MAY co
 
 * 'get_pub_keys', if the Client wishes to receive the authentication credentials of the current group members from the KDC. This parameter may be included in the Join Request if the KDC stores the authentication credentials of the group members, while it is not useful to include it if the Client obtains those authentication credentials through alternative means, e.g., from the AS. Note that including this parameter might result in a following Join Response of large size, which can be inconvenient for resource-constrained devices.
 
-  If the Client wishes to retrieve the authentication credentials of all the current group members, the 'get_pub_keys' parameter MUST encode the CBOR simple value 'null' (0xf6). Otherwise, the 'get_pub_keys' parameter MUST encode a non-empty CBOR array, containing the following three elements formatted as defined below.
+  If the Client wishes to retrieve the authentication credentials of all the current group members, the 'get_pub_keys' parameter MUST encode the CBOR simple value "null" (0xf6). Otherwise, the 'get_pub_keys' parameter MUST encode a non-empty CBOR array, containing the following three elements formatted as defined below.
 
-  - The first element, namely 'inclusion\_flag', encodes the CBOR simple value True. That is, the Client indicates that it wishes to receive the authentication credentials of all group members having their node identifier specified in the third element of the 'get_pub_keys' array, namely 'id\_filter' (see below).
+  - The first element, namely 'inclusion\_flag', encodes the CBOR simple value "true" (0xf5). That is, the Client indicates that it wishes to receive the authentication credentials of all group members having their node identifier specified in the third element of the 'get_pub_keys' array, namely 'id\_filter' (see below).
 
   - The second element, namely 'role\_filter', is a non-empty CBOR array. Each element of the array contains one role or a combination of roles for the group identified by GROUPNAME. That is, when the Join Request includes a non-Null 'get_pub_keys' parameter, the Client filters authentication credentials based on node identifiers.
 
@@ -750,7 +750,7 @@ If no authentication credential is included in the 'client_cred' field, the hand
 
 If an eligible authentication credential for the Client is neither present in the 'client_cred' field nor retrieved from the stored ones at the KDC, it is RECOMMENDED that the handler stops the processing and replies with a 4.00 (Bad Request) error response. Applications profiles MAY define alternatives (OPT8).
 
-If, regardless the reason, the KDC replies with a 4.00 (Bad Request) error response, this response MAY have Content-Format set to application/ace-groupcomm+cbor and have a CBOR map as payload. For instance, the CBOR map can include a 'sign_info' parameter formatted as 'sign_info_res' defined in {{sign-info}}, with the 'pub_key_enc' element set to the CBOR simple value 'null' (0xf6) if the Client sent its own authentication credential and the KDC is not set to store authentication credentials of the group members.
+If, regardless the reason, the KDC replies with a 4.00 (Bad Request) error response, this response MAY have Content-Format set to application/ace-groupcomm+cbor and have a CBOR map as payload. For instance, the CBOR map can include a 'sign_info' parameter formatted as 'sign_info_res' defined in {{sign-info}}, with the 'pub_key_enc' element set to the CBOR simple value "null" (0xf6) if the Client sent its own authentication credential and the KDC is not set to store authentication credentials of the group members.
 
 If all the verifications above succeed, the KDC proceeds as follows.
 
@@ -1024,17 +1024,17 @@ The handler expects a request with payload formatted as a CBOR map, that MUST co
 
      Note that a group member can retrieve the authentication credentials of all the current group members by sending a GET request to the same KDC resource instead (see {{sec-key-retrieval-all}}).
 
-  - The element 'inclusion\_flag' encodes the CBOR simple value True if the third element 'id\_filter' specifies an empty CBOR array, or if the Client wishes to receive the authentication credentials of the nodes having their node identifier specified in 'id\_filter' (i.e, selection by inclusive filtering). Instead, this element encodes the CBOR simple value False if the Client wishes to receive the authentication credentials of the nodes not having the node identifiers specified in the third element 'id\_filter' (i.e., selection by exclusive filtering).
+  - The element 'inclusion\_flag' encodes the CBOR simple value "true" (0xf5) if the third element 'id\_filter' specifies an empty CBOR array, or if the Client wishes to receive the authentication credentials of the nodes having their node identifier specified in 'id\_filter' (i.e, selection by inclusive filtering). Instead, this element encodes the CBOR simple value "false" (0xf4) if the Client wishes to receive the authentication credentials of the nodes not having the node identifiers specified in the third element 'id\_filter' (i.e., selection by exclusive filtering).
 
   - The array 'role\_filter' can be empty, if the Client does not wish to filter the requested authentication credentials based on the roles of the group members.
 
-  - The array 'id\_filter' contains zero or more node identifiers of group members, for the group identified by GROUPNAME. The Client indicates that it wishes to receive the authentication credentials of the nodes having or not having these node identifiers, in case the 'inclusion\_flag' element encodes the CBOR simple value True or False, respectively. The array 'id\_filter' may be empty, if the Client does not wish to filter the requested authentication credentials based on the node identifiers of the group members.
+  - The array 'id\_filter' contains zero or more node identifiers of group members, for the group identified by GROUPNAME. The Client indicates that it wishes to receive the authentication credentials of the nodes having or not having these node identifiers, in case the 'inclusion\_flag' element encodes the CBOR simple value "true" (0xf5) or "false" (0xf4), respectively. The array 'id\_filter' may be empty, if the Client does not wish to filter the requested authentication credentials based on the node identifiers of the group members.
 
 Note that, in case the 'role\_filter' array and the 'id\_filter' array are both non-empty:
 
-* If the 'inclusion\_flag' encodes the CBOR simple value True, the handler returns the authentication credentials of group members whose roles match with 'role\_filter' and/or having their node identifier specified in 'id\_filter'.
+* If the 'inclusion\_flag' encodes the CBOR simple value "true" (0xf5), the handler returns the authentication credentials of group members whose roles match with 'role\_filter' and/or having their node identifier specified in 'id\_filter'.
 
-* If the 'inclusion\_flag' encodes the CBOR simple value False, the handler returns the authentication credentials of group members whose roles match with 'role\_filter' and, at the same time, not having their node identifier specified in 'id\_filter'.
+* If the 'inclusion\_flag' encodes the CBOR simple value "false" (0xf4), the handler returns the authentication credentials of group members whose roles match with 'role\_filter' and, at the same time, not having their node identifier specified in 'id\_filter'.
 
 The specific format of authentication credentials as well as identifiers, roles and combination of roles of group members MUST be specified by application profiles of this specification (REQ1, REQ6, REQ25).
 
@@ -2076,7 +2076,7 @@ Mappings" registry following the procedure specified in {{Section 8.10 of I-D.ie
 
 * Name: sign_info
 * CBOR Key: TBD (range -256 to 255)
-* Value Type: Simple value null / array
+* Value Type: Simple value "null" / array
 * Reference: {{&SELF}}
 
 &nbsp;
