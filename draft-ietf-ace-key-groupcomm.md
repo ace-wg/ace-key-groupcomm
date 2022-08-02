@@ -926,9 +926,9 @@ Uri-Path: "ace-group"
 Uri-Path: "g1"
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation,
-         with PUB_KEY and POP_EVIDENCE being CBOR byte strings):
+         with AUTH_CRED and POP_EVIDENCE being CBOR byte strings):
   { "scope": << [ "group1", ["sender", "receiver"] ] >> ,
-    "get_creds": [true, ["sender"], []], "client_cred": PUB_KEY,
+    "get_creds": [true, ["sender"], []], "client_cred": AUTH_CRED,
     "cnonce": h'6df49c495409a9b5', "client_cred_verify": POP_EVIDENCE }
 
 Response:
@@ -942,7 +942,7 @@ Location-Path: "c101"
 Payload (in CBOR diagnostic notation,
          with KEY being a CBOR byte strings):
   { "gkty": 13, "key": KEY, "num": 12, "exp": 1609459200,
-    "creds": [ PUB_KEY1, PUB_KEY2 ],
+    "creds": [ AUTH_CRED_1, AUTH_CRED_2 ],
     "peer_roles": ["sender", ["sender", "receiver"]],
     "peer_identifiers": [ ID1, ID2 ] }
 ~~~~~~~~~~~
@@ -1104,7 +1104,7 @@ Response:
 Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
-  { "creds": [ PUB_KEY3 ],
+  { "creds": [ AUTH_CRED_3 ],
     "peer_roles": [ "receiver" ],
     "peer_identifiers": [ ID3 ] }
 ~~~~~~~~~~~
@@ -1151,7 +1151,7 @@ Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
   { "num": 5,
-    "creds": [ PUB_KEY1, PUB_KEY2, PUB_KEY3 ],
+    "creds": [ AUTH_CRED_1, AUTH_CRED_2, AUTH_CRED_3 ],
     "peer_roles": ["sender", ["sender", "receiver"], "receiver"],
     "peer_identifiers": [ ID1, ID2, ID3 ] }
 ~~~~~~~~~~~
@@ -1212,11 +1212,11 @@ Response:
 
 Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
-Payload (in CBOR diagnostic notation, with PUB_KEY_KDC
+Payload (in CBOR diagnostic notation, with AUTH_CRED_KDC
          and POP_EVIDENCE being CBOR byte strings):
   {
     "kdc_nonce": h'25a8991cd700ac01',
-    "kdc_cred": PUB_KEY_KDC,
+    "kdc_cred": AUTH_CRED_KDC,
     "kdc_cred_verify": POP_EVIDENCE
   }
 ~~~~~~~~~~~
@@ -1541,9 +1541,9 @@ Uri-Path: "nodes"
 Uri-Path: "c101"
 Uri-Path: "pub-key"
 Content-Format: "application/ace-groupcomm+cbor"
-Payload (in CBOR diagnostic notation, with PUB_KEY
+Payload (in CBOR diagnostic notation, with AUTH_CRED
          and POP_EVIDENCE being CBOR byte strings):
-  { "client_cred": PUB_KEY, "cnonce": h'9ff7684414affcc8',
+  { "client_cred": AUTH_CRED, "cnonce": h'9ff7684414affcc8',
     "client_cred_verify": POP_EVIDENCE }
 
 Response:
