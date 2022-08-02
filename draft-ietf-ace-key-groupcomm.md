@@ -482,7 +482,7 @@ If request messages sent to the KDC as well as success response messages from th
 
   If the value of the GROUPNAME URI path and the group name in the access token scope ('gname' in {{ssec-authorization-response}}) are not required to coincide, the KDC MUST implement a mechanism to map the GROUPNAME value in the URI to the group name, in order to refer to the correct group (REQ7).
 
-* /ace-group/GROUPNAME/pub-key : this resource is invariant once established, and contains the authentication credentials of all the members of the group with name GROUPNAME.
+* /ace-group/GROUPNAME/creds : this resource is invariant once established, and contains the authentication credentials of all the members of the group with name GROUPNAME.
 
   This resource is created only in case the KDC acts as repository of authentication credentials for group members.
 
@@ -490,7 +490,7 @@ If request messages sent to the KDC as well as success response messages from th
 
   Clients may be authorized to access this resource even without being group members, e.g., if authorized to be external signature verifiers for the group.
 
-* ace-group/GROUPNAME/kdc-pub-key : this resource is invariant once established, and contains the authentication credential of the KDC for the group with name GROUPNAME.
+* ace-group/GROUPNAME/kdc-cred : this resource is invariant once established, and contains the authentication credential of the KDC for the group with name GROUPNAME.
 
    This resource is created only in case the KDC has an associated authentication credential and this is required for the correct group operation. It is REQUIRED of application profiles to define whether the KDC has such an associated authentication credential (REQ8).
 
@@ -510,7 +510,7 @@ If request messages sent to the KDC as well as success response messages from th
 
   A Client as a group member can access this resource in order to retrieve the current group keying material together with its the individual keying material; request new individual keying material to use in the group; and leave the group. These operations are described in {{update-keys}}, {{new-keys}}, and {{ssec-group-leaving}}, respectively.
 
-* /ace-group/GROUPNAME/nodes/NODENAME/pub-key : this resource is invariant once established, and contains the individual authentication credential for the node with name NODENAME, as group member of the group with name GROUPNAME.
+* /ace-group/GROUPNAME/nodes/NODENAME/cred : this resource is invariant once established, and contains the individual authentication credential for the node with name NODENAME, as group member of the group with name GROUPNAME.
 
   A Client can access this resource in order to upload at the KDC a new authentication credential to use in the group. This operation is described in {{update-pub-key}}.
 
@@ -530,7 +530,7 @@ It is expected that a Client minimally supports the following set of primary ope
 
 * POST and GET requests to ace-group/GROUPNAME/ , in order to join a group (POST) and later retrieve the current group key material as a group member (GET).
 
-* GET and FETCH requests to ace-group/GROUPNAME/pub-key , in order to retrieve the authentication credentials of all the other group members (GET) or only some of them by filtering (FETCH). While retrieving authentication credentials remains possible by using GET requests, retrieval by filtering allows to greatly limit the size of exchanged messages.
+* GET and FETCH requests to ace-group/GROUPNAME/creds , in order to retrieve the authentication credentials of all the other group members (GET) or only some of them by filtering (FETCH). While retrieving authentication credentials remains possible by using GET requests, retrieval by filtering allows to greatly limit the size of exchanged messages.
 
 * GET request to ace-group/GROUPNAME/num , in order to retrieve the current version of the group key material as a group member.
 
@@ -538,7 +538,7 @@ It is expected that a Client minimally supports the following set of primary ope
 
 In addition, some Clients may rather not support the following set of secondary operations and corresponding interactions with the KDC. This can be specified, for instance, in compliance documents defining minimalistic Clients and their capabilities in specific deployments. In turn, these might also have to consider the used application profile of this specification.
 
-* GET request to ace-group/GROUPNAME/kdc-pub-key , in order to retrieve the current authentication credential of the KDC, in addition to when joining the group. This is relevant only if the KDC has an associated authentication credential and this is required for the correct group operation.
+* GET request to ace-group/GROUPNAME/kdc-cred , in order to retrieve the current authentication credential of the KDC, in addition to when joining the group. This is relevant only if the KDC has an associated authentication credential and this is required for the correct group operation.
 
 * GET request to ace-group/GROUPNAME/policies , in order to retrieve the current group policies as a group member, in addition to when joining the group.
 
@@ -546,7 +546,7 @@ In addition, some Clients may rather not support the following set of secondary 
 
 * PUT request to ace-group/GROUPNAME/nodes/NODENAME , in order to ask for new individual keying material. The Client would have to alternatively re-join the group through a POST request to ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group or on the application profile of this specification, the Client might simply not be associated with any individual keying material.
 
-* POST request to ace-group/GROUPNAME/nodes/NODENAME/pub-key , in order to provide the KDC with a new authentication credential. The Client would have to alternatively re-join the group through a POST request to ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group, the Client might simply not have an associated authentication credential to provide.
+* POST request to ace-group/GROUPNAME/nodes/NODENAME/cred , in order to provide the KDC with a new authentication credential. The Client would have to alternatively re-join the group through a POST request to ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group, the Client might simply not have an associated authentication credential to provide.
 
 It is REQUIRED of application profiles of this specification to categorize possible newly defined operations for Clients into primary operations and secondary operations, and to provide accompanying considerations (REQ12).
 
@@ -1008,7 +1008,7 @@ Payload (in CBOR diagnostic notation,
 ~~~~~~~~~~~
 {: #fig-retrieve-key-material-2 title="Example of Key Distribution Request-Response"}
 
-## /ace-group/GROUPNAME/pub-key
+## /ace-group/GROUPNAME/creds
 
 This resource implements the GET and FETCH handlers.
 
@@ -1070,7 +1070,7 @@ Note that this resource handler only verifies that the node is authorized by the
 
 #### Retrieve a Subset of Authentication Credentials in the Group {#sec-key-retrieval}
 
-In case the KDC maintains the authentication credentials of group members, a node in the group can contact the KDC to request the authentication credentials, roles and node identifiers of a specified subset of group members, by sending a CoAP FETCH request to the /ace-group/GROUPNAME/pub-key endpoint at the KDC, where GROUPNAME is the group name, and formatted as defined in {{pubkey-fetch}}.
+In case the KDC maintains the authentication credentials of group members, a node in the group can contact the KDC to request the authentication credentials, roles and node identifiers of a specified subset of group members, by sending a CoAP FETCH request to the /ace-group/GROUPNAME/creds endpoint at the KDC, where GROUPNAME is the group name, and formatted as defined in {{pubkey-fetch}}.
 
 {{fig-public-key-1}} gives an overview of the exchange mentioned above, while {{fig-public-key-2}} shows an example of such an exchange.
 
@@ -1079,7 +1079,7 @@ Client                                                      KDC
    |                                                         |
    |            Authentication Credential Request:           |
    |-------------------------------------------------------->|
-   |            FETCH /ace-group/GROUPNAME/pub-key           |
+   |             FETCH /ace-group/GROUPNAME/creds            |
    |                                                         |
    |<-- Authentication Credential Response: 2.05 (Created) --|
    |                                                         |
@@ -1118,7 +1118,7 @@ If all verifications succeed, the KDC replies with a 2.05 (Content) response as 
 
 #### Retrieve All Authentication Credentials in the Group {#sec-key-retrieval-all}
 
-In case the KDC maintains the authentication credentials of group members, a group or an external signature verifier can contact the KDC to request the authentication credentials, roles and node identifiers of all the current group members, by sending a CoAP GET request to the /ace-group/GROUPNAME/pub-key endpoint at the KDC, where GROUPNAME is the group name.
+In case the KDC maintains the authentication credentials of group members, a group or an external signature verifier can contact the KDC to request the authentication credentials, roles and node identifiers of all the current group members, by sending a CoAP GET request to the /ace-group/GROUPNAME/creds endpoint at the KDC, where GROUPNAME is the group name.
 
 {{fig-public-key-3}} gives an overview of the message exchange, while {{fig-public-key-4}} shows an example of such an exchange.
 
@@ -1128,7 +1128,7 @@ Client                                                      KDC
    |                                                         |
    |            Authentication Credential Request:           |
    |-------------------------------------------------------->|
-   |             GET /ace-group/GROUPNAME/pub-key            |
+   |              GET /ace-group/GROUPNAME/creds             |
    |                                                         |
    |<-- Authentication Credential Response: 2.05 (Content) --|
    |                                                         |
@@ -1157,7 +1157,7 @@ Payload (in CBOR diagnostic notation):
 ~~~~~~~~~~~
 {: #fig-public-key-4 title="Example of Authentication Credential Request-Response to Obtain the Authentication Credentials of all the Group Members"}
 
-## ace-group/GROUPNAME/kdc-pub-key
+## ace-group/GROUPNAME/kdc-cred
 
 This resource implements a GET handler.
 
@@ -1177,7 +1177,7 @@ If all verifications succeed, the handler returns a 2.05 (Content) message conta
 
 #### Retrieve the KDC's Authentication Credential # {#kdc-pub-key}
 
-In case the KDC has an associated authentication credential as required for the correct group operation, a group member or an external signature verifier can contact the KDC to request the KDC's authentication credential, by sending a CoAP GET request to the /ace-group/GROUPNAME/kdc-pub-key endpoint at the KDC, where GROUPNAME is the group name.
+In case the KDC has an associated authentication credential as required for the correct group operation, a group member or an external signature verifier can contact the KDC to request the KDC's authentication credential, by sending a CoAP GET request to the /ace-group/GROUPNAME/kdc-cred endpoint at the KDC, where GROUPNAME is the group name.
 
 Upon receiving the 2.05 (Content) response, the Client retrieves the KDC's authentication credential from the ’kdc_cred’ parameter, and MUST verify the proof-of-possession (PoP) evidence specified in the 'kdc_cred_verify' parameter. In case of successful verification of the PoP evidence, the Client MUST store the obtained KDC's authentication credential and replace the currently stored one.
 
@@ -1482,7 +1482,7 @@ A Client can actively request to leave the group. In this case, the Client sends
 
 Note that, after having left the group, the Client may wish to join it again. Then, as long as the Client is still authorized to join the group, i.e., the associated access token is still valid, the Client can request to re-join the group directly to the KDC (see {{ssec-key-distribution-exchange}}), without having to retrieve a new access token from the AS.
 
-## /ace-group/GROUPNAME/nodes/NODENAME/pub-key
+## /ace-group/GROUPNAME/nodes/NODENAME/cred
 
 This resource implements the POST handler.
 
@@ -1512,7 +1512,7 @@ Then, the handler replies with a 2.04 (Changed) response, which does not include
 
 In case the KDC maintains the authentication credentials of group members, a node in the group can contact the KDC to upload a new authentication credential to use in the group, and replace the currently stored one.
 
-To this end, the Client performs an Authentication Credential Update Request-Response exchange with the KDC, i.e., it sends a CoAP POST request to the /ace-group/GROUPNAME/nodes/NODENAME/pub-key endpoint at the KDC, where GROUPNAME is the group name and NODENAME is its node name.
+To this end, the Client performs an Authentication Credential Update Request-Response exchange with the KDC, i.e., it sends a CoAP POST request to the /ace-group/GROUPNAME/nodes/NODENAME/cred endpoint at the KDC, where GROUPNAME is the group name and NODENAME is its node name.
 
 The request is formatted as specified in {{node-pub-key-post}}.
 
@@ -1522,7 +1522,7 @@ Figure {{fig-pub-key-update-req-resp}} gives an overview of the exchange describ
 Client                                                          KDC
 |                                                                |
 |----------- Authentication Credential Update Request: --------->|
-|        POST ace-group/GROUPNAME/nodes/NODENAME/pub-key         |
+|          POST ace-group/GROUPNAME/nodes/NODENAME/cred          |
 |                                                                |
 |<-- Authentication Credential Update Response: 2.04 (Changed) --|
 |                                                                |
