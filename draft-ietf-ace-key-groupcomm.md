@@ -46,7 +46,6 @@ normative:
   RFC8610:
   RFC7252:
   RFC7967:
-  RFC8742:
   RFC8747:
   RFC8949:
   I-D.ietf-cose-rfc8152bis-struct:
@@ -67,6 +66,18 @@ normative:
     date: false
     title: COSE Header Parameters
     target: https://www.iana.org/assignments/cose/cose.xhtml#header-parameters
+  CBOR.Tags:
+    author:
+      org: IANA
+    date: false
+    title: Concise Binary Object Representation (CBOR) Tags
+    target: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
+  CoAP.Content.Formats:
+    author:
+      org: IANA
+    date: false
+    title: CoAP Content-Formats
+    target: https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats
 
 informative:
 
@@ -86,6 +97,7 @@ informative:
   I-D.ietf-ace-oscore-profile:
   I-D.ietf-ace-dtls-authorize:
   I-D.ietf-ace-mqtt-tls-profile:
+  I-D.ietf-cbor-file-magic:
   I-D.tiloca-core-oscore-discovery:
 
 entity:
@@ -1715,19 +1727,9 @@ As also discussed in {{ssec-authorization-response}}, this enables a Resource Se
 
 The extended format is intended only for the 'scope' claim of access tokens, for the cases where the claim takes as value a CBOR byte string. That is, the extended format does not apply to the 'scope' parameter included in ACE messages, i.e., the Authorization Request and Authorization Response exchanged between the Client and the Authorization Server (see {{Sections 5.8.1 and 5.8.2 of I-D.ietf-ace-oauth-authz}}), the AS Request Creation Hints message from the Resource Server (see {{Section 5.3 of I-D.ietf-ace-oauth-authz}}), and the Introspection Response from the Authorization Server (see {{Section 5.9.2 of I-D.ietf-ace-oauth-authz}}).
 
-The value of the 'scope' claim following the extended format is composed as follows. Given the original scope using a semantics SEM and encoded as a CBOR byte string, the corresponding extended scope is encoded as a tagged CBOR byte string, wrapping a CBOR sequence {{RFC8742}} of two elements. In particular:
-
-* The first element of the sequence is a CBOR integer, and identifies the semantics SEM used for this scope. The value of this element has to be taken from the "Value" column of the "ACE Scope Semantics" registry defined in {{iana-scope-semantics}} of this specification.
-
-   When defining a new semantics for a binary scope, it is up to the applications and application profiles to define and register the corresponding integer identifier (REQ28).
-
-* The second element of the sequence is the original scope using the semantics SEM, encoded as a CBOR byte string.
-
-Finally, the CBOR byte string wrapping the CBOR sequence is tagged, and identified by the CBOR tag TBD_TAG "ACE Extended Scope Format", defined in {{iana-cbor-tags}} of this specification.
+The value of the 'scope' claim following the extended format is composed as follows. Given the original scope using a semantics SEM and encoded as a CBOR byte string, the corresponding extended scope consists of the same CBOR byte string enclosed by a CBOR tag {{RFC8949}}, whose tag number identifies the semantics SEM.
 
 The resulting tagged CBOR byte string is used as value of the 'scope' claim of the access token.
-
-The usage of the extended scope format is not limited to application profiles of this specification or to applications based on group communication. Rather, it is generally applicable to any application and application profile where access control information in the access token is expressed as a binary encoded scope.
 
 {{cddl-ex-0-ext}} and {{cddl-ex-ext}} build on the examples in {{ssec-authorization-response}}, and show the corresponding extended scopes.
 
@@ -1747,13 +1749,7 @@ scope_entry = AIF_Generic<gname, permissions>
 
 scope = << [ + scope_entry ] >>
 
-semantics = int
-
-; This defines an array, the elements
-; of which are to be used in a CBOR Sequence:
-sequence = [semantics, scope]
-
-extended_scope = #6.TBD_TAG(<< sequence >>)
+extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 ~~~~~~~~~~~~~~~~~~~~
 {: #cddl-ex-0-ext title="Example CDLL definition of scope, using the default Authorization Information Format"}
 
@@ -1766,15 +1762,17 @@ scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 
 scope = << [ + scope_entry ] >>
 
-semantics = int
-
-; This defines an array, the elements
-; of which are to be used in a CBOR Sequence:
-sequence = [semantics, scope]
-
-extended_scope = #6.TBD_TAG(<< sequence >>)
+extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 ~~~~~~~~~~~~~~~~~~~~
 {: #cddl-ex-ext title="CDLL definition of scope, using as example group name encoded as tstr and role as tstr"}
+
+The usage of the extended scope format is not limited to application profiles of this specification or to applications based on group communication. Rather, it is generally applicable to any application and application profile where access control information in the access token is expressed as a binary encoded scope.
+
+Applications and application profiles using the extended format of scope have to specify which CBOR tag from {{CBOR.Tags}} is used for identifying the scope semantics, or to register a new CBOR tag if a suitable one does not exist already (REQ28). In case there is an already existing, suitable CBOR tag, a new CBOR tag should not be registered in order to avoid codepoint squatting.
+
+If the binary encoded scope uses a semantics associated with a registered CoAP Content-Format {{RFC7252}}{{CoAP.Content.Formats}}, then a suitable CBOR tag associated with that CoAP Content-Format would already be registered, as defined in {{Section 4.3 of I-D.ietf-cbor-file-magic}}.
+
+This is especially relevant when the binary encoded scope uses the AIF format. That is, it is expected that the definition of an AIF specific data model comes together with the registration of CoAP Content-Formats for the relevant combinations of its Toid and Tperm values. As discussed above, this yields the automatic registration of the CBOR tags associated with those CoAP Content-Formats.
 
 # ACE Groupcomm Parameters {#params}
 
@@ -2097,18 +2095,6 @@ IANA is asked to register the following entry in the "Interface Description (if=
 
 * Reference: {{&SELF}}
 
-## CBOR Tags {#iana-cbor-tags}
-
-IANA is asked to register the following entry in the "CBOR Tags" registry.
-
-* Tag : TBD_TAG
-
-* Data Item: byte string
-
-* Semantics: Extended ACE scope format, including the identifier of the used scope semantics.
-
-* Reference: {{&SELF}}
-
 ## ACE Groupcomm Parameters {#iana-reg}
 
 This specification establishes the "ACE Groupcomm Parameters" IANA registry. The
@@ -2192,18 +2178,6 @@ The columns of this registry are:
 * Description: This field contains a brief description for this sequence number synchronization method.
 
 * Reference: This field contains a pointer to the public specification describing the sequence number synchronization method.
-
-## ACE Scope Semantics {#iana-scope-semantics}
-
-This specification establishes the "ACE Scope Semantics" IANA registry. The registry has been created to use the "Expert Review" registration procedure {{RFC8126}}. Expert review guidelines are provided in {{review}}. It should be noted that, in addition to the expert review, some portions of the registry require a specification, potentially a Standards Track RFC, to be supplied as well.
-
-The columns of this registry are:
-
-* Value: The value to be used to identify this scope semantics. The value MUST be unique. The value can be a positive integer or a negative integer. Integer values between 0 and 255 are designated as Standards Track Document required. Integer values from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as expert review. Integer values less than -65536 are marked as private use.
-
-* Description: This field contains a brief description of the scope semantics.
-
-* Reference: This field contains a pointer to the public specification defining the scope semantics, if one exists.
 
 ## ACE Groupcomm Errors {#iana-ace-groupcomm-errors}
 
@@ -2317,7 +2291,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ27: Specify the format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label (see {{node-get}}).
 
-* REQ28: Specify and register the identifier of newly defined semantics for binary scopes (see {{sec-extended-scope}}).
+* REQ28: Specify which CBOR tag is used for identifying the semantics of binary scopes, or register a new CBOR tag if a suitable one does not exist already (see {{sec-extended-scope}}).
 
 * REQ29: Categorize newly defined parameters according to the same criteria of {{params}}.
 
@@ -2402,6 +2376,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 * Consistent renaming of parameters and URI paths.
 
 * Updated format of scope entries when using AIF.
+
+* Updated signaling of semantics for binary encoded scopes.
 
 * Editorial fixes.
 
