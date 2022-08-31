@@ -48,8 +48,8 @@ normative:
   RFC7967:
   RFC8747:
   RFC8949:
-  I-D.ietf-cose-rfc8152bis-struct:
-  I-D.ietf-cose-rfc8152bis-algs:
+  RFC9052:
+  RFC9053:
   I-D.ietf-cose-countersign:
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-core-oscore-groupcomm:
@@ -91,13 +91,13 @@ informative:
   RFC8259:
   RFC8392:
   RFC8613:
+  RFC9277:
   I-D.ietf-core-groupcomm-bis:
   I-D.ietf-core-coap-pubsub:
   I-D.ietf-cose-cbor-encoded-cert:
   I-D.ietf-ace-oscore-profile:
   I-D.ietf-ace-dtls-authorize:
   I-D.ietf-ace-mqtt-tls-profile:
-  I-D.ietf-cbor-file-magic:
   I-D.tiloca-core-oscore-discovery:
 
 entity:
@@ -133,7 +133,7 @@ Readers are expected to be familiar with:
 
 * The terms and concepts described in CoAP {{RFC7252}}. Unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol".
 
-* The terms and concepts described in CBOR {{RFC8949}} and COSE {{I-D.ietf-cose-rfc8152bis-struct}} {{I-D.ietf-cose-rfc8152bis-algs}} {{I-D.ietf-cose-countersign}}.
+* The terms and concepts described in CBOR {{RFC8949}} and COSE {{RFC9052}}{{RFC9053}} {{I-D.ietf-cose-countersign}}.
 
 A principal interested to participate in group communication as well as already participating as a group member is interchangeably denoted as "Client" or "node".
 
@@ -460,7 +460,7 @@ sign_info_entry =
 gname = tstr
 ~~~~~~~~~~~
 
-This format is consistent with every signature algorithm currently defined in {{I-D.ietf-cose-rfc8152bis-algs}}, i.e., with algorithms that have only the COSE key type as their COSE capability. {{sec-future-cose-algs}} describes how the format of each 'sign_info_entry' can be generalized for possible future registered algorithms having a different set of COSE capabilities.
+This format is consistent with every signature algorithm currently defined in {{RFC9053}}, i.e., with algorithms that have only the COSE key type as their COSE capability. {{sec-future-cose-algs}} describes how the format of each 'sign_info_entry' can be generalized for possible future registered algorithms having a different set of COSE capabilities.
 
 ### 'kdcchallenge' Parameter {#kdcchallenge}
 
@@ -1770,7 +1770,7 @@ The usage of the extended scope format is not limited to application profiles of
 
 Applications and application profiles using the extended format of scope have to specify which CBOR tag from {{CBOR.Tags}} is used for identifying the scope semantics, or to register a new CBOR tag if a suitable one does not exist already (REQ28). In case there is an already existing, suitable CBOR tag, a new CBOR tag should not be registered in order to avoid codepoint squatting.
 
-If the binary encoded scope uses a semantics associated with a registered CoAP Content-Format {{RFC7252}}{{CoAP.Content.Formats}}, then a suitable CBOR tag associated with that CoAP Content-Format would already be registered, as defined in {{Section 4.3 of I-D.ietf-cbor-file-magic}}.
+If the binary encoded scope uses a semantics associated with a registered CoAP Content-Format {{RFC7252}}{{CoAP.Content.Formats}}, then a suitable CBOR tag associated with that CoAP Content-Format would already be registered, as defined in {{Section 4.3 of RFC9277}}.
 
 This is especially relevant when the binary encoded scope uses the AIF format. That is, it is expected that the definition of an AIF specific data model comes together with the registration of CoAP Content-Formats for the relevant combinations of its Toid and Tperm values. As discussed above, this yields the automatic registration of the CBOR tags associated with those CoAP Content-Formats.
 
@@ -2331,7 +2331,7 @@ This section lists the requirements on application profiles of this specificatio
 
 # Extensibility for Future COSE Algorithms # {#sec-future-cose-algs}
 
-As defined in {{Section 8.1 of I-D.ietf-cose-rfc8152bis-algs}}, future algorithms can be registered in the "COSE Algorithms" registry {{COSE.Algorithms}} as specifying none or multiple COSE capabilities.
+As defined in {{Section 8.1 of RFC9053}}, future algorithms can be registered in the "COSE Algorithms" registry {{COSE.Algorithms}} as specifying none or multiple COSE capabilities.
 
 To enable the seamless use of such future registered algorithms, this section defines a general, agile format for each 'sign_info_entry' of the 'sign_info' parameter in the Token Transfer Response, see {{sign-info}}.
 
