@@ -50,10 +50,10 @@ normative:
   RFC8949:
   RFC9052:
   RFC9053:
+  RFC9200:
+  RFC9237:
   I-D.ietf-cose-countersign:
-  I-D.ietf-ace-oauth-authz:
   I-D.ietf-core-oscore-groupcomm:
-  I-D.ietf-ace-aif:
   COSE.Algorithms:
     author:
       org: IANA
@@ -80,7 +80,6 @@ normative:
     target: https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats
 
 informative:
-
   RFC2093:
   RFC2094:
   RFC2627:
@@ -91,12 +90,12 @@ informative:
   RFC8259:
   RFC8392:
   RFC8613:
+  RFC9202:
+  RFC9203:
   RFC9277:
   I-D.ietf-core-groupcomm-bis:
   I-D.ietf-core-coap-pubsub:
   I-D.ietf-cose-cbor-encoded-cert:
-  I-D.ietf-ace-oscore-profile:
-  I-D.ietf-ace-dtls-authorize:
   I-D.ietf-ace-mqtt-tls-profile:
   I-D.tiloca-core-oscore-discovery:
 
@@ -129,7 +128,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 Readers are expected to be familiar with:
 
-* The terms and concepts described in the ACE framework {{I-D.ietf-ace-oauth-authz}} and in the Authorization Information Format (AIF) {{I-D.ietf-ace-aif}} to express authorization information. The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes Client (C), Resource Server (RS), and Authorization Server (AS).
+* The terms and concepts described in the ACE framework {{RFC9200}} and in the Authorization Information Format (AIF) {{RFC9237}} to express authorization information. The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes Client (C), Resource Server (RS), and Authorization Server (AS).
 
 * The terms and concepts described in CoAP {{RFC7252}}. Unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol".
 
@@ -159,7 +158,7 @@ Furthermore, this document uses "names" or "identifiers" for groups and nodes. T
 
 This document additionally uses the following terminology:
 
-* Transport profile, to indicate a profile of ACE as per {{Section 5.8.4.3 of I-D.ietf-ace-oauth-authz}}. A transport profile specifies the communication protocol and communication security protocol between an ACE Client and Resource Server, as well as proof-of-possession methods, if it supports proof-of-possession access tokens, etc. Transport profiles of ACE include, for instance, {{I-D.ietf-ace-oscore-profile}}, {{I-D.ietf-ace-dtls-authorize}} and {{I-D.ietf-ace-mqtt-tls-profile}}.
+* Transport profile, to indicate a profile of ACE as per {{Section 5.8.4.3 of RFC9200}}. A transport profile specifies the communication protocol and communication security protocol between an ACE Client and Resource Server, as well as proof-of-possession methods, if it supports proof-of-possession access tokens, etc. Transport profiles of ACE include, for instance, {{RFC9203}}, {{RFC9202}} and {{I-D.ietf-ace-mqtt-tls-profile}}.
 
 * Application profile, that defines how applications enforce and use supporting security services they require. These services may include, for instance, provisioning, revocation and distribution of keying material. An application profile may define specific procedures and message formats.
 
@@ -221,7 +220,7 @@ This document specifies a mechanism for:
 
    Once this exchange is completed, the joining node MUST have a secure communication association established with the KDC, before joining a group under that KDC.
 
-   This exchange and the following secure communications between the Client and the KDC MUST occur in accordance with the transport profile of ACE used between Client and KDC, such as the DTLS transport profile {{I-D.ietf-ace-dtls-authorize}} and OSCORE transport profile {{I-D.ietf-ace-oscore-profile}} of ACE.
+   This exchange and the following secure communications between the Client and the KDC MUST occur in accordance with the transport profile of ACE used between Client and KDC, such as the DTLS transport profile {{RFC9202}} and OSCORE transport profile {{RFC9203}} of ACE.
 
 3. The joining node starts the joining process to become a member of the group, by sending a request to the related group-membership resource at the KDC. Based on the application requirements and policies, the KDC may perform a group rekeying, by generating new group keying material and distributing it to the current group members through the rekeying scheme used in the group.
 
@@ -264,13 +263,13 @@ This document specifies a mechanism for:
 
 # Authorization to Join a Group {#sec-auth}
 
-This section describes in detail the format of messages exchanged by the participants when a node requests access to a given group. This exchange is based on ACE {{I-D.ietf-ace-oauth-authz}}.
+This section describes in detail the format of messages exchanged by the participants when a node requests access to a given group. This exchange is based on ACE {{RFC9200}}.
 
-As defined in {{I-D.ietf-ace-oauth-authz}}, the Client requests the AS for the authorization to join the group through the KDC (see {{ssec-authorization-request}}). If the request is approved and authorization is granted, the AS provides the Client with a proof-of-possession access token and parameters to securely communicate with the KDC (see {{ssec-authorization-response}}).
+As defined in {{RFC9200}}, the Client requests the AS for the authorization to join the group through the KDC (see {{ssec-authorization-request}}). If the request is approved and authorization is granted, the AS provides the Client with a proof-of-possession access token and parameters to securely communicate with the KDC (see {{ssec-authorization-response}}).
 
 Communications between the Client and the AS MUST be secured, according to what is defined by the used transport profile of ACE. The Content-Format used in the message also depends on the used transport profile of ACE. For example, it can be application/ace+cbor for the first two messages and application/cwt for the third message, which are defined in the ACE framework.
 
-The transport profile of ACE also defines a number of details such as the communication and security protocols used with the KDC (see Appendix C of {{I-D.ietf-ace-oauth-authz}}).
+The transport profile of ACE also defines a number of details such as the communication and security protocols used with the KDC (see Appendix C of {{RFC9200}}).
 
 {{fig-group-member-registration}} gives an overview of the exchange described above.
 
@@ -290,13 +289,13 @@ Client                                             AS    KDC
 
 ## Authorization Request {#ssec-authorization-request}
 
-The Authorization Request sent from the Client to the AS is defined in {{Section 5.8.1 of I-D.ietf-ace-oauth-authz}} and MAY contain the following parameters, which, if included, MUST have format and value as specified below.
+The Authorization Request sent from the Client to the AS is defined in {{Section 5.8.1 of RFC9200}} and MAY contain the following parameters, which, if included, MUST have format and value as specified below.
 
 * 'scope', specifying the name of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.
 
    This parameter is encoded as a CBOR byte string, which wraps a CBOR array of one or more scope entries. All the scope entries are specified according to a same format, i.e. either the AIF format or the textual format defined below.
 
-   * If the AIF format is used, each scope entry is encoded as per {{I-D.ietf-ace-aif}}. If a scope entry expresses a set of roles to take in a group as per this document, the object identifier "Toid" specifies the group name and MUST be encoded as a CBOR text string, while the permission set "Tperm" specifies the roles that the Client wishes to take in the group.
+   * If the AIF format is used, each scope entry is encoded as per {{RFC9237}}. If a scope entry expresses a set of roles to take in a group as per this document, the object identifier "Toid" specifies the group name and MUST be encoded as a CBOR text string, while the permission set "Tperm" specifies the roles that the Client wishes to take in the group.
 
       The AIF format is the default format for application profiles of this specification, and is preferable for those that aim to a compact encoding of scope. This is desirable especially for application profiles defining several roles, with the Client possibly requesting for multiple roles combined.
 
@@ -312,13 +311,13 @@ The Authorization Request sent from the Client to the AS is defined in {{Section
 
    It is REQUIRED of application profiles of this specificaton to specify the exact format and encoding of scope (REQ1). This includes defining the set of possible roles and their identifiers, as well as the corresponding encoding to use in the scope entries according to the used scope format.
 
-   If the application profile uses the AIF format, it is also REQUIRED to register its specific instance of "Toid" and "Tperm", as well as the corresponding Media Type and Content-Format, as per the guidelines in {{I-D.ietf-ace-aif}} (REQ2).
+   If the application profile uses the AIF format, it is also REQUIRED to register its specific instance of "Toid" and "Tperm", as well as the corresponding Media Type and Content-Format, as per the guidelines in {{RFC9237}} (REQ2).
 
    If the application profile uses the textual format, it MAY additionally specify CBOR values to use for abbreviating the role identifiers (OPT1).
 
 * 'audience', with an identifier of the KDC.
 
-As defined in {{I-D.ietf-ace-oauth-authz}}, other additional parameters can be included if necessary.
+As defined in {{RFC9200}}, other additional parameters can be included if necessary.
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
 gname = tstr
@@ -351,9 +350,9 @@ scope = << [ + scope_entry ] >>
 
 ## Authorization Response {#ssec-authorization-response}
 
-The AS processes the Authorization Request as defined in {{Section 5.8.2 of I-D.ietf-ace-oauth-authz}}, especially verifying that the Client is authorized to access the specified groups with the requested roles, or possibly a subset of those.
+The AS processes the Authorization Request as defined in {{Section 5.8.2 of RFC9200}}, especially verifying that the Client is authorized to access the specified groups with the requested roles, or possibly a subset of those.
 
-In case of successful verification, the Authorization Response sent from the AS to the Client is also defined in {{Section 5.8.2 of I-D.ietf-ace-oauth-authz}}. Note that the parameter 'expires_in' MAY be omitted if the application defines how the expiration time is communicated to the Client via other means, or if it establishes a default value.
+In case of successful verification, the Authorization Response sent from the AS to the Client is also defined in {{Section 5.8.2 of RFC9200}}. Note that the parameter 'expires_in' MAY be omitted if the application defines how the expiration time is communicated to the Client via other means, or if it establishes a default value.
 
 Additionally, when included, the following parameter MUST have the corresponding values:
 
@@ -365,7 +364,7 @@ The proof-of-possession access token (in 'access_token' above) MUST contain the 
 
 * an expiration time claim (see for example 'exp' defined in {{Section 3.1.4 of RFC8392}} for CWT);
 
-* a scope claim (see for example 'scope' registered in {{Section 8.14 of I-D.ietf-ace-oauth-authz}} for CWT).
+* a scope claim (see for example 'scope' registered in {{Section 8.14 of RFC9200}} for CWT).
 
    This claim specifies the same access control information as in the 'scope' parameter of the Authorization Response, if the parameter is present in the message, or as in the 'scope' parameter of the Authorization Request otherwise.
 
@@ -381,15 +380,15 @@ The proof-of-possession access token (in 'access_token' above) MUST contain the 
 
 The access token MAY additionally contain other claims that the transport profile of ACE requires, or other optional parameters.
 
-When receiving an Authorization Request from a Client that was previously authorized, and for which the AS still owns a valid non-expired access token, the AS MAY reply with that token. Note that it is up to application profiles of ACE to make sure that re-posting the same token does not cause re-use of keying material between nodes (for example, that is done with the use of random nonces in {{I-D.ietf-ace-oscore-profile}}).
+When receiving an Authorization Request from a Client that was previously authorized, and for which the AS still owns a valid non-expired access token, the AS MAY reply with that token. Note that it is up to application profiles of ACE to make sure that re-posting the same token does not cause re-use of keying material between nodes (for example, that is done with the use of random nonces in {{RFC9203}}).
 
 ## Token Transferring {#token-post}
 
-The Client sends a Token Transfer Request to the KDC, i.e., a CoAP POST request including the access token and targeting the authz-info endpoint (see {{Section 5.10.1 of I-D.ietf-ace-oauth-authz}}).
+The Client sends a Token Transfer Request to the KDC, i.e., a CoAP POST request including the access token and targeting the authz-info endpoint (see {{Section 5.10.1 of RFC9200}}).
 
-Note that this request deviates from the one defined in {{I-D.ietf-ace-oauth-authz}}, since it allows to ask the KDC for additional information concerning the authentication credentials used in the group to ensure source authentication, as well as for possible additional group parameters.
+Note that this request deviates from the one defined in {{RFC9200}}, since it allows to ask the KDC for additional information concerning the authentication credentials used in the group to ensure source authentication, as well as for possible additional group parameters.
 
-The joining node MAY ask for this information from the KDC through the same Token Transfer Request. In this case, the message MUST have Content-Format set to application/ace+cbor defined in {{Section 8.16 of I-D.ietf-ace-oauth-authz}}, and the message payload MUST be formatted as a CBOR map, which MUST include the access token. The CBOR map MAY additionally include the following parameter, which, if included, MUST have format and value as specified below.
+The joining node MAY ask for this information from the KDC through the same Token Transfer Request. In this case, the message MUST have Content-Format set to application/ace+cbor defined in {{Section 8.16 of RFC9200}}, and the message payload MUST be formatted as a CBOR map, which MUST include the access token. The CBOR map MAY additionally include the following parameter, which, if included, MUST have format and value as specified below.
 
 * 'sign_info' defined in {{sign-info}}, specifying the CBOR simple value "null" (0xf6) to request information about the signature algorithm, signature algorithm parameters, signature key parameters and about the exact format of authentication credentials used in the groups that the Client has been authorized to join.
 
@@ -397,7 +396,7 @@ Alternatively, such information may be pre-configured on the joining node, or ma
 
 After successful verification, the Client is authorized to receive the group keying material from the KDC and join the group. Hence, the KDC replies to the Client with a Token Transfer Response, i.e., a  CoAP 2.01 (Created) response.
 
-The Token Transfer Response MUST have Content-Format "application/ace+cbor", and its payload is a CBOR map. Note that this deviates from what is defined in the ACE framework, where the response from the authz-info endpoint is defined as conveying no payload (see {{Section 5.10.1 of I-D.ietf-ace-oauth-authz}}).
+The Token Transfer Response MUST have Content-Format "application/ace+cbor", and its payload is a CBOR map. Note that this deviates from what is defined in the ACE framework, where the response from the authz-info endpoint is defined as conveying no payload (see {{Section 5.10.1 of RFC9200}}).
 
 If the access token contains a role that requires the Client to send its own authentication credential to the KDC when joining the group, the CBOR map MUST include the parameter 'kdcchallenge' defined in {{kdcchallenge}}, specifying a dedicated challenge N_S generated by the KDC.
 
@@ -413,11 +412,11 @@ Note that the CBOR map specified as payload of the 2.01 (Created) response may i
 
 Application profiles of this specification MAY define alternative specific negotiations of parameter values for the signature algorithm and signature keys, if 'sign_info' is not used (OPT3).
 
-If allowed by the used transport profile of ACE, the Client may provide the Access Token to the KDC by other means than the Token Transfer Request. An example is the DTLS transport profile of ACE, where the Client can provide the access token to the KDC during the secure session establishment (see {{Section 3.3.2 of I-D.ietf-ace-dtls-authorize}}).
+If allowed by the used transport profile of ACE, the Client may provide the Access Token to the KDC by other means than the Token Transfer Request. An example is the DTLS transport profile of ACE, where the Client can provide the access token to the KDC during the secure session establishment (see {{Section 3.3.2 of RFC9202}}).
 
 ### 'sign_info' Parameter {#sign-info}
 
-The 'sign_info' parameter is an OPTIONAL parameter of the request and response messages exchanged between the Client and the authz-info endpoint at the RS (see {{Section 5.10.1. of I-D.ietf-ace-oauth-authz}}).
+The 'sign_info' parameter is an OPTIONAL parameter of the request and response messages exchanged between the Client and the authz-info endpoint at the RS (see {{Section 5.10.1. of RFC9200}}).
 
 This parameter allows the Client and the RS to exchange information about a signature algorithm and about authentication credentials to accordingly use for signature verification. Its exact semantics and content are application specific.
 
@@ -464,7 +463,7 @@ This format is consistent with every signature algorithm currently defined in {{
 
 ### 'kdcchallenge' Parameter {#kdcchallenge}
 
-The 'kdcchallenge' parameter is an OPTIONAL parameter of response message returned from the authz-info endpoint at the RS, as defined in {{Section 5.10.1 of I-D.ietf-ace-oauth-authz}}. This parameter contains a challenge generated by the RS and provided to the Client.
+The 'kdcchallenge' parameter is an OPTIONAL parameter of response message returned from the authz-info endpoint at the RS, as defined in {{Section 5.10.1 of RFC9200}}. This parameter contains a challenge generated by the RS and provided to the Client.
 
 In this specification and in application profiles building on it, the Client may use this challenge to prove possession of its own private key in the Join Request (see the 'client_cred_verify' parameter in {{gid-post}}).
 
@@ -572,7 +571,7 @@ Unless the request targets the /ace-group resource, the KDC MUST check that it i
 
 * The set of roles specified in that scope entry allows the Client to perform the requested operation on the targeted resource (REQ11).
 
-In case the KDC stores a valid access token but the verifications above fail, the KDC MUST reply with a 4.03 (Forbidden) error response. This response MAY be an AS Request Creation Hints, as defined in {{Section 5.3 of I-D.ietf-ace-oauth-authz}}, in which case the Content-Format MUST be set to application/ace+cbor.
+In case the KDC stores a valid access token but the verifications above fail, the KDC MUST reply with a 4.03 (Forbidden) error response. This response MAY be an AS Request Creation Hints, as defined in {{Section 5.3 of RFC9200}}, in which case the Content-Format MUST be set to application/ace+cbor.
 
 If the request is not formatted correctly (e.g., required fields are not present or are not encoded as expected), the handler MUST reply with a 4.00 (Bad Request) error response.
 
@@ -1575,7 +1574,7 @@ A Client identified by NODENAME may be removed from a group identified by GROUPN
 
 2. The node has been found compromised or is suspected so.
 
-3. The Client's authorization to be a group member with the current roles is not valid anymore, i.e., the access token has expired or has been revoked. If the AS provides token introspection (see {{Section 5.9 of I-D.ietf-ace-oauth-authz}}), the KDC can optionally use it and check whether the Client is still authorized.
+3. The Client's authorization to be a group member with the current roles is not valid anymore, i.e., the access token has expired or has been revoked. If the AS provides token introspection (see {{Section 5.9 of RFC9200}}), the KDC can optionally use it and check whether the Client is still authorized.
 
 In either case, the KDC performs the following actions.
 
@@ -1725,7 +1724,7 @@ This section defines an extended format of binary encoded scope, which additiona
 
 As also discussed in {{ssec-authorization-response}}, this enables a Resource Server to unambiguously process a received access token, also in case the Resource Server runs multiple applications or application profiles that involve different scope semantics.
 
-The extended format is intended only for the 'scope' claim of access tokens, for the cases where the claim takes as value a CBOR byte string. That is, the extended format does not apply to the 'scope' parameter included in ACE messages, i.e., the Authorization Request and Authorization Response exchanged between the Client and the Authorization Server (see {{Sections 5.8.1 and 5.8.2 of I-D.ietf-ace-oauth-authz}}), the AS Request Creation Hints message from the Resource Server (see {{Section 5.3 of I-D.ietf-ace-oauth-authz}}), and the Introspection Response from the Authorization Server (see {{Section 5.9.2 of I-D.ietf-ace-oauth-authz}}).
+The extended format is intended only for the 'scope' claim of access tokens, for the cases where the claim takes as value a CBOR byte string. That is, the extended format does not apply to the 'scope' parameter included in ACE messages, i.e., the Authorization Request and Authorization Response exchanged between the Client and the Authorization Server (see {{Sections 5.8.1 and 5.8.2 of RFC9200}}), the AS Request Creation Hints message from the Resource Server (see {{Section 5.3 of RFC9200}}), and the Introspection Response from the Authorization Server (see {{Section 5.9.2 of RFC9200}}).
 
 The value of the 'scope' claim following the extended format is composed as follows. Given the original scope using a semantics SEM and encoded as a CBOR byte string, the corresponding extended scope consists of the same CBOR byte string enclosed by a CBOR tag {{RFC8949}}, whose tag number identifies the semantics SEM.
 
@@ -1933,7 +1932,7 @@ In particular, the following guidelines apply, and application profiles of this 
 
 # Security Considerations {#sec-cons}
 
-Security considerations are inherited from the ACE framework {{I-D.ietf-ace-oauth-authz}}, and from the specific transport profile of ACE used between the Clients and the KDC, e.g., {{I-D.ietf-ace-dtls-authorize}} and {{I-D.ietf-ace-oscore-profile}}.
+Security considerations are inherited from the ACE framework {{RFC9200}}, and from the specific transport profile of ACE used between the Clients and the KDC, e.g., {{RFC9202}} and {{RFC9203}}.
 
 Furthermore, the following security considerations apply.
 
@@ -2071,7 +2070,7 @@ IANA is asked to register the following entries in the "OAuth Parameters" regist
 ## OAuth Parameters CBOR Mappings {#iana-kinfo-map}
 
 IANA is asked to register the following entries in the "OAuth Parameters CBOR
-Mappings" registry following the procedure specified in {{Section 8.10 of I-D.ietf-ace-oauth-authz}}.
+Mappings" registry following the procedure specified in {{Section 8.10 of RFC9200}}.
 
 * Name: sign_info
 * CBOR Key: TBD (range -256 to 255)
@@ -2239,7 +2238,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ1: Specify the format and encoding of 'scope'. This includes defining the set of possible roles and their identifiers, as well as the corresponding encoding to use in the scope entries according to the used scope format (see {{ssec-authorization-request}}).
 
-* REQ2: If the AIF format of 'scope' is used, register its specific instance of "Toid" and "Tperm" as Media Type parameters and a corresponding Content-Format, as per the guidelines in {{I-D.ietf-ace-aif}}.
+* REQ2: If the AIF format of 'scope' is used, register its specific instance of "Toid" and "Tperm" as Media Type parameters and a corresponding Content-Format, as per the guidelines in {{RFC9237}}.
 
 * REQ3: If used, specify the acceptable values for 'sign_alg' (see {{token-post}}).
 
@@ -2283,7 +2282,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ23: Specify the security protocol the group members must use to protect their communication (e.g., group OSCORE). This must provide encryption, integrity and replay protection.
 
-* REQ24: Specify how the communication is secured between Client and KDC. Optionally, specify transport profile of ACE {{I-D.ietf-ace-oauth-authz}} to use between Client and KDC (see {{ssec-key-distribution-exchange}}.
+* REQ24: Specify how the communication is secured between Client and KDC. Optionally, specify transport profile of ACE {{RFC9200}} to use between Client and KDC (see {{ssec-key-distribution-exchange}}.
 
 * REQ25: Specify the format of the identifiers of group members (see {{gid-post}}).
 
