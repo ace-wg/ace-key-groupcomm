@@ -2282,7 +2282,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ23: Specify the security protocol the group members must use to protect their communication (e.g., group OSCORE). This must provide encryption, integrity and replay protection.
 
-* REQ24: Specify how the communication is secured between Client and KDC. Optionally, specify transport profile of ACE {{RFC9200}} to use between Client and KDC (see {{ssec-key-distribution-exchange}}.
+* REQ24: Specify how the communication is secured between Client and KDC. Optionally, specify transport profile of ACE {{RFC9200}} to use between Client and KDC (see {{ssec-key-distribution-exchange}}).
 
 * REQ25: Specify the format of the identifiers of group members (see {{gid-post}}).
 
