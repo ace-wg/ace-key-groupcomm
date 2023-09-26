@@ -452,8 +452,8 @@ sign_info_entry =
   id : gname / [ + gname ],
   sign_alg : int / tstr,
   sign_parameters : [ any ],
-  sign_key_parameters : [ any ],
-  cred_fmt = int / null
+  sign_key_parameters : [ + parameter : any ],
+  cred_fmt : int / null
 ]
 
 gname = tstr
@@ -2349,15 +2349,9 @@ sign_info_entry =
 [
   id : gname / [ + gname ],
   sign_alg : int / tstr,
-  sign_parameters : [ alg_capab_1 : any,
-                      alg_capab_2 : any,
-                      ...,
-                      alg_capab_N : any],
-  sign_capab_1 : [ any ],
-  sign_capab_2 : [ any ],
-  ...,
-  sign_capab_N : [ any ],
-  cred_fmt = int / null
+  sign_parameters : [ * alg_capab : any ],
+  * sign_capab : [ * capab : any ],
+  cred_fmt : int / null
 ]
 
 gname = tstr
