@@ -2347,11 +2347,11 @@ The format of each 'sign_info_entry' (see {{sign-info}}) is generalized as follo
 ~~~~~~~~~~~ CDDL
 sign_info_entry =
 [
-  id : gname / [ + gname ],
-  sign_alg : int / tstr,
-  sign_parameters : [ * alg_capab : any ],
+    id : gname / [ + gname ],
+    sign_alg : int / tstr,
+    sign_parameters : [ * alg_capab : any ],
   * sign_capab : [ * capab : any ],
-  cred_fmt : int / null
+    cred_fmt : int / null
 ]
 
 gname = tstr
