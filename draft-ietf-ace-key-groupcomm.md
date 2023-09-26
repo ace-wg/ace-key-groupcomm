@@ -2362,6 +2362,12 @@ gname = tstr
 
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
+## Version -16 to -17 ## {#sec-16-17}
+
+* Fixed the CDDL definition of 'sign_info_entry'
+
+* Fixes and editorial improvements.
+
 ## Version -15 to -16 ## {#sec-15-16}
 
 * Distinction between authentication credentials and public keys.
