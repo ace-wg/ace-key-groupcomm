@@ -52,7 +52,7 @@ normative:
   RFC9053:
   RFC9200:
   RFC9237:
-  I-D.ietf-cose-countersign:
+  RFC9338:
   I-D.ietf-core-oscore-groupcomm:
   COSE.Algorithms:
     author:
@@ -132,7 +132,7 @@ Readers are expected to be familiar with:
 
 * The terms and concepts described in CoAP {{RFC7252}}. Unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol".
 
-* The terms and concepts described in CBOR {{RFC8949}} and COSE {{RFC9052}}{{RFC9053}} {{I-D.ietf-cose-countersign}}.
+* The terms and concepts described in CBOR {{RFC8949}} and COSE {{RFC9052}}{{RFC9053}}{{RFC9338}}.
 
 A principal interested to participate in group communication as well as already participating as a group member is interchangeably denoted as "Client" or "node".
 
@@ -1698,7 +1698,7 @@ First, the KDC computes a COSE_Encrypt0 object as follows.
 
 * The unprotected header of the COSE_Encrypt0 object MUST include the 'Partial IV' parameter, with value the Partial IV computed above.
 
-In order to ensure source authentication, each rekeying message protected with the administrative keying material MUST be signed by the KDC. To this end, the KDC computes a countersignature of the COSE_Encrypt0 object, as described in {{Sections 3.2 and 3.3 of I-D.ietf-cose-countersign}}. In particular, the following applies when computing the countersignature.
+In order to ensure source authentication, each rekeying message protected with the administrative keying material MUST be signed by the KDC. To this end, the KDC computes a countersignature of the COSE_Encrypt0 object, as described in {{Sections 3.2 and 3.3 of RFC9338}}. In particular, the following applies when computing the countersignature.
 
 * The Countersign_structure contains the context text string "CounterSignature0".
 
