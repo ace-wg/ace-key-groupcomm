@@ -200,15 +200,15 @@ This document specifies a mechanism for:
 
 * Authorizing a Client to join the group ({{sec-auth}}), and providing it with the group keying material to communicate with the other group members ({{key-distr}}).
 
-* Allowing a group member to retrieve group keying material ({{update-keys}} and {{new-keys}}).
+* Allowing a group member to retrieve group keying material ({{ssec-key-material-retrieval}} and {{update-keys}}).
 
 * Allowing a group member to retrieve authentication credentials of other group members ({{sec-key-retrieval}}) and to provide an updated authentication credential ({{update-pub-key}}).
 
-* Allowing a group member to leave the group ({{sec-node-removal}}).
+* Allowing a group member to leave the group ({{ssec-group-leaving}}).
 
 * Evicting a group member from the group ({{sec-node-removal}}).
 
-* Renewing and re-distributing the group keying material (rekeying) upon a membership change in the group ({{ssec-group-leaving}} and {{sec-node-removal}}).
+* Renewing and re-distributing the group keying material (rekeying), e.g., upon a membership change in the group ({{sec-group-rekeying}}).
 
 {{fig-flow}} provides a high level overview of the message flow for a node joining a group. The message flow can be expanded as follows.
 
