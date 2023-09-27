@@ -2110,7 +2110,7 @@ The columns of this registry are:
 
 * Reference: This contains a pointer to the public specification for the item.
 
-This registry has been initially populated by the values in {{fig-ACE-Groupcomm-Parameters}}. The Reference column for all of these entries refers to sections of this document.
+This registry has been initially populated with the values in {{fig-ACE-Groupcomm-Parameters}}. The Reference column for all of these entries refers to sections of this document.
 
 ## ACE Groupcomm Key Types {#iana-key}
 
@@ -2130,7 +2130,7 @@ The columns of this registry are:
 
 * References: This contains a pointer to the public specification for the format of the keying material, if one exists.
 
-This registry has been initially populated by the values in {{gkty}}. The specification column for all of these entries will be this document.
+This registry has been initially populated with the values in {{gkty}}. The specification column for all of these entries will be this document.
 
 ## ACE Groupcomm Profiles
 
@@ -2162,7 +2162,7 @@ The columns of this registry are:
 
 * Reference: This field contains a pointer to the public specification providing the format of the group communication policy, if one exists.
 
-This registry has been initially populated by the values in {{fig-ACE-Groupcomm-Policies}}.
+This registry has been initially populated with the values in {{fig-ACE-Groupcomm-Policies}}.
 
 ## Sequence Number Synchronization Methods
 
@@ -2190,7 +2190,7 @@ The columns of this registry are:
 
 * Reference: This field contains a pointer to the public specification defining the error, if one exists.
 
-This registry has been initially populated by the values in {{fig-ACE-Groupcomm-Error-Identifiers}}. The Reference column for all of these entries refers to this document.
+This registry has been initially populated with the values in {{fig-ACE-Groupcomm-Error-Identifiers}}. The Reference column for all of these entries refers to this document.
 
 ## ACE Groupcomm Rekeying Schemes {#iana-ace-groupcomm-rekeying-schemes}
 
@@ -2206,7 +2206,7 @@ The columns of this registry are:
 
 * Reference: This field contains a pointer to the public specification defining the group rekeying scheme, if one exists.
 
-This registry has been initially populated by the value in {{rekeying-scheme-0}}.
+This registry has been initially populated with the value in {{rekeying-scheme-0}}.
 
 ## Expert Review Instructions {#review}
 
