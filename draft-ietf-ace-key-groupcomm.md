@@ -2068,7 +2068,7 @@ This specification registers the 'application/ace-groupcomm+cbor' media type for
 
    Author: Francesca Palombini <francesca.palombini@ericsson.com>
 
-   Change controller: IESG
+   Change controller: IETF
 
 ## CoAP Content-Formats {#content-type}
 
@@ -2088,14 +2088,14 @@ IANA is asked to register the following entries in the "OAuth Parameters" regist
 
 *  Parameter name: sign_info
 *  Parameter usage location: client-rs request, rs-client response
-*  Change Controller: IESG
+*  Change Controller: IETF
 *  Specification Document(s): {{&SELF}}
 
 &nbsp;
 
 *  Parameter name: kdcchallenge
 *  Parameter usage location: rs-client response
-*  Change Controller: IESG
+*  Change Controller: IETF
 *  Specification Document(s): {{&SELF}}
 
 ## OAuth Parameters CBOR Mappings {#iana-kinfo-map}
