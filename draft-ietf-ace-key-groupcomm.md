@@ -176,7 +176,7 @@ Examples throughout this document are expressed in CBOR diagnostic notation with
 
 # Overview
 
-The full procedure can be separated in two phases: the first one follows the ACE Framework, between Client, AS, and KDC; the second one is the key distribution between Client and KDC. After the two phases are completed, the Client is able to participate in the group communication, via a Dispatcher entity.
+At a high level, the key provisioning process is separated in two phases: the first one follows the ACE Framework between Client, AS, and KDC; the second one is the actual key distribution between Client and KDC. After the two phases are completed, the Client is able to participate in the group communication, via a Dispatcher entity.
 
 ~~~~~~~~~~~
 +------------+               +-----------+
@@ -2420,6 +2420,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 * Expanded definition of "Dispatcher".
 
 * Added definition of "Individual keying material" to the terminology.
+
+* Clarified high-level breakdown of the key provisioning process in two phases.
 
 * Fixed the CDDL definition of 'sign_info_entry'.
 
