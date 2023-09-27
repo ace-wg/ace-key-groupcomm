@@ -1081,6 +1081,8 @@ If all verifications succeed, the handler returns a 2.05 (Content) message respo
 
 * 'peer\_roles', which encodes the role (or CBOR array of roles) that each of the selected group members has in the group.
 
+   This parameter SHOULD be present and it MAY be omitted, according to the same criteria defined for the Join Response (see {{gid-post}}).
+
 * 'peer\_identifiers', which encodes the node identifier that each of the selected group members has in the group.
 
 The specific format of authentication credentials as well as of node identifiers of group members is specified by the application profile (REQ6, REQ25).
@@ -1144,6 +1146,8 @@ Payload (in CBOR diagnostic notation):
 The handler expects a GET request.
 
 If all verifications succeed, the KDC replies with a 2.05 (Content) response as in the FETCH handler in {{pubkey-fetch}}, but specifying in the payload the authentication credentials of all the group members, together with their roles and node identifiers.
+
+The parameter 'peer_roles' SHOULD be present in the payload of the response and it MAY be omitted, according to the same criteria defined for the Join Response (see {{gid-post}}).
 
 #### Retrieve All Authentication Credentials in the Group {#sec-key-retrieval-all}
 
