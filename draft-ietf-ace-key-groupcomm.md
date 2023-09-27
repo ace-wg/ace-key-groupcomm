@@ -1010,7 +1010,7 @@ A node in the group can contact the KDC to retrieve the current group keying mat
 ~~~~~~~~~~~
 Client                                                              KDC
    |                                                                 |
-   |----- Key Distribution Request: POST /ace-group/GROUPNAME ------>|
+   |----- Key Distribution Request: GET /ace-group/GROUPNAME ------>|
    |                                                                 |
    |<----------- Key Distribution Response: 2.05 (Content) --------- |
    |                                                                 |
@@ -1381,19 +1381,21 @@ In order to mitigate this, a node that supports the No-Response option {{RFC7967
 
 When any of the following happens, a node MUST stop using the owned group keying material to protect outgoing messages, and SHOULD stop using it to decrypt and verify incoming messages.
 
-* Upon expiration of the keying material, according to what indicated by the KDC with the 'exp' parameter in a Join Response, or to a pre-configured value.
+* Upon expiration of the keying material, according to what is indicated by the KDC with the 'exp' parameter (e.g., in a Join Response), or to a pre-configured value.
 
 * Upon receiving a notification of revoked/renewed keying material from the KDC, possibly as part of an update of the keying material (rekeying) triggered by the KDC.
 
 * Upon receiving messages from other group members without being able to retrieve the keying material to correctly decrypt them. This may be due to rekeying messages previously sent by the KDC, that the Client was not able to receive or decrypt.
 
-In either case, if it wants to continue participating in the group communication, the node has to request the latest keying material from the KDC. To this end, the Client sends a CoAP GET request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, formatted as specified in {{node-get}}.
+In either case, if it wants to continue participating in the group communication, the Client has to request the latest keying material from the KDC. To this end, the Client sends a CoAP GET request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, formatted as specified in {{node-get}}.
 
-Note that policies can be set up, so that the Client sends a Key Re-Distribution request to the KDC only after a given number of received messages could not be decrypted (because of failed decryption processing or inability to retrieve the necessary keying material).
+Note that policies can be set up, so that the Client sends a Key Distribution Request to the KDC only after a given number of received messages could not be decrypted (because of failed decryption processing or inability to retrieve the necessary keying material).
 
 It is application dependent and pertaining to the particular message exchange (e.g., {{I-D.ietf-core-oscore-groupcomm}}) to set up these policies for instructing Clients to retain incoming messages and for how long (OPT11). This allows Clients to possibly decrypt such messages after getting updated keying material, rather than just consider them non valid messages to discard right away.
 
-The same Key Distribution Request could also be sent by the Client without being triggered by a failed decryption of a message, if the Client wants to be sure that it has the latest group keying material. If that is the case, the Client will receive from the KDC the same group keying material it already has in memory.
+After having failed to decrypt messages from another group member and having sent a Key Distribution Request to the KDC, the Client might end up retrieving the same, latest group keying material that it already stores. In such a case, multiple failed decryptions might be due to the message sender and/or the KDC that have changed their authentication credential. Hence, the Client can retrieve such latest authentication credentials, by sending to the KDC an Authentication Credential Request (see {{sec-key-retrieval}} and {{sec-key-retrieval-all}}) and a KDC Authentication Credential Request (see {{kdc-pub-key}}), respectively.
+
+The Client can also send to the KDC a Key Distribution Request without having been triggered by a failed decryption of a message from another group member, if the Client wants to be sure that it currently stores the latest group keying material. If that is the case, the Client will receive from the KDC the same group keying material it already stores.
 
 {{fig-key-redistr-req-resp}} gives an overview of the exchange described above, while {{fig-key-redistr-req-resp-2}} shows an example.
 
@@ -2391,6 +2393,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 * Fixed the CDDL definition of 'sign_info_entry'.
 
 * Relaxed rule about including the 'peer_roles' parameter.
+
+* More guidelines for group members that fail to decrypt messages.
 
 * Added reserved value to the "ACE Groupcomm Profiles" IANA registry.
 
