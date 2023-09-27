@@ -1910,7 +1910,7 @@ This specification defines a number of values that the KDC can include as error 
 |   6   | Group deleted                               |
 +-------+---------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-ACE-Groupcomm-Error Identifiers title="ACE Groupcomm Error Identifiers" artwork-align="center"}
+{: #fig-ACE-Groupcomm-Error-Identifiers title="ACE Groupcomm Error Identifiers" artwork-align="center"}
 
 A Client supporting the 'error' parameter (see {{kdc-if-errors}} and {{params}}) and able to understand the specified error may use that information to determine what actions to take next. If it is included in the error response and supported by the Client, the 'error_description' parameter may provide additional context.
 
@@ -2110,7 +2110,7 @@ The columns of this registry are:
 
 * Reference: This contains a pointer to the public specification for the item.
 
-This registry has been initially populated by the values in {{params}}. The Reference column for all of these entries refers to sections of this document.
+This registry has been initially populated by the values in {{fig-ACE-Groupcomm-Parameters}}. The Reference column for all of these entries refers to sections of this document.
 
 ## ACE Groupcomm Key Types {#iana-key}
 
@@ -2162,7 +2162,7 @@ The columns of this registry are:
 
 * Reference: This field contains a pointer to the public specification providing the format of the group communication policy, if one exists.
 
-This registry will be initially populated by the values in {{fig-ACE-Groupcomm-Policies}}.
+This registry has been initially populated by the values in {{fig-ACE-Groupcomm-Policies}}.
 
 ## Sequence Number Synchronization Methods
 
@@ -2190,7 +2190,7 @@ The columns of this registry are:
 
 * Reference: This field contains a pointer to the public specification defining the error, if one exists.
 
-This registry has been initially populated by the values in {{error-types}}. The Reference column for all of these entries refers to this document.
+This registry has been initially populated by the values in {{fig-ACE-Groupcomm-Error-Identifiers}}. The Reference column for all of these entries refers to this document.
 
 ## ACE Groupcomm Rekeying Schemes {#iana-ace-groupcomm-rekeying-schemes}
 
