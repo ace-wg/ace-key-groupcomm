@@ -493,7 +493,7 @@ The KDC provides its interface by hosting the following resources. Note that the
 
 If request messages sent to the KDC as well as success response messages from the KDC include a payload and specify a Content-Format, those messages MUST have Content-Format set to application/ace-groupcomm+cbor, defined in {{content-type}}. CBOR labels for the message parameters are defined in {{params}}.
 
-* /ace-group : this resource is invariant once established, and indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same resource, those applications will collide, and a mechanism will be needed to differentiate the endpoints.
+* /ace-group : the path of this resource is invariant once the resource is established, and indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same path, those applications will collide, and a mechanism will be needed to differentiate the endpoints.
 
   A Client can access this resource in order to retrieve a set of group names, each corresponding to one of the specified group identifiers. This operation is described in {{retrieval-gnames}}.
 
@@ -503,7 +503,7 @@ If request messages sent to the KDC as well as success response messages from th
 
   If the value of the GROUPNAME URI path and the group name in the access token scope ('gname' in {{ssec-authorization-response}}) are not required to coincide, the KDC MUST implement a mechanism to map the GROUPNAME value in the URI to the group name, in order to refer to the correct group (REQ7).
 
-* /ace-group/GROUPNAME/creds : this resource is invariant once established, and contains the authentication credentials of all the members of the group with name GROUPNAME.
+* /ace-group/GROUPNAME/creds : the path of this resource is invariant once the resource is established. This resource contains the authentication credentials of all the members of the group with name GROUPNAME.
 
   This resource is created only in case the KDC acts as repository of authentication credentials for group members.
 
@@ -511,7 +511,7 @@ If request messages sent to the KDC as well as success response messages from th
 
   Clients may be authorized to access this resource even without being group members, e.g., if authorized to be external signature verifiers for the group.
 
-* ace-group/GROUPNAME/kdc-cred : this resource is invariant once established, and contains the authentication credential of the KDC for the group with name GROUPNAME.
+* ace-group/GROUPNAME/kdc-cred : the path of this resource is invariant once the resource is established. This resource contains the authentication credential of the KDC for the group with name GROUPNAME.
 
    This resource is created only in case the KDC has an associated authentication credential and this is required for the correct group operation. It is REQUIRED of application profiles to define whether the KDC has such an associated authentication credential (REQ8).
 
@@ -519,11 +519,11 @@ If request messages sent to the KDC as well as success response messages from th
 
    Clients may be authorized to access this resource even without being group members, e.g., if authorized to be external signature verifiers for the group.
 
-* /ace-group/GROUPNAME/policies : this resource is invariant once established, and contains the group policies of the group with name GROUPNAME.
+* /ace-group/GROUPNAME/policies : the path of this resource is invariant once the resource is established. This resource contains the group policies of the group with name GROUPNAME.
 
   A Client can access this resource as a group member in order to retrieve the group policies. This operation is described in {{policies}}.
 
-* /ace-group/GROUPNAME/num : this resource is invariant once established, and contains the current version number for the symmetric group keying material of the group with name GROUPNAME.
+* /ace-group/GROUPNAME/num : the path of this resource is invariant once the resource is established. This resource contains the current version number for the symmetric group keying material of the group with name GROUPNAME.
 
   A Client can access this resource as a group member in order to retrieve the version number of the keying material currently used in the group. This operation is described in {{key-version}}.
 
@@ -531,7 +531,7 @@ If request messages sent to the KDC as well as success response messages from th
 
   A Client as a group member can access this resource in order to retrieve the current group keying material together with its the individual keying material; request new individual keying material to use in the group; and leave the group. These operations are described in {{update-keys}}, {{new-keys}}, and {{ssec-group-leaving}}, respectively.
 
-* /ace-group/GROUPNAME/nodes/NODENAME/cred : this resource is invariant once established, and contains the individual authentication credential for the node with name NODENAME, as group member of the group with name GROUPNAME.
+* /ace-group/GROUPNAME/nodes/NODENAME/cred : the path of this resource is invariant once the resource is established. This resource contains the individual authentication credential for the node with name NODENAME, as group member of the group with name GROUPNAME.
 
   A Client can access this resource in order to upload at the KDC a new authentication credential to use in the group. This operation is described in {{update-pub-key}}.
 
@@ -2420,6 +2420,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 * Fixed the CDDL definition of 'sign_info_entry'.
 
 * Clarified meaning of the 'cred_fmt' and 'exp' parameters.
+
+* Clarified that invariance applies to resources paths, not to resources.
 
 * Relaxed rule about including the 'peer_roles' parameter.
 
