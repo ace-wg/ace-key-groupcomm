@@ -800,13 +800,14 @@ The Join Response message MUST have Content-Format application/ace-groupcomm+cbo
 The exact format of the 'key' value MUST be defined in applications of this specification (REQ17), as well as values of 'gkty' accepted by the application (REQ18). Additionally, documents specifying the key format MUST register it in the "ACE Groupcomm Key Types" registry defined in {{iana-key}}, including its name, type and application profile to be used with.
 
 ~~~~~~~~~~~
-+----------+----------------+---------+-------------------------+
-| Name     | Key Type Value | Profile | Description             |
-+----------+----------------+---------+-------------------------+
-| Reserved | 0              |         | This value is reserved  |
-+----------+----------------+---------+-------------------------+
++----------+----------------+---------+-------------+------------+
+| Name     | Key Type Value | Profile | Description | References |
++----------+----------------+---------+-------------+------------+
+| Reserved | 0              |         | This value  | [RFC-XXXX] |
+|          |                |         | is reserved |            |
++----------+----------------+---------+-------------+------------+
 ~~~~~~~~~~~
-{: #gkty title="Key Type Values" artwork-align="center"}
+{: #fig-gkty title="ACE Groupcomm Key Types" artwork-align="center"}
 
 The response SHOULD contain the following parameter:
 
@@ -815,6 +816,15 @@ The response SHOULD contain the following parameter:
 Optionally, the response MAY contain the following parameters, which, if included, MUST have format and value as specified below.
 
 * 'ace-groupcomm-profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. Applications of this specification MUST register an application profile identifier and the related value for this parameter in the "ACE Groupcomm Profiles" registry (REQ19).
+
+~~~~~~~~~~~
++----------+------------------------+------------+------------+
+| Name     | Description            | CBOR Value | Reference  |
++----------+------------------------+------------+------------+
+| Reserved | This value is reserved | 0          | [RFC-XXXX] |
++----------+------------------------+------------+------------+
+~~~~~~~~~~~
+{: #ace-groupcomm-profile-0 title="ACE Groupcomm Profiles" artwork-align="center"}
 
 * 'creds', MUST be present if 'get\_creds' was present in the request, otherwise it MUST NOT be present. This parameter is a CBOR array specifying the authentication credentials of the group members, i.e., of all of them or of the ones selected according to the 'get\_creds' parameter in the request. In particular, each element of the array is a CBOR byte string, with value the original binary representation of a group member's authentication credential. It is REQUIRED of the application profiles to define the specific formats of authentication credentials that are acceptable to use in the group (REQ6).
 
@@ -2110,7 +2120,7 @@ The columns of this registry are:
 
 * Reference: This contains a pointer to the public specification for the item.
 
-This registry has been initially populated with the values in {{fig-ACE-Groupcomm-Parameters}}. The Reference column for all of these entries refers to sections of this document.
+This registry has been initially populated with the values in {{fig-ACE-Groupcomm-Parameters}}.
 
 ## ACE Groupcomm Key Types {#iana-key}
 
@@ -2130,7 +2140,7 @@ The columns of this registry are:
 
 * References: This contains a pointer to the public specification for the format of the keying material, if one exists.
 
-This registry has been initially populated with the values in {{gkty}}. The specification column for all of these entries will be this document.
+This registry has been initially populated with the value in {{fig-gkty}}.
 
 ## ACE Groupcomm Profiles
 
@@ -2142,9 +2152,11 @@ The columns of this registry are:
 
 * Description: Text giving an overview of the application profile and the context it is developed for.
 
-* CBOR Value: CBOR abbreviation for the name of this application profile. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 are designated as Standards Action. Integer values from -65536 to -257 and from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as Expert Review. Integer values less than -65536 are marked as Private Use.
+* CBOR Value: CBOR abbreviation for the name of this application profile. Different ranges of values use different registration policies {{RFC8126}}. Integer values from -256 to 255 are designated as Standards Action. Integer values from -65536 to -257 and from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as Expert Review. Integer values less than -65536 are marked as Private Use.
 
 * Reference: This contains a pointer to the public specification of the abbreviation for this application profile, if one exists.
+
+This registry has been initially populated with the value in {{ace-groupcomm-profile-0}}.
 
 ## ACE Groupcomm Policies
 
