@@ -801,13 +801,15 @@ The exact format of the 'key' value MUST be defined in applications of this spec
 
 ~~~~~~~~~~~
 +----------+----------------+---------+-------------+------------+
-| Name     | Key Type Value | Profile | Description | References |
+| Name     | Key Type Value | Profile | Description | Reference  |
 +----------+----------------+---------+-------------+------------+
 | Reserved | 0              |         | This value  | [RFC-XXXX] |
 |          |                |         | is reserved |            |
 +----------+----------------+---------+-------------+------------+
 ~~~~~~~~~~~
 {: #fig-gkty title="ACE Groupcomm Key Types" artwork-align="center"}
+
+Note to RFC Editor: In {{fig-gkty}}, please replace "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
 
 The response SHOULD contain the following parameter:
 
@@ -825,6 +827,8 @@ Optionally, the response MAY contain the following parameters, which, if include
 +----------+------------------------+------------+------------+
 ~~~~~~~~~~~
 {: #ace-groupcomm-profile-0 title="ACE Groupcomm Profiles" artwork-align="center"}
+
+Note to RFC Editor: In {{ace-groupcomm-profile-0}}, please replace "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
 
 * 'creds', MUST be present if 'get\_creds' was present in the request, otherwise it MUST NOT be present. This parameter is a CBOR array specifying the authentication credentials of the group members, i.e., of all of them or of the ones selected according to the 'get\_creds' parameter in the request. In particular, each element of the array is a CBOR byte string, with value the original binary representation of a group member's authentication credential. It is REQUIRED of the application profiles to define the specific formats of authentication credentials that are acceptable to use in the group (REQ6).
 
@@ -873,7 +877,7 @@ Optionally, the response MAY contain the following parameters, which, if include
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Policies title="ACE Groupcomm Policies" artwork-align="center"}
 
-Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
+Note to RFC Editor: In {{fig-ACE-Groupcomm-Policies}}, please replace all occurrences of "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
 
 * 'kdc_cred', encoded as a CBOR byte string, with value the original binary representation of the KDC's authentication credential. This parameter is used if the KDC has an associated authentication credential and this is required for the correct group operation. It is REQUIRED of application profiles to define whether the KDC has an authentication credential and if this has to be provided through the 'kdc_cred' parameter (REQ8).
 
@@ -903,7 +907,7 @@ Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC n
 
    Application profiles of this specification MAY define a default group rekeying scheme, to refer to in case the 'rekeying_scheme' parameter is not included in the Join Response (OPT9).
 
-Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
+Note to RFC Editor: In {{rekeying-scheme-0}}, please replace "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
 
 * 'mgt_key_material', encoded as a CBOR byte string and containing the specific administrative keying material that the joining node requires in order to participate in the group rekeying process performed by the KDC. This parameter MUST NOT be present if the 'rekeying_scheme' parameter is not present and the application profile does not specify a default group rekeying scheme to use in the group. Some simple rekeying scheme may not require specific administrative keying material to be provided, e.g., the basic "Point-to-Point" group rekeying scheme (see {{point-to-point-rekeying}}).
 
@@ -1858,7 +1862,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Parameters title="ACE Groupcomm Parameters" artwork-align="center"}
 
-Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
+Note to RFC Editor: In {{fig-ACE-Groupcomm-Parameters}}, please replace all occurrences of "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
 
 The KDC is expected to support and understand all the parameters above. Instead, a Client can support and understand only a subset of such parameters, depending on the roles it expects to take in the joined groups or on other conditions defined in application profiles of this specification.
 
@@ -2138,7 +2142,7 @@ The columns of this registry are:
 
 * Description: This field contains a brief description of the keying material.
 
-* References: This contains a pointer to the public specification for the format of the keying material, if one exists.
+* Reference: This contains a pointer to the public specification for the format of the keying material, if one exists.
 
 This registry has been initially populated with the value in {{fig-gkty}}.
 
