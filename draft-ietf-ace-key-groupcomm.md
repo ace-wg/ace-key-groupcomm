@@ -823,7 +823,7 @@ Note to RFC Editor: In {{fig-gkty}}, please replace "{{&SELF}}" with the RFC num
 
 The response SHOULD contain the following parameter:
 
-* 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what is specified for NumericDate in {{Section 2 of RFC7519}}. Group members MUST stop using the keying material to protect outgoing messages and retrieve new keying material at the time indicated in this field.
+* 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what is specified for NumericDate in {{Section 2 of RFC7519}}. Group members MUST NOT use the keying material after the time indicated in this field, and they can retrieve the new group keying material from the KDC.
 
 Optionally, the response MAY contain the following parameters, which, if included, MUST have format and value as specified below.
 
@@ -2417,7 +2417,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 * Fixed the CDDL definition of 'sign_info_entry'.
 
-* Clarified meaning of the 'cred_fmt' parameter.
+* Clarified meaning of the 'cred_fmt' and 'exp' parameters.
 
 * Relaxed rule about including the 'peer_roles' parameter.
 
