@@ -434,7 +434,7 @@ When used in the following Token Transfer Response from the KDC (see {{token-pos
 
 * The fourth element 'sign_key_parameters' is a CBOR array indicating the parameters of the key used with the signature algorithm, in the groups identified by the 'gname' values. Its content depends on the value of 'sign_alg'. It is REQUIRED of the application profiles to define the possible values and structure for the elements of this parameter (REQ5).
 
-* The fifth element 'cred_fmt' parameter is either a CBOR integer indicating the format of authentication credentials used in the groups identified by the 'gname' values, or has value the CBOR simple value "null" (0xf6) indicating that the KDC does not act as repository of authentication credentials for group members. Its acceptable integer values are taken from the 'Label' column of the "COSE Header Parameters" registry {{COSE.Header.Parameters}}. It is REQUIRED of the application profiles to define specific values to use for this parameter, consistently with the acceptable formats of authentication credentials (REQ6).
+* The fifth element 'cred_fmt' is either a CBOR integer indicating the format of authentication credentials used in the groups identified by the 'gname' values, or has value the CBOR simple value "null" (0xf6) indicating that the KDC does not act as repository of authentication credentials for group members. Its acceptable integer values are taken from the 'Label' column of the "COSE Header Parameters" registry {{COSE.Header.Parameters}}, with some of those values also indicating the type of container to use for exchanging the authentication credentials with the KDC (e.g., a chain or bag of certificates). It is REQUIRED of the application profiles to define specific values to use for this parameter, consistently with the acceptable formats of authentication credentials (REQ6).
 
 The CDDL notation {{RFC8610}} of the 'sign_info' parameter is given below.
 
@@ -2390,6 +2390,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 ## Version -16 to -17 ## {#sec-16-17}
 
 * Fixed the CDDL definition of 'sign_info_entry'.
+
+* Clarified meaning of the 'cred_fmt' parameter.
 
 * Relaxed rule about including the 'peer_roles' parameter.
 
