@@ -66,6 +66,12 @@ normative:
     date: false
     title: COSE Header Parameters
     target: https://www.iana.org/assignments/cose/cose.xhtml#header-parameters
+  COSE.Key.Types:
+    author:
+      org: IANA
+    date: false
+    title: COSE key Types
+    target: https://www.iana.org/assignments/cose/cose.xhtml#key-type
   CBOR.Tags:
     author:
       org: IANA
@@ -2363,11 +2369,19 @@ If any of the currently registered COSE algorithms is considered, using this gen
 
 ## Format of 'sign_info_entry' ## {#sec-future-cose-algs-sign-info-entry}
 
-The format of each 'sign_info_entry' (see {{sign-info}}) is generalized as follows. Given N the number of elements of the 'sign_parameters' array, i.e., the number of COSE capabilities of the signature algorithm, then:
+The format of each 'sign_info_entry' (see {{sign-info}}) is generalized as follows.
 
-* 'sign_key_parameters' is replaced by N elements 'sign_capab_i', each of which is a CBOR array.
+* 'sign_parameters' includes N >= 0 elements, each of which is a COSE capability of the signature algorithm indicated in 'sign_alg'.
 
-* The i-th array following 'sign_parameters', i.e., 'sign_capab_i' (i = 0, ..., N-1), is the array of COSE capabilities for the algorithm capability specified in 'sign_parameters'\[i\].
+   In particular, 'sign_parameters' has the same format and value of the COSE capabilities array for the signature algorithm indicated in 'sign_alg', as specified for that algorithm in the 'Capabilities' column of the "COSE Algorithms" registry {{COSE.Algorithms}}.
+
+* 'sign_key_parameters' is replaced by N elements 'sign_capab', each of which is a CBOR array.
+
+   The i-th 'sign_capab' array (i = 0, ..., N-1) is the array of COSE capabilities for the algorithm capability specified in 'sign_parameters'\[i\].
+
+   In particular, each 'sign_capab' array has the same format and value of the COSE capabilities array for the algorithm capability specified in 'sign_parameters'\[i\].
+
+   Such a COSE capabilities array is currently defined for the algorithm capability COSE key type, in the "Capabilities" column of the "COSE Key Types" registry {{COSE.Key.Types}}.
 
 ~~~~~~~~~~~ CDDL
 sign_info_entry =
@@ -2398,6 +2412,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 * More guidelines for group members that fail to decrypt messages.
 
 * Added reserved value to the "ACE Groupcomm Profiles" IANA registry.
+
+* Revised the future-ready generalization of 'sign_info_entry'.
 
 * Fixes and editorial improvements.
 
