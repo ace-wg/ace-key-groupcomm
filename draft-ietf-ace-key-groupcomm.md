@@ -170,6 +170,8 @@ This document additionally uses the following terminology:
 
 * Authentication credential, as the set of information associated with an entity, including that entity's public key and parameters associated with the public key. Examples of authentication credentials are CBOR Web Tokens (CWTs) and CWT Claims Sets (CCSs) {{RFC8392}}, X.509 certificates {{RFC5280}}, and C509 certificates {{I-D.ietf-cose-cbor-encoded-cert}}.
 
+* Individual keying material: information exclusively pertaining to a group member, as associated with its group membership and related to other keying material and parameters used in the group. For example, this can be a member identifier that is unique within the group. The specific nature and format of individual keying material used in a group is defined in application profiles of this specification. The individual keying material of a group member is not related to the secure association between that group member and the KDC.
+
 Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
 
 # Overview
@@ -2410,6 +2412,8 @@ gname = tstr
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 ## Version -16 to -17 ## {#sec-16-17}
+
+* Added definition of "Individual keying material" to the terminology.
 
 * Fixed the CDDL definition of 'sign_info_entry'.
 
