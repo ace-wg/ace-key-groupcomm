@@ -2380,7 +2380,9 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 ## Version -16 to -17 ## {#sec-16-17}
 
-* Fixed the CDDL definition of 'sign_info_entry'
+* Fixed the CDDL definition of 'sign_info_entry'.
+
+* Added reserved value to the "ACE Groupcomm Profiles" IANA registry.
 
 * Fixes and editorial improvements.
 
