@@ -1396,7 +1396,7 @@ When any of the following happens, a node MUST stop using the stored group keyin
 
 * Upon receiving messages from other group members without being able to retrieve the keying material to correctly decrypt them. This may be due to rekeying messages previously sent by the KDC, that the Client was not able to receive or decrypt.
 
-In either case, if it wants to continue participating in the group communication, the Client has to request the latest keying material from the KDC. To this end, the Client sends a CoAP GET request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, formatted as specified in {{node-get}}.
+In either case, if it wants to continue participating in the group communication, the Client has to request the latest keying material from the KDC. To this end, the Client sends a CoAP GET request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, formatted as specified in {{node-get}}. The Client can request the latest keying material from the KDC before the currently stored, old keying material reaches its expiration time.
 
 Note that policies can be set up, so that the Client sends a Key Distribution Request to the KDC only after a given number of received messages could not be decrypted (because of failed decryption processing or inability to retrieve the necessary keying material).
 
@@ -1632,6 +1632,8 @@ In either case, the KDC performs the following actions.
 # Group Rekeying Process {#sec-group-rekeying}
 
 A group rekeying is started and driven by the KDC. The KDC is not intended to accommodate explicit requests from group members to trigger a group rekeying. That is, the scheduling and execution of a group rekeying is an exclusive prerogative of the KDC. Reasons that can trigger a group rekeying are a change in the group membership, the current group keying material approaching its expiration time, or a regularly scheduled update of the group keying material.
+
+The KDC can perform a group rekeying before the current group keying material expires, unless it is acceptable or there are reasons to temporarily pause secure communications in the group, following the expiration of the current keying material.
 
 The KDC MUST increment the version number NUM of the current keying material, before distributing the newly generated keying material with version number NUM+1 to the group. Once completed the group rekeying, the KDC MUST delete the old keying material and SHOULD store the newly distributed keying material in persistent storage.
 
@@ -2422,6 +2424,10 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 * Relaxed rule about including the 'peer_roles' parameter.
 
 * More guidelines for group members that fail to decrypt messages.
+
+* Fetching the latest keying material can happen before the old, stored one expires.
+
+* Renewing the current keying material can happen before it expires.
 
 * Revised size of integer for building AEAD nonces for group rekeying.
 
