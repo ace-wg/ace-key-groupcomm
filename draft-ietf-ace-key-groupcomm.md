@@ -1275,12 +1275,12 @@ A node in the group can contact the KDC to retrieve the current group policies, 
 {{fig-policies}} gives an overview of the exchange described above, while {{fig-policies-2}} shows an example.
 
 ~~~~~~~~~~~
-Client                                                   KDC
-   |                                                      |
-   |-Policies Request: GET ace-group/GROUPNAME/policies ->|
-   |                                                      |
-   |<--------- Policies Response: 2.05 (Content) ---------|
-   |                                                      |
+Client                                                      KDC
+   |                                                         |
+   |-- Policies Request: GET ace-group/GROUPNAME/policies -->|
+   |                                                         |
+   |<----------- Policies Response: 2.05 (Content) ----------|
+   |                                                         |
 ~~~~~~~~~~~
 {: #fig-policies title="Message Flow of Policies Request-Response" artwork-align="center"}
 
