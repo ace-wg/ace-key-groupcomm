@@ -83,9 +83,9 @@ informative:
   RFC2093:
   RFC2094:
   RFC2627:
+  RFC5280:
   RFC7519:
   RFC7641:
-  RFC7925:
   RFC7959:
   RFC8259:
   RFC8392:
@@ -162,7 +162,7 @@ This document additionally uses the following terminology:
 
 * Application profile, that defines how applications enforce and use supporting security services they require. These services may include, for instance, provisioning, revocation and distribution of keying material. An application profile may define specific procedures and message formats.
 
-* Authentication credential, as the set of information associated with an entity, including that entity's public key and parameters associated with the public key. Examples of authentication credentials are CBOR Web Tokens (CWTs) and CWT Claims Sets (CCSs) {{RFC8392}}, X.509 certificates {{RFC7925}} and C509 certificates {{I-D.ietf-cose-cbor-encoded-cert}}.
+* Authentication credential, as the set of information associated with an entity, including that entity's public key and parameters associated with the public key. Examples of authentication credentials are CBOR Web Tokens (CWTs) and CWT Claims Sets (CCSs) {{RFC8392}}, X.509 certificates {{RFC5280}} and C509 certificates {{I-D.ietf-cose-cbor-encoded-cert}}.
 
 # Overview
 
@@ -322,7 +322,7 @@ As defined in {{RFC9200}}, other additional parameters can be included if necess
 ~~~~~~~~~~~~~~~~~~~~ CDDL
 gname = tstr
 
-permissions = uint . bits roles
+permissions = uint .bits roles
 
 roles = &(
    Requester: 1,
@@ -817,7 +817,7 @@ The response SHOULD contain the following parameter:
 
 Optionally, the response MAY contain the following parameters, which, if included, MUST have format and value as specified below.
 
-* 'ace-groupcomm-profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. Applications of this specification MUST register an application profile identifier and the related value for this parameter in the "ACE Groupcomm Profiles" registry (REQ19).
+* 'ace_groupcomm_profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. Applications of this specification MUST register an application profile identifier and the related value for this parameter in the "ACE Groupcomm Profiles" registry (REQ19).
 
 ~~~~~~~~~~~
 +----------+------------------------+------------+------------+
@@ -998,7 +998,7 @@ If all verifications succeed, the handler replies with a 2.05 (Content) response
 
 Each of the following parameters specified in {{gid-post}} MUST also be included in the payload of the response, if they are included in the payload of the Join Responses sent for the group: 'rekeying_scheme', 'mgt_key_material'.
 
-The payload MAY also include the parameters 'ace-groupcomm-profile' and 'exp' parameters specified in {{gid-post}}.
+The payload MAY also include the parameters 'ace_groupcomm_profile' and 'exp' parameters specified in {{gid-post}}.
 
 #### Retrieve Group Keying Material {#ssec-key-material-retrieval}
 
@@ -1528,7 +1528,7 @@ The handler expects a POST request with payload as specified in {{gid-post}}, wi
 
 In addition to what is defined in {{kdc-if-errors}} and at the beginning of {{node-subresource}}, the handler verifies that this operation is consistent with the set of roles that the node has in the group. If the verification fails, the KDC MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 1 ("Request inconsistent with the current roles").
 
-If the KDC cannot retrieve the 'kdcchallenge' associated with this Client (see {{token-post}}), the KDC MUST reply with a 4.00 (Bad Request) error response, which MUST also have Content-Format application/ace-groupcomm+cbor. The payload of the error response is a CBOR map including a newly generated 'kdcchallenge' value. This is specified in the 'kdcchallenge' parameter. In such a case the KDC MUST store the newly generated value as the 'kdcchallenge' value associated with this Client, possibly replacing the currently stored value.
+If the KDC cannot retrieve the 'kdcchallenge' associated with this Client (see {{token-post}}), the KDC MUST reply with a 4.00 (Bad Request) error response, which MUST also have Content-Format application/ace-groupcomm+cbor. The payload of the error response is a CBOR map including a newly generated 'kdcchallenge' value. This is specified in the 'kdcchallenge' parameter. In such a case the KDC MUST store the newly generated value as the 'kdcchallenge' value associated with this Client, replacing the currently stored value (if any).
 
 Otherwise, the handler checks that the authentication credential specified in the 'client_cred' field is valid for the group identified by GROUPNAME. That is, the handler checks that the authentication credential is encoded according to the format used in the group, is intended for the public key algorithm used in the group, and is aligned with the possible associated parameters used in the group. If that cannot be successfully verified, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 2 ("Authentication Credential incompatible with the group configuration").
 
@@ -1733,7 +1733,7 @@ In order to ensure source authentication, each rekeying message protected with t
 
 * The protected header of the signing object MUST include the parameter 'alg', specifying the used signature algorithm.
 
-If source authentication of messages exchanged in the group is also ensured by means of signatures, then rekeying messages MUST be signed using the same signature algorithm and related parameters. Also, the KDC's authentication credential including the public key to use for signature verification MUST me provided in the Join Response through the 'kdc_cred' parameter, together with the corresponding proof-of-possession (PoP) evidence in the 'kdc_cred_verify' parameter.
+If source authentication of messages exchanged in the group is also ensured by means of signatures, then rekeying messages MUST be signed using the same signature algorithm and related parameters. Also, the KDC's authentication credential including the public key to use for signature verification MUST be provided in the Join Response through the 'kdc_cred' parameter, together with the corresponding proof-of-possession (PoP) evidence in the 'kdc_cred_verify' parameter.
 
 If source authentication of messages exchanged in the group is not ensured by means of signatures, then the KDC MUST provide its authentication credential together with a corresponding PoP evidence as part of the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see {{gid-post}}). It is RECOMMENDED to specify this information by using the same format and encoding used for the parameters 'kdc_cred', 'kdc_nonce' and 'kdc_cred_verify' in the Join Response. It is up to separate documents profiling the use of the group rekeying scheme to specify such details.
 
@@ -1758,7 +1758,7 @@ The resulting tagged CBOR byte string is used as value of the 'scope' claim of t
 ~~~~~~~~~~~~~~~~~~~~ CDDL
 gname = tstr
 
-permissions = uint . bits roles
+permissions = uint .bits roles
 
 roles = &(
    Requester: 1,
@@ -1840,7 +1840,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 +-----------------------+------+---------------------+------------+
 | num                   | TBD  | int                 | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| ace-groupcomm-profile | TBD  | int                 | [RFC-XXXX] |
+| ace_groupcomm_profile | TBD  | int                 | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
 | exp                   | TBD  | int                 | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
@@ -1873,7 +1873,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 
 Note to RFC Editor: In {{fig-ACE-Groupcomm-Parameters}}, please replace all occurrences of "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
 
-The KDC is expected to support and understand all the parameters above. Instead, a Client can support and understand only a subset of such parameters, depending on the roles it expects to take in the joined groups or on other conditions defined in application profiles of this specification.
+The KDC is expected to support all the parameters above. Instead, a Client can support only a subset of such parameters, depending on the roles it expects to take in the joined groups or on other conditions defined in application profiles of this specification.
 
 In the following, the parameters are categorized according to the support expected by Clients. That is, a Client that supports a parameter is able to: i) use and specify it in a request message to the KDC; and ii) understand and process it if specified in a response message from the KDC. It is REQUIRED of application profiles of this specification to sort their newly defined parameters according to the same categorization (REQ29).
 
