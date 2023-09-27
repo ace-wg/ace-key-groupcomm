@@ -1715,11 +1715,13 @@ First, the KDC computes a COSE_Encrypt0 object as follows.
 
    The KDC considers the following values.
 
-   - COUNT, as a 1-byte unsigned integer associated with the used encryption key. Its value is set to 0 when starting to perform a new group rekeying instance, and is incremented after each use of the encryption key.
+   - COUNT, as a 2-byte unsigned integer associated with the used encryption key. Its value is set to 0 when starting to perform a new group rekeying instance, and is incremented after each use of the encryption key.
 
-   - NEW_NUM, as the version number of the new group keying material to distribute in this rekeying instance, left-padded with zeroes to exactly NONCE_SIZE - 1.
+   - NEW_NUM, as the version number of the new group keying material to distribute in this rekeying instance, left-padded with zeroes to exactly NONCE_SIZE - 2 bytes.
 
    Then, the KDC computes a Partial IV as the byte string concatenation of COUNT and NEW_NUM, in this order. Finally, the AEAD nonce is computed as the XOR between the Base IV and the Partial IV.
+
+   In order to comply with the security requirements of AEAD encryption algorithms, the KDC MUST NOT use the same pair (AEAD encryption key, AEAD nonce). For example, this includes not using the same encryption key from the administrative keying material more than 2^16 times during the same rekeying instance.
 
 * The protected header of the COSE_Encrypt0 object MUST include the following parameters.
 
@@ -2416,6 +2418,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 * Relaxed rule about including the 'peer_roles' parameter.
 
 * More guidelines for group members that fail to decrypt messages.
+
+* Revised size of integer for building AEAD nonces for group rekeying.
 
 * Added reserved value to the "ACE Groupcomm Profiles" IANA registry.
 
