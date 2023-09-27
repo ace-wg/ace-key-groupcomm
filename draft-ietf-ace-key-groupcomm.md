@@ -206,6 +206,8 @@ The following participants (see {{fig-roles}}) take part in the authorization an
 
    Examples of a Dispatcher are: the Broker in a pub-sub setting; a relayer for group communication that delivers group messages as multiple unicast messages to all group members; an implicit entity as in a multicast communication setting, where messages are transmitted to a multicast IP address and delivered on the transport channel.
 
+   If it consists of an explicit entity such as a pub-sub Broker or a message relayer, the Dispatcher is comparable to an untrusted on-path intermediary, and as such it is able to read the messages sent by Clients in the group.
+
 This document specifies a mechanism for:
 
 * Authorizing a Client to join the group ({{sec-auth}}), and providing it with the group keying material to communicate with the other group members ({{key-distr}}).
@@ -2414,6 +2416,8 @@ gname = tstr
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 ## Version -16 to -17 ## {#sec-16-17}
+
+* Expanded definition of "Dispatcher".
 
 * Added definition of "Individual keying material" to the terminology.
 
