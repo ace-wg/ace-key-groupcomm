@@ -170,6 +170,8 @@ This document additionally uses the following terminology:
 
 * Authentication credential, as the set of information associated with an entity, including that entity's public key and parameters associated with the public key. Examples of authentication credentials are CBOR Web Tokens (CWTs) and CWT Claims Sets (CCSs) {{RFC8392}}, X.509 certificates {{RFC5280}}, and C509 certificates {{I-D.ietf-cose-cbor-encoded-cert}}.
 
+Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
+
 # Overview
 
 The full procedure can be separated in two phases: the first one follows the ACE Framework, between Client, AS, and KDC; the second one is the key distribution between Client and KDC. After the two phases are completed, the Client is able to participate in the group communication, via a Dispatcher entity.
