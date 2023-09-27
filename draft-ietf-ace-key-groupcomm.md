@@ -1599,7 +1599,7 @@ Additionally, after updating its own authentication credential, a group member M
 
 # Removal of a Group Member {#sec-node-removal}
 
-A Client identified by NODENAME may be removed from a group identified by GROUPNAME where it is a member, due to the following reasons.
+A Client identified by NODENAME may be removed from a group identified by GROUPNAME where it is a member, for example due to the following reasons.
 
 1. The Client explicitly asks to leave the group, as defined in {{ssec-group-leaving}}.
 
