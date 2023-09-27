@@ -1461,7 +1461,7 @@ The typical successful outcome consists in replying with newly generated, indivi
 
 In either case, the handler may specify the new group keying material as part of the 2.05 (Content) response.
 
-Note that this handler is not intended to accommodate requests from a group member to trigger a group rekeying, whose scheduling and execution is an exclusive prerogative of the KDC.
+Note that this handler is not intended to accommodate requests from a group member to trigger a group rekeying, whose scheduling and execution is an exclusive prerogative of the KDC (see also related security considerations in {{sec-cons-rekeying}}).
 
 #### Request to Change Individual Keying Material {#new-keys}
 
