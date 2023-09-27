@@ -293,7 +293,7 @@ The Authorization Request sent from the Client to the AS is defined in {{Section
 
 * 'scope', specifying the name of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.
 
-   This parameter is encoded as a CBOR byte string, which wraps a CBOR array of one or more scope entries. All the scope entries are specified according to a same format, i.e. either the AIF format or the textual format defined below.
+   This parameter is encoded as a CBOR byte string, which wraps a CBOR array of one or more scope entries. All the scope entries are specified according to a same format, i.e., either the AIF format or the textual format defined below.
 
    * If the AIF format is used, each scope entry is encoded as per {{RFC9237}}. If a scope entry expresses a set of roles to take in a group as per this document, the object identifier "Toid" specifies the group name and MUST be encoded as a CBOR text string, while the permission set "Tperm" specifies the roles that the Client wishes to take in the group.
 
@@ -380,7 +380,7 @@ The proof-of-possession access token (in 'access_token' above) MUST contain the 
 
 The access token MAY additionally contain other claims that the transport profile of ACE requires, or other optional parameters.
 
-When receiving an Authorization Request from a Client that was previously authorized, and for which the AS still owns a valid non-expired access token, the AS MAY reply with that token. Note that it is up to application profiles of ACE to make sure that re-posting the same token does not cause re-use of keying material between nodes (for example, that is done with the use of random nonces in {{RFC9203}}).
+When receiving an Authorization Request from a Client that was previously authorized, and for which the AS still stores a valid non-expired access token, the AS MAY reply with that token. Note that it is up to application profiles of ACE to make sure that re-posting the same token does not cause re-use of keying material between nodes (for example, that is done with the use of random nonces in {{RFC9203}}).
 
 ## Token Transferring {#token-post}
 
@@ -787,7 +787,7 @@ Then, the handler performs the following actions.
 
 The Join Response MUST have response code 2.01 (Created) if the Client has been added to the list of group members in this join exchange (see above), or 2.04 (Changed) otherwise, i.e., if the Client is re-joining the group without having left it.
 
-The Join Response message MUST include the Location-Path CoAP option, specifying the URI path to the sub-resource associated with the Client, i.e. "/ace-group/GROUPNAME/nodes/NODENAME".
+The Join Response message MUST include the Location-Path CoAP option, specifying the URI path to the sub-resource associated with the Client, i.e., "/ace-group/GROUPNAME/nodes/NODENAME".
 
 The Join Response message MUST have Content-Format application/ace-groupcomm+cbor. The payload of the response is formatted as a CBOR map, which MUST contain the following fields and values.
 
@@ -865,18 +865,17 @@ Note to RFC Editor: In {{ace-groupcomm-profile-0}}, please replace "{{&SELF}}" w
 |              |       |          | the KDC if the       |            |
 |              |       |          | latest group keying  |            |
 |              |       |          | material is the one  |            |
-|              |       |          | that they own        |            |
+|              |       |          | that they store      |            |
 +--------------+-------+----------+----------------------+------------+
 | Expiration   | TBD   | uint     | Number of seconds    | [RFC-XXXX] |
-| Delta        |       |          | from 'exp' until the |            |
-|              |       |          | specified UTC        |            |
-|              |       |          | date/time after      |            |
+| Delta        |       |          | from 'exp' until a   |            |
+|              |       |          | UTC date/time, after |            |
 |              |       |          | which group members  |            |
 |              |       |          | MUST stop using the  |            |
 |              |       |          | group keying         |            |
-|              |       |          | material they own to |            |
-|              |       |          | verify incoming      |            |
-|              |       |          | messages             |            |
+|              |       |          | material that they   |            |
+|              |       |          | store to decrypt     |            |
+|              |       |          | incoming messages    |            |
 +--------------+-------+----------|----------------------|------------+
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Policies title="ACE Groupcomm Policies" artwork-align="center"}
@@ -915,7 +914,7 @@ Note to RFC Editor: In {{rekeying-scheme-0}}, please replace "{{&SELF}}" with th
 
 * 'mgt_key_material', encoded as a CBOR byte string and containing the specific administrative keying material that the joining node requires in order to participate in the group rekeying process performed by the KDC. This parameter MUST NOT be present if the 'rekeying_scheme' parameter is not present and the application profile does not specify a default group rekeying scheme to use in the group. Some simple rekeying scheme may not require specific administrative keying material to be provided, e.g., the basic "Point-to-Point" group rekeying scheme (see {{point-to-point-rekeying}}).
 
-   In more advanced group rekeying schemes, the administrative keying material can be composed of multiple keys organized, for instance, into a logical tree hierarchy, whose root key is the only administrative key shared by all the group members. In such a case, each group member is exclusively associated with one leaf key in the hierarchy, and owns only the administrative keys from the associated leaf key all the way up along the path to the root key. That is, different group members can be provided with a different subset of the overall administrative keying material.
+   In more advanced group rekeying schemes, the administrative keying material can be composed of multiple keys organized, for instance, into a logical tree hierarchy, whose root key is the only administrative key shared by all the group members. In such a case, each group member is exclusively associated with one leaf key in the hierarchy, and stores only the administrative keys from the associated leaf key all the way up along the path to the root key. That is, different group members can be provided with a different subset of the overall administrative keying material.
 
    It is expected from separate documents to define how the advanced group rekeying scheme possibly indicated in the 'rekeying_scheme' parameter is used by an application profile of this specification. This includes defining the format of the administrative keying material to specify in 'mgt_key_material', consistently with the group rekeying scheme and the application profile in question.
 
@@ -1379,7 +1378,7 @@ In order to mitigate this, a node that supports the No-Response option {{RFC7967
 
 #### Retrieve Group and Individual Keying Material {#update-keys}
 
-When any of the following happens, a node MUST stop using the owned group keying material to protect outgoing messages, and SHOULD stop using it to decrypt and verify incoming messages.
+When any of the following happens, a node MUST stop using the stored group keying material to protect outgoing messages, and SHOULD stop using it to decrypt and verify incoming messages.
 
 * Upon expiration of the keying material, according to what is indicated by the KDC with the 'exp' parameter (e.g., in a Join Response), or to a pre-configured value.
 
@@ -1678,11 +1677,11 @@ Rekeying messages can be protected at the application layer, by using COSE and t
 
 Regardless the specifically used delivery method, the group rekeying scheme can perform a possible roll-over of the administrative keying material through the same sent rekeying messages. Actually, such a roll-over occurs every time a group rekeying is performed upon the leaving of group members, which have to be excluded from future communications in the group.
 
-From a high level point of view, each group member owns only a subset of the overall administrative keying material, obtained upon joining the group. Then, when a group rekeying occurs:
+From a high level point of view, each group member stores only a subset of the overall administrative keying material, obtained upon joining the group. Then, when a group rekeying occurs:
 
-* Each rekeying message is protected by using a (most convenient) key from the administrative keying material such that: i) the used key is not owned by any node leaving the group, i.e. the key is safe to use and does not have to be renewed; and ii) the used key is owned by all the target group members, that indeed have to be provided with new group keying material to protect communications in the group.
+* Each rekeying message is protected by using a (most convenient) key from the administrative keying material such that: i) the used key is not stored by any node leaving the group, i.e., the key is safe to use and does not have to be renewed; and ii) the used key is stored by all the target group members, that indeed have to be provided with new group keying material to protect communications in the group.
 
-* Each rekeying message includes not only the new group keying material intended to all the rekeyed group members, but also any new administrative keys that: i) are pertaining to and supposed to be owned by the target group members; and ii) had to be updated since leaving group members own the previous version.
+* Each rekeying message includes not only the new group keying material intended to all the rekeyed group members, but also any new administrative keys that: i) are pertaining to and supposed to be stored by the target group members; and ii) had to be updated since leaving group members store the previous version.
 
 Further details depend on the specific rekeying scheme used in the group.
 
@@ -1974,7 +1973,7 @@ A compromised KDC would thus put the attacker in the same position, which also m
 
 * The attacker can build erroneous associations between node identifiers and group members' authentication credentials.
 
-On the other hand, as long as the security protocol used in the group ensures source authentication of messages (e.g., by means of signatures), the KDC is not able to impersonate group members since it does now own their private keys.
+On the other hand, as long as the security protocol used in the group ensures source authentication of messages (e.g., by means of signatures), the KDC is not able to impersonate group members since it does not have their private keys.
 
 Further security considerations are specific of the communication and security protocols used in the group, and thus have to be provided by those protocols and complemented by the application profiles of this specification using them.
 
