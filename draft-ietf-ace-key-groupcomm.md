@@ -1653,7 +1653,7 @@ When taking this approach in the group identified by GROUPNAME, the KDC can prac
 
 * The KDC SHOULD make the ace-group/GROUPNAME resource Observable {{RFC7641}}. Thus, upon performing a group rekeying, the KDC can distribute the new group keying material through individual notification responses sent to the target group members that are also observing that resource.
 
-   In case the KDC deletes the group, this also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 6 ("Group deleted").
+   In case the KDC deletes the group (and thus deletes the ace-group/GROUPNAME resource), relying on CoAP Observe as discussed above also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 6 ("Group deleted").
 
 * If a target group member specified a URI in the 'control_uri' parameter of the Join Request upon joining the group (see {{gid-post}}), the KDC can provide that group member with the new group keying material by sending a unicast POST request to that URI.
 
