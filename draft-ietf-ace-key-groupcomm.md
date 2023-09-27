@@ -2045,11 +2045,11 @@ This specification registers the 'application/ace-groupcomm+cbor' media type for
 
    Optional parameters: N/A
 
-   Encoding considerations: Must be encoded as CBOR map containing the protocol parameters defined in {{&SELF}}.
+   Encoding considerations: Must be encoded as a CBOR map containing the parameters defined in {{&SELF}}.
 
-   Security considerations: See {{sec-cons}} of this document.
+   Security considerations: See {{sec-cons}} of {{&SELF}}.
 
-   Interoperability considerations: n/a
+   Interoperability considerations: N/A
 
    Published specification: {{&SELF}}
 
@@ -2059,16 +2059,15 @@ This specification registers the 'application/ace-groupcomm+cbor' media type for
 
    Additional information: N/A
 
-   Person & email address to contact for further information:
-   <iesg@ietf.org>
+   Person & email address to contact for further information: ACE WG mailing list (ace@ietf.org) or IETF Applications and Real-Time Area (art@ietf.org)
 
    Intended usage: COMMON
 
    Restrictions on usage: None
 
-   Author: Francesca Palombini <francesca.palombini@ericsson.com>
+   Author/Change controller: IETF
 
-   Change controller: IETF
+   Provisional registration: No
 
 ## CoAP Content-Formats {#content-type}
 
