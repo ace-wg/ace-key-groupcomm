@@ -99,10 +99,10 @@ informative:
   RFC9202:
   RFC9203:
   RFC9277:
+  RFC9431:
   I-D.ietf-core-groupcomm-bis:
   I-D.ietf-core-coap-pubsub:
   I-D.ietf-cose-cbor-encoded-cert:
-  I-D.ietf-ace-mqtt-tls-profile:
   I-D.tiloca-core-oscore-discovery:
 
 entity:
@@ -166,7 +166,7 @@ Furthermore, this document uses "names" or "identifiers" for groups and nodes. T
 
 This document additionally uses the following terminology:
 
-* Transport profile, to indicate a profile of ACE as per {{Section 5.8.4.3 of RFC9200}}. A transport profile specifies the communication protocol and communication security protocol between an ACE Client and Resource Server, as well as proof-of-possession methods, if it supports proof-of-possession access tokens, etc. Transport profiles of ACE include, for instance, {{RFC9203}}, {{RFC9202}}, and {{I-D.ietf-ace-mqtt-tls-profile}}.
+* Transport profile, to indicate a profile of ACE as per {{Section 5.8.4.3 of RFC9200}}. A transport profile specifies the communication protocol and communication security protocol between an ACE Client and Resource Server, as well as proof-of-possession methods, if it supports proof-of-possession access tokens, etc. Transport profiles of ACE include, for instance, {{RFC9203}}, {{RFC9202}}, and {{RFC9431}}.
 
 * Application profile, that defines how applications enforce and use supporting security services they require. These services may include, for instance, provisioning, revocation, and distribution of keying material. An application profile may define specific procedures and message formats.
 
