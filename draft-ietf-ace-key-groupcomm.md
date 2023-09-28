@@ -224,6 +224,8 @@ This document specifies a mechanism for:
 
 * Renewing and re-distributing the group keying material (rekeying), e.g., upon a membership change in the group ({{sec-group-rekeying}}).
 
+   Rekeying the group may result in a temporary misalignment of the keying material stored by the different group members. Different situations where this can happen and how they can be handled are discussed in {{sec-misalignment-keying-material}}.
+
 {{fig-flow}} provides a high level overview of the message flow for a node joining a group. The message flow can be expanded as follows.
 
 1. The joining node requests an access token from the AS, in order to access one or more group-membership resources at the KDC and hence join the associated groups.
@@ -1649,7 +1651,9 @@ A rekeying message may include additional information, depending on the rekeying
 
 The complete format of a rekeying message, including the encoding and content of the 'mgt_key_material' parameter, has to be defined in separate specifications aimed at profiling the used rekeying scheme in the context of the used application profile of this specification. As a particular case, an application profile of this specification MAY define additional information to include in rekeying messages for the "Point-to-Point" group rekeying scheme in {{point-to-point-rekeying}} (OPT14).
 
-Consistently with the used group rekeying scheme, the actual delivery of rekeying messages can occur through different approaches, as discussed in the following.
+Consistently with the used group rekeying scheme, the actual delivery of rekeying messages can occur through different approaches, as discussed in the following {{point-to-point-rekeying}} and {{one-to-many-rekeying}}.
+
+The possible, temporary misalignment of the keying material stored by the different group members due to a group rekeying is discussed in {{sec-misalignment-keying-material}}. Further security considerations related to the group rekeying process are compiled in {{sec-cons-rekeying}}.
 
 ## Point-to-Point Group Rekeying {#point-to-point-rekeying}
 
@@ -1759,7 +1763,7 @@ After that, the KDC specifies the computed countersignature in the 'COSE_Counter
 
 Finally, the KDC specifies the COSE_Encrypt0 object as payload of a CoAP request, which is sent to the target group members as per the used message delivery method.
 
-## Misalignment of Group Keying Material # {sec-misalignment-keying-material}
+## Misalignment of Group Keying Material # {#sec-misalignment-keying-material}
 
 A group member can receive a message shortly after the group has been rekeyed, and new keying material has been distributed by the KDC. In the following two cases, this may result in misaligned keying material between the group members.
 
@@ -2013,6 +2017,10 @@ Unless otherwise defined by an application profile of this specification, the KD
 
 Note that the considerations in {{sec-cons-communication}} about dealing with replayed messages still hold, even in case the KDC rekeys the group upon every single joining of a new group member. However, if the KDC has renewed the group keying material upon a group member's joining, and the time interval between the end of the rekeying process and that member's joining is sufficiently small, then that group member is also on the safe side, since it would not accept replayed messages protected with the old group keying material previous to its joining.
 
+Once a joining node has obtained the new, latest keying material through a Join Response from the KDC (see {{ssec-key-distribution-exchange}}), the joining node becomes able to read any message that was exchanged in the group and protected with that keying material. This is the case if the KDC provides the current group members with the new, latest keying material before completing the joining procedure. However, the joining node is not able to read messages exchanged in the group and protected with keying material older than the one provided in the Join Response, i.e., having a strictly lower version number NUM.
+
+A node that has left the group should not expect any of its outgoing messages to be successfully processed, if received by other nodes in the group after its leaving, due to a possible group rekeying occurred before the message reception.
+
 The KDC may enforce a rekeying policy that takes into account the overall time required to rekey the group, as well as the expected rate of changes in the group membership. That is, the KDC may not rekey the group at each and every group membership change, for instance if members' joining and leaving occur frequently and performing a group rekeying takes too long. Instead, the KDC might rekey the group after a minimum number of group members have joined or left within a given time interval, or after a maximum amount of time since the last group rekeying was completed, or yet during predictable network inactivity periods.
 
 However, this would result in the KDC not constantly preserving backward and forward security in the group. That is:
@@ -2028,8 +2036,6 @@ However, if the KDC relies on Observe notifications to distribute the new group 
 The KDC needs to have a mechanism in place to detect DoS attacks from nodes repeatedly performing actions that might trigger a group rekeying. Such actions can include leaving and/or re-joining the group at high rates, or often asking the KDC for new indidivual keying material. Ultimately, the KDC can resort to removing these nodes from the group and (temperorarily) preventing them from joining the group again.
 
 The KDC also needs to have a congestion control mechanism in place, in order to avoid network congestion upon distributing new group keying material. For example, CoAP and Observe give guidance on such mechanisms, see {{Section 4.7 of RFC7252}} and {{Section 4.5.1 of RFC7641}}.
-
-A node that has left the group should not expect any of its outgoing messages to be successfully processed, if received by other nodes after its leaving, due to a possible group rekeying occurred before the message reception.
 
 ## Block-Wise Considerations
 
@@ -2442,6 +2448,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 * Renewing the current keying material can happen before it expires.
 
 * Moved up the discussion on misalignment of group keying material.
+
+* Expanded security considerations on group rekeying for joining nodes.
 
 * Revised size of integer for building AEAD nonces for group rekeying.
 
