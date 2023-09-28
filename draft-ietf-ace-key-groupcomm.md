@@ -996,7 +996,7 @@ Payload (in CBOR diagnostic notation,
          with AUTH_CRED and POP_EVIDENCE being CBOR byte strings):
   { "scope": << [ "group1", ["sender", "receiver"] ] >> ,
     "get_creds": [true, ["sender"], []], "client_cred": AUTH_CRED,
-    "cnonce": h'6df49c495409a9b5', "client_cred_verify": POP_EVIDENCE }
+    "cnonce": h'25a8991cd700ac01', "client_cred_verify": POP_EVIDENCE }
 
 Response:
 
@@ -1309,7 +1309,7 @@ Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation, with AUTH_CRED_KDC
          and POP_EVIDENCE being CBOR byte strings):
   {
-    "kdc_nonce": h'25a8991cd700ac01',
+    "kdc_nonce": h'0b7db12aaff56da3',
     "kdc_cred": AUTH_CRED_KDC,
     "kdc_cred_verify": POP_EVIDENCE
   }
@@ -1663,7 +1663,7 @@ Uri-Path: "pub-key"
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation, with AUTH_CRED
          and POP_EVIDENCE being CBOR byte strings):
-  { "client_cred": AUTH_CRED, "cnonce": h'9ff7684414affcc8',
+  { "client_cred": AUTH_CRED, "cnonce": h'0446baefc56111bf',
     "client_cred_verify": POP_EVIDENCE }
 
 Response:
