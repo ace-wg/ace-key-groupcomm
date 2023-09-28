@@ -741,18 +741,18 @@ get_creds = null / [ inclusion_flag, role_filter, id_filter]
 
 ~~~~~~~~~~~~~~~~~~~~
 scope, N_S, and N_C expressed in CBOR diagnostic notation:
-  scope = h'826667726F7570316673656E646572'
+  scope = h'826667726f7570316673656e646572'
   N_S   = h'018a278f7faab55a'
   N_C   = h'25a8991cd700ac01'
 
 
 scope, N_S, and N_C as CBOR encoded byte strings:
-  scope = 0x4f826667726F7570316673656E646572
+  scope = 0x4f826667726f7570316673656e646572
   N_S   = 0x48018a278f7faab55a
   N_C   = 0x4825a8991cd700ac01
 
 PoP input:
-  0x4f 826667726F7570316673656E646572
+  0x4f 826667726f7570316673656e646572
     48 018a278f7faab55a 48 25a8991cd700ac01
 ~~~~~~~~~~~~~~~~~~~~
 {: #fig-client-cred-input title="Example of PoP input to compute 'client_cred_verify' using CBOR encoding"}
@@ -1612,7 +1612,7 @@ Then, the handler replies with a 2.04 (Changed) response, which does not include
 
 ~~~~~~~~~~~~~~~~~~~~
 scope, N_S, and N_C expressed in CBOR diagnostic notation:
-  scope = h'826667726F7570316673656E646572'
+  scope = h'826667726f7570316673656e646572'
   N_S   = h'018a278f7faab55a'
   N_C   = h'0446baefc56111bf'
 
@@ -1623,7 +1623,7 @@ scope, N_S, and N_C as CBOR encoded byte strings:
   N_C   = 0x480446baefc56111bf
 
 PoP input:
-  0x4f 826667726F7570316673656E646572
+  0x4f 826667726f7570316673656e646572
     48 018a278f7faab55a 48 0446baefc56111bf
 ~~~~~~~~~~~~~~~~~~~~
 {: #fig-client-cred-input-2 title="Example of PoP input to compute 'client_cred_verify' using CBOR encoding"}
