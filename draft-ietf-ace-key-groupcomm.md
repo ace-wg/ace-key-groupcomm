@@ -180,19 +180,19 @@ Examples throughout this document are expressed in CBOR diagnostic notation with
 
 At a high level, the key provisioning process is separated in two phases: the first one follows the ACE Framework between Client, AS, and KDC; the second one is the actual key distribution between Client and KDC. After the two phases are completed, the Client is able to participate in the group communication, via a Dispatcher entity.
 
-~~~~~~~~~~~
-+------------+               +-----------+
-|     AS     |               |    KDC    |
-|            |        .----->|           |
-+------------+       /       +-----------+
-      ^             /
-      |            /
-      v           /                                 +-----------+
-+------------+   /           +------------+         |+-----------+
-|   Client   |<-'            | Dispatcher |         ||+-----------+
-|            |<------------->|            |<------->|||   Group   |
-+------------+               +------------+         |||  members  |
-                                                    +++-----------+
+~~~ aasvg
+.------------.               .------------.
+|     AS     |        .----->|    KDC     |
+'------------'        |      '------------'
+      ^               |
+      |               |
+      v               |
+.------------.        |                           .-----------.
+|   Client   |<-------'      .------------.       | .---------+-.
+|            |<------------->| Dispatcher |<----->| | .---------+-.
+'------------'               '------------'       '-+ |   Group   |
+                                                    '-+  members  |
+                                                      '-----------'
 ~~~~~~~~~~~
 {: #fig-roles title="Key Distribution Participants" artwork-align="center"}
 
