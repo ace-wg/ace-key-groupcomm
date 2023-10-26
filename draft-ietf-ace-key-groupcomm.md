@@ -503,6 +503,8 @@ If request messages sent to the KDC as well as success response messages from th
 
   A Client can access this resource in order to retrieve a set of group names, each corresponding to one of the specified group identifiers. This operation is described in {{retrieval-gnames}}.
 
+  Clients may be authorized to access this resource even without being members of any group at the KDC, and even if they are not authorized to become group members (e.g., when authorized to be external signature verifiers).
+
 * /ace-group/GROUPNAME : one such sub-resource to /ace-group is hosted for each group with name GROUPNAME that the KDC manages, and contains the symmetric group keying material for that group.
 
   A Client can access this resource in order to join the group with name GROUPNAME, or later as a group member to retrieve the current group keying material. These operations are described in {{ssec-key-distribution-exchange}} and {{ssec-key-material-retrieval}}, respectively.
