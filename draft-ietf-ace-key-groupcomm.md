@@ -633,7 +633,7 @@ Note that the KDC only verifies that the node is authorized by the AS to access 
 
 #### Retrieve Group Names {#retrieval-gnames}
 
-In case the joining node only knows the group identifier of the group it wishes to join or about which it wishes to get update information from the KDC, the node can contact the KDC to request the corresponding group name and group-membership resource URI. The node can request several group identifiers at once. It does so by sending a CoAP FETCH request to the /ace-group endpoint at the KDC formatted as defined in {{ace-group-fetch}}.
+In case the joining node only knows the group identifier of the group it wishes to join or about which it wishes to get updated information from the KDC, the node can contact the KDC to request the corresponding group name and group-membership resource URI. The node can request several group identifiers at once. It does so by sending a CoAP FETCH request to the /ace-group endpoint at the KDC formatted as defined in {{ace-group-fetch}}.
 
 {{fig-ace-group-fetch}} gives an overview of the exchanges described above, and {{fig-ace-group-fetch-2}} shows an example.
 
