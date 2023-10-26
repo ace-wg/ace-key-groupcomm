@@ -1168,16 +1168,16 @@ Uri-Path: "g1"
 Uri-Path: "pub-key"
 Content-Format: "application/ace-groupcomm+cbor"
 Payload:
-  { "get_creds": [true, [], [ ID3 ]] }
+  { "get_creds": [true, [], [ ID2, ID3 ]] }
 
 Response:
 
 Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
-  { "creds": [ AUTH_CRED_3 ],
-    "peer_roles": [ "receiver" ],
-    "peer_identifiers": [ ID3 ] }
+{ "creds": [ AUTH_CRED_2, AUTH_CRED_3, ],
+  "peer_roles": [ ["sender", "receiver"], "receiver" ],
+  "peer_identifiers": [ ID2, ID3 ] }
 ~~~~~~~~~~~
 {: #fig-public-key-2 title="Example of Authentication Credential Request-Response to Obtain the Authentication Credentials of Specific Group Members"}
 
