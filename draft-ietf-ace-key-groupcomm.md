@@ -1981,7 +1981,7 @@ Note that the actual use of a parameter and its inclusion in a message depends o
 
 A Client MUST support the following parameters.
 
-* 'scope', 'gkty', 'key', 'num', 'exp', 'gid', 'gname', 'guri', 'creds', 'peer_identifiers', 'ace_groupcomm_profile', 'control_uri', 'rekeying_scheme'.
+* 'scope', 'cnonce', 'gkty', 'key', 'num', 'exp', 'gid', 'gname', 'guri', 'creds', 'peer_identifiers', 'ace_groupcomm_profile', 'control_uri', 'rekeying_scheme'.
 
 A Client SHOULD support the following parameter.
 
@@ -1993,7 +1993,7 @@ A Client MAY support the following optional parameters. Application profiles of 
 
 The following conditional parameters are relevant only if specific conditions hold. It is REQUIRED of application profiles of this specification to define whether Clients must, should, or may support these parameters, and under which circumstances (REQ30).
 
-* 'client_cred', 'cnonce', 'client_cred_verify'. These parameters are relevant for a Client that has an authentication credential to use in a joined group.
+* 'client_cred', 'client_cred_verify'. These parameters are relevant for a Client that has an authentication credential to use in a joined group.
 
 * 'kdcchallenge'. This parameter is relevant for a Client that has an authentication credential to use in a joined group and that provides the access token to the KDC through a Token Transfer Request (see {{token-post}}).
 
@@ -2496,6 +2496,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 ## Version -17 to -18 ## {#sec-17-18}
 
 * Consistent use of leading slash in URI paths.
+
+* Consistency fix: Clients always support the 'cnonce' parameter.
 
 * Fixes and editorial improvements.
 
