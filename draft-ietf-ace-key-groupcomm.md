@@ -1729,7 +1729,7 @@ The possible, temporary misalignment of the keying material stored by the differ
 
 ## Point-to-Point Group Rekeying {#point-to-point-rekeying}
 
-This approach consists in the KDC sending one individual rekeying message to each target group member. In particular, the rekeying message is protected by means of the security association between the KDC and the target group member in question, as per the used application profile of this specification and the used transport profile of ACE.
+A point-to-point group rekeying consists in the KDC sending one individual rekeying message to each target group member. In particular, the rekeying message is protected by means of the security association between the KDC and the target group member in question, as per the used application profile of this specification and the used transport profile of ACE.
 
 This is the approach taken by the basic "Point-to-Point" group rekeying scheme, that the KDC can explicitly signal in the Join Response (see {{gid-post}}), through the 'rekeying_scheme' parameter specifying the value 0.
 
