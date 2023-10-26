@@ -867,7 +867,7 @@ Note to RFC Editor: In {{ace-groupcomm-profile-0}}, please replace "{{&SELF}}" w
 | Number       |       |          | group members to     |            |
 | Synchroniza- |       |          | synchronize with     |            |
 | tion Method  |       |          | sequence numbers of  |            |
-|              |       |          | of sender group      |            |
+|              |       |          | sender group         |            |
 |              |       |          | members. Its value   |            |
 |              |       |          | is taken from the    |            |
 |              |       |          | 'Value' column of    |            |
