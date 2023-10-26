@@ -351,7 +351,10 @@ roles = &(
 
 scope_entry = AIF-Generic<gname, permissions>
 
-scope = << [ + scope_entry ] >>
+scope_entries = [ + scope_entry ]
+
+scope = bstr .cbor scope_entries
+
 ~~~~~~~~~~~~~~~~~~~~
 {: #cddl-ex-0 title="Example of scope using the AIF format"}
 
@@ -362,7 +365,9 @@ role = tstr
 
 scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 
-scope = << [ + scope_entry ] >>
+scope_entries = [ + scope_entry ]
+
+scope = bstr .cbor scope_entries
 ~~~~~~~~~~~~~~~~~~~~
 {: #cddl-ex title="Example of scope using the textual format, with the group name and role identifiers encoded as text strings"}
 
@@ -1873,7 +1878,9 @@ roles = &(
 
 scope_entry = AIF-Generic<gname, permissions>
 
-scope = << [ + scope_entry ] >>
+scope_entries = [ + scope_entry ]
+
+scope = bstr .cbor scope_entries
 
 extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 ~~~~~~~~~~~~~~~~~~~~
@@ -1886,7 +1893,9 @@ role = tstr
 
 scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 
-scope = << [ + scope_entry ] >>
+scope_entries = [ + scope_entry ]
+
+scope = bstr .cbor scope_entries
 
 extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 ~~~~~~~~~~~~~~~~~~~~
