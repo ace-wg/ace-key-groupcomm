@@ -1993,7 +1993,7 @@ A Client MAY support the following optional parameters. Application profiles of 
 
 The following conditional parameters are relevant only if specific conditions hold. It is REQUIRED of application profiles of this specification to define whether Clients must, should, or may support these parameters, and under which circumstances (REQ30).
 
-* 'client_cred', 'client_cred_verify'. These parameters are relevant for a Client that has an authentication credential to use in a joined group.
+* 'client_cred' and 'client_cred_verify'. These parameters are relevant for a Client that has an authentication credential to use in a joined group.
 
 * 'kdcchallenge'. This parameter is relevant for a Client that has an authentication credential to use in a joined group and that provides the access token to the KDC through a Token Transfer Request (see {{token-post}}).
 
