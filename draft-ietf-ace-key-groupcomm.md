@@ -963,7 +963,7 @@ PoP input:
 ~~~~~~~~~~~~~~~~~~~~
 {: #fig-kdc-cred-input title="Example of PoP input to compute 'kdc_cred_verify' using CBOR encoding"}
 
-After sending the Join Response, the KDC MUST store the N_C value specified in the 'cnonce' parameter of the Join Request, as a 'clientchallenge' value associated with the Client. If, as a group member, the Client later sends a GET request to the /ace-group/GROUPNAME/kdc-cred resource for retrieving the latest KDC's authentication credential (see {{kdc-pub-key-get}}), then the KDC is able to use the stored 'clientchallenge' for computing a PoP evidence to include in the response sent to the Client, hence proving the possession of its own private key.
+After sending the Join Response, if the KDC has an associated authentication credential, the KDC MUST store the N_C value specified in the 'cnonce' parameter of the Join Request, as a ‘clientchallenge’ value associated with the Client. If, as a group member, the Client later sends a GET request to the /ace-group/GROUPNAME/kdc-cred resource for retrieving the latest KDC's authentication credential (see {{kdc-pub-key-get}}), then the KDC is able to use the stored 'clientchallenge' for computing a PoP evidence to include in the response sent to the Client, hence proving the possession of its own private key.
 
 If the Join Response includes the 'kdc_cred_verify' parameter, the Client verifies the conveyed PoP evidence and considers the group joining unsuccessful in case of failed verification. Application profiles of this specification MUST specify the exact approaches used by the Client to verify the PoP evidence in 'kdc_cred_verify', and MUST specify which of those approaches is used in which case (REQ21).
 
@@ -2498,6 +2498,8 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 * Consistent use of leading slash in URI paths.
 
 * Consistency fix: Clients always support the 'cnonce' parameter.
+
+* The KDC might not have to store the 'cnonce' from a Join Request.
 
 * Fixes and editorial improvements.
 
