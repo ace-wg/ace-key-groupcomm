@@ -2159,9 +2159,9 @@ This specification registers the 'application/ace-groupcomm+cbor' media type for
 
 IANA is asked to register the following entry to the "CoAP Content-Formats" registry within the "CoRE Parameters" registry group.
 
-Media Type: application/ace-groupcomm+cbor
+Content Type: application/ace-groupcomm+cbor
 
-Encoding: -
+Content Coding: -
 
 ID: TBD
 
