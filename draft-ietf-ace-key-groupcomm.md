@@ -2204,11 +2204,11 @@ Mappings" registry following the procedure specified in {{Section 8.10 of RFC920
 
 IANA is asked to register the following entry in the "Interface Description (if=) Link Target Attribute Values" registry within the "CoRE Parameters" registry group.
 
-* Attribute Value: ace.group
+* Value: ace.group
 
-* Description: The 'ace group' interface is used to provision keying material and related information and policies to members of a group using the ACE framework.
+* Description: The KDC interface is used to provision keying material and related information and policies to members of a security group using the ACE framework.
 
-* Reference: {{&SELF}}
+* Reference: {{kdc-if}} of {{&SELF}}
 
 ## ACE Groupcomm Parameters {#iana-reg}
 
