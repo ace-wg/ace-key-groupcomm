@@ -495,7 +495,7 @@ Later on as a group member, the Client can also rely on the interface at the KDC
 
 ## Interface at the KDC {#kdc-if}
 
-The KDC provides its interface by hosting the following resources. Note that the root url-path "ace-group" used hereafter is a default name; implementations are not required to use this name, and can define their own instead. The Interface Description (if=) Link Target Attribute value "ace.group" is registered in {{if-ace-group}} and can be used to describe this interface.
+The KDC provides its interface by hosting the following resources. Note that the root url-path "/ace-group" used hereafter is a default name; implementations are not required to use this name, and can define their own instead. The Interface Description (if=) Link Target Attribute value "ace.group" is registered in {{if-ace-group}} and can be used to describe this interface.
 
 If request messages sent to the KDC as well as success response messages from the KDC include a payload and specify a Content-Format, those messages MUST have Content-Format set to application/ace-groupcomm+cbor, defined in {{content-type}}. CBOR labels for the message parameters are defined in {{params}}.
 
@@ -517,7 +517,7 @@ If request messages sent to the KDC as well as success response messages from th
 
   Clients may be authorized to access this resource even without being group members, e.g., if authorized to be external signature verifiers for the group.
 
-* ace-group/GROUPNAME/kdc-cred : the path of this resource is invariant once the resource is established. This resource contains the authentication credential of the KDC for the group with name GROUPNAME.
+* /ace-group/GROUPNAME/kdc-cred : the path of this resource is invariant once the resource is established. This resource contains the authentication credential of the KDC for the group with name GROUPNAME.
 
    This resource is created only in case the KDC has an associated authentication credential and this is required for the correct group operation. It is REQUIRED of application profiles to define whether the KDC has such an associated authentication credential (REQ8).
 
@@ -553,27 +553,27 @@ It is REQUIRED of the application profiles of this specification to define what 
 
 It is expected that a Client minimally supports the following set of primary operations and corresponding interactions with the KDC.
 
-* FETCH request to ace-group/ , in order to retrieve group names associated with group identifiers.
+* FETCH request to /ace-group/ , in order to retrieve group names associated with group identifiers.
 
-* POST and GET requests to ace-group/GROUPNAME/ , in order to join a group (POST) and later retrieve the current group key material as a group member (GET).
+* POST and GET requests to /ace-group/GROUPNAME/ , in order to join a group (POST) and later retrieve the current group key material as a group member (GET).
 
-* GET and FETCH requests to ace-group/GROUPNAME/creds , in order to retrieve the authentication credentials of all the other group members (GET) or only some of them by filtering (FETCH). While retrieving authentication credentials remains possible by using GET requests, retrieval by filtering allows to greatly limit the size of exchanged messages.
+* GET and FETCH requests to /ace-group/GROUPNAME/creds , in order to retrieve the authentication credentials of all the other group members (GET) or only some of them by filtering (FETCH). While retrieving authentication credentials remains possible by using GET requests, retrieval by filtering allows to greatly limit the size of exchanged messages.
 
-* GET request to ace-group/GROUPNAME/num , in order to retrieve the current version of the group key material as a group member.
+* GET request to /ace-group/GROUPNAME/num , in order to retrieve the current version of the group key material as a group member.
 
-* DELETE request to ace-group/GROUPNAME/nodes/NODENAME , in order to leave the group.
+* DELETE request to /ace-group/GROUPNAME/nodes/NODENAME , in order to leave the group.
 
 In addition, some Clients may rather not support the following set of secondary operations and corresponding interactions with the KDC. This can be specified, for instance, in compliance documents defining minimalistic Clients and their capabilities in specific deployments. In turn, these might also have to consider the used application profile of this specification.
 
-* GET request to ace-group/GROUPNAME/kdc-cred , in order to retrieve the current authentication credential of the KDC, in addition to when joining the group. This is relevant only if the KDC has an associated authentication credential and this is required for the correct group operation.
+* GET request to /ace-group/GROUPNAME/kdc-cred , in order to retrieve the current authentication credential of the KDC, in addition to when joining the group. This is relevant only if the KDC has an associated authentication credential and this is required for the correct group operation.
 
-* GET request to ace-group/GROUPNAME/policies , in order to retrieve the current group policies as a group member, in addition to when joining the group.
+* GET request to /ace-group/GROUPNAME/policies , in order to retrieve the current group policies as a group member, in addition to when joining the group.
 
-* GET request to ace-group/GROUPNAME/nodes/NODENAME , in order to retrieve the current group keying material and individual keying material. The former can also be retrieved through a GET request to ace-group/GROUPNAME/ (see above). The latter would not be possible to re-obtain as a group member.
+* GET request to /ace-group/GROUPNAME/nodes/NODENAME , in order to retrieve the current group keying material and individual keying material. The former can also be retrieved through a GET request to /ace-group/GROUPNAME/ (see above). The latter would not be possible to re-obtain as a group member.
 
-* PUT request to ace-group/GROUPNAME/nodes/NODENAME , in order to ask for new individual keying material. The Client would have to alternatively re-join the group through a POST request to ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group or on the application profile of this specification, the Client might simply not be associated with any individual keying material.
+* PUT request to /ace-group/GROUPNAME/nodes/NODENAME , in order to ask for new individual keying material. The Client would have to alternatively re-join the group through a POST request to /ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group or on the application profile of this specification, the Client might simply not be associated with any individual keying material.
 
-* POST request to ace-group/GROUPNAME/nodes/NODENAME/cred , in order to provide the KDC with a new authentication credential. The Client would have to alternatively re-join the group through a POST request to ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group, the Client might simply not have an associated authentication credential to provide.
+* POST request to /ace-group/GROUPNAME/nodes/NODENAME/cred , in order to provide the KDC with a new authentication credential. The Client would have to alternatively re-join the group through a POST request to /ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group, the Client might simply not have an associated authentication credential to provide.
 
 It is REQUIRED of application profiles of this specification to categorize possible newly defined operations for Clients into primary operations and secondary operations, and to provide accompanying considerations (REQ12).
 
@@ -663,7 +663,7 @@ Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
   { "gid": [01, 02], "gname": ["group1", "group2"],
-    "guri": ["ace-group/g1", "ace-group/g2"] }
+    "guri": ["/ace-group/g1", "/ace-group/g2"] }
 ~~~~~~~~~~~
 {: #fig-ace-group-fetch-2 title="Example of Group Name and URI Retrieval Request-Response"}
 
@@ -733,7 +733,7 @@ get_creds = null / [ inclusion_flag, role_filter, id_filter]
 
 * 'creds_repo', which can be present if the format of the Client's authentication credential in the 'client_cred' parameter is a certificate. In such a case, this parameter has as value the URI of the certificate. This parameter is encoded as a CBOR text string. Alternative specific encodings of this parameter MAY be defined in applications of this specification (OPT6).
 
-* 'control_uri', with value a full URI, encoded as a CBOR text string. A default url-path is /ace-group/GROUPNAME/node, although implementations can use different ones instead. The URI MUST NOT have url-path ace-group/GROUPNAME.
+* 'control_uri', with value a full URI, encoded as a CBOR text string. A default url-path is /ace-group/GROUPNAME/node, although implementations can use different ones instead. The URI MUST NOT have url-path /ace-group/GROUPNAME.
 
    If 'control_uri' is specified in the Join Request, the Client acts as a CoAP server and hosts a resource at this specific URI. The KDC MAY use this URI to send CoAP requests to the Client (acting as CoAP server in this exchange), for example for one-to-one provisioning of new group keying material when performing a group rekeying (see {{update-keys}}), or to inform the Client of its removal from the group {{sec-node-removal}}.
 
@@ -940,7 +940,7 @@ Note to RFC Editor: In {{rekeying-scheme-0}}, please replace "{{&SELF}}" with th
 
    It is expected from separate documents to define how the advanced group rekeying scheme possibly indicated in the 'rekeying_scheme' parameter is used by an application profile of this specification. This includes defining the format of the administrative keying material to specify in 'mgt_key_material', consistently with the group rekeying scheme and the application profile in question.
 
-* 'control_group_uri', with a full URI as value, encoded as a CBOR text string. The URI MUST specify addressing information intended to reach all the members in the group. For example, this can be a multicast IP address, optionally together with a port number that, if omitted, defaults to 5683, i.e., the default port number for the "coap" URI scheme (see {{Section 6.1 of RFC7252}}). The URI MUST include GROUPNAME in the url-path. A default url-path is /ace-group/GROUPNAME, although implementations can use different ones instead. The URI MUST NOT have url-path ace-group/GROUPNAME/node.
+* 'control_group_uri', with a full URI as value, encoded as a CBOR text string. The URI MUST specify addressing information intended to reach all the members in the group. For example, this can be a multicast IP address, optionally together with a port number that, if omitted, defaults to 5683, i.e., the default port number for the "coap" URI scheme (see {{Section 6.1 of RFC7252}}). The URI MUST include GROUPNAME in the url-path. A default url-path is /ace-group/GROUPNAME, although implementations can use different ones instead. The URI MUST NOT have url-path /ace-group/GROUPNAME/node.
 
    If 'control_group_uri' is included in the Join Response, the Clients supporting this parameter act as CoAP servers, host a resource at this specific URI, and listen to the specified addressing information.
 
@@ -1228,7 +1228,7 @@ Payload (in CBOR diagnostic notation):
 ~~~~~~~~~~~
 {: #fig-public-key-4 title="Example of Authentication Credential Request-Response to Obtain the Authentication Credentials of all the Group Members"}
 
-## ace-group/GROUPNAME/kdc-cred
+## /ace-group/GROUPNAME/kdc-cred
 
 This resource implements a GET handler.
 
@@ -1285,7 +1285,7 @@ Member                                                         KDC
   |                                                             |
   |             KDC Authentication Credential Request           |
   |------------------------------------------------------------>|
-  |              GET ace-group/GROUPNAME/gm-pub-key             |
+  |              GET /ace-group/GROUPNAME/gm-pub-key            |
   |                                                             |
   |<-- KDC Authentication Credential Response: 2.05 (Content) --|
   |                                                             |
@@ -1337,12 +1337,12 @@ A node in the group can contact the KDC to retrieve the current group policies, 
 {{fig-policies}} gives an overview of the exchange described above, while {{fig-policies-2}} shows an example.
 
 ~~~~~~~~~~~
-Client                                                      KDC
-   |                                                         |
-   |-- Policies Request: GET ace-group/GROUPNAME/policies -->|
-   |                                                         |
-   |<----------- Policies Response: 2.05 (Content) ----------|
-   |                                                         |
+Client                                                       KDC
+   |                                                          |
+   |-- Policies Request: GET /ace-group/GROUPNAME/policies -->|
+   |                                                          |
+   |<----------- Policies Response: 2.05 (Content) -----------|
+   |                                                          |
 ~~~~~~~~~~~
 {: #fig-policies title="Message Flow of Policies Request-Response" artwork-align="center"}
 
@@ -1387,12 +1387,12 @@ A node in the group can contact the KDC to request information about the version
 {{fig-version}} gives an overview of the exchange described above, while {{fig-version-2}} shows an example.
 
 ~~~~~~~~~~~
-Client                                                    KDC
-   |                                                       |
-   |---- Version Request: GET ace-group/GROUPNAME/num ---->|
-   |                                                       |
-   |<--------- Version Response: 2.05 (Content) -----------|
-   |                                                       |
+Client                                                     KDC
+   |                                                        |
+   |---- Version Request: GET /ace-group/GROUPNAME/num ---->|
+   |                                                        |
+   |<---------- Version Response: 2.05 (Content) -----------|
+   |                                                        |
 ~~~~~~~~~~~
 {: #fig-version title="Message Flow of Version Request-Response" artwork-align="center"}
 
@@ -1432,11 +1432,11 @@ The handler expects a GET request.
 
 If all verifications succeed, the handler replies with a 2.05 (Content) response containing both the group keying material and the individual keying material for the Client, or information enabling the Client to derive it. The payload of the response is formatted as a CBOR map. The format for the group keying material is the same as defined in the response of {{gid-get}}. The specific format of individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ27) and registered in {{iana-reg}}.
 
-Optionally, the KDC can make the sub-resource at ace-group/GROUPNAME/nodes/NODENAME also Observable {{RFC7641}} for the associated node. In case the KDC removes that node from the group without having been explicitly asked for it, this allows the KDC to send an unsolicited 4.04 (Not Found) response to the node as a notification of eviction from the group (see {{sec-node-removal}}).
+Optionally, the KDC can make the sub-resource at /ace-group/GROUPNAME/nodes/NODENAME also Observable {{RFC7641}} for the associated node. In case the KDC removes that node from the group without having been explicitly asked for it, this allows the KDC to send an unsolicited 4.04 (Not Found) response to the node as a notification of eviction from the group (see {{sec-node-removal}}).
 
-Note that the node could have also been observing the resource at ace-group/GROUPNAME, in order to be informed of changes in the keying material. In such a case, this method would result in largely overlapping notifications received for the resource at ace-group/GROUPNAME and the sub-resource at ace-group/GROUPNAME/nodes/NODENAME.
+Note that the node could have also been observing the resource at /ace-group/GROUPNAME, in order to be informed of changes in the keying material. In such a case, this method would result in largely overlapping notifications received for the resource at /ace-group/GROUPNAME and the sub-resource at /ace-group/GROUPNAME/nodes/NODENAME.
 
-In order to mitigate this, a node that supports the No-Response option {{RFC7967}} can use it when starting the observation of the sub-resource at ace-group/GROUPNAME/nodes/NODENAME. In particular, the GET observation request can also include the No-Response option, with value set to 2 (Not interested in 2.xx responses).
+In order to mitigate this, a node that supports the No-Response option {{RFC7967}} can use it when starting the observation of the sub-resource at /ace-group/GROUPNAME/nodes/NODENAME. In particular, the GET observation request can also include the No-Response option, with value set to 2 (Not interested in 2.xx responses).
 
 #### Retrieve Group and Individual Keying Material {#update-keys}
 
@@ -1464,7 +1464,7 @@ The Client can also send to the KDC a Key Distribution Request without having be
 Client                                                          KDC
    |                                                             |
    |------------------ Key Distribution Request: --------------->|
-   |           GET ace-group/GROUPNAME/nodes/NODENAME            |
+   |           GET /ace-group/GROUPNAME/nodes/NODENAME           |
    |                                                             |
    |<-------- Key Distribution Response: 2.05 (Content) ---------|
    |                                                             |
@@ -1528,8 +1528,8 @@ To this end, the Client performs a Key Renewal Request-Response exchange with th
 ~~~~~~~~~~~
 Client                                                    KDC
    |                                                       |
-   |------------------ Key Renewal Request: -------------->|
-   |           PUT ace-group/GROUPNAME/nodes/NODENAME      |
+   |---------------- Key Renewal Request: ---------------->|
+   |        PUT /ace-group/GROUPNAME/nodes/NODENAME        |
    |                                                       |
    |<-------- Key Renewal Response: 2.05 (Content) --------|
    |                                                       |
@@ -1642,7 +1642,7 @@ Figure {{fig-pub-key-update-req-resp}} gives an overview of the exchange describ
 Client                                                          KDC
 |                                                                |
 |----------- Authentication Credential Update Request: --------->|
-|          POST ace-group/GROUPNAME/nodes/NODENAME/cred          |
+|         POST /ace-group/GROUPNAME/nodes/NODENAME/cred          |
 |                                                                |
 |<-- Authentication Credential Update Response: 2.04 (Changed) --|
 |                                                                |
@@ -1691,7 +1691,7 @@ In either case, the KDC performs the following actions.
 
 * In case of forced eviction, i.e., for cases 2 and 3 above, the KDC deletes the authentication credential of the removed Client, if it acts as repository of authentication credentials for group members.
 
-* If the removed Client is registered as an observer of the group-membership resource at ace-group/GROUPNAME, the KDC removes the Client from the list of observers of that resource.
+* If the removed Client is registered as an observer of the group-membership resource at /ace-group/GROUPNAME, the KDC removes the Client from the list of observers of that resource.
 
 * If the sub-resource nodes/NODENAME was created for the removed Client, the KDC deletes that sub-resource.
 
@@ -1699,7 +1699,7 @@ In either case, the KDC performs the following actions.
 
    - If the evicted Client implements the 'control_uri' resource specified in {{gid-post}}, the KDC sends a DELETE request, targeting the URI specified in the 'control_uri' parameter of the Join Request (see {{gid-post}}).
 
-   - If the evicted Client is observing its associated sub-resource at ace-group/GROUPNAME/nodes/NODENAME (see {{node-get}}), the KDC sends an unsolicited 4.04 (Not Found) error response, which does not include the Observe option and indicates that the observed resource has been deleted (see {{Section 3.2 of RFC7641}}).
+   - If the evicted Client is observing its associated sub-resource at /ace-group/GROUPNAME/nodes/NODENAME (see {{node-get}}), the KDC sends an unsolicited 4.04 (Not Found) error response, which does not include the Observe option and indicates that the observed resource has been deleted (see {{Section 3.2 of RFC7641}}).
 
       The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 5 ("Group membership terminated").
 
@@ -1733,15 +1733,15 @@ This is the approach taken by the basic "Point-to-Point" group rekeying scheme, 
 
 When taking this approach in the group identified by GROUPNAME, the KDC can practically deliver the rekeying messages to the target group members in different, co-existing ways.
 
-* The KDC SHOULD make the ace-group/GROUPNAME resource Observable {{RFC7641}}. Thus, upon performing a group rekeying, the KDC can distribute the new group keying material through individual notification responses sent to the target group members that are also observing that resource.
+* The KDC SHOULD make the /ace-group/GROUPNAME resource Observable {{RFC7641}}. Thus, upon performing a group rekeying, the KDC can distribute the new group keying material through individual notification responses sent to the target group members that are also observing that resource.
 
-   In case the KDC deletes the group (and thus deletes the ace-group/GROUPNAME resource), relying on CoAP Observe as discussed above also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 6 ("Group deleted").
+   In case the KDC deletes the group (and thus deletes the /ace-group/GROUPNAME resource), relying on CoAP Observe as discussed above also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 6 ("Group deleted").
 
 * If a target group member specified a URI in the 'control_uri' parameter of the Join Request upon joining the group (see {{gid-post}}), the KDC can provide that group member with the new group keying material by sending a unicast POST request to that URI.
 
-   A Client that does not plan to observe the ace-group/GROUPNAME resource at the KDC SHOULD provide a URI in the 'control_uri' parameter of the Join Request upon joining the group.
+   A Client that does not plan to observe the /ace-group/GROUPNAME resource at the KDC SHOULD provide a URI in the 'control_uri' parameter of the Join Request upon joining the group.
 
-If the KDC has to send a rekeying message to a target group member, but this did not include the 'control_uri' parameter in the Join Request and is not a registered observer for the ace-group/GROUPNAME resource, then that target group member would not be able to participate to the group rekeying. Later on, after having repeatedly failed to successfully exchange secure messages in the group, that group member can retrieve the current group keying material from the KDC, by sending a GET request to ace-group/GROUPNAME or ace-group/GROUPNAME/nodes/NODENAME (see {{gid-get}} and {{node-get}}, respectively).
+If the KDC has to send a rekeying message to a target group member, but this did not include the 'control_uri' parameter in the Join Request and is not a registered observer for the /ace-group/GROUPNAME resource, then that target group member would not be able to participate to the group rekeying. Later on, after having repeatedly failed to successfully exchange secure messages in the group, that group member can retrieve the current group keying material from the KDC, by sending a GET request to /ace-group/GROUPNAME or /ace-group/GROUPNAME/nodes/NODENAME (see {{gid-get}} and {{node-get}}, respectively).
 
 ## One-to-Many Group Rekeying {#one-to-many-rekeying}
 
