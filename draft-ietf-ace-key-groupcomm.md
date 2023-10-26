@@ -140,7 +140,7 @@ Readers are expected to be familiar with:
 
 * The terms and concepts described in CoAP {{RFC7252}}. Unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol".
 
-* The terms and concepts described in CBOR {{RFC8949}} and COSE {{RFC9052}}{{RFC9053}}{{RFC9338}}.
+* The terms and concepts described in CDDL {{RFC8610}}, CBOR {{RFC8949}}, and COSE {{RFC9052}}{{RFC9053}}{{RFC9338}}.
 
 A principal interested to participate in group communication as well as already participating as a group member is interchangeably denoted as "Client" or "node".
 
