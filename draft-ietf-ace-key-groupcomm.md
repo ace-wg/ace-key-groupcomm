@@ -1781,7 +1781,7 @@ Further details depend on the specific rekeying scheme used in the group.
 
 When using a group rekeying scheme relying on one-to-many rekeying messages, the actual data content of each rekeying message is prepared according to what the rekeying scheme prescribes.
 
-Then, the KDC can protect the rekeying message as defined below. The used encryption algorithm which SHOULD be the same one used to protect communications in the group. The method defined below assumes that the following holds for the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see {{gid-post}}).
+Then, the KDC can protect the rekeying message as defined below. The used encryption algorithm SHOULD be the same one used to protect communications in the group. The method defined below assumes that the following holds for the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see {{gid-post}}).
 
 * The included symmetric encryption keys are accompanied by a corresponding and unique key identifier assigned by the KDC.
 
