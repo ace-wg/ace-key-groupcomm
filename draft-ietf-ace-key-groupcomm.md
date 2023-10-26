@@ -336,6 +336,8 @@ The Authorization Request sent from the Client to the AS is defined in {{Section
 As defined in {{RFC9200}}, other additional parameters can be included if necessary.
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
+;# include rfc9237
+
 gname = tstr
 
 permissions = uint .bits roles
@@ -347,7 +349,7 @@ roles = &(
    Verifier: 4
 )
 
-scope_entry = AIF_Generic<gname, permissions>
+scope_entry = AIF-Generic<gname, permissions>
 
 scope = << [ + scope_entry ] >>
 ~~~~~~~~~~~~~~~~~~~~
@@ -1856,6 +1858,8 @@ The resulting tagged CBOR byte string is used as value of the 'scope' claim of t
 {{cddl-ex-0-ext}} and {{cddl-ex-ext}} build on the examples in {{ssec-authorization-response}}, and show the corresponding extended scopes.
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
+;# include rfc9237
+
 gname = tstr
 
 permissions = uint .bits roles
@@ -1867,7 +1871,7 @@ roles = &(
    Verifier: 4
 )
 
-scope_entry = AIF_Generic<gname, permissions>
+scope_entry = AIF-Generic<gname, permissions>
 
 scope = << [ + scope_entry ] >>
 
