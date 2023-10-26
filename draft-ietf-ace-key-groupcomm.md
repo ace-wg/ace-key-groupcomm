@@ -154,15 +154,15 @@ A principal interested to participate in group communication as well as already 
 
 Furthermore, this document uses "names" or "identifiers" for groups and nodes. Their different meanings are summarized below.
 
-* Group name: the invariant once established identifier of a group. It is used in the interactions between Client, AS, and RS to identify a group. A group name is always unique among the group names of the existing groups under the same KDC.
+* Group name: The identifier of a group. Once established, it is invariant. It is used in the interactions between Client, AS, and RS to identify a group. A group name is always unique among the group names of the existing groups under the same KDC.
 
-* GROUPNAME: the invariant once established text string used in URIs. GROUPNAME uniquely maps to the group name of a group, although they do not necessarily coincide.
+* GROUPNAME: The text string used in URIs to identify a group. Once established, it is invariant. GROUPNAME uniquely maps to the group name of a group, although they do not necessarily coincide.
 
 * Group identifier: the identifier of the group keying material used in a group. Unlike group name and GROUPNAME, this identifier changes over time, when the group keying material is updated.
 
-* Node name: the invariant once established identifier of a node. It is used in the interactions between Client and RS, as well as to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.
+* Node name: The identifier of a node. Once established, it is invariant. It is used in the interactions between Client and RS, as well as to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.
 
-* NODENAME: the invariant once established text string used in URIs to identify a member of a group. Its value coincides with the node name of the associated group member.
+* NODENAME: The text string used in URIs to identify a member of a group. Once established, it is invariant. Its value coincides with the node name of the associated group member.
 
 This document additionally uses the following terminology:
 
