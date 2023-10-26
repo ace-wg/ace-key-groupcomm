@@ -2493,6 +2493,12 @@ gname = tstr
 
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
+## Version -17 to -18 ## {#sec-17-18}
+
+* Consistent use of leading slash in URI paths.
+
+* Fixes and editorial improvements.
+
 ## Version -16 to -17 ## {#sec-16-17}
 
 * Expanded definition of "Dispatcher".
