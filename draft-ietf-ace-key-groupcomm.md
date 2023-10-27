@@ -52,6 +52,7 @@ normative:
   RFC9053:
   RFC9200:
   RFC9237:
+  RFC9290:
   RFC9338:
   I-D.ietf-core-oscore-groupcomm:
   COSE.Algorithms:
@@ -600,15 +601,49 @@ If the request is not formatted correctly (e.g., required fields are not present
 
 If the request includes unknown or non-expected fields, the handler MUST silently ignore them and continue processing the request. Application profiles of this specification MAY define optional or mandatory payload formats for specific error cases (OPT4).
 
-Some error responses from the KDC can have Content-Format set to application/ace-groupcomm+cbor. In such a case, the payload of the response MUST be a CBOR map, which includes the following fields.
+Some error responses from the KDC can convey error-specific information according to the problem-details format defined in {{RFC9290}}. Such error responses MUST have Content-Format set to application/concise-problem-details+cbor. The payload of these error responses MUST be a CBOR map specifying a Concise Problem Details data item (see {{Section 2 of RFC9290}}). The CBOR map is formatted as follows.
 
-* 'error', with value a CBOR integer specifying the error occurred at the KDC. The value is taken from the "Value" column of the "ACE Groupcomm Errors" registry defined in {{iana-ace-groupcomm-errors}} of this specification. This field MUST be present.
+* It MUST include the Custom Problem Detail entry 'ace-groupcomm-error' registered in {{iana-custom-problem-details}} of this document.
 
-* 'error_description', with value a CBOR text string specifying a human-readable diagnostic description of the error occurred at the KDC, written in English. The diagnostic text is intended for software engineers as well as for device and network operators, in order to aid debugging and provide context for possible intervention. The diagnostic message SHOULD be logged by the KDC. This field MAY be present, and it is unlikely relevant in an unattended setup where human intervention is not expected.
+   This entry includes only one field, namely 'error-id'. The map key for 'error-id' is the CBOR unsigned integer with value 0. The value of 'error-id' is a CBOR integer specifying the error occurred at the KDC. This value is taken from the 'Value' column of the "ACE Groupcomm Errors" registry defined in {{iana-ace-groupcomm-errors}} of this document.
 
-The 'error' and 'error_description' fields are defined as OPTIONAL to support for Clients (see {{params}}). A Client supporting the 'error' parameter and able to understand the specified error may use that information to determine what actions to take next.
+   The CDDL notation {{RFC8610}} of the 'ace-groupcomm-error' entry is given below.
 
-{{error-types}} of this specification defines an initial set of error identifiers, as possible values for the 'error' field. Application profiles of this specification inherit this initial set of error identifiers and MAY define additional value (OPT5).
+~~~~~~~~~~~ CDDL
+   ace-groupcomm-error = {
+     &(error-id: 0) => int
+   }
+~~~~~~~~~~~
+
+* It MAY include further Standard Problem Detail entries or Custom Problem Detail entries (see {{RFC9290}}).
+
+   In particular, it can include the Standard Problem Detail entry 'detail' (map key -2), whose value is a CBOR text string that specifies a human-readable, diagnostic description of the error occurred at the KDC. The diagnostic text is intended for software engineers as well as for device and network operators, in order to aid debugging and provide context for possible intervention. The diagnostic message SHOULD be logged by the KDC. The 'detail' entry is unlikely relevant in an unattended setup where human intervention is not expected.
+
+An example of error response using the problem-details format is shown in {{fig-exapmle-error-response}}.
+
+~~~~~~~~~~~
+Response:
+
+Header: Service Unavailable (Code=5.03)
+Content-Format: application/concise-problem-details+cbor
+Payload:
+{
+  / title /                -1: "No available node identifiers",
+  / detail /               -2: "Things will change after a
+                                group rekeying; try later",
+  / response-code /        -4: 163, / 5.03 /
+  / ace-groupcomm-error/  TBD: {
+    / error-id /  0: 4 / "No available node identifiers" /,
+  }
+}
+~~~~~~~~~~~
+{: #fig-exapmle-error-response title="Example of Error Response with Problem Details"}
+
+Note to RFC Editor: In the figure above, please replace "TBD" with the unsigned integer assigned as key value to the Custom Problem Detail entry 'ace-groupcomm-error' (see {{iana-custom-problem-details}}). Then, please delete this paragraph.
+
+The problem-details format in general and the Custom Problem Detail entry 'ace-groupcomm-error' in particular are OPTIONAL to support for Clients. A Client supporting the entry 'ace-groupcomm-error' and able to understand the specified error may use that information to determine what actions to take next.
+
+{{error-types}} of this specification defines an initial set of error identifiers, as possible values for the 'error-id' field. Application profiles of this specification inherit this initial set of error identifiers and MAY define additional value (OPT5).
 
 ## /ace-group
 
@@ -774,11 +809,11 @@ If the KDC manages the group members' authentication credentials, the handler ch
 
 * The KDC checks the authentication credential to be valid for the group identified by GROUPNAME. That is, it checks that the authentication credential has the format used in the group, is intended for the public key algorithm used in the group, and is aligned with the possible associated parameters used in the group.
 
-   If this verification fails, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 2 ("Authentication credential incompatible with the group configuration").
+   If this verification fails, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 2 ("Authentication credential incompatible with the group configuration").
 
 * The KDC verifies the PoP evidence contained in the 'client_cred_verify' field. Application profiles of this specification MUST specify the exact approaches used to verify the PoP evidence, and MUST specify which of those approaches is used in which case (REQ14).
 
-   If the PoP evidence does not pass verification, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 3 ("Invalid Proof-of-Possession evidence").
+   If the PoP evidence does not pass verification, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 3 ("Invalid Proof-of-Possession evidence").
 
 If no authentication credential is included in the 'client_cred' field, the handler checks if an authentication credential is already associated with the received access token and to the group identified by GROUPNAME (see also {{ssec-key-distribution-exchange}}). Note that the same joining node may use different authentication credentials in different groups, and all those authentication credentials would be associated with the same access token.
 
@@ -1038,7 +1073,7 @@ The GET handler returns the symmetric group keying material for the group identi
 
 The handler expects a GET request.
 
-In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
+In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 0 ("Operation permitted only to group members").
 
 If all verifications succeed, the handler replies with a 2.05 (Content) response containing the symmetric group keying material. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'gkty', 'key', and 'num' specified in {{gid-post}}.
 
@@ -1331,7 +1366,7 @@ This resource implements the GET handler.
 
 The handler expects a GET request.
 
-In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
+In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 0 ("Operation permitted only to group members").
 
 If all verifications succeed, the handler replies with a 2.05 (Content) response containing the list of policies for the group identified by GROUPNAME. The payload of the response is formatted as a CBOR map including only the parameter 'group_policies' defined in {{gid-post}} and specifying the current policies in the group. If the KDC does not store any policy, the payload is formatted as a zero-length CBOR byte string.
 
@@ -1381,7 +1416,7 @@ This resource implements the GET handler.
 
 The handler expects a GET request.
 
-In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
+In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 0 ("Operation permitted only to group members").
 
 If all verifications succeed, the handler returns a 2.05 (Content) message containing an integer that represents the version number of the symmetric group keying material. This number is incremented on the KDC every time the KDC updates the symmetric group keying material, before the new keying material is distributed. This number is stored in persistent storage.
 
@@ -1429,7 +1464,7 @@ This resource implements the GET, PUT, and DELETE handlers.
 
 In addition to what is defined in {{kdc-if-errors}}, each of the handlers performs the following two verifications.
 
-* The handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
+* The handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 0 ("Operation permitted only to group members").
 
 * The handler verifies that the node name of the Client is equal to NODENAME used in the url-path. If the verification fails, the handler replies with a 4.03 (Forbidden) error response.
 
@@ -1508,9 +1543,9 @@ The PUT handler processes requests from a Client that asks for new individual ke
 
 The handler expects a PUT request with empty payload.
 
-In addition to what is defined in {{kdc-if-errors}} and at the beginning of {{node-subresource}}, the handler verifies that this operation is consistent with the set of roles that the Client has in the group (REQ11). If the verification fails, the KDC MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 1 ("Request inconsistent with the current roles").
+In addition to what is defined in {{kdc-if-errors}} and at the beginning of {{node-subresource}}, the handler verifies that this operation is consistent with the set of roles that the Client has in the group (REQ11). If the verification fails, the KDC MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 1 ("Request inconsistent with the current roles").
 
-If the KDC is currently not able to serve this request, i.e., to generate new individual keying material for the requesting Client, the KDC MUST reply with a 5.03 (Service Unavailable) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 4 ("No available node identifiers").
+If the KDC is currently not able to serve this request, i.e., to generate new individual keying material for the requesting Client, the KDC MUST reply with a 5.03 (Service Unavailable) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 4 ("No available node identifiers").
 
 If all verifications succeed, the handler replies with a 2.05 (Content) response containing newly generated, individual keying material for the Client. The payload of the response is formatted as a CBOR map. The specific format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ27) and registered in {{iana-reg}}.
 
@@ -1575,7 +1610,7 @@ The DELETE handler removes the node identified by NODENAME from the group identi
 
 The handler expects a DELETE request with empty payload.
 
-In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
+In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 0 ("Operation permitted only to group members").
 
 If all verification succeeds, the handler performs the actions defined in {{sec-node-removal}} and replies with a 2.02 (Deleted) response with empty payload.
 
@@ -1601,13 +1636,13 @@ An example of PoP input to compute 'client_cred_verify' using CBOR encoding is g
 
 It is REQUIRED of the application profiles to define the specific formats of authentication credentials that are acceptable to use in the group (REQ6).
 
-In addition to what is defined in {{kdc-if-errors}} and at the beginning of {{node-subresource}}, the handler verifies that this operation is consistent with the set of roles that the node has in the group. If the verification fails, the KDC MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 1 ("Request inconsistent with the current roles").
+In addition to what is defined in {{kdc-if-errors}} and at the beginning of {{node-subresource}}, the handler verifies that this operation is consistent with the set of roles that the node has in the group. If the verification fails, the KDC MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 1 ("Request inconsistent with the current roles").
 
 If the KDC cannot retrieve the 'kdcchallenge' associated with this Client (see {{token-post}}), the KDC MUST reply with a 4.00 (Bad Request) error response, which MUST also have Content-Format application/ace-groupcomm+cbor. The payload of the error response is a CBOR map including a newly generated 'kdcchallenge' value. This is specified in the 'kdcchallenge' parameter. In such a case the KDC MUST store the newly generated value as the 'kdcchallenge' value associated with this Client, replacing the currently stored value (if any).
 
-Otherwise, the handler checks that the authentication credential specified in the 'client_cred' field is valid for the group identified by GROUPNAME. That is, the handler checks that the authentication credential is encoded according to the format used in the group, is intended for the public key algorithm used in the group, and is aligned with the possible associated parameters used in the group. If that cannot be successfully verified, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 2 ("Authentication Credential incompatible with the group configuration").
+Otherwise, the handler checks that the authentication credential specified in the 'client_cred' field is valid for the group identified by GROUPNAME. That is, the handler checks that the authentication credential is encoded according to the format used in the group, is intended for the public key algorithm used in the group, and is aligned with the possible associated parameters used in the group. If that cannot be successfully verified, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 2 ("Authentication credential incompatible with the group configuration").
 
-Otherwise, the handler verifies the PoP evidence contained in the 'client_cred_verify' field of the request, by using the authentication credential specified in the 'client_cred' field, as well as the same way considered in {{gid-post}} and defined by the specific application profile (REQ14). If the PoP evidence does not pass verification, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 3 ("Invalid Proof-of-Possession evidence").
+Otherwise, the handler verifies the PoP evidence contained in the 'client_cred_verify' field of the request, by using the authentication credential specified in the 'client_cred' field, as well as the same way considered in {{gid-post}} and defined by the specific application profile (REQ14). If the PoP evidence does not pass verification, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 3 ("Invalid Proof-of-Possession evidence").
 
 If all verifications succeed, the handler performs the following actions.
 
@@ -1708,7 +1743,7 @@ In either case, the KDC performs the following actions.
 
    - If the evicted Client is observing its associated sub-resource at /ace-group/GROUPNAME/nodes/NODENAME (see {{node-get}}), the KDC sends an unsolicited 4.04 (Not Found) error response, which does not include the Observe option and indicates that the observed resource has been deleted (see {{Section 3.2 of RFC7641}}).
 
-      The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 5 ("Group membership terminated").
+      The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 5 ("Group membership terminated").
 
 * If the application requires forward security or the used application profile requires so, the KDC MUST generate new group keying material and securely distribute it to all the current group members except the leaving node (see {{sec-group-rekeying}}).
 
@@ -1742,7 +1777,7 @@ When taking this approach in the group identified by GROUPNAME, the KDC can prac
 
 * The KDC SHOULD make the /ace-group/GROUPNAME resource Observable {{RFC7641}}. Thus, upon performing a group rekeying, the KDC can distribute the new group keying material through individual notification responses sent to the target group members that are also observing that resource.
 
-   In case the KDC deletes the group (and thus deletes the /ace-group/GROUPNAME resource), relying on CoAP Observe as discussed above also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 6 ("Group deleted").
+   In case the KDC deletes the group (and thus deletes the /ace-group/GROUPNAME resource), relying on CoAP Observe as discussed above also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 6 ("Group deleted").
 
 * If a target group member specified a URI in the 'control_uri' parameter of the Join Request upon joining the group (see {{gid-post}}), the KDC can provide that group member with the new group keying material by sending a unicast POST request to that URI.
 
@@ -1920,10 +1955,6 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 | Name                  | CBOR | CBOR Type           | Reference  |
 |                       | Key  |                     |            |
 +-----------------------+------+---------------------+------------+
-| error                 | TBD  | int                 | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| error_description     | TBD  | tstr                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
 | gid                   | TBD  | array               | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
 | gname                 | TBD  | array of tstr       | [RFC-XXXX] |
@@ -2000,10 +2031,6 @@ A Client SHOULD support the following parameter.
 
 * 'get_creds'. That is, not supporting this parameter would yield the inconvenient and undesirable behavior where: i) the Client does not ask for the other group members' authentication credentials upon joining the group (see {{ssec-key-distribution-exchange}}); and ii) later on as a group member, the Client only retrieves the authentication credentials of all group members (see {{sec-key-retrieval-all}}).
 
-A Client MAY support the following optional parameters. Application profiles of this specification MAY define that Clients must or should support these parameters instead (OPT15).
-
-* 'error', 'error_description'.
-
 The following conditional parameters are relevant only if specific conditions hold. It is REQUIRED of application profiles of this specification to define whether Clients must, should, or may support these parameters, and under which circumstances (REQ30).
 
 * 'client_cred' and 'client_cred_verify'. These parameters are relevant for a Client that has an authentication credential to use in a joined group.
@@ -2024,7 +2051,7 @@ The following conditional parameters are relevant only if specific conditions ho
 
 # ACE Groupcomm Error Identifiers {#error-types}
 
-This specification defines a number of values that the KDC can include as error identifiers, in the 'error' field of an error response with Content-Format application/ace-groupcomm+cbor.
+This specification defines a number of values that the KDC can use as error identifiers. These are used in error responses with Content-Format application/concise-problem-details+cbor, as values of the 'error-id' field within the Custom Problem Detail entry 'ace-groupcomm-error' (see {{kdc-if-errors}}).
 
 ~~~~~~~~~~~
 +-------+---------------------------------------------+
@@ -2048,7 +2075,7 @@ This specification defines a number of values that the KDC can include as error 
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Error-Identifiers title="ACE Groupcomm Error Identifiers" artwork-align="center"}
 
-A Client supporting the 'error' parameter (see {{kdc-if-errors}} and {{params}}) and able to understand the specified error may use that information to determine what actions to take next. If it is included in the error response and supported by the Client, the 'error_description' parameter may provide additional context.
+If a Client supports the problem-details format {{RFC9290}} and the Custom Problem Detail entry 'ace-groupcomm-error' defined in {{kdc-if-errors}}, and is able to understand the error specified in the 'error-id' field therein, then the Client may use that information to determine what actions to take next. If the Concise Problem Details data item specified in the error response includes the 'detail' entry and the Client supports it, such an entry may provide additional context.
 
 In particular, the following guidelines apply, and application profiles of this specification can define more detailed actions for the Client to take when learning that a specific error has occurred.
 
@@ -2069,6 +2096,8 @@ In particular, the following guidelines apply, and application profiles of this 
 # Security Considerations {#sec-cons}
 
 Security considerations are inherited from the ACE framework {{RFC9200}}, and from the specific transport profile of ACE used between the Clients and the KDC, e.g., {{RFC9202}} and {{RFC9203}}.
+
+When using the problem-details format defined in {{RFC9290}} for error responses, then the privacy and security considerations from {{Sections 4 and 5 of RFC9290}} also apply.
 
 Furthermore, the following security considerations apply.
 
@@ -2222,6 +2251,16 @@ IANA is asked to register the following entry in the "Interface Description (if=
 * Description: The 'ace group' interface is used to provision keying material and related information and policies to members of a group using the ACE framework.
 
 * Reference: {{&SELF}}
+
+## Custom Problem Detail Keys Registry {#iana-custom-problem-details}
+
+IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry within the "CoRE Parameters" registry group.
+
+* Key Value: TBD
+* Name: ace-groupcomm-error
+* Brief Description: Carry {{&SELF}} problem details in a Concise Problem Details data item.
+* Change Controller: IETF
+* Reference: {{kdc-if-errors}} of {{&SELF}}
 
 ## ACE Groupcomm Parameters {#iana-reg}
 
@@ -2442,7 +2481,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * OPT4: Optionally, specify possible or required payload formats for specific error cases.
 
-* OPT5: Optionally, specify additional identifiers of error types, as values of the 'error' field in an error response from the KDC.
+* OPT5: Optionally, specify additional identifiers of error types, as values of the 'error-id' field within the Custom Problem Detail entry 'ace-groupcomm-error' (see {{kdc-if-errors}}).
 
 * OPT6: Optionally, specify the encoding of 'creds\_repo' if the default is not used (see {{gid-post}}).
 
@@ -2461,8 +2500,6 @@ This section lists the requirements on application profiles of this specificatio
 * OPT13: Optionally, specify how the identifier of a group member's authentication credential is included in requests sent to other group members (see {{update-pub-key}}).
 
 * OPT14: Optionally, specify additional information to include in rekeying messages for the "Point-to-Point" group rekeying scheme (see {{sec-group-rekeying}}).
-
-* OPT15: Optionally, specify if Clients must or should support any of the parameters defined as optional in this specification (see {{params}}).
 
 # Extensibility for Future COSE Algorithms # {#sec-future-cose-algs}
 
