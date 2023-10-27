@@ -643,7 +643,7 @@ Note to RFC Editor: In the figure above, please replace "TBD" with the unsigned 
 
 The problem-details format in general and the Custom Problem Detail entry 'ace-groupcomm-error' in particular are OPTIONAL to support for Clients. A Client supporting the entry 'ace-groupcomm-error' and able to understand the specified error may use that information to determine what actions to take next.
 
-{{error-types}} of this specification defines an initial set of error identifiers, as possible values for the 'error-id' field. Application profiles of this specification inherit this initial set of error identifiers and MAY define additional value (OPT5).
+{{error-types}} of this specification defines an initial set of error identifiers, as possible values for the 'error-id' field. Application profiles of this specification inherit this initial set of error identifiers and MAY define additional values (OPT5).
 
 ## /ace-group
 
