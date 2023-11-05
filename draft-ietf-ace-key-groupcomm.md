@@ -631,7 +631,7 @@ Payload:
   / title /                -1: "No available node identifiers",
   / detail /               -2: "Things will change after a
                                 group rekeying; try later",
-  / ace-groupcomm-error/  TBD: {
+  / ace-groupcomm-error /  TBD: {
     / error-id /  0: 4 / "No available node identifiers" /,
   }
 }
