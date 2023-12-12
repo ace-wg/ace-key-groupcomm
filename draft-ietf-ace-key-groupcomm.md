@@ -39,6 +39,7 @@ author:
 
 normative:
   RFC2119:
+  RFC6690:
   RFC6749:
   RFC6838:
   RFC8126:
@@ -495,17 +496,59 @@ Later on as a group member, the Client can also rely on the interface at the KDC
 
 ## Interface at the KDC {#kdc-if}
 
-The KDC provides its interface by hosting the following resources. Note that the root url-path "/ace-group" used hereafter is a default name; implementations are not required to use this name, and can define their own instead. The Interface Description (if=) Link Target Attribute value "ace.group" is registered in {{if-ace-group}} and can be used to describe this interface.
+The KDC provides its interface by hosting the following resources. Note that the root url-path "ace-group" used hereafter is a default name; implementations are not required to use this name, and can define their own instead.
 
 If request messages sent to the KDC as well as success response messages from the KDC include a payload and specify a Content-Format, those messages MUST have Content-Format set to application/ace-groupcomm+cbor, defined in {{content-type}}. CBOR labels for the message parameters are defined in {{params}}.
 
-* /ace-group : the path of this resource is invariant once the resource is established, and indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same path, those applications will collide, and a mechanism will be needed to differentiate the endpoints.
+* /ace-group : the path of this root resource is invariant once the resource is established, and indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same path, those applications will collide, and a mechanism will be needed to differentiate the endpoints.
 
   A Client can access this resource in order to retrieve a set of group names, each corresponding to one of the specified group identifiers. This operation is described in {{retrieval-gnames}}.
 
-* /ace-group/GROUPNAME : one such sub-resource to /ace-group is hosted for each group with name GROUPNAME that the KDC manages, and contains the symmetric group keying material for that group.
+  The Interface Description (if=) Link Target Attribute value "ace.groups" is registered in {{if-ace-group}} and can be used to describe the interface provided by this root resource.
+
+  The example below shows an exchange with a KDC with address 2001:db8::ab that hosts the resource /ace-group and returns a link to such a resource in link-format {{RFC6690}}.
+
+  ~~~~~~~~~~~
+  Request:
+
+  Header: GET (Code=0.01)
+  Uri-Host: "kdc.example.com"
+  Uri-Path: ".well-known"
+  Uri-Path: "core"
+  Uri-Query: "if=ace.groups"
+
+  Response:
+
+  Header: Content (Code=2.05)
+  Content-Format: 40 (application/link-format)
+  Payload:
+    <coap://[2001:db8::ab]/ace-group>;if="ace.groups"
+  ~~~~~~~~~~~
+
+* /ace-group/GROUPNAME : one such sub-resource to /ace-group is hosted for each group with name GROUPNAME that the KDC manages. In particular, it is the group-membership resource associated with that group, of which it contains the symmetric group keying material.
 
   A Client can access this resource in order to join the group with name GROUPNAME, or later as a group member to retrieve the current group keying material. These operations are described in {{ssec-key-distribution-exchange}} and {{ssec-key-material-retrieval}}, respectively.
+
+  The Interface Description (if=) Link Target Attribute value "ace.group" is registered in {{if-ace-group}} and can be used to describe the interface provided by a group-membership resource.
+
+  The example below shows an exchange with a KDC with address 2001:db8::ab that hosts the group-membership resource /ace-group/gp1 and returns a link to such a resource in link-format {{RFC6690}}.
+
+  ~~~~~~~~~~~
+  Request:
+
+  Header: GET (Code=0.01)
+  Uri-Host: "kdc.example.com"
+  Uri-Path: ".well-known"
+  Uri-Path: "core"
+  Uri-Query: "if=ace.group"
+
+  Response:
+
+  Header: Content (Code=2.05)
+  Content-Format: 40 (application/link-format)
+  Payload:
+    <coap://[2001:db8::ab]/ace-group/gp1>;if="ace.group"
+  ~~~~~~~~~~~
 
   If the value of the GROUPNAME URI path and the group name in the access token scope ('gname' in {{ssec-authorization-response}}) are not required to coincide, the KDC MUST implement a mechanism to map the GROUPNAME value in the URI to the group name, in order to refer to the correct group (REQ7).
 
@@ -2204,9 +2247,17 @@ Mappings" registry following the procedure specified in {{Section 8.10 of RFC920
 
 IANA is asked to register the following entry in the "Interface Description (if=) Link Target Attribute Values" registry within the "CoRE Parameters" registry group.
 
+* Value: ace.groups
+
+* Description: The KDC interface at the parent resource of group-membership resources is used to retrieve names of security groups using the ACE framework.
+
+* Reference: {{kdc-if}} of {{&SELF}}
+
+&nbsp;
+
 * Value: ace.group
 
-* Description: The KDC interface is used to provision keying material and related information and policies to members of a security group using the ACE framework.
+* Description: The KDC interface at a group-membership resource is used to provision keying material and related information and policies to members of the corresponding security group using the ACE framework.
 
 * Reference: {{kdc-if}} of {{&SELF}}
 
