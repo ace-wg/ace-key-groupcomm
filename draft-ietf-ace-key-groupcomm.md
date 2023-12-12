@@ -1942,7 +1942,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 +-----------------------+------+---------------------+------------+
 | ace_groupcomm_profile | TBD  | int                 | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| exp                   | TBD  | int                 | [RFC-XXXX] |
+| exp                   | TBD  | uint                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
 | creds                 | TBD  | array               | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
