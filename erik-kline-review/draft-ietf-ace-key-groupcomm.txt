@@ -3166,7 +3166,15 @@ Table of Contents
    The KDC can perform a group rekeying before the current group keying
    material expires, unless it is acceptable or there are reasons to
    temporarily pause secure communications in the group, following the
-   expiration of the current keying material.
+   expiration of the current keying material.  For example, a pause in
+   the group communication might have been scheduled to start anyway
+   when the group keying material expires, e.g., to allow maintenance
+   operations on the group members.  As another example, the KDC might
+   be carrying out a verification that some group members are seemingly
+   compromised and to be evicted, and this requires to be completed in
+   order to appropriately define and schedule the exact rekeying process
+   to perform.  As a result, the KDC could delay the execution of the
+   group rekeying.
 
    The KDC MUST increment the version number NUM of the current keying
    material, before distributing the newly generated keying material
