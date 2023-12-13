@@ -1761,7 +1761,9 @@ Table of Contents
       identifier that the group member associated with the i-th
       authentication credential in 'creds' has in the group.  In
       particular, the i-th array element is encoded as a CBOR byte
-      string, with value the node identifier of the group member.
+      string, with value the node identifier of the group member.  The
+      specific format of node identifiers of group members is specified
+      by the application profile (REQ25).
 
    *  'group_policies', with value a CBOR map, whose entries specify how
       the group handles specific management aspects.  These include, for
@@ -4811,7 +4813,7 @@ A.1.  Mandatory-to-Address Requirements
       use between Client and KDC (see Section 4.3.1.1).
 
    *  REQ25: Specify the format of the identifiers of group members (see
-      Section 4.3.1).
+      Section 4.3.1 and Section 4.4.1).
 
    *  REQ26: Specify policies at the KDC to handle ids that are not
       included in 'get_creds' (see Section 4.4.1).
