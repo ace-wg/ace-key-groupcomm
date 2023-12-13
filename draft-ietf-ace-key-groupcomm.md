@@ -200,7 +200,7 @@ The following participants (see {{fig-roles}}) take part in the authorization an
 
 * Client (C): node that wants to join a group and take part in group communication with other group members. Within the group, the Client can have different roles.
 
-* Authorization Server (AS): as per the AS defined in the ACE Framework, it enforces access policies, and knows if a node is allowed to join a given group with write and/or read rights.
+* Authorization Server (AS): as per the AS defined in the ACE Framework {{RFC9200}}, it enforces access policies, and knows if a node is allowed to join a given group with write and/or read rights.
 
 * Key Distribution Center (KDC): maintains the keying material to protect group communications, and provides it to Clients authorized to join a given group. During the first part of the exchange ({{sec-auth}}), it takes the role of the RS in the ACE Framework. During the second part ({{key-distr}}), which is not based on the ACE Framework, it distributes the keying material. In addition, it provides the latest keying material to group members when requested or, if required by the application, when membership changes.
 
