@@ -3956,12 +3956,19 @@ Table of Contents
 
    Unless otherwise defined by an application profile of this
    specification, the KDC SHOULD renew the group keying material upon a
-   group membership change.  In particular, since the minimum number of
-   group members is one, the KDC SHOULD provide even a Client joining an
-   empty group with new keying material never used before in that group.
-   Similarly, the KDC SHOULD provide new group keying material also to a
-   Client that remains the only member in the group after the leaving of
-   other group members.
+   group membership change.  As a possible exception, the KDC may not
+   rekey the group upon the joining of a new group member, if the
+   application does not require backward security.  As another possible
+   exception discussed more in detail later in this section, the KDC may
+   rely on a rekeying policy that reasonably take into account the
+   expected rate of group membership changes and the duration of a group
+   rekeying.
+
+   Since the minimum number of group members is one, the KDC SHOULD
+   provide even a Client joining an empty group with new keying material
+   never used before in that group.  Similarly, the KDC SHOULD provide
+   new group keying material also to a Client that remains the only
+   member in the group after the leaving of other group members.
 
    Note that the considerations in Section 10.1 about dealing with
    replayed messages still hold, even in case the KDC rekeys the group
