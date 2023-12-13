@@ -3624,6 +3624,97 @@ A Client that does not plan to observe the /ace-group/GROUPNAME resource at the 
 </li>
         </ul>
 <p id="section-6.1-5">If the KDC has to send a rekeying message to a target group member, but this did not include the 'control_uri' parameter in the Join Request and is not a registered observer for the /ace-group/GROUPNAME resource, then that target group member would not be able to participate to the group rekeying. Later on, after having repeatedly failed to successfully exchange secure messages in the group, that group member can retrieve the current group keying material from the KDC, by sending a GET request to /ace-group/GROUPNAME or /ace-group/GROUPNAME/nodes/NODENAME (see <a href="#gid-get" class="auto internal xref">Section 4.3.2</a> and <a href="#node-get" class="auto internal xref">Section 4.8.1</a>, respectively).<a href="#section-6.1-5" class="pilcrow">¶</a></p>
+<p id="section-6.1-6">Figure <a href="#fig-rekeying-example-1" class="auto internal xref">Figure 37</a> provides an example of point-to-point group rekeying. In particular, the example makes the following assumptions.<a href="#section-6.1-6" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.1-7.1">
+            <p id="section-6.1-7.1.1">The group currently consists of four group members, namely C1, C2, C3, and C4.<a href="#section-6.1-7.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.1-7.2">
+            <p id="section-6.1-7.2.1">Each group member, when joining the group, provided the KDC with a URI in the 'control_uri' parameter, with url-path "grp-rek".<a href="#section-6.1-7.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.1-7.3">
+            <p id="section-6.1-7.3.1">Before the group rekeying is performed, the keying material used in the group has version number num=5.<a href="#section-6.1-7.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.1-7.4">
+            <p id="section-6.1-7.4.1">The KDC performs the group rekeying in such a way to evict the group member C3, which has been found to be compromised.<a href="#section-6.1-7.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-6.1-8">In the example, the KDC individually rekeys the group members intended to remain in the group (i.e., C1, C2, and C4), by means of one rekeying message each.<a href="#section-6.1-8" class="pilcrow">¶</a></p>
+<span id="name-example-of-message-exchange"></span><div id="fig-rekeying-example-1">
+<figure id="figure-37">
+          <div id="section-6.1-9.1">
+            <div class="alignCenter art-svg artwork" id="section-6.1-9.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="384" width="560" viewBox="0 0 560 384" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 32,32 L 32,64" fill="none" stroke="black"></path>
+                <path d="M 40,256 L 40,288" fill="none" stroke="black"></path>
+                <path d="M 80,72 L 80,208" fill="none" stroke="black"></path>
+                <path d="M 112,256 L 112,288" fill="none" stroke="black"></path>
+                <path d="M 184,256 L 184,288" fill="none" stroke="black"></path>
+                <path d="M 224,72 L 224,208" fill="none" stroke="black"></path>
+                <path d="M 256,256 L 256,288" fill="none" stroke="black"></path>
+                <path d="M 328,256 L 328,288" fill="none" stroke="black"></path>
+                <path d="M 400,256 L 400,288" fill="none" stroke="black"></path>
+                <path d="M 480,256 L 480,288" fill="none" stroke="black"></path>
+                <path d="M 520,72 L 520,208" fill="none" stroke="black"></path>
+                <path d="M 552,32 L 552,64" fill="none" stroke="black"></path>
+                <path d="M 552,256 L 552,288" fill="none" stroke="black"></path>
+                <path d="M 32,32 L 552,32" fill="none" stroke="black"></path>
+                <path d="M 32,64 L 552,64" fill="none" stroke="black"></path>
+                <path d="M 40,256 L 112,256" fill="none" stroke="black"></path>
+                <path d="M 184,256 L 256,256" fill="none" stroke="black"></path>
+                <path d="M 328,256 L 400,256" fill="none" stroke="black"></path>
+                <path d="M 480,256 L 552,256" fill="none" stroke="black"></path>
+                <path d="M 40,288 L 112,288" fill="none" stroke="black"></path>
+                <path d="M 184,288 L 256,288" fill="none" stroke="black"></path>
+                <path d="M 328,288 L 400,288" fill="none" stroke="black"></path>
+                <path d="M 480,288 L 552,288" fill="none" stroke="black"></path>
+                <path d="M 44,344 L 140,344" fill="none" stroke="black"></path>
+                <path d="M 444,344 L 548,344" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="528,208 516,202.4 516,213.6" fill="black" transform="rotate(90,520,208)"></polygon>
+                <polygon class="arrowhead" points="232,208 220,202.4 220,213.6" fill="black" transform="rotate(90,224,208)"></polygon>
+                <polygon class="arrowhead" points="88,208 76,202.4 76,213.6" fill="black" transform="rotate(90,80,208)"></polygon>
+                <g class="text">
+                  <text x="288" y="52">KDC</text>
+                  <text x="24" y="100">Group</text>
+                  <text x="168" y="100">Group</text>
+                  <text x="464" y="100">Group</text>
+                  <text x="28" y="116">keying</text>
+                  <text x="172" y="116">keying</text>
+                  <text x="468" y="116">keying</text>
+                  <text x="36" y="132">material</text>
+                  <text x="180" y="132">material</text>
+                  <text x="476" y="132">material</text>
+                  <text x="32" y="148">(num=6)</text>
+                  <text x="176" y="148">(num=6)</text>
+                  <text x="472" y="148">(num=6)</text>
+                  <text x="76" y="244">/grp-rek</text>
+                  <text x="220" y="244">/grp-rek</text>
+                  <text x="364" y="244">/grp-rek</text>
+                  <text x="516" y="244">/grp-rek</text>
+                  <text x="76" y="276">C1</text>
+                  <text x="220" y="276">C2</text>
+                  <text x="364" y="276">C3</text>
+                  <text x="516" y="276">C4</text>
+                  <text x="320" y="308">[TO</text>
+                  <text x="348" y="308">BE</text>
+                  <text x="396" y="308">EVICTED]</text>
+                  <text x="40" y="324">|</text>
+                  <text x="552" y="324">|</text>
+                  <text x="40" y="340">\</text>
+                  <text x="172" y="340">Stored</text>
+                  <text x="224" y="340">group</text>
+                  <text x="276" y="340">keying</text>
+                  <text x="340" y="340">material</text>
+                  <text x="408" y="340">(num=5)</text>
+                  <text x="552" y="340">/</text>
+                </g>
+              </svg><a href="#section-6.1-9.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-37" class="selfRef">Figure 37</a>:
+<a href="#name-example-of-message-exchange" class="selfRef">Example of Message Exchanges for a Point-to-Point Group Rekeying</a>
+          </figcaption></figure>
+</div>
 </section>
 </div>
 <div id="one-to-many-rekeying">
@@ -3661,6 +3752,131 @@ The setup of rekeying topics at the broker as well as the discovery of the topic
 </li>
         </ul>
 <p id="section-6.2-10">Further details depend on the specific rekeying scheme used in the group.<a href="#section-6.2-10" class="pilcrow">¶</a></p>
+<p id="section-6.2-11">Figure <a href="#fig-rekeying-example-2" class="auto internal xref">Figure 38</a> provides an example of one-to-many group rekeying over multicast. In particular, the example makes the following assumptions.<a href="#section-6.2-11" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.2-12.1">
+            <p id="section-6.2-12.1.1">The group currently consists of four group members, namely C1, C2, C3, and C4.<a href="#section-6.2-12.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.2-12.2">
+            <p id="section-6.2-12.2.1">Each group member, when joining the group, provided the KDC with a URI in the 'control_uri' parameter, with url-path "grp-rek".<a href="#section-6.2-12.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.2-12.3">
+            <p id="section-6.2-12.3.1">Each group member, when joining the group, received from the KDC a URI in the 'control_group_uri' parameter, specifying the multicast address MULT_ADDR and url-path "grp-mrek".<a href="#section-6.2-12.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.2-12.4">
+            <p id="section-6.2-12.4.1">Before the group rekeying is performed, the keying material used in the group has version number num=5.<a href="#section-6.2-12.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.2-12.5">
+            <p id="section-6.2-12.5.1">The KDC performs the group rekeying in such a way to evict the group member C3, which has been found to be compromised.<a href="#section-6.2-12.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-6.2-13">In the example, the KDC determines that the most convenient way to perform a group rekeying that evicts C3 is as follows.<a href="#section-6.2-13" class="pilcrow">¶</a></p>
+<p id="section-6.2-14">First, the KDC sends one rekeying message over multicast, to the multicast address MULT_ADDR and the url-path "grp-mrek". In the figure, the message is denoted with dashed lines. The message is protected with a non-compromised key from the administrative keying material that only C1 and C2 store. Therefore, even though all the group members receive this message, only C1 and C2 are able to decrypt it. The message includes: the new group keying material with version number num=6; and new keys from the administrative keying material to replace those stored by the group members C1, C2, and C3.<a href="#section-6.2-14" class="pilcrow">¶</a></p>
+<p id="section-6.2-15">After that, the KDC sends one rekeying message addressed individually to C4 and with url-path "grp-rek". In the figure, the message is denoted with a dotted line. The message is protected with the secure association shared between C4 and the KDC. The message includes: the new group keying material with version number num=6; and new keys from the administrative keying material to replace those stored by both C4 and C3.<a href="#section-6.2-15" class="pilcrow">¶</a></p>
+<span id="name-example-of-message-exchanges"></span><div id="fig-rekeying-example-2">
+<figure id="figure-38">
+          <div id="section-6.2-16.1">
+            <div class="alignCenter art-svg artwork" id="section-6.2-16.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="400" width="576" viewBox="0 0 576 400" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,64" fill="none" stroke="black"></path>
+                <path d="M 8,288 L 8,320" fill="none" stroke="black"></path>
+                <path d="M 56,192 L 56,240" fill="none" stroke="black"></path>
+                <path d="M 80,288 L 80,320" fill="none" stroke="black"></path>
+                <path d="M 112,288 L 112,320" fill="none" stroke="black"></path>
+                <path d="M 160,192 L 160,240" fill="none" stroke="black"></path>
+                <path d="M 184,288 L 184,320" fill="none" stroke="black"></path>
+                <path d="M 216,288 L 216,320" fill="none" stroke="black"></path>
+                <path d="M 272,72 L 272,240" fill="none" stroke="black"></path>
+                <path d="M 312,288 L 312,320" fill="none" stroke="black"></path>
+                <path d="M 344,288 L 344,320" fill="none" stroke="black"></path>
+                <path d="M 392,192 L 392,240" fill="none" stroke="black"></path>
+                <path d="M 568,32 L 568,64" fill="none" stroke="black"></path>
+                <path d="M 568,288 L 568,320" fill="none" stroke="black"></path>
+                <path d="M 8,32 L 568,32" fill="none" stroke="black"></path>
+                <path d="M 8,64 L 568,64" fill="none" stroke="black"></path>
+                <path d="M 56,192 L 392,192" fill="none" stroke="black"></path>
+                <path d="M 8,288 L 80,288" fill="none" stroke="black"></path>
+                <path d="M 112,288 L 184,288" fill="none" stroke="black"></path>
+                <path d="M 216,288 L 312,288" fill="none" stroke="black"></path>
+                <path d="M 344,288 L 568,288" fill="none" stroke="black"></path>
+                <path d="M 8,320 L 80,320" fill="none" stroke="black"></path>
+                <path d="M 112,320 L 184,320" fill="none" stroke="black"></path>
+                <path d="M 216,320 L 312,320" fill="none" stroke="black"></path>
+                <path d="M 344,320 L 568,320" fill="none" stroke="black"></path>
+                <path d="M 12,376 L 132,376" fill="none" stroke="black"></path>
+                <path d="M 436,376 L 564,376" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="400,240 388,234.4 388,245.6" fill="black" transform="rotate(90,392,240)"></polygon>
+                <polygon class="arrowhead" points="280,240 268,234.4 268,245.6" fill="black" transform="rotate(90,272,240)"></polygon>
+                <polygon class="arrowhead" points="168,240 156,234.4 156,245.6" fill="black" transform="rotate(90,160,240)"></polygon>
+                <polygon class="arrowhead" points="64,240 52,234.4 52,245.6" fill="black" transform="rotate(90,56,240)"></polygon>
+                <circle cx="8" cy="96" r="6" class="closeddot" fill="black"></circle>
+                <circle cx="8" cy="112" r="6" class="closeddot" fill="black"></circle>
+                <circle cx="336" cy="96" r="6" class="closeddot" fill="black"></circle>
+                <circle cx="336" cy="128" r="6" class="closeddot" fill="black"></circle>
+                <g class="text">
+                  <text x="272" y="52">KDC</text>
+                  <text x="544" y="84">:</text>
+                  <text x="40" y="100">Group</text>
+                  <text x="92" y="100">keying</text>
+                  <text x="156" y="100">material</text>
+                  <text x="224" y="100">(num=6)</text>
+                  <text x="368" y="100">Group</text>
+                  <text x="420" y="100">keying</text>
+                  <text x="544" y="100">:</text>
+                  <text x="48" y="116">Updated</text>
+                  <text x="140" y="116">administrative</text>
+                  <text x="380" y="116">material</text>
+                  <text x="448" y="116">(num=6)</text>
+                  <text x="544" y="116">:</text>
+                  <text x="44" y="132">keying</text>
+                  <text x="108" y="132">material</text>
+                  <text x="160" y="132">for</text>
+                  <text x="188" y="132">C1</text>
+                  <text x="216" y="132">and</text>
+                  <text x="244" y="132">C2</text>
+                  <text x="376" y="132">Updated</text>
+                  <text x="468" y="132">administrative</text>
+                  <text x="544" y="132">:</text>
+                  <text x="372" y="148">keying</text>
+                  <text x="436" y="148">material</text>
+                  <text x="488" y="148">for</text>
+                  <text x="516" y="148">C4</text>
+                  <text x="544" y="148">:</text>
+                  <text x="544" y="164">:</text>
+                  <text x="544" y="180">:</text>
+                  <text x="544" y="196">:</text>
+                  <text x="544" y="212">:</text>
+                  <text x="544" y="228">:</text>
+                  <text x="544" y="244">v</text>
+                  <text x="48" y="276">/grp-mrek</text>
+                  <text x="152" y="276">/grp-mrek</text>
+                  <text x="256" y="276">/grp-mrek</text>
+                  <text x="384" y="276">/grp-mrek</text>
+                  <text x="532" y="276">/grp-rek</text>
+                  <text x="44" y="308">C1</text>
+                  <text x="148" y="308">C2</text>
+                  <text x="268" y="308">C3</text>
+                  <text x="452" y="308">C4</text>
+                  <text x="216" y="340">[TO</text>
+                  <text x="244" y="340">BE</text>
+                  <text x="292" y="340">EVICTED]</text>
+                  <text x="8" y="356">|</text>
+                  <text x="568" y="356">|</text>
+                  <text x="8" y="372">\</text>
+                  <text x="164" y="372">Stored</text>
+                  <text x="216" y="372">group</text>
+                  <text x="268" y="372">keying</text>
+                  <text x="332" y="372">material</text>
+                  <text x="400" y="372">(num=5)</text>
+                  <text x="568" y="372">/</text>
+                </g>
+              </svg><a href="#section-6.2-16.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-38" class="selfRef">Figure 38</a>:
+<a href="#name-example-of-message-exchanges" class="selfRef">Example of Message Exchanges for a One-to-Many Group Rekeying</a>
+          </figcaption></figure>
+</div>
 <div id="one-to-many-rekeying-protection">
 <section id="section-6.2.1">
           <h4 id="name-protection-of-rekeying-mess">
@@ -3767,9 +3983,9 @@ In order to comply with the security requirements of AEAD encryption algorithms,
 <p id="section-7-3">The extended format is intended only for the 'scope' claim of access tokens, for the cases where the claim takes as value a CBOR byte string. That is, the extended format does not apply to the 'scope' parameter included in ACE messages, i.e., the Authorization Request and Authorization Response exchanged between the Client and the Authorization Server (see Sections <a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.1" class="relref">5.8.1</a> and <a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.2" class="relref">5.8.2</a> of <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), the AS Request Creation Hints message from the Resource Server (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.3" class="relref">Section 5.3</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), and the Introspection Response from the Authorization Server (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.9.2" class="relref">Section 5.9.2</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>).<a href="#section-7-3" class="pilcrow">¶</a></p>
 <p id="section-7-4">The value of the 'scope' claim following the extended format is composed as follows. Given the original scope using a semantics SEM and encoded as a CBOR byte string, the corresponding extended scope consists of the same CBOR byte string enclosed by a CBOR tag <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, whose tag number identifies the semantics SEM.<a href="#section-7-4" class="pilcrow">¶</a></p>
 <p id="section-7-5">The resulting tagged CBOR byte string is used as value of the 'scope' claim of the access token.<a href="#section-7-5" class="pilcrow">¶</a></p>
-<p id="section-7-6"><a href="#cddl-ex-0-ext" class="auto internal xref">Figure 37</a> and <a href="#cddl-ex-ext" class="auto internal xref">Figure 38</a> build on the examples in <a href="#ssec-authorization-response" class="auto internal xref">Section 3.2</a>, and show the corresponding extended scopes.<a href="#section-7-6" class="pilcrow">¶</a></p>
+<p id="section-7-6"><a href="#cddl-ex-0-ext" class="auto internal xref">Figure 39</a> and <a href="#cddl-ex-ext" class="auto internal xref">Figure 40</a> build on the examples in <a href="#ssec-authorization-response" class="auto internal xref">Section 3.2</a>, and show the corresponding extended scopes.<a href="#section-7-6" class="pilcrow">¶</a></p>
 <span id="name-example-cdll-definition-of-"></span><div id="cddl-ex-0-ext">
-<figure id="figure-37">
+<figure id="figure-39">
         <div class="lang-CDDL sourcecode" id="section-7-7.1">
 <pre>
 gname = tstr
@@ -3790,12 +4006,12 @@ scope = &lt;&lt; [ + scope_entry ] &gt;&gt;
 extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 </pre>
 </div>
-<figcaption><a href="#figure-37" class="selfRef">Figure 37</a>:
+<figcaption><a href="#figure-39" class="selfRef">Figure 39</a>:
 <a href="#name-example-cdll-definition-of-" class="selfRef">Example CDLL definition of scope, using the default Authorization Information Format</a>
         </figcaption></figure>
 </div>
 <span id="name-cdll-definition-of-scope-us"></span><div id="cddl-ex-ext">
-<figure id="figure-38">
+<figure id="figure-40">
         <div class="lang-CDDL sourcecode" id="section-7-8.1">
 <pre>
 gname = tstr
@@ -3809,7 +4025,7 @@ scope = &lt;&lt; [ + scope_entry ] &gt;&gt;
 extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 </pre>
 </div>
-<figcaption><a href="#figure-38" class="selfRef">Figure 38</a>:
+<figcaption><a href="#figure-40" class="selfRef">Figure 40</a>:
 <a href="#name-cdll-definition-of-scope-us" class="selfRef">CDLL definition of scope, using as example group name encoded as tstr and role as tstr</a>
         </figcaption></figure>
 </div>
@@ -3827,7 +4043,7 @@ extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 <p id="section-8-1">This specification defines a number of parameters used during the second part of the message exchange, after the exchange of Token Transfer Request and Response. The table below summarizes them, and specifies the CBOR key to use instead of the full descriptive name.<a href="#section-8-1" class="pilcrow">¶</a></p>
 <p id="section-8-2">Note that the media type application/ace-groupcomm+cbor MUST be used when these parameters are transported in the respective message fields.<a href="#section-8-2" class="pilcrow">¶</a></p>
 <span id="name-ace-groupcomm-parameters-2"></span><div id="fig-ACE-Groupcomm-Parameters">
-<figure id="figure-39">
+<figure id="figure-41">
         <div class="alignCenter art-text artwork" id="section-8-3.1">
 <pre>
 +-----------------------+------+---------------------+------------+
@@ -3897,11 +4113,11 @@ extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 +-----------------------+------+---------------------+------------+
 </pre>
 </div>
-<figcaption><a href="#figure-39" class="selfRef">Figure 39</a>:
+<figcaption><a href="#figure-41" class="selfRef">Figure 41</a>:
 <a href="#name-ace-groupcomm-parameters-2" class="selfRef">ACE Groupcomm Parameters</a>
         </figcaption></figure>
 </div>
-<p id="section-8-4">Note to RFC Editor: In <a href="#fig-ACE-Groupcomm-Parameters" class="auto internal xref">Figure 39</a>, please replace all occurrences of "[RFC-XXXX]" with the RFC number of this specification and delete this paragraph.<a href="#section-8-4" class="pilcrow">¶</a></p>
+<p id="section-8-4">Note to RFC Editor: In <a href="#fig-ACE-Groupcomm-Parameters" class="auto internal xref">Figure 41</a>, please replace all occurrences of "[RFC-XXXX]" with the RFC number of this specification and delete this paragraph.<a href="#section-8-4" class="pilcrow">¶</a></p>
 <p id="section-8-5">The KDC is expected to support all the parameters above. Instead, a Client can support only a subset of such parameters, depending on the roles it expects to take in the joined groups or on other conditions defined in application profiles of this specification.<a href="#section-8-5" class="pilcrow">¶</a></p>
 <p id="section-8-6">In the following, the parameters are categorized according to the support expected by Clients. That is, a Client that supports a parameter is able to: i) use and specify it in a request message to the KDC; and ii) understand and process it if specified in a response message from the KDC. It is REQUIRED of application profiles of this specification to sort their newly defined parameters according to the same categorization (REQ29).<a href="#section-8-6" class="pilcrow">¶</a></p>
 <p id="section-8-7">Note that the actual use of a parameter and its inclusion in a message depends on the specific exchange, the specific Client and group involved, as well as what is defined in the used application profile of this specification.<a href="#section-8-7" class="pilcrow">¶</a></p>
@@ -3959,7 +4175,7 @@ extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
       </h2>
 <p id="section-9-1">This specification defines a number of values that the KDC can include as error identifiers, in the 'error' field of an error response with Content-Format application/ace-groupcomm+cbor.<a href="#section-9-1" class="pilcrow">¶</a></p>
 <span id="name-ace-groupcomm-error-identifi"></span><div id="fig-ACE-Groupcomm-Error-Identifiers">
-<figure id="figure-40">
+<figure id="figure-42">
         <div class="alignCenter art-text artwork" id="section-9-2.1">
 <pre>
 +-------+---------------------------------------------+
@@ -3982,7 +4198,7 @@ extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 +-------+---------------------------------------------+
 </pre>
 </div>
-<figcaption><a href="#figure-40" class="selfRef">Figure 40</a>:
+<figcaption><a href="#figure-42" class="selfRef">Figure 42</a>:
 <a href="#name-ace-groupcomm-error-identifi" class="selfRef">ACE Groupcomm Error Identifiers</a>
         </figcaption></figure>
 </div>
@@ -4241,7 +4457,7 @@ the item. The name MUST be unique. It is not used in the encoding.<a href="#sect
             <p id="section-11.6-4.4.1">Reference: This contains a pointer to the public specification for the item.<a href="#section-11.6-4.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-11.6-5">This registry has been initially populated with the values in <a href="#fig-ACE-Groupcomm-Parameters" class="auto internal xref">Figure 39</a>.<a href="#section-11.6-5" class="pilcrow">¶</a></p>
+<p id="section-11.6-5">This registry has been initially populated with the values in <a href="#fig-ACE-Groupcomm-Parameters" class="auto internal xref">Figure 41</a>.<a href="#section-11.6-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-key">
@@ -4369,7 +4585,7 @@ the item. The name MUST be unique. It is not used in the encoding.<a href="#sect
             <p id="section-11.11-4.3.1">Reference: This field contains a pointer to the public specification defining the error, if one exists.<a href="#section-11.11-4.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-11.11-5">This registry has been initially populated with the values in <a href="#fig-ACE-Groupcomm-Error-Identifiers" class="auto internal xref">Figure 40</a>. The Reference column for all of these entries refers to this document.<a href="#section-11.11-5" class="pilcrow">¶</a></p>
+<p id="section-11.11-5">This registry has been initially populated with the values in <a href="#fig-ACE-Groupcomm-Error-Identifiers" class="auto internal xref">Figure 42</a>. The Reference column for all of these entries refers to this document.<a href="#section-11.11-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-ace-groupcomm-rekeying-schemes">
@@ -4791,7 +5007,7 @@ Such a COSE capabilities array is currently defined for the algorithm capability
 </li>
         </ul>
 <span id="name-sign_info_entry-with-genera"></span><div id="fig-sign-info-entry-general">
-<figure id="figure-41">
+<figure id="figure-43">
           <div class="lang-CDDL sourcecode" id="appendix-B.1-3.1">
 <pre>
 sign_info_entry =
@@ -4806,7 +5022,7 @@ sign_info_entry =
 gname = tstr
 </pre>
 </div>
-<figcaption><a href="#figure-41" class="selfRef">Figure 41</a>:
+<figcaption><a href="#figure-43" class="selfRef">Figure 43</a>:
 <a href="#name-sign_info_entry-with-genera" class="selfRef">'sign_info_entry' with general format</a>
           </figcaption></figure>
 </div>

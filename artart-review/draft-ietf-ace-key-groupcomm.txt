@@ -3276,6 +3276,50 @@ Table of Contents
    group/GROUPNAME/nodes/NODENAME (see Section 4.3.2 and Section 4.8.1,
    respectively).
 
+   Figure Figure 37 provides an example of point-to-point group
+   rekeying.  In particular, the example makes the following
+   assumptions.
+
+   *  The group currently consists of four group members, namely C1, C2,
+      C3, and C4.
+
+   *  Each group member, when joining the group, provided the KDC with a
+      URI in the 'control_uri' parameter, with url-path "grp-rek".
+
+   *  Before the group rekeying is performed, the keying material used
+      in the group has version number num=5.
+
+   *  The KDC performs the group rekeying in such a way to evict the
+      group member C3, which has been found to be compromised.
+
+   In the example, the KDC individually rekeys the group members
+   intended to remain in the group (i.e., C1, C2, and C4), by means of
+   one rekeying message each.
+
+      .----------------------------------------------------------------.
+      |                              KDC                               |
+      '----------------------------------------------------------------'
+            |                 |                                    |
+   Group    |        Group    |                           Group    |
+   keying   |        keying   |                           keying   |
+   material |        material |                           material |
+   (num=6)  |        (num=6)  |                           (num=6)  |
+            |                 |                                    |
+            |                 |                                    |
+            |                 |                                    |
+            v                 v                                    v
+
+        /grp-rek          /grp-rek          /grp-rek           /grp-rek
+       .--------.        .--------.        .--------.         .--------.
+       |   C1   |        |   C2   |        |   C3   |         |   C4   |
+       '--------'        '--------'        '--------'         '--------'
+                                         [TO BE EVICTED]
+       |                                                               |
+       \____________ Stored group keying material (num=5) _____________/
+
+       Figure 37: Example of Message Exchanges for a Point-to-Point
+                              Group Rekeying
+
 6.2.  One-to-Many Group Rekeying
 
    This section provides high-level recommendations on how the KDC can
@@ -3383,6 +3427,73 @@ Table of Contents
 
    Further details depend on the specific rekeying scheme used in the
    group.
+
+   Figure Figure 38 provides an example of one-to-many group rekeying
+   over multicast.  In particular, the example makes the following
+   assumptions.
+
+   *  The group currently consists of four group members, namely C1, C2,
+      C3, and C4.
+
+   *  Each group member, when joining the group, provided the KDC with a
+      URI in the 'control_uri' parameter, with url-path "grp-rek".
+
+   *  Each group member, when joining the group, received from the KDC a
+      URI in the 'control_group_uri' parameter, specifying the multicast
+      address MULT_ADDR and url-path "grp-mrek".
+
+   *  Before the group rekeying is performed, the keying material used
+      in the group has version number num=5.
+
+   *  The KDC performs the group rekeying in such a way to evict the
+      group member C3, which has been found to be compromised.
+
+   In the example, the KDC determines that the most convenient way to
+   perform a group rekeying that evicts C3 is as follows.
+
+   First, the KDC sends one rekeying message over multicast, to the
+   multicast address MULT_ADDR and the url-path "grp-mrek".  In the
+   figure, the message is denoted with dashed lines.  The message is
+   protected with a non-compromised key from the administrative keying
+   material that only C1 and C2 store.  Therefore, even though all the
+   group members receive this message, only C1 and C2 are able to
+   decrypt it.  The message includes: the new group keying material with
+   version number num=6; and new keys from the administrative keying
+   material to replace those stored by the group members C1, C2, and C3.
+
+   After that, the KDC sends one rekeying message addressed individually
+   to C4 and with url-path "grp-rek".  In the figure, the message is
+   denoted with a dotted line.  The message is protected with the secure
+   association shared between C4 and the KDC.  The message includes: the
+   new group keying material with version number num=6; and new keys
+   from the administrative keying material to replace those stored by
+   both C4 and C3.
+
+ .---------------------------------------------------------------------.
+ |                               KDC                                   |
+ '---------------------------------------------------------------------'
+                                  |                                 :
+ * Group keying material (num=6)  |       * Group keying            :
+ * Updated administrative         |         material (num=6)        :
+   keying material for C1 and C2  |       * Updated administrative  :
+                                  |         keying material for C4  :
+                                  |                                 :
+                                  |                                 :
+       +------------+-------------+--------------+                  :
+       |            |             |              |                  :
+       |            |             |              |                  :
+       v            v             v              v                  v
+
+  /grp-mrek    /grp-mrek    /grp-mrek       /grp-mrek          /grp-rek
+ .--------.   .--------.   .-----------.   .---------------------------.
+ |   C1   |   |   C2   |   |     C3    |   |            C4             |
+ '--------'   '--------'   '-----------'   '---------------------------'
+                          [TO BE EVICTED]
+ |                                                                     |
+ \_______________ Stored group keying material (num=5) ________________/
+
+    Figure 38: Example of Message Exchanges for a One-to-Many Group
+                                Rekeying
 
 6.2.1.  Protection of Rekeying Messages
 
@@ -3569,7 +3680,7 @@ Table of Contents
    The resulting tagged CBOR byte string is used as value of the 'scope'
    claim of the access token.
 
-   Figure 37 and Figure 38 build on the examples in Section 3.2, and
+   Figure 39 and Figure 40 build on the examples in Section 3.2, and
    show the corresponding extended scopes.
 
    gname = tstr
@@ -3589,7 +3700,7 @@ Table of Contents
 
    extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 
-       Figure 37: Example CDLL definition of scope, using the default
+       Figure 39: Example CDLL definition of scope, using the default
                       Authorization Information Format
 
    gname = tstr
@@ -3602,7 +3713,7 @@ Table of Contents
 
    extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 
-      Figure 38: CDLL definition of scope, using as example group name
+      Figure 40: CDLL definition of scope, using as example group name
                       encoded as tstr and role as tstr
 
    The usage of the extended scope format is not limited to application
@@ -3707,9 +3818,9 @@ Table of Contents
     | kdcchallenge          | TBD  | bstr                | [RFC-XXXX] |
     +-----------------------+------+---------------------+------------+
 
-                    Figure 39: ACE Groupcomm Parameters
+                    Figure 41: ACE Groupcomm Parameters
 
-   Note to RFC Editor: In Figure 39, please replace all occurrences of
+   Note to RFC Editor: In Figure 41, please replace all occurrences of
    "[RFC-XXXX]" with the RFC number of this specification and delete
    this paragraph.
 
@@ -3827,7 +3938,7 @@ Table of Contents
           |   6   | Group deleted                               |
           +-------+---------------------------------------------+
 
-                 Figure 40: ACE Groupcomm Error Identifiers
+                 Figure 42: ACE Groupcomm Error Identifiers
 
    A Client supporting the 'error' parameter (see Section 4.1.2 and
    Section 8) and able to understand the specified error may use that
@@ -4214,7 +4325,7 @@ Table of Contents
       the item.
 
    This registry has been initially populated with the values in
-   Figure 39.
+   Figure 41.
 
 11.7.  ACE Groupcomm Key Types
 
@@ -4415,7 +4526,7 @@ Table of Contents
       specification defining the error, if one exists.
 
    This registry has been initially populated with the values in
-   Figure 40.  The Reference column for all of these entries refers to
+   Figure 42.  The Reference column for all of these entries refers to
    this document.
 
 11.12.  ACE Groupcomm Rekeying Schemes
@@ -4946,7 +5057,7 @@ B.1.  Format of 'sign_info_entry'
 
    gname = tstr
 
-              Figure 41: 'sign_info_entry' with general format
+              Figure 43: 'sign_info_entry' with general format
 
 Appendix C.  Document Updates
 
