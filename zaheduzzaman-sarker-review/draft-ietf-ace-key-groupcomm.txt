@@ -320,12 +320,14 @@ Table of Contents
    *  Individual keying material: information exclusively pertaining to
       a group member, as associated with its group membership and
       related to other keying material and parameters used in the group.
-      For example, this can be a member identifier that is unique within
-      the group.  The specific nature and format of individual keying
-      material used in a group is defined in application profiles of
-      this specification.  The individual keying material of a group
-      member is not related to the secure association between that group
-      member and the KDC.
+      For example, this can be an identifier that the secure
+      communication protocol employs to uniquely identify a node as a
+      group member (e.g., a cryptographic key identifier uniquely
+      associated with the group member in question).  The specific
+      nature and format of individual keying material used in a group is
+      defined in application profiles of this specification.  The
+      individual keying material of a group member is not related to the
+      secure association between that group member and the KDC.
 
    Examples throughout this document are expressed in CBOR diagnostic
    notation without the tag and value abbreviations.
