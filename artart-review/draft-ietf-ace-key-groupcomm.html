@@ -1482,10 +1482,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-1-1">This document builds on the Authentication and Authorization for Constrained Environments (ACE) framework and defines how to request, distribute, and renew keying material and configuration parameters to protect message exchanges in a group communication environment.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">Candidate group members acting as ACE Clients and authorized to join a group can interact with the Key Distribution Center (KDC) acting as ACE Resource Server and responsible for that group, in order to obtain the necessary keying material and parameters to communicate with other group members.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">In particular, this document defines the operations and interface available at the KDC, as well as general message formats for the interactions between Clients and KDC. At the same time, communications in the group can rely on different approaches, e.g., based on multicast <span>[<a href="#I-D.ietf-core-groupcomm-bis" class="cite xref">I-D.ietf-core-groupcomm-bis</a>]</span> or on publish-subscribe messaging <span>[<a href="#I-D.ietf-core-coap-pubsub" class="cite xref">I-D.ietf-core-coap-pubsub</a>]</span>, and can be protected in different ways.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">Therefore, this document delegates details on the communication and security approaches used in a group to separate application profiles. These are specialized instances of this document, targeting a particular group communication approach and defining how communications in the group are protected, as well as the specific keying material and configuration parameters provided to group members. In order to ensure consistency and aid the development of such application profiles, this document defines a number of related compliance requirements (see <a href="#req" class="auto internal xref">Appendix A</a>).<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">New keying material is generated and distributed to the group upon membership changes (rekeying), if the application requires backward security (i.e., new group members must be prevented from accessing communications in the group prior to their joining) and forward security (i.e., former group members must be prevented from accessing communications in the group after their leaving).<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">A group rekeying scheme performs the actual distribution of the new keying material, by rekeying the current group members when a new Client joins the group, and the remaining group members when a Client leaves the group. This can rely on different approaches, including efficient group rekeying schemes such as <span>[<a href="#RFC2093" class="cite xref">RFC2093</a>]</span>, <span>[<a href="#RFC2094" class="cite xref">RFC2094</a>]</span>, and <span>[<a href="#RFC2627" class="cite xref">RFC2627</a>]</span>.<a href="#section-1-6" class="pilcrow">¶</a></p>
-<p id="section-1-7">Consistently with what is recommended in the ACE framework, this document uses CBOR <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> for data encoding. However, using JSON <span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span> instead of CBOR is possible, by relying on the conversion method specified in Sections <a href="https://rfc-editor.org/rfc/rfc8949#section-6.1" class="relref">6.1</a> and <a href="https://rfc-editor.org/rfc/rfc8949#section-6.2" class="relref">6.2</a> of <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>.<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-4">Therefore, this document delegates details on the communication and security approaches used in a group to separate application profiles. These are specialized instances of this document, targeting a particular group communication approach and defining how communications in the group are protected, as well as the specific keying material and configuration parameters provided to group members.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">In order to ensure consistency and aid the development of such application profiles, <a href="#req" class="auto internal xref">Appendix A</a> of this document defines a number of related compliance requirements. In particular, <a href="#req-mandatory" class="auto internal xref">Appendix A.1</a> compiles the requirements that application profiles are REQUIRED to fulfill; these are referred to by an identifier that starts with "REQ". Instead, <a href="#req-optional" class="auto internal xref">Appendix A.2</a> compiles the requirements that application profiles MAY fulfill; these are referred to by an identifier that starts with "OPT".<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">New keying material is generated and distributed to the group upon membership changes (rekeying), if the application requires backward security (i.e., new group members must be prevented from accessing communications in the group prior to their joining) and forward security (i.e., former group members must be prevented from accessing communications in the group after their leaving).<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">A group rekeying scheme performs the actual distribution of the new keying material, by rekeying the current group members when a new Client joins the group, and the remaining group members when a Client leaves the group. This can rely on different approaches, including efficient group rekeying schemes such as <span>[<a href="#RFC2093" class="cite xref">RFC2093</a>]</span>, <span>[<a href="#RFC2094" class="cite xref">RFC2094</a>]</span>, and <span>[<a href="#RFC2627" class="cite xref">RFC2627</a>]</span>.<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-8">Consistently with what is recommended in the ACE framework, this document uses CBOR <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> for data encoding. However, using JSON <span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span> instead of CBOR is possible, by relying on the conversion method specified in Sections <a href="https://rfc-editor.org/rfc/rfc8949#section-6.1" class="relref">6.1</a> and <a href="https://rfc-editor.org/rfc/rfc8949#section-6.2" class="relref">6.2</a> of <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>.<a href="#section-1-8" class="pilcrow">¶</a></p>
 <div id="terminology">
 <section id="section-1.1">
         <h3 id="name-terminology">
@@ -3847,7 +3848,7 @@ The setup of rekeying topics at the broker as well as the discovery of the topic
                 <path d="M 112,320 L 184,320" fill="none" stroke="black"></path>
                 <path d="M 216,320 L 312,320" fill="none" stroke="black"></path>
                 <path d="M 344,320 L 568,320" fill="none" stroke="black"></path>
-                <path d="M 20,376 L 132,376" fill="none" stroke="black"></path>
+                <path d="M 12,376 L 132,376" fill="none" stroke="black"></path>
                 <path d="M 436,376 L 564,376" fill="none" stroke="black"></path>
                 <polygon class="arrowhead" points="400,240 388,234.4 388,245.6" fill="black" transform="rotate(90,392,240)"></polygon>
                 <polygon class="arrowhead" points="280,240 268,234.4 268,245.6" fill="black" transform="rotate(90,272,240)"></polygon>
@@ -3904,9 +3905,9 @@ The setup of rekeying topics at the broker as well as the discovery of the topic
                   <text x="216" y="340">[TO</text>
                   <text x="244" y="340">BE</text>
                   <text x="292" y="340">EVICTED]</text>
-                  <text x="16" y="356">|</text>
+                  <text x="8" y="356">|</text>
                   <text x="568" y="356">|</text>
-                  <text x="16" y="372">\</text>
+                  <text x="8" y="372">\</text>
                   <text x="164" y="372">Stored</text>
                   <text x="216" y="372">group</text>
                   <text x="268" y="372">keying</text>
@@ -4881,7 +4882,7 @@ This section gives some general guidelines for what the experts should be lookin
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-requirements-on-application" class="section-name selfRef">Requirements on Application Profiles</a>
       </h2>
 <p id="appendix-A-1">This section lists the requirements on application profiles of this specification, for the convenience of application profile designers.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-<div id="mandatory-to-address-requirements">
+<div id="req-mandatory">
 <section id="appendix-A.1">
         <h3 id="name-mandatory-to-address-requir">
 <a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-mandatory-to-address-requir" class="section-name selfRef">Mandatory-to-Address Requirements</a>
@@ -4980,7 +4981,7 @@ This section gives some general guidelines for what the experts should be lookin
         </ul>
 </section>
 </div>
-<div id="optional-to-address-requirements">
+<div id="req-optional">
 <section id="appendix-A.2">
         <h3 id="name-optional-to-address-require">
 <a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-optional-to-address-require" class="section-name selfRef">Optional-to-Address Requirements</a>
