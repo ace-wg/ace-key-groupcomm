@@ -3667,80 +3667,84 @@ The setup of rekeying topics at the broker as well as the discovery of the topic
 <a href="#section-6.2.1" class="section-number selfRef">6.2.1. </a><a href="#name-protection-of-rekeying-mess" class="section-name selfRef">Protection of Rekeying Messages</a>
           </h4>
 <p id="section-6.2.1-1">When using a group rekeying scheme relying on one-to-many rekeying messages, the actual data content of each rekeying message is prepared according to what the rekeying scheme prescribes.<a href="#section-6.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-2">Then, the KDC can protect the rekeying message as defined below. The used encryption algorithm which SHOULD be the same one used to protect communications in the group. The method defined below assumes that the following holds for the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>).<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-2">The following describes one possible method for the KDC to protect the rekeying messages.<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-3">The method assumes that the following holds for the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>).<a href="#section-6.2.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.2.1-3.1">
-              <p id="section-6.2.1-3.1.1">The included symmetric encryption keys are accompanied by a corresponding and unique key identifier assigned by the KDC.<a href="#section-6.2.1-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2.1-4.1">
+              <p id="section-6.2.1-4.1.1">The encryption algorithm SHOULD be the same one used to protect communications in the group.<a href="#section-6.2.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-3.2">
-              <p id="section-6.2.1-3.2.1">A Base IV is also included, with the same size of the AEAD nonce considered by the encryption algorithm to use.<a href="#section-6.2.1-3.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-4.2">
+              <p id="section-6.2.1-4.2.1">The included symmetric encryption keys are accompanied by a corresponding and unique key identifier assigned by the KDC.<a href="#section-6.2.1-4.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-6.2.1-4.3">
+              <p id="section-6.2.1-4.3.1">A Base IV is also included, with the same size of the AEAD nonce considered by the encryption algorithm to use.<a href="#section-6.2.1-4.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-6.2.1-4">First, the KDC computes a COSE_Encrypt0 object as follows.<a href="#section-6.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-5">First, the KDC computes a COSE_Encrypt0 object as follows.<a href="#section-6.2.1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.2.1-5.1">
-              <p id="section-6.2.1-5.1.1">The encryption key to use is selected from the administrative keying material, as defined by the rekeying scheme used in the group.<a href="#section-6.2.1-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2.1-6.1">
+              <p id="section-6.2.1-6.1.1">The encryption key to use is selected from the administrative keying material, as defined by the rekeying scheme used in the group.<a href="#section-6.2.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-5.2">
-              <p id="section-6.2.1-5.2.1">The plaintext is the actual data content of the rekeying message.<a href="#section-6.2.1-5.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-6.2">
+              <p id="section-6.2.1-6.2.1">The plaintext is the actual data content of the rekeying message.<a href="#section-6.2.1-6.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-5.3">
-              <p id="section-6.2.1-5.3.1">The Additional Authenticated Data (AAD) is empty, unless otherwise specified by separate documents profiling the use of the group rekeying scheme.<a href="#section-6.2.1-5.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-6.3">
+              <p id="section-6.2.1-6.3.1">The Additional Authenticated Data (AAD) is empty, unless otherwise specified by separate documents profiling the use of the group rekeying scheme.<a href="#section-6.2.1-6.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-5.4">
-              <p id="section-6.2.1-5.4.1">Since the KDC is the only sender of rekeying messages, the AEAD nonce can be computed as follows, where NONCE_SIZE is the size in bytes of the AEAD nonce. Separate documents profiling the use of the group rekeying scheme may define alternative ways to compute the AEAD nonce.<a href="#section-6.2.1-5.4.1" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-5.4.2">
-The KDC considers the following values.<a href="#section-6.2.1-5.4.2" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-6.4">
+              <p id="section-6.2.1-6.4.1">Since the KDC is the only sender of rekeying messages, the AEAD nonce can be computed as follows, where NONCE_SIZE is the size in bytes of the AEAD nonce. Separate documents profiling the use of the group rekeying scheme may define alternative ways to compute the AEAD nonce.<a href="#section-6.2.1-6.4.1" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-6.4.2">
+The KDC considers the following values.<a href="#section-6.2.1-6.4.2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.2.1-5.4.3.1">
-                  <p id="section-6.2.1-5.4.3.1.1">COUNT, as a 2-byte unsigned integer associated with the used encryption key. Its value is set to 0 when starting to perform a new group rekeying instance, and is incremented after each use of the encryption key.<a href="#section-6.2.1-5.4.3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2.1-6.4.3.1">
+                  <p id="section-6.2.1-6.4.3.1.1">COUNT, as a 2-byte unsigned integer associated with the used encryption key. Its value is set to 0 when starting to perform a new group rekeying instance, and is incremented after each use of the encryption key.<a href="#section-6.2.1-6.4.3.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-6.2.1-5.4.3.2">
-                  <p id="section-6.2.1-5.4.3.2.1">NEW_NUM, as the version number of the new group keying material to distribute in this rekeying instance, left-padded with zeros to exactly NONCE_SIZE - 2 bytes.<a href="#section-6.2.1-5.4.3.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-6.2.1-6.4.3.2">
+                  <p id="section-6.2.1-6.4.3.2.1">NEW_NUM, as the version number of the new group keying material to distribute in this rekeying instance, left-padded with zeros to exactly NONCE_SIZE - 2 bytes.<a href="#section-6.2.1-6.4.3.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
-<p id="section-6.2.1-5.4.4">
-Then, the KDC computes a Partial IV as the byte string concatenation of COUNT and NEW_NUM, in this order. Finally, the AEAD nonce is computed as the XOR between the Base IV and the Partial IV.<a href="#section-6.2.1-5.4.4" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-5.4.5">
-In order to comply with the security requirements of AEAD encryption algorithms, the KDC MUST NOT use the same pair (AEAD encryption key, AEAD nonce). For example, this includes not using the same encryption key from the administrative keying material more than 2^16 times during the same rekeying instance.<a href="#section-6.2.1-5.4.5" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-6.4.4">
+Then, the KDC computes a Partial IV as the byte string concatenation of COUNT and NEW_NUM, in this order. Finally, the AEAD nonce is computed as the XOR between the Base IV and the Partial IV.<a href="#section-6.2.1-6.4.4" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-6.4.5">
+In order to comply with the security requirements of AEAD encryption algorithms, the KDC MUST NOT use the same pair (AEAD encryption key, AEAD nonce). For example, this includes not using the same encryption key from the administrative keying material more than 2^16 times during the same rekeying instance.<a href="#section-6.2.1-6.4.5" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-5.5">
-              <p id="section-6.2.1-5.5.1">The protected header of the COSE_Encrypt0 object MUST include the following parameters.<a href="#section-6.2.1-5.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-6.5">
+              <p id="section-6.2.1-6.5.1">The protected header of the COSE_Encrypt0 object MUST include the following parameters.<a href="#section-6.2.1-6.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.2.1-5.5.2.1">
-                  <p id="section-6.2.1-5.5.2.1.1">'alg', specifying the used encryption algorithm.<a href="#section-6.2.1-5.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2.1-6.5.2.1">
+                  <p id="section-6.2.1-6.5.2.1.1">'alg', specifying the used encryption algorithm.<a href="#section-6.2.1-6.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-6.2.1-5.5.2.2">
-                  <p id="section-6.2.1-5.5.2.2.1">'kid', specifying the identifier of the encryption key from the administrative keying material used to protect this rekeying message.<a href="#section-6.2.1-5.5.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-6.2.1-6.5.2.2">
+                  <p id="section-6.2.1-6.5.2.2.1">'kid', specifying the identifier of the encryption key from the administrative keying material used to protect this rekeying message.<a href="#section-6.2.1-6.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
-            <li class="normal" id="section-6.2.1-5.6">
-              <p id="section-6.2.1-5.6.1">The unprotected header of the COSE_Encrypt0 object MUST include the 'Partial IV' parameter, with value the Partial IV computed above.<a href="#section-6.2.1-5.6.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-6.6">
+              <p id="section-6.2.1-6.6.1">The unprotected header of the COSE_Encrypt0 object MUST include the 'Partial IV' parameter, with value the Partial IV computed above.<a href="#section-6.2.1-6.6.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-6.2.1-6">In order to ensure source authentication, each rekeying message protected with the administrative keying material MUST be signed by the KDC. To this end, the KDC computes a countersignature of the COSE_Encrypt0 object, as described in Sections <a href="https://rfc-editor.org/rfc/rfc9338#section-3.2" class="relref">3.2</a> and <a href="https://rfc-editor.org/rfc/rfc9338#section-3.3" class="relref">3.3</a> of <span>[<a href="#RFC9338" class="cite xref">RFC9338</a>]</span>. In particular, the following applies when computing the countersignature.<a href="#section-6.2.1-6" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-7">In order to ensure source authentication, each rekeying message protected with the administrative keying material MUST be signed by the KDC. To this end, the KDC computes a countersignature of the COSE_Encrypt0 object, as described in Sections <a href="https://rfc-editor.org/rfc/rfc9338#section-3.2" class="relref">3.2</a> and <a href="https://rfc-editor.org/rfc/rfc9338#section-3.3" class="relref">3.3</a> of <span>[<a href="#RFC9338" class="cite xref">RFC9338</a>]</span>. In particular, the following applies when computing the countersignature.<a href="#section-6.2.1-7" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.2.1-7.1">
-              <p id="section-6.2.1-7.1.1">The Countersign_structure contains the context text string "CounterSignature0".<a href="#section-6.2.1-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2.1-8.1">
+              <p id="section-6.2.1-8.1.1">The Countersign_structure contains the context text string "CounterSignature0".<a href="#section-6.2.1-8.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-7.2">
-              <p id="section-6.2.1-7.2.1">The private key of the KDC is used as signing key.<a href="#section-6.2.1-7.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-8.2">
+              <p id="section-6.2.1-8.2.1">The private key of the KDC is used as signing key.<a href="#section-6.2.1-8.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-7.3">
-              <p id="section-6.2.1-7.3.1">The payload is the ciphertext of the COSE_Encrypt0 object.<a href="#section-6.2.1-7.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-8.3">
+              <p id="section-6.2.1-8.3.1">The payload is the ciphertext of the COSE_Encrypt0 object.<a href="#section-6.2.1-8.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-7.4">
-              <p id="section-6.2.1-7.4.1">The Additional Authenticated Data (AAD) is empty, unless otherwise specified by separate documents profiling the use of a group rekeying scheme.<a href="#section-6.2.1-7.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-8.4">
+              <p id="section-6.2.1-8.4.1">The Additional Authenticated Data (AAD) is empty, unless otherwise specified by separate documents profiling the use of a group rekeying scheme.<a href="#section-6.2.1-8.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-7.5">
-              <p id="section-6.2.1-7.5.1">The protected header of the signing object MUST include the parameter 'alg', specifying the used signature algorithm.<a href="#section-6.2.1-7.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-8.5">
+              <p id="section-6.2.1-8.5.1">The protected header of the signing object MUST include the parameter 'alg', specifying the used signature algorithm.<a href="#section-6.2.1-8.5.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-6.2.1-8">If source authentication of messages exchanged in the group is also ensured by means of signatures, then rekeying messages MUST be signed using the same signature algorithm and related parameters. Also, the KDC's authentication credential including the public key to use for signature verification MUST be provided in the Join Response through the 'kdc_cred' parameter, together with the corresponding proof-of-possession (PoP) evidence in the 'kdc_cred_verify' parameter.<a href="#section-6.2.1-8" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-9">If source authentication of messages exchanged in the group is not ensured by means of signatures, then the KDC MUST provide its authentication credential together with a corresponding PoP evidence as part of the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>). It is RECOMMENDED to specify this information by using the same format and encoding used for the parameters 'kdc_cred', 'kdc_nonce', and 'kdc_cred_verify' in the Join Response. It is up to separate documents profiling the use of the group rekeying scheme to specify such details.<a href="#section-6.2.1-9" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-10">After that, the KDC specifies the computed countersignature in the 'COSE_Countersignature0' header parameter of the COSE_Encrypt0 object.<a href="#section-6.2.1-10" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-11">Finally, the KDC specifies the COSE_Encrypt0 object as payload of a CoAP request, which is sent to the target group members as per the used message delivery method.<a href="#section-6.2.1-11" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-9">If source authentication of messages exchanged in the group is also ensured by means of signatures, then rekeying messages MUST be signed using the same signature algorithm and related parameters. Also, the KDC's authentication credential including the public key to use for signature verification MUST be provided in the Join Response through the 'kdc_cred' parameter, together with the corresponding proof-of-possession (PoP) evidence in the 'kdc_cred_verify' parameter.<a href="#section-6.2.1-9" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-10">If source authentication of messages exchanged in the group is not ensured by means of signatures, then the KDC MUST provide its authentication credential together with a corresponding PoP evidence as part of the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>). It is RECOMMENDED to specify this information by using the same format and encoding used for the parameters 'kdc_cred', 'kdc_nonce', and 'kdc_cred_verify' in the Join Response. It is up to separate documents profiling the use of the group rekeying scheme to specify such details.<a href="#section-6.2.1-10" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-11">After that, the KDC specifies the computed countersignature in the 'COSE_Countersignature0' header parameter of the COSE_Encrypt0 object.<a href="#section-6.2.1-11" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-12">Finally, the KDC specifies the COSE_Encrypt0 object as payload of a CoAP request, which is sent to the target group members as per the used message delivery method.<a href="#section-6.2.1-12" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
