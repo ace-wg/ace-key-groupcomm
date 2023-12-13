@@ -402,7 +402,7 @@ When receiving an Authorization Request from a Client that was previously author
 
 The Client sends a Token Transfer Request to the KDC, i.e., a CoAP POST request including the access token and targeting the authz-info endpoint (see {{Section 5.10.1 of RFC9200}}).
 
-Note that this request deviates from the one defined in {{RFC9200}}, since it allows to ask the KDC for additional information concerning the authentication credentials used in the group to ensure source authentication, as well as for possible additional group parameters.
+Note that this request deviates from the one defined in {{RFC9200}}, since it allows the Client to ask the KDC for additional information concerning the authentication credentials used in the group to ensure source authentication, as well as for possible additional group parameters.
 
 The joining node MAY ask for this information from the KDC through the same Token Transfer Request. In this case, the message MUST have Content-Format set to application/ace+cbor defined in {{Section 8.16 of RFC9200}}, and the message payload MUST be formatted as a CBOR map, which MUST include the access token. The CBOR map MAY additionally include the following parameter, which, if included, MUST have format and value as specified below.
 
