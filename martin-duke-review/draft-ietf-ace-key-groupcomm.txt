@@ -377,7 +377,8 @@ Table of Contents
    *  Dispatcher: entity through which the Clients communicate with the
       group, when sending a message intended to multiple group members.
       That is, the Dispatcher distributes such a one-to-many message to
-      the group members as intended recipients.  A single-recipient
+      the group members as intended recipients.  The Dispatcher does not
+      have access to the group keying material.  A single-recipient
       message intended to only one group member may be delivered by
       alternative means, with no assistance from the Dispatcher.
 
@@ -390,8 +391,9 @@ Table of Contents
 
       If it consists of an explicit entity such as a pub-sub Broker or a
       message relayer, the Dispatcher is comparable to an untrusted on-
-      path intermediary, and as such it is able to read the messages
-      sent by Clients in the group.
+      path intermediary, and as such it is able to see the messages sent
+      by Clients in the group, but not to decrypt them and read their
+      plain content.
 
    This document specifies a mechanism for:
 
