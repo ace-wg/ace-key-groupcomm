@@ -1691,7 +1691,7 @@ A Client identified by NODENAME may be removed from a group identified by GROUPN
 
 In either case, the KDC performs the following actions.
 
-* The KDC removes the Client from the list of current members of the group.
+* The KDC removes the Client from the list of current members of the group. When doing so, the KDC deletes the currently stored value of N_C for that Client, which was specified in the Join Request (see {{gid-post}}) or in the latest succesful Authentication Credential Update Request (see {{node-pub-key-post}}) from that Client.
 
 * In case of forced eviction, i.e., for cases 2 and 3 above, the KDC deletes the authentication credential of the removed Client, if it acts as repository of authentication credentials for group members.
 
