@@ -307,7 +307,7 @@ Client                                             AS    KDC
 
 The Authorization Request sent from the Client to the AS is defined in {{Section 5.8.1 of RFC9200}} and MAY contain the following parameters, which, if included, MUST have format and value as specified below.
 
-* 'scope', specifying the name of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.
+* 'scope', specifying the names of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.
 
    This parameter is encoded as a CBOR byte string, which wraps a CBOR array of one or more scope entries. All the scope entries are specified according to a same format, i.e., either the AIF format or the textual format defined below.
 
