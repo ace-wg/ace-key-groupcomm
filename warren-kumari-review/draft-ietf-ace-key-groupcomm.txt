@@ -204,7 +204,7 @@ Table of Contents
    then a rekeying has to occur every time new members join the group.
    If the application requires forward security (i.e., former group
    members must be prevented from accessing communications in the group
-   after their leaving), a rekeying has to occur every time current
+   after their leaving), then a rekeying has to occur every time current
    members leave the group or are evicted from the group.
 
    A group rekeying scheme performs the actual distribution of the new
