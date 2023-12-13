@@ -3551,7 +3551,7 @@ Payload: -
           <p id="section-5-2.1.1">The Client explicitly asks to leave the group, as defined in <a href="#ssec-group-leaving" class="auto internal xref">Section 4.8.3.1</a>.<a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.2">
-          <p id="section-5-2.2.1">The node has been found compromised or is suspected so.<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.2.1">The node has been found compromised or is suspected so. The KDC is expected to determine that a group member has to be evicted either through its own means, or based on information that it obtains from a trusted source (e.g., an Intrusion Detection System, or an issuer of authentication credentials). Additional mechanics, protocols, and interfaces at the KDC that can support this are out of the scope of this document.<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.3">
           <p id="section-5-2.3.1">The Client's authorization to be a group member with the current roles is not valid anymore, i.e., the access token has expired or has been revoked. If the AS provides token introspection (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.9" class="relref">Section 5.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), the KDC can optionally use it and check whether the Client is still authorized.<a href="#section-5-2.3.1" class="pilcrow">¶</a></p>
