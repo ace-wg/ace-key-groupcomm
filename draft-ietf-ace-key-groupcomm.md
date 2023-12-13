@@ -1743,6 +1743,41 @@ When taking this approach in the group identified by GROUPNAME, the KDC can prac
 
 If the KDC has to send a rekeying message to a target group member, but this did not include the 'control_uri' parameter in the Join Request and is not a registered observer for the /ace-group/GROUPNAME resource, then that target group member would not be able to participate to the group rekeying. Later on, after having repeatedly failed to successfully exchange secure messages in the group, that group member can retrieve the current group keying material from the KDC, by sending a GET request to /ace-group/GROUPNAME or /ace-group/GROUPNAME/nodes/NODENAME (see {{gid-get}} and {{node-get}}, respectively).
 
+Figure {{fig-rekeying-example-1}} provides an example of point-to-point group rekeying. In particular, the example makes the following assumptions.
+
+* The group currently consists of four group members, namely C1, C2, C3, and C4.
+* Each group member, when joining the group, provided the KDC with a URI in the 'control_uri' parameter, with url-path "grp-rek".
+* Before the group rekeying is performed, the keying material used in the group has version number num=5.
+* The KDC performs the group rekeying in such a way to evict the group member C3, which has been found to be compromised.
+
+In the example, the KDC individually rekeys the group members intended to remain in the group (i.e., C1, C2, and C4), by means of one rekeying message each.
+
+~~~~~~~~~~~ aasvg
+
+    .----------------------------------------------------------------.
+    |                              KDC                               |
+    '----------------------------------------------------------------'
+          |                 |                                    |
+ Group    |        Group    |                           Group    |
+ keying   |        keying   |                           keying   |
+ material |        material |                           material |
+ (num=6)  |        (num=6)  |                           (num=6)  |
+          |                 |                                    |
+          |                 |                                    |
+          |                 |                                    |
+          v                 v                                    v
+
+      /grp-rek          /grp-rek          /grp-rek           /grp-rek
+     .--------.        .--------.        .--------.         .--------.
+     |   C1   |        |   C2   |        |   C3   |         |   C4   |
+     '--------'        '--------'        '--------'         '--------'
+                                       [TO BE EVICTED]
+     |                                                               |
+     \____________ Stored group keying material (num=5) _____________/
+
+~~~~~~~~~~~
+{: #fig-rekeying-example-1 title="Example of Message Exchanges for a Point-to-Point Group Rekeying" artwork-align="center"}
+
 ## One-to-Many Group Rekeying {#one-to-many-rekeying}
 
 This section provides high-level recommendations on how the KDC can rekey a group by means of a more efficient and scalable group rekeying scheme, e.g., {{RFC2093}}{{RFC2094}}{{RFC2627}}. That is, each rekeying message might be, and likely is, intended to multiple target group members, and thus can be delivered to the whole group, although possible to decrypt only for the actual target group members.
@@ -1774,6 +1809,48 @@ From a high level point of view, each group member stores only a subset of the o
 * Each rekeying message includes not only the new group keying material intended to all the rekeyed group members, but also any new administrative keys that: i) are pertaining to and supposed to be stored by the target group members; and ii) had to be updated since leaving group members store the previous version.
 
 Further details depend on the specific rekeying scheme used in the group.
+
+Figure {{fig-rekeying-example-2}} provides an example of one-to-many group rekeying over multicast. In particular, the example makes the following assumptions.
+
+* The group currently consists of four group members, namely C1, C2, C3, and C4.
+* Each group member, when joining the group, provided the KDC with a URI in the 'control_uri' parameter, with url-path "grp-rek".
+* Each group member, when joining the group, received from the KDC a URI in the 'control_group_uri' parameter, specifying the multicast address MULT_ADDR and url-path "grp-mrek".
+* Before the group rekeying is performed, the keying material used in the group has version number num=5.
+* The KDC performs the group rekeying in such a way to evict the group member C3, which has been found to be compromised.
+
+In the example, the KDC determines that the most convenient way to perform a group rekeying that evicts C3 is as follows.
+
+First, the KDC sends one rekeying message over multicast, to the multicast address MULT_ADDR and the url-path "grp-mrek". In the figure, the message is denoted with dashed lines. The message is protected with a non-compromised key from the administrative keying material that only C1 and C2 store. Therefore, even though all the group members receive this message, only C1 and C2 are able to decrypt it. The message includes: the new group keying material with version number num=6; and new keys from the administrative keying material to replace those stored by the group members C1, C2, and C3.
+
+After that, the KDC sends one rekeying message addressed individually to C4 and with url-path "grp-rek". In the figure, the message is denoted with a dotted line. The message is protected with the secure association shared between C4 and the KDC. The message includes: the new group keying material with version number num=6; and new keys from the administrative keying material to replace those stored by both C4 and C3.
+
+~~~~~~~~~~~ aasvg
+
+.---------------------------------------------------------------------.
+|                               KDC                                   |
+'---------------------------------------------------------------------'
+                                 |                                 :
+* Group keying material (num=6)  |       * Group keying            :
+* Updated administrative         |         material (num=6)        :
+  keying material for C1 and C2  |       * Updated administrative  :
+                                 |         keying material for C4  :
+                                 |                                 :
+                                 |                                 :
+      +------------+-------------+--------------+                  :
+      |            |             |              |                  :
+      |            |             |              |                  :
+      v            v             v              v                  v
+
+ /grp-mrek    /grp-mrek    /grp-mrek       /grp-mrek          /grp-rek
+.--------.   .--------.   .-----------.   .---------------------------.
+|   C1   |   |   C2   |   |     C3    |   |            C4             |
+'--------'   '--------'   '-----------'   '---------------------------'
+                         [TO BE EVICTED]
+|                                                                     |
+\_______________ Stored group keying material (num=5) ________________/
+
+~~~~~~~~~~~
+{: #fig-rekeying-example-2 title="Example of Message Exchanges for a One-to-Many Group Rekeying" artwork-align="center"}
 
 ### Protection of Rekeying Messages {#one-to-many-rekeying-protection}
 
