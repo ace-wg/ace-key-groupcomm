@@ -768,11 +768,13 @@ Table of Contents
    possession of its own private key (see the 'client_cred_verify'
    parameter in Section 4.3.1).
 
-   The KDC MUST store the 'kdcchallenge' value associated with the
-   Client at least until it receives a Join Request from it (see
-   Section 4.3.1.1), to be able to verify the PoP evidence provided
-   during the join process, and thus that the Client possesses its own
-   private key.
+   While storing the access token, the KDC MUST store the 'kdcchallenge'
+   value associated with the Client at least until it receives a Join
+   Request from it (see Section 4.3.1.1), to be able to verify the PoP
+   evidence provided during the join process, and thus that the Client
+   possesses its own private key.  The KDC deletes the 'kdcchallenge'
+   value associated with the Client upon deleting the access token
+   (e.g., upon its expiration, see Section 5.10.3 of [RFC9200]).
 
    The same 'kdcchallenge' value MAY be reused several times by the
    Client, to generate a new PoP evidence, e.g., in case the Client
