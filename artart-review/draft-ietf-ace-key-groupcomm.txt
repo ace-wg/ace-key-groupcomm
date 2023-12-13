@@ -375,9 +375,10 @@ Table of Contents
       changes.
 
    *  Dispatcher: entity through which the Clients communicate with the
-      group, when sending a message intended to multiple group members.
+      group when sending a message intended to multiple group members.
       That is, the Dispatcher distributes such a one-to-many message to
-      the group members as intended recipients.  A single-recipient
+      the group members as intended recipients.  The Dispatcher does not
+      have access to the group keying material.  A single-recipient
       message intended to only one group member may be delivered by
       alternative means, with no assistance from the Dispatcher.
 
