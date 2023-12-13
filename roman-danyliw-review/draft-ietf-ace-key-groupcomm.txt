@@ -364,8 +364,9 @@ Table of Contents
       Client can have different roles.
 
    *  Authorization Server (AS): as per the AS defined in the ACE
-      Framework, it enforces access policies, and knows if a node is
-      allowed to join a given group with write and/or read rights.
+      Framework [RFC9200], it enforces access policies, and knows if a
+      node is allowed to join a given group with write and/or read
+      rights.
 
    *  Key Distribution Center (KDC): maintains the keying material to
       protect group communications, and provides it to Clients
