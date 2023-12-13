@@ -1681,7 +1681,7 @@ A Client identified by NODENAME may be removed from a group identified by GROUPN
 
 1. The Client explicitly asks to leave the group, as defined in {{ssec-group-leaving}}.
 
-2. The node has been found compromised or is suspected so.
+2. The node has been found compromised or is suspected so. The KDC is expected to determine that a group member has to be evicted either through its own means, or based on information that it obtains from a trusted source (e.g., an Intrusion Detection System, or an issuer of authentication credentials). Additional mechanics, protocols, and interfaces at the KDC that can support this are out of the scope of this document.
 
 3. The Client's authorization to be a group member with the current roles is not valid anymore, i.e., the access token has expired or has been revoked. If the AS provides token introspection (see {{Section 5.9 of RFC9200}}), the KDC can optionally use it and check whether the Client is still authorized.
 
