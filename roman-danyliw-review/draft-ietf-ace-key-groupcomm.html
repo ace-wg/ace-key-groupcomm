@@ -1771,7 +1771,7 @@ Client                                             AS    KDC
 <p id="section-3.1-1">The Authorization Request sent from the Client to the AS is defined in <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.1" class="relref">Section 5.8.1</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span> and MAY contain the following parameters, which, if included, MUST have format and value as specified below.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1-2.1">
-            <p id="section-3.1-2.1.1">'scope', specifying the name of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-2.1.1">'scope', specifying the names of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2.1.2">
 This parameter is encoded as a CBOR byte string, which wraps a CBOR array of one or more scope entries. All the scope entries are specified according to a same format, i.e., either the AIF format or the textual format defined below.<a href="#section-3.1-2.1.2" class="pilcrow">¶</a></p>
 <ul class="normal">

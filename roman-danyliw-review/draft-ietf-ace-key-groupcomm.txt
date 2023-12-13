@@ -545,7 +545,7 @@ Table of Contents
    parameters, which, if included, MUST have format and value as
    specified below.
 
-   *  'scope', specifying the name of the groups that the Client
+   *  'scope', specifying the names of the groups that the Client
       requests to access, and optionally the roles that the Client
       requests to have in those groups.
 
