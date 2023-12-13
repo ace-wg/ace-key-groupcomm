@@ -197,12 +197,15 @@ Table of Contents
    such application profiles, this document defines a number of related
    compliance requirements (see Appendix A).
 
-   New keying material is generated and distributed to the group upon
-   membership changes (rekeying), if the application requires backward
-   security (i.e., new group members must be prevented from accessing
-   communications in the group prior to their joining) and forward
-   security (i.e., former group members must be prevented from accessing
-   communications in the group after their leaving).
+   New keying material is intended to be generated and distributed to
+   the group upon membership changes (rekeying).  If the application
+   requires backward security (i.e., new group members must be prevented
+   from accessing communications in the group prior to their joining),
+   then a rekeying has to occur every time new members join the group.
+   If the application requires forward security (i.e., former group
+   members must be prevented from accessing communications in the group
+   after their leaving), a rekeying has to occur every time current
+   members leave the group or are evicted from the group.
 
    A group rekeying scheme performs the actual distribution of the new
    keying material, by rekeying the current group members when a new
