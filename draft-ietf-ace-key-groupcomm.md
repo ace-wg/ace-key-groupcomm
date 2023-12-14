@@ -829,9 +829,15 @@ The exact format of the 'key' value MUST be defined in application profiles of t
 
 Note to RFC Editor: In {{fig-gkty}}, please replace "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
 
-The response SHOULD contain the following parameter:
+The response SHOULD contain the following parameters:
 
 * 'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what is specified for NumericDate in {{Section 2 of RFC7519}}. Group members MUST NOT use the keying material after the time indicated in this field, and they can retrieve the new group keying material from the KDC.
+
+* 'exi', with value the residual lifetime of the keying material for the group communication, encoded as a CBOR unsigned integer. If the 'exp' parameter is included, this parameter MUST also be included. This field contains a numeric value representing the residual lifetime of the keying material in seconds, i.e., the number of seconds between the current time at the KDC and the time when the keying material expires (as specified in the 'exp' parameter, if present). A Client determines the expiration time of the keying material by adding the seconds specified in the 'exi' parameter to its current time upon receiving the response containing the 'exi' parameter. The Client MUST NOT use the keying material after such an expiration time, and it can retrieve the new group keying material from the KDC.
+
+If a Client has a reliable way to synchronize its internal clock with UTC, and both the 'exp' and 'exi' parameters are present, then the Client MUST use the 'exp' parameter value as expiration time for the group keying material. Otherwise, the Client uses the 'exi' parameter value.
+
+When a Client relies on the 'exi' parameter, the expiration time that it computes is offset in the future with respect to the actual expiration time as intended by the KDC and specified in the 'exp' parameter (if present). Such an offset is the amount of time between when the KDC sends the response message including the 'exi' parameter and when the Client receives that message. That is, especially if the delivery of the response to the Client is delayed, the Client will believe the keying material to be valid for a longer time than the KDC actually means. However, before approaching the actual expiration time, the KDC is expected to rekey the group and distribute new keying material (see {{sec-group-rekeying}}).
 
 Optionally, the response MAY contain the following parameters, which, if included, MUST have the format and value as specified below.
 
@@ -1010,8 +1016,8 @@ Location-Path: "nodes"
 Location-Path: "c101"
 Payload (in CBOR diagnostic notation,
          with KEY being a CBOR byte strings):
-  { "gkty": 13, "key": KEY, "num": 12, "exp": 1609459200,
-    "creds": [ AUTH_CRED_1, AUTH_CRED_2 ],
+  { "gkty": 13, "key": KEY, "num": 12, "exp": 1924992000,
+    "exi": 2592000, "creds": [ AUTH_CRED_1, AUTH_CRED_2 ],
     "peer_roles": ["sender", ["sender", "receiver"]],
     "peer_identifiers": [ ID1, ID2 ] }
 ~~~~~~~~~~~
@@ -1039,7 +1045,7 @@ If all verifications succeed, the handler replies with a 2.05 (Content) response
 
 Each of the following parameters specified in {{gid-post}} MUST also be included in the payload of the response, if they are included in the payload of the Join Responses sent for the group: 'rekeying_scheme', 'mgt_key_material'.
 
-The payload MAY also include the parameters 'ace_groupcomm_profile' and 'exp' parameters specified in {{gid-post}}.
+The payload MAY also include the parameters 'ace_groupcomm_profile', 'exp', and 'exi' specified in {{gid-post}}. If the 'exp' parameter is included, the 'exi' parameter MUST also be included. If the parameter 'exi' is included, its value specifies the residual lifetime of the group keying material from the current time at the KDC.
 
 #### Retrieve Group Keying Material {#ssec-key-material-retrieval}
 
@@ -1050,7 +1056,7 @@ A node in the group can contact the KDC to retrieve the current group keying mat
 ~~~~~~~~~~~
 Client                                                              KDC
    |                                                                 |
-   |----- Key Distribution Request: GET /ace-group/GROUPNAME ------>|
+   |------ Key Distribution Request: GET /ace-group/GROUPNAME ------>|
    |                                                                 |
    |<----------- Key Distribution Response: 2.05 (Content) --------- |
    |                                                                 |
@@ -1434,7 +1440,9 @@ The handler expects a GET request.
 
 If all verifications succeed, the handler replies with a 2.05 (Content) response containing both the group keying material and the individual keying material for the Client, or information enabling the Client to derive it.
 
-The payload of the response is formatted as a CBOR map, which includes the same fields of the response defined in {{gid-get}}. In particular, the format for the group keying material is the same as defined in the response of {{gid-get}}. The CBOR map can include additional parameters that specify the individual keying material for the Client. The specific format of individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ27) and registered in {{iana-reg}}.
+The payload of the response is formatted as a CBOR map, which includes the same fields of the response defined in {{gid-get}}. In particular, the format for the group keying material is the same as defined in the response of {{gid-get}}. If the 'exp' parameter is included, the 'exi' parameter MUST also be included. If the parameter 'exi' is included, its value specifies the residual lifetime of the group keying material from the current time at the KDC.
+
+The CBOR map can include additional parameters that specify the individual keying material for the Client. The specific format of individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ27) and registered in {{iana-reg}}.
 
 Optionally, the KDC can make the sub-resource at /ace-group/GROUPNAME/nodes/NODENAME also Observable {{RFC7641}} for the associated node. In case the KDC removes that node from the group without having been explicitly asked for it, this allows the KDC to send an unsolicited 4.04 (Not Found) response to the node as a notification of eviction from the group (see {{sec-node-removal}}).
 
@@ -1446,7 +1454,7 @@ In order to mitigate this, a node that supports the No-Response option {{RFC7967
 
 When any of the following happens, a node MUST stop using the stored group keying material to protect outgoing messages, and SHOULD stop using it to decrypt and verify incoming messages.
 
-* Upon expiration of the keying material, according to what is indicated by the KDC with the 'exp' parameter (e.g., in a Join Response), or to a pre-configured value.
+* Upon expiration of the keying material, according to what is indicated by the KDC with the 'exp' and/or 'exi' parameter (e.g., in a Join Response), or to a pre-configured value.
 
 * Upon receiving a notification of revoked/renewed keying material from the KDC, possibly as part of an update of the keying material (rekeying) triggered by the KDC.
 
@@ -1719,7 +1727,7 @@ The KDC MUST increment the version number NUM of the current keying material, be
 
 Distributing the new group keying material requires the KDC to send multiple rekeying messages to the group members. Depending on the rekeying scheme used in the group and the reason that has triggered the rekeying process, each rekeying message can be intended for one or multiple group members, hereafter referred to as target group members. The KDC MUST support at least the "Point-to-Point" group rekeying scheme in {{point-to-point-rekeying}} and MAY support additional ones.
 
-Each rekeying message MUST have Content-Format set to application/ace-groupcomm+cbor and its payload formatted as a CBOR map, which MUST include at least the information specified in the Key Distribution Response message (see {{gid-get}}), i.e., the parameters 'gkty', 'key', and 'num' defined in {{gid-post}}. The CBOR map MAY include the parameter 'exp', as well as the parameter 'mgt_key_material' specifying new administrative keying material for the target group members, if relevant for the used rekeying scheme.
+Each rekeying message MUST have Content-Format set to application/ace-groupcomm+cbor and its payload formatted as a CBOR map, which MUST include at least the information specified in the Key Distribution Response message (see {{gid-get}}), i.e., the parameters 'gkty', 'key', and 'num' defined in {{gid-post}}. The CBOR map SHOULD also include the parameters 'exp' and 'exi'. If the 'exp' parameter is included, the 'exi' parameter MUST also be included. The CBOR map MAY include the parameter 'mgt_key_material' specifying new administrative keying material for the target group members, if relevant for the used rekeying scheme.
 
 A rekeying message may include additional information, depending on the rekeying scheme used in the group, the reason that has triggered the rekeying process, and the specific target group members. In particular, if the group rekeying is performed due to one or multiple Clients that have joined the group and the KDC acts as repository of authentication credentials of the group members, then a rekeying message MAY also include the authentication credentials that those Clients use in the group, together with the roles and node identifier that the corresponding Client has in the group. It is RECOMMENDED to specify this information by means of the parameters 'creds', 'peer_roles', and 'peer_identifiers', like is done in the Join Response message (see {{gid-post}}).
 
@@ -1948,6 +1956,8 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 +-----------------------+------+---------------------+------------+
 | exp                   | TBD  | int                 | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
+| exi                   | TBD  | uint                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
 | creds                 | TBD  | array               | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
 | peer_roles            | TBD  | array               | [RFC-XXXX] |
@@ -1985,7 +1995,7 @@ Note that the actual use of a parameter and its inclusion in a message depends o
 
 A Client MUST support the following parameters.
 
-* 'scope', 'cnonce', 'gkty', 'key', 'num', 'exp', 'gid', 'gname', 'guri', 'creds', 'peer_identifiers', 'ace_groupcomm_profile', 'control_uri', 'rekeying_scheme'.
+* 'scope', 'cnonce', 'gkty', 'key', 'num', 'exp', 'exi', 'gid', 'gname', 'guri', 'creds', 'peer_identifiers', 'ace_groupcomm_profile', 'control_uri', 'rekeying_scheme'.
 
 A Client SHOULD support the following parameter.
 
