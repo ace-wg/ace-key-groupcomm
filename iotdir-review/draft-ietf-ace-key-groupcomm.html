@@ -1029,7 +1029,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Palombini &amp; Tiloca</td>
-<td class="center">Expires 15 June 2024</td>
+<td class="center">Expires 16 June 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1042,12 +1042,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-ace-key-groupcomm-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-12-13" class="published">13 December 2023</time>
+<time datetime="2023-12-14" class="published">14 December 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-06-15">15 June 2024</time></dd>
+<dd class="expires"><time datetime="2024-06-16">16 June 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1093,7 +1093,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 15 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 16 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2438,21 +2438,26 @@ If the PoP evidence does not pass verification, the handler MUST reply with a 4.
             </figcaption></figure>
 </div>
 <p id="section-4.3.1-25">Note to RFC Editor: In <a href="#fig-gkty" class="auto internal xref">Figure 10</a>, please replace "[RFC-XXXX]" with the RFC number of this specification and delete this paragraph.<a href="#section-4.3.1-25" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-26">The response SHOULD contain the following parameter:<a href="#section-4.3.1-26" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-26">The response SHOULD contain the following parameters:<a href="#section-4.3.1-26" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3.1-27.1">
               <p id="section-4.3.1-27.1.1">'exp', with value the expiration time of the keying material for the group communication, encoded as a CBOR unsigned integer. This field contains a numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds, analogous to what is specified for NumericDate in <span><a href="https://rfc-editor.org/rfc/rfc7519#section-2" class="relref">Section 2</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>. Group members MUST NOT use the keying material after the time indicated in this field, and they can retrieve the new group keying material from the KDC.<a href="#section-4.3.1-27.1.1" class="pilcrow">¶</a></p>
 </li>
+            <li class="normal" id="section-4.3.1-27.2">
+              <p id="section-4.3.1-27.2.1">'exi', with value the residual lifetime of the keying material for the group communication, encoded as a CBOR unsigned integer. If the 'exp' parameter is included, this parameter MUST also be included. This field contains a numeric value representing the residual lifetime of the keying material in seconds, i.e., the number of seconds between the current time at the KDC and the time when the keying material expires (as specified in the 'exp' parameter, if present). A Client determines the expiration time of the keying material by adding the seconds specified in the 'exi' parameter to its current time upon receiving the response containing the 'exi' parameter. The Client MUST NOT use the keying material after such an expiration time, and it can retrieve the new group keying material from the KDC.<a href="#section-4.3.1-27.2.1" class="pilcrow">¶</a></p>
+</li>
           </ul>
-<p id="section-4.3.1-28">Optionally, the response MAY contain the following parameters, which, if included, MUST have the format and value as specified below.<a href="#section-4.3.1-28" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-28">If a Client has a reliable way to synchronize its internal clock with UTC, and both the 'exp' and 'exi' parameters are present, then the Client MUST use the 'exp' parameter value as expiration time for the group keying material. Otherwise, the Client uses the 'exi' parameter value.<a href="#section-4.3.1-28" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-29">When a Client relies on the 'exi' parameter, the expiration time that it computes is offset in the future with respect to the actual expiration time as intended by the KDC and specified in the 'exp' parameter (if present). Such an offset is the amount of time between when the KDC sends the response message including the 'exi' parameter and when the Client receives that message. That is, especially if the delivery of the response to the Client is delayed, the Client will believe the keying material to be valid for a longer time than the KDC actually means. However, before approaching the actual expiration time, the KDC is expected to rekey the group and distribute new keying material (see <a href="#sec-group-rekeying" class="auto internal xref">Section 6</a>).<a href="#section-4.3.1-29" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-30">Optionally, the response MAY contain the following parameters, which, if included, MUST have the format and value as specified below.<a href="#section-4.3.1-30" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.3.1-29.1">
-              <p id="section-4.3.1-29.1.1">'ace_groupcomm_profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. Applications of this specification MUST register an application profile identifier and the related value for this parameter in the "ACE Groupcomm Profiles" registry (REQ19).<a href="#section-4.3.1-29.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.3.1-31.1">
+              <p id="section-4.3.1-31.1.1">'ace_groupcomm_profile', with value a CBOR integer that MUST be used to uniquely identify the application profile for group communication. Applications of this specification MUST register an application profile identifier and the related value for this parameter in the "ACE Groupcomm Profiles" registry (REQ19).<a href="#section-4.3.1-31.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <span id="name-ace-groupcomm-profiles"></span><div id="ace-groupcomm-profile-0">
 <figure id="figure-11">
-            <div class="alignCenter art-text artwork" id="section-4.3.1-30.1">
+            <div class="alignCenter art-text artwork" id="section-4.3.1-32.1">
 <pre>
 +----------+------------------------+------------+------------+
 | Name     | Description            | CBOR Value | Reference  |
@@ -2465,28 +2470,28 @@ If the PoP evidence does not pass verification, the handler MUST reply with a 4.
 <a href="#name-ace-groupcomm-profiles" class="selfRef">ACE Groupcomm Profiles</a>
             </figcaption></figure>
 </div>
-<p id="section-4.3.1-31">Note to RFC Editor: In <a href="#ace-groupcomm-profile-0" class="auto internal xref">Figure 11</a>, please replace "[RFC-XXXX]" with the RFC number of this specification and delete this paragraph.<a href="#section-4.3.1-31" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-33">Note to RFC Editor: In <a href="#ace-groupcomm-profile-0" class="auto internal xref">Figure 11</a>, please replace "[RFC-XXXX]" with the RFC number of this specification and delete this paragraph.<a href="#section-4.3.1-33" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.3.1-32.1">
-              <p id="section-4.3.1-32.1.1">'creds', MUST be present if 'get_creds' was present in the request, otherwise it MUST NOT be present. This parameter is a CBOR array specifying the authentication credentials of the group members, i.e., of all of them or of the ones selected according to the 'get_creds' parameter in the request. In particular, each element of the array is a CBOR byte string, whose value is the original binary representation of a group member's authentication credential. It is REQUIRED of application profiles to define the specific formats of authentication credentials that are acceptable to use in the group (REQ6).<a href="#section-4.3.1-32.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.3.1-34.1">
+              <p id="section-4.3.1-34.1.1">'creds', MUST be present if 'get_creds' was present in the request, otherwise it MUST NOT be present. This parameter is a CBOR array specifying the authentication credentials of the group members, i.e., of all of them or of the ones selected according to the 'get_creds' parameter in the request. In particular, each element of the array is a CBOR byte string, whose value is the original binary representation of a group member's authentication credential. It is REQUIRED of application profiles to define the specific formats of authentication credentials that are acceptable to use in the group (REQ6).<a href="#section-4.3.1-34.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.3.1-32.2">
-              <p id="section-4.3.1-32.2.1">'peer_roles', SHOULD be present if 'creds' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, where n is the number of authentication credentials included in the 'creds' parameter (at most the number of members in the group). The i-th element of the array specifies the role (or CBOR array of roles) that the group member associated with the i-th authentication credential in 'creds' has in the group. In particular, each array element is encoded as the role element of a scope entry, as defined in <a href="#ssec-authorization-request" class="auto internal xref">Section 3.1</a>.<a href="#section-4.3.1-32.2.1" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-32.2.2">
-This parameter MAY be omitted if the Client can rely on other means to unambiguously gain knowledge of the role of each group member whose associated authentication credential is specified in the 'creds' parameter. For example, all such group members may have the same role in the group joined by the Client, and such a role can be unambiguously assumed by the Client (e.g., based on what is defined in the used application profile of this specification). As another example, each of the authentication credentials specified in the 'creds' parameter can indicate the role(s) that the corresponding group member has in the group joined by the Client.<a href="#section-4.3.1-32.2.2" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-32.2.3">
-When receiving the authentication credential of a Client in the 'client_cred' parameter of a Join Request (see <a href="#ssec-key-distribution-exchange" class="auto internal xref">Section 4.3.1.1</a>) or of an Authentication Credential Update Request (see <a href="#update-pub-key" class="auto internal xref">Section 4.9.1.1</a>), the KDC is not expected to check that the authentication credential indicates the role(s) that the Client can have or has in the group in question. When preparing a Join Response, the KDC can decide whether to include the 'peer_roles' parameter depending on the specific set of authentication credentials specified in the 'creds' parameter of that Join Response.<a href="#section-4.3.1-32.2.3" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.3.1-34.2">
+              <p id="section-4.3.1-34.2.1">'peer_roles', SHOULD be present if 'creds' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, where n is the number of authentication credentials included in the 'creds' parameter (at most the number of members in the group). The i-th element of the array specifies the role (or CBOR array of roles) that the group member associated with the i-th authentication credential in 'creds' has in the group. In particular, each array element is encoded as the role element of a scope entry, as defined in <a href="#ssec-authorization-request" class="auto internal xref">Section 3.1</a>.<a href="#section-4.3.1-34.2.1" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-34.2.2">
+This parameter MAY be omitted if the Client can rely on other means to unambiguously gain knowledge of the role of each group member whose associated authentication credential is specified in the 'creds' parameter. For example, all such group members may have the same role in the group joined by the Client, and such a role can be unambiguously assumed by the Client (e.g., based on what is defined in the used application profile of this specification). As another example, each of the authentication credentials specified in the 'creds' parameter can indicate the role(s) that the corresponding group member has in the group joined by the Client.<a href="#section-4.3.1-34.2.2" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-34.2.3">
+When receiving the authentication credential of a Client in the 'client_cred' parameter of a Join Request (see <a href="#ssec-key-distribution-exchange" class="auto internal xref">Section 4.3.1.1</a>) or of an Authentication Credential Update Request (see <a href="#update-pub-key" class="auto internal xref">Section 4.9.1.1</a>), the KDC is not expected to check that the authentication credential indicates the role(s) that the Client can have or has in the group in question. When preparing a Join Response, the KDC can decide whether to include the 'peer_roles' parameter depending on the specific set of authentication credentials specified in the 'creds' parameter of that Join Response.<a href="#section-4.3.1-34.2.3" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.3.1-32.3">
-              <p id="section-4.3.1-32.3.1">'peer_identifiers', MUST be present if 'creds' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, where n is the number of authentication credentials included in the 'creds' parameter (at most the number of members in the group). The i-th element of the array specifies the node identifier that the group member associated with the i-th authentication credential in 'creds' has in the group. In particular, the i-th array element is encoded as a CBOR byte string, whose value is the node identifier of the group member.<a href="#section-4.3.1-32.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.3.1-34.3">
+              <p id="section-4.3.1-34.3.1">'peer_identifiers', MUST be present if 'creds' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, where n is the number of authentication credentials included in the 'creds' parameter (at most the number of members in the group). The i-th element of the array specifies the node identifier that the group member associated with the i-th authentication credential in 'creds' has in the group. In particular, the i-th array element is encoded as a CBOR byte string, whose value is the node identifier of the group member.<a href="#section-4.3.1-34.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.3.1-32.4">
-              <p id="section-4.3.1-32.4.1">'group_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policies" registry. This specification defines the three elements "Sequence Number Synchronization Methods", "Key Update Check Interval", and "Expiration Delta", which are summarized in <a href="#fig-ACE-Groupcomm-Policies" class="auto internal xref">Figure 12</a>. Application profiles that build on this document MUST specify the exact content format and default value of included map entries (REQ20).<a href="#section-4.3.1-32.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.3.1-34.4">
+              <p id="section-4.3.1-34.4.1">'group_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policies" registry. This specification defines the three elements "Sequence Number Synchronization Methods", "Key Update Check Interval", and "Expiration Delta", which are summarized in <a href="#fig-ACE-Groupcomm-Policies" class="auto internal xref">Figure 12</a>. Application profiles that build on this document MUST specify the exact content format and default value of included map entries (REQ20).<a href="#section-4.3.1-34.4.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <span id="name-ace-groupcomm-policies"></span><div id="fig-ACE-Groupcomm-Policies">
 <figure id="figure-12">
-            <div class="alignCenter art-text artwork" id="section-4.3.1-33.1">
+            <div class="alignCenter art-text artwork" id="section-4.3.1-35.1">
 <pre>
 +--------------+-------+----------+----------------------+------------+
 |     Name     | CBOR  |   CBOR   |     Description      | Reference  |
@@ -2528,40 +2533,40 @@ When receiving the authentication credential of a Client in the 'client_cred' pa
 <a href="#name-ace-groupcomm-policies" class="selfRef">ACE Groupcomm Policies</a>
             </figcaption></figure>
 </div>
-<p id="section-4.3.1-34">Note to RFC Editor: In <a href="#fig-ACE-Groupcomm-Policies" class="auto internal xref">Figure 12</a>, please replace all occurrences of "[RFC-XXXX]" with the RFC number of this specification and delete this paragraph.<a href="#section-4.3.1-34" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-36">Note to RFC Editor: In <a href="#fig-ACE-Groupcomm-Policies" class="auto internal xref">Figure 12</a>, please replace all occurrences of "[RFC-XXXX]" with the RFC number of this specification and delete this paragraph.<a href="#section-4.3.1-36" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.3.1-35.1">
-              <p id="section-4.3.1-35.1.1">'kdc_cred', encoded as a CBOR byte string, whose value is the original binary representation of the KDC's authentication credential. This parameter is used if the KDC has an associated authentication credential and this is required for the correct group operation. It is REQUIRED of application profiles to define whether the KDC has an authentication credential and if this has to be provided through the 'kdc_cred' parameter (REQ8).<a href="#section-4.3.1-35.1.1" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-35.1.2">
-In such a case, the KDC's authentication credential MUST have the same format used for the authentication credentials of the group members. It is REQUIRED of application profiles to define the specific formats that are acceptable to use for the authentication credentials in the group (REQ6).<a href="#section-4.3.1-35.1.2" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.3.1-37.1">
+              <p id="section-4.3.1-37.1.1">'kdc_cred', encoded as a CBOR byte string, whose value is the original binary representation of the KDC's authentication credential. This parameter is used if the KDC has an associated authentication credential and this is required for the correct group operation. It is REQUIRED of application profiles to define whether the KDC has an authentication credential and if this has to be provided through the 'kdc_cred' parameter (REQ8).<a href="#section-4.3.1-37.1.1" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-37.1.2">
+In such a case, the KDC's authentication credential MUST have the same format used for the authentication credentials of the group members. It is REQUIRED of application profiles to define the specific formats that are acceptable to use for the authentication credentials in the group (REQ6).<a href="#section-4.3.1-37.1.2" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.3.1-35.2">
-              <p id="section-4.3.1-35.2.1">'kdc_nonce', encoded as a CBOR byte string, and including a dedicated nonce N_KDC generated by the KDC. This parameter MUST be present if the 'kdc_cred' parameter is present.<a href="#section-4.3.1-35.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.3.1-37.2">
+              <p id="section-4.3.1-37.2.1">'kdc_nonce', encoded as a CBOR byte string, and including a dedicated nonce N_KDC generated by the KDC. This parameter MUST be present if the 'kdc_cred' parameter is present.<a href="#section-4.3.1-37.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.3.1-35.3">
-              <p id="section-4.3.1-35.3.1">'kdc_cred_verify', encoded as a CBOR byte string. This parameter MUST be present if the 'kdc_cred' parameter is present.<a href="#section-4.3.1-35.3.1" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-35.3.2">
-This parameter contains a proof-of-possession (PoP) evidence computed by the KDC over the following PoP input: the nonce N_C (encoded as a CBOR byte string) concatenated with the nonce N_KDC (encoded as a CBOR byte string), where:<a href="#section-4.3.1-35.3.2" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.3.1-37.3">
+              <p id="section-4.3.1-37.3.1">'kdc_cred_verify', encoded as a CBOR byte string. This parameter MUST be present if the 'kdc_cred' parameter is present.<a href="#section-4.3.1-37.3.1" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-37.3.2">
+This parameter contains a proof-of-possession (PoP) evidence computed by the KDC over the following PoP input: the nonce N_C (encoded as a CBOR byte string) concatenated with the nonce N_KDC (encoded as a CBOR byte string), where:<a href="#section-4.3.1-37.3.2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.3.1-35.3.3.1">
-                  <p id="section-4.3.1-35.3.3.1.1">N_C is the nonce generated by the Client and specified in the 'cnonce' parameter of the Join Request, encoded as a CBOR byte string.<a href="#section-4.3.1-35.3.3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.3.1-37.3.3.1">
+                  <p id="section-4.3.1-37.3.3.1.1">N_C is the nonce generated by the Client and specified in the 'cnonce' parameter of the Join Request, encoded as a CBOR byte string.<a href="#section-4.3.1-37.3.3.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-4.3.1-35.3.3.2">
-                  <p id="section-4.3.1-35.3.3.2.1">N_KDC is the nonce generated by the KDC and specified in the 'kdc_nonce' parameter, encoded as a CBOR byte string.<a href="#section-4.3.1-35.3.3.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-4.3.1-37.3.3.2">
+                  <p id="section-4.3.1-37.3.3.2.1">N_KDC is the nonce generated by the KDC and specified in the 'kdc_nonce' parameter, encoded as a CBOR byte string.<a href="#section-4.3.1-37.3.3.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
-<p id="section-4.3.1-35.3.4">
-An example of PoP input to compute 'kdc_cred_verify' using CBOR encoding is given in <a href="#fig-kdc-cred-input" class="auto internal xref">Figure 14</a>.<a href="#section-4.3.1-35.3.4" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-35.3.5">
-A possible type of PoP evidence is a signature that the KDC computes by using its own private key, whose corresponding public key is specified in the authentication credential carried in the 'kdc_cred' parameter. Application profiles of this specification MUST specify the exact approaches used by the KDC to compute the PoP evidence to include in 'kdc_cred_verify', and MUST specify which of those approaches is used in which case (REQ21).<a href="#section-4.3.1-35.3.5" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-37.3.4">
+An example of PoP input to compute 'kdc_cred_verify' using CBOR encoding is given in <a href="#fig-kdc-cred-input" class="auto internal xref">Figure 14</a>.<a href="#section-4.3.1-37.3.4" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-37.3.5">
+A possible type of PoP evidence is a signature that the KDC computes by using its own private key, whose corresponding public key is specified in the authentication credential carried in the 'kdc_cred' parameter. Application profiles of this specification MUST specify the exact approaches used by the KDC to compute the PoP evidence to include in 'kdc_cred_verify', and MUST specify which of those approaches is used in which case (REQ21).<a href="#section-4.3.1-37.3.5" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.3.1-35.4">
-              <p id="section-4.3.1-35.4.1">'rekeying_scheme', identifying the rekeying scheme that the KDC uses to provide new group keying material to the group members. This parameter is encoded as a CBOR integer, whose value is taken from the "Value" column of the "ACE Groupcomm Rekeying Schemes" registry defined in <a href="#iana-ace-groupcomm-rekeying-schemes" class="auto internal xref">Section 11.12</a> of this specification.<a href="#section-4.3.1-35.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.3.1-37.4">
+              <p id="section-4.3.1-37.4.1">'rekeying_scheme', identifying the rekeying scheme that the KDC uses to provide new group keying material to the group members. This parameter is encoded as a CBOR integer, whose value is taken from the "Value" column of the "ACE Groupcomm Rekeying Schemes" registry defined in <a href="#iana-ace-groupcomm-rekeying-schemes" class="auto internal xref">Section 11.12</a> of this specification.<a href="#section-4.3.1-37.4.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <span id="name-ace-groupcomm-rekeying-sche"></span><div id="rekeying-scheme-0">
 <figure id="figure-13">
-            <div class="alignCenter art-text artwork" id="section-4.3.1-36.1">
+            <div class="alignCenter art-text artwork" id="section-4.3.1-38.1">
 <pre>
 +-------+----------------+-------------------------------+------------+
 | Value |      Name      |          Description          | Reference  |
@@ -2577,29 +2582,29 @@ A possible type of PoP evidence is a signature that the KDC computes by using it
 <a href="#name-ace-groupcomm-rekeying-sche" class="selfRef">ACE Groupcomm Rekeying Schemes</a>
             </figcaption></figure>
 </div>
-<p id="section-4.3.1-37">Application profiles of this specification MAY define a default group rekeying scheme, to refer to in case the 'rekeying_scheme' parameter is not included in the Join Response (OPT9).<a href="#section-4.3.1-37" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-38">Note to RFC Editor: In <a href="#rekeying-scheme-0" class="auto internal xref">Figure 13</a>, please replace "[RFC-XXXX]" with the RFC number of this specification and delete this paragraph.<a href="#section-4.3.1-38" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-39">Application profiles of this specification MAY define a default group rekeying scheme, to refer to in case the 'rekeying_scheme' parameter is not included in the Join Response (OPT9).<a href="#section-4.3.1-39" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-40">Note to RFC Editor: In <a href="#rekeying-scheme-0" class="auto internal xref">Figure 13</a>, please replace "[RFC-XXXX]" with the RFC number of this specification and delete this paragraph.<a href="#section-4.3.1-40" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.3.1-39.1">
-              <p id="section-4.3.1-39.1.1">'mgt_key_material', encoded as a CBOR byte string and containing the specific administrative keying material that the joining node requires in order to participate in the group rekeying process performed by the KDC. This parameter MUST NOT be present if the 'rekeying_scheme' parameter is not present and the application profile does not specify a default group rekeying scheme to use in the group. Some simple rekeying schemes may not require specific administrative keying material to be provided, e.g., the basic "Point-to-Point" group rekeying scheme (see <a href="#point-to-point-rekeying" class="auto internal xref">Section 6.1</a>).<a href="#section-4.3.1-39.1.1" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-39.1.2">
-In more advanced group rekeying schemes, the administrative keying material can be composed of multiple keys organized, for instance, into a logical tree hierarchy, whose root key is the only administrative key shared by all the group members. In such a case, each group member is exclusively associated with one leaf key in the hierarchy, and stores only the administrative keys from the associated leaf key all the way up along the path to the root key. That is, different group members can be provided with a different subset of the overall administrative keying material.<a href="#section-4.3.1-39.1.2" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-39.1.3">
-It is expected from separate documents to define how the advanced group rekeying scheme possibly indicated in the 'rekeying_scheme' parameter is used by an application profile of this specification. This includes defining the format of the administrative keying material to specify in 'mgt_key_material', consistently with the group rekeying scheme and the application profile in question.<a href="#section-4.3.1-39.1.3" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.3.1-41.1">
+              <p id="section-4.3.1-41.1.1">'mgt_key_material', encoded as a CBOR byte string and containing the specific administrative keying material that the joining node requires in order to participate in the group rekeying process performed by the KDC. This parameter MUST NOT be present if the 'rekeying_scheme' parameter is not present and the application profile does not specify a default group rekeying scheme to use in the group. Some simple rekeying schemes may not require specific administrative keying material to be provided, e.g., the basic "Point-to-Point" group rekeying scheme (see <a href="#point-to-point-rekeying" class="auto internal xref">Section 6.1</a>).<a href="#section-4.3.1-41.1.1" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-41.1.2">
+In more advanced group rekeying schemes, the administrative keying material can be composed of multiple keys organized, for instance, into a logical tree hierarchy, whose root key is the only administrative key shared by all the group members. In such a case, each group member is exclusively associated with one leaf key in the hierarchy, and stores only the administrative keys from the associated leaf key all the way up along the path to the root key. That is, different group members can be provided with a different subset of the overall administrative keying material.<a href="#section-4.3.1-41.1.2" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-41.1.3">
+It is expected from separate documents to define how the advanced group rekeying scheme possibly indicated in the 'rekeying_scheme' parameter is used by an application profile of this specification. This includes defining the format of the administrative keying material to specify in 'mgt_key_material', consistently with the group rekeying scheme and the application profile in question.<a href="#section-4.3.1-41.1.3" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.3.1-39.2">
-              <p id="section-4.3.1-39.2.1">'control_group_uri', with a full URI as value, encoded as a CBOR text string. The URI MUST specify addressing information intended to reach all the members in the group. For example, this can be a multicast IP address, optionally together with a port number that, if omitted, defaults to 5683, i.e., the default port number for the "coap" URI scheme (see <span><a href="https://rfc-editor.org/rfc/rfc7252#section-6.1" class="relref">Section 6.1</a> of [<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>). The URI MUST include GROUPNAME in the url-path. A default url-path is /ace-group/GROUPNAME, although implementations can use different ones instead. The URI MUST NOT have url-path /ace-group/GROUPNAME/node.<a href="#section-4.3.1-39.2.1" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-39.2.2">
-If 'control_group_uri' is included in the Join Response, the Clients supporting this parameter act as CoAP servers, host a resource at this specific URI, and listen to the specified addressing information.<a href="#section-4.3.1-39.2.2" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-39.2.3">
-The KDC MAY use this URI to send one-to-many CoAP requests to the Client group members (acting as CoAP servers in this exchange), for example for one-to-many provisioning of new group keying material when performing a group rekeying (see <a href="#update-keys" class="auto internal xref">Section 4.8.1.1</a>), or to inform the Clients of their removal from the group <a href="#sec-node-removal" class="auto internal xref">Section 5</a>.<a href="#section-4.3.1-39.2.3" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-39.2.4">
-In particular, this resource is intended for communications concerning exclusively the group whose group name GROUPNAME is specified in the 'scope' parameter. If the KDC does not implement mechanisms using this resource for that group, it can ignore this parameter. Other additional functionalities of this resource MAY be defined in application profiles of this specifications (OPT10).<a href="#section-4.3.1-39.2.4" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.3.1-41.2">
+              <p id="section-4.3.1-41.2.1">'control_group_uri', with a full URI as value, encoded as a CBOR text string. The URI MUST specify addressing information intended to reach all the members in the group. For example, this can be a multicast IP address, optionally together with a port number that, if omitted, defaults to 5683, i.e., the default port number for the "coap" URI scheme (see <span><a href="https://rfc-editor.org/rfc/rfc7252#section-6.1" class="relref">Section 6.1</a> of [<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>). The URI MUST include GROUPNAME in the url-path. A default url-path is /ace-group/GROUPNAME, although implementations can use different ones instead. The URI MUST NOT have url-path /ace-group/GROUPNAME/node.<a href="#section-4.3.1-41.2.1" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-41.2.2">
+If 'control_group_uri' is included in the Join Response, the Clients supporting this parameter act as CoAP servers, host a resource at this specific URI, and listen to the specified addressing information.<a href="#section-4.3.1-41.2.2" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-41.2.3">
+The KDC MAY use this URI to send one-to-many CoAP requests to the Client group members (acting as CoAP servers in this exchange), for example for one-to-many provisioning of new group keying material when performing a group rekeying (see <a href="#update-keys" class="auto internal xref">Section 4.8.1.1</a>), or to inform the Clients of their removal from the group <a href="#sec-node-removal" class="auto internal xref">Section 5</a>.<a href="#section-4.3.1-41.2.3" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-41.2.4">
+In particular, this resource is intended for communications concerning exclusively the group whose group name GROUPNAME is specified in the 'scope' parameter. If the KDC does not implement mechanisms using this resource for that group, it can ignore this parameter. Other additional functionalities of this resource MAY be defined in application profiles of this specifications (OPT10).<a href="#section-4.3.1-41.2.4" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <span id="name-example-of-pop-input-to-comp"></span><div id="fig-kdc-cred-input">
 <figure id="figure-14">
-            <div class="alignLeft art-text artwork" id="section-4.3.1-40.1">
+            <div class="alignLeft art-text artwork" id="section-4.3.1-42.1">
 <pre>
 N_C and N_KDC expressed in CBOR diagnostic notation:
   N_C   = h'25a8991cd700ac01'
@@ -2618,9 +2623,9 @@ PoP input:
 <a href="#name-example-of-pop-input-to-comp" class="selfRef">Example of PoP input to compute 'kdc_cred_verify' using CBOR encoding</a>
             </figcaption></figure>
 </div>
-<p id="section-4.3.1-41">After sending the Join Response, if the KDC has an associated authentication credential, the KDC MUST store the N_C value specified in the 'cnonce' parameter of the Join Request, as a ‘clientchallenge’ value associated with the Client. If, as a group member, the Client later sends a GET request to the /ace-group/GROUPNAME/kdc-cred resource for retrieving the latest KDC's authentication credential (see <a href="#kdc-pub-key-get" class="auto internal xref">Section 4.5.1</a>), then the KDC is able to use the stored 'clientchallenge' for computing a PoP evidence to include in the response sent to the Client, hence proving the possession of its own private key.<a href="#section-4.3.1-41" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-42">If the Join Response includes the 'kdc_cred_verify' parameter, the Client verifies the conveyed PoP evidence and considers the group joining unsuccessful in case of failed verification. Application profiles of this specification MUST specify the exact approaches used by the Client to verify the PoP evidence in 'kdc_cred_verify', and MUST specify which of those approaches is used in which case (REQ21).<a href="#section-4.3.1-42" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-43">Specific application profiles that build on this document MUST specify the communication protocol that members of the group use to communicate with each other (REQ22) and how exactly the keying material is used to protect the group communication (REQ23).<a href="#section-4.3.1-43" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-43">After sending the Join Response, if the KDC has an associated authentication credential, the KDC MUST store the N_C value specified in the 'cnonce' parameter of the Join Request, as a ‘clientchallenge’ value associated with the Client. If, as a group member, the Client later sends a GET request to the /ace-group/GROUPNAME/kdc-cred resource for retrieving the latest KDC's authentication credential (see <a href="#kdc-pub-key-get" class="auto internal xref">Section 4.5.1</a>), then the KDC is able to use the stored 'clientchallenge' for computing a PoP evidence to include in the response sent to the Client, hence proving the possession of its own private key.<a href="#section-4.3.1-43" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-44">If the Join Response includes the 'kdc_cred_verify' parameter, the Client verifies the conveyed PoP evidence and considers the group joining unsuccessful in case of failed verification. Application profiles of this specification MUST specify the exact approaches used by the Client to verify the PoP evidence in 'kdc_cred_verify', and MUST specify which of those approaches is used in which case (REQ21).<a href="#section-4.3.1-44" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-45">Specific application profiles that build on this document MUST specify the communication protocol that members of the group use to communicate with each other (REQ22) and how exactly the keying material is used to protect the group communication (REQ23).<a href="#section-4.3.1-45" class="pilcrow">¶</a></p>
 <div id="ssec-key-distribution-exchange">
 <section id="section-4.3.1.1">
             <h5 id="name-join-the-group">
@@ -2670,8 +2675,8 @@ Location-Path: "nodes"
 Location-Path: "c101"
 Payload (in CBOR diagnostic notation,
          with KEY being a CBOR byte strings):
-  { "gkty": 13, "key": KEY, "num": 12, "exp": 1609459200,
-    "creds": [ AUTH_CRED_1, AUTH_CRED_2 ],
+  { "gkty": 13, "key": KEY, "num": 12, "exp": 1924992000,
+    "exi": 2592000, "creds": [ AUTH_CRED_1, AUTH_CRED_2 ],
     "peer_roles": ["sender", ["sender", "receiver"]],
     "peer_identifiers": [ ID1, ID2 ] }
 </pre>
@@ -2699,7 +2704,7 @@ Payload (in CBOR diagnostic notation,
 <p id="section-4.3.2-3">In addition to what is defined in <a href="#kdc-if-errors" class="auto internal xref">Section 4.1.2</a>, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in <a href="#key-distr" class="auto internal xref">Section 4</a>. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").<a href="#section-4.3.2-3" class="pilcrow">¶</a></p>
 <p id="section-4.3.2-4">If all verifications succeed, the handler replies with a 2.05 (Content) response containing the symmetric group keying material. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'gkty', 'key', and 'num' specified in <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>.<a href="#section-4.3.2-4" class="pilcrow">¶</a></p>
 <p id="section-4.3.2-5">Each of the following parameters specified in <a href="#gid-post" class="auto internal xref">Section 4.3.1</a> MUST also be included in the payload of the response, if they are included in the payload of the Join Responses sent for the group: 'rekeying_scheme', 'mgt_key_material'.<a href="#section-4.3.2-5" class="pilcrow">¶</a></p>
-<p id="section-4.3.2-6">The payload MAY also include the parameters 'ace_groupcomm_profile' and 'exp' parameters specified in <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>.<a href="#section-4.3.2-6" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-6">The payload MAY also include the parameters 'ace_groupcomm_profile', 'exp', and 'exi' specified in <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>. If the 'exp' parameter is included, the 'exi' parameter MUST also be included. If the parameter 'exi' is included, its value specifies the residual lifetime of the group keying material from the current time at the KDC.<a href="#section-4.3.2-6" class="pilcrow">¶</a></p>
 <div id="ssec-key-material-retrieval">
 <section id="section-4.3.2.1">
             <h5 id="name-retrieve-group-keying-mater">
@@ -2713,7 +2718,7 @@ Payload (in CBOR diagnostic notation,
 <pre>
 Client                                                              KDC
    |                                                                 |
-   |----- Key Distribution Request: GET /ace-group/GROUPNAME ------&gt;|
+   |------ Key Distribution Request: GET /ace-group/GROUPNAME ------&gt;|
    |                                                                 |
    |&lt;----------- Key Distribution Response: 2.05 (Content) --------- |
    |                                                                 |
@@ -3246,10 +3251,11 @@ Payload(in CBOR diagnostic notation):
           </h4>
 <p id="section-4.8.1-1">The handler expects a GET request.<a href="#section-4.8.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.8.1-2">If all verifications succeed, the handler replies with a 2.05 (Content) response containing both the group keying material and the individual keying material for the Client, or information enabling the Client to derive it.<a href="#section-4.8.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.8.1-3">The payload of the response is formatted as a CBOR map, which includes the same fields of the response defined in <a href="#gid-get" class="auto internal xref">Section 4.3.2</a>. In particular, the format for the group keying material is the same as defined in the response of <a href="#gid-get" class="auto internal xref">Section 4.3.2</a>. The CBOR map can include additional parameters that specify the individual keying material for the Client. The specific format of individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ27) and registered in <a href="#iana-reg" class="auto internal xref">Section 11.6</a>.<a href="#section-4.8.1-3" class="pilcrow">¶</a></p>
-<p id="section-4.8.1-4">Optionally, the KDC can make the sub-resource at /ace-group/GROUPNAME/nodes/NODENAME also Observable <span>[<a href="#RFC7641" class="cite xref">RFC7641</a>]</span> for the associated node. In case the KDC removes that node from the group without having been explicitly asked for it, this allows the KDC to send an unsolicited 4.04 (Not Found) response to the node as a notification of eviction from the group (see <a href="#sec-node-removal" class="auto internal xref">Section 5</a>).<a href="#section-4.8.1-4" class="pilcrow">¶</a></p>
-<p id="section-4.8.1-5">Note that the node could have also been observing the resource at /ace-group/GROUPNAME, in order to be informed of changes in the keying material. In such a case, this method would result in largely overlapping notifications received for the resource at /ace-group/GROUPNAME and the sub-resource at /ace-group/GROUPNAME/nodes/NODENAME.<a href="#section-4.8.1-5" class="pilcrow">¶</a></p>
-<p id="section-4.8.1-6">In order to mitigate this, a node that supports the No-Response option <span>[<a href="#RFC7967" class="cite xref">RFC7967</a>]</span> can use it when starting the observation of the sub-resource at /ace-group/GROUPNAME/nodes/NODENAME. In particular, the GET observation request can also include the No-Response option, with value set to 2 (Not interested in 2.xx responses).<a href="#section-4.8.1-6" class="pilcrow">¶</a></p>
+<p id="section-4.8.1-3">The payload of the response is formatted as a CBOR map, which includes the same fields of the response defined in <a href="#gid-get" class="auto internal xref">Section 4.3.2</a>. In particular, the format for the group keying material is the same as defined in the response of <a href="#gid-get" class="auto internal xref">Section 4.3.2</a>. If the 'exp' parameter is included, the 'exi' parameter MUST also be included. If the parameter 'exi' is included, its value specifies the residual lifetime of the group keying material from the current time at the KDC.<a href="#section-4.8.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.8.1-4">The CBOR map can include additional parameters that specify the individual keying material for the Client. The specific format of individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ27) and registered in <a href="#iana-reg" class="auto internal xref">Section 11.6</a>.<a href="#section-4.8.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.8.1-5">Optionally, the KDC can make the sub-resource at /ace-group/GROUPNAME/nodes/NODENAME also Observable <span>[<a href="#RFC7641" class="cite xref">RFC7641</a>]</span> for the associated node. In case the KDC removes that node from the group without having been explicitly asked for it, this allows the KDC to send an unsolicited 4.04 (Not Found) response to the node as a notification of eviction from the group (see <a href="#sec-node-removal" class="auto internal xref">Section 5</a>).<a href="#section-4.8.1-5" class="pilcrow">¶</a></p>
+<p id="section-4.8.1-6">Note that the node could have also been observing the resource at /ace-group/GROUPNAME, in order to be informed of changes in the keying material. In such a case, this method would result in largely overlapping notifications received for the resource at /ace-group/GROUPNAME and the sub-resource at /ace-group/GROUPNAME/nodes/NODENAME.<a href="#section-4.8.1-6" class="pilcrow">¶</a></p>
+<p id="section-4.8.1-7">In order to mitigate this, a node that supports the No-Response option <span>[<a href="#RFC7967" class="cite xref">RFC7967</a>]</span> can use it when starting the observation of the sub-resource at /ace-group/GROUPNAME/nodes/NODENAME. In particular, the GET observation request can also include the No-Response option, with value set to 2 (Not interested in 2.xx responses).<a href="#section-4.8.1-7" class="pilcrow">¶</a></p>
 <div id="update-keys">
 <section id="section-4.8.1.1">
             <h5 id="name-retrieve-group-and-individu">
@@ -3258,7 +3264,7 @@ Payload(in CBOR diagnostic notation):
 <p id="section-4.8.1.1-1">When any of the following happens, a node MUST stop using the stored group keying material to protect outgoing messages, and SHOULD stop using it to decrypt and verify incoming messages.<a href="#section-4.8.1.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.8.1.1-2.1">
-                <p id="section-4.8.1.1-2.1.1">Upon expiration of the keying material, according to what is indicated by the KDC with the 'exp' parameter (e.g., in a Join Response), or to a pre-configured value.<a href="#section-4.8.1.1-2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-4.8.1.1-2.1.1">Upon expiration of the keying material, according to what is indicated by the KDC with the 'exp' and/or 'exi' parameter (e.g., in a Join Response), or to a pre-configured value.<a href="#section-4.8.1.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-4.8.1.1-2.2">
                 <p id="section-4.8.1.1-2.2.1">Upon receiving a notification of revoked/renewed keying material from the KDC, possibly as part of an update of the keying material (rekeying) triggered by the KDC.<a href="#section-4.8.1.1-2.2.1" class="pilcrow">¶</a></p>
@@ -3601,7 +3607,7 @@ The response MUST have Content-Format set to application/ace-groupcomm+cbor and 
 <p id="section-6-2">The KDC can perform a group rekeying before the current group keying material expires, unless it is acceptable or there are reasons to temporarily pause secure communications in the group, following the expiration of the current keying material.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <p id="section-6-3">The KDC MUST increment the version number NUM of the current keying material, before distributing the newly generated keying material with version number NUM+1 to the group. Once the group rekeying is completed, the KDC MUST delete the old keying material and SHOULD store the newly distributed keying material in persistent storage.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <p id="section-6-4">Distributing the new group keying material requires the KDC to send multiple rekeying messages to the group members. Depending on the rekeying scheme used in the group and the reason that has triggered the rekeying process, each rekeying message can be intended for one or multiple group members, hereafter referred to as target group members. The KDC MUST support at least the "Point-to-Point" group rekeying scheme in <a href="#point-to-point-rekeying" class="auto internal xref">Section 6.1</a> and MAY support additional ones.<a href="#section-6-4" class="pilcrow">¶</a></p>
-<p id="section-6-5">Each rekeying message MUST have Content-Format set to application/ace-groupcomm+cbor and its payload formatted as a CBOR map, which MUST include at least the information specified in the Key Distribution Response message (see <a href="#gid-get" class="auto internal xref">Section 4.3.2</a>), i.e., the parameters 'gkty', 'key', and 'num' defined in <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>. The CBOR map MAY include the parameter 'exp', as well as the parameter 'mgt_key_material' specifying new administrative keying material for the target group members, if relevant for the used rekeying scheme.<a href="#section-6-5" class="pilcrow">¶</a></p>
+<p id="section-6-5">Each rekeying message MUST have Content-Format set to application/ace-groupcomm+cbor and its payload formatted as a CBOR map, which MUST include at least the information specified in the Key Distribution Response message (see <a href="#gid-get" class="auto internal xref">Section 4.3.2</a>), i.e., the parameters 'gkty', 'key', and 'num' defined in <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>. The CBOR map SHOULD also include the parameters 'exp' and 'exi'. If the 'exp' parameter is included, the 'exi' parameter MUST also be included. The CBOR map MAY include the parameter 'mgt_key_material' specifying new administrative keying material for the target group members, if relevant for the used rekeying scheme.<a href="#section-6-5" class="pilcrow">¶</a></p>
 <p id="section-6-6">A rekeying message may include additional information, depending on the rekeying scheme used in the group, the reason that has triggered the rekeying process, and the specific target group members. In particular, if the group rekeying is performed due to one or multiple Clients that have joined the group and the KDC acts as repository of authentication credentials of the group members, then a rekeying message MAY also include the authentication credentials that those Clients use in the group, together with the roles and node identifier that the corresponding Client has in the group. It is RECOMMENDED to specify this information by means of the parameters 'creds', 'peer_roles', and 'peer_identifiers', like is done in the Join Response message (see <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>).<a href="#section-6-6" class="pilcrow">¶</a></p>
 <p id="section-6-7">The complete format of a rekeying message, including the encoding and content of the 'mgt_key_material' parameter, has to be defined in separate specifications aimed at profiling the used rekeying scheme in the context of the used application profile of this specification. As a particular case, an application profile of this specification MAY define additional information to include in rekeying messages for the "Point-to-Point" group rekeying scheme in <a href="#point-to-point-rekeying" class="auto internal xref">Section 6.1</a> (OPT14).<a href="#section-6-7" class="pilcrow">¶</a></p>
 <p id="section-6-8">Consistently with the used group rekeying scheme, the actual delivery of rekeying messages can occur through different approaches, as discussed in the following <a href="#point-to-point-rekeying" class="auto internal xref">Section 6.1</a> and <a href="#one-to-many-rekeying" class="auto internal xref">Section 6.2</a>.<a href="#section-6-8" class="pilcrow">¶</a></p>
@@ -3874,6 +3880,8 @@ extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 +-----------------------+------+---------------------+------------+
 | exp                   | TBD  | int                 | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
+| exi                   | TBD  | uint                | [RFC-XXXX] |
++-----------------------+------+---------------------+------------+
 | creds                 | TBD  | array               | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
 | peer_roles            | TBD  | array               | [RFC-XXXX] |
@@ -3911,7 +3919,7 @@ extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 <p id="section-8-8">A Client MUST support the following parameters.<a href="#section-8-8" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8-9.1">
-          <p id="section-8-9.1.1">'scope', 'cnonce', 'gkty', 'key', 'num', 'exp', 'gid', 'gname', 'guri', 'creds', 'peer_identifiers', 'ace_groupcomm_profile', 'control_uri', 'rekeying_scheme'.<a href="#section-8-9.1.1" class="pilcrow">¶</a></p>
+          <p id="section-8-9.1.1">'scope', 'cnonce', 'gkty', 'key', 'num', 'exp', 'exi', 'gid', 'gname', 'guri', 'creds', 'peer_identifiers', 'ace_groupcomm_profile', 'control_uri', 'rekeying_scheme'.<a href="#section-8-9.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-8-10">A Client SHOULD support the following parameter.<a href="#section-8-10" class="pilcrow">¶</a></p>
