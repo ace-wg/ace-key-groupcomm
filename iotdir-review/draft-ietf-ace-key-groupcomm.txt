@@ -3351,10 +3351,19 @@ Table of Contents
    On the other hand, it requires the KDC to provide and use additional
    administrative keying material to protect the rekeying messages, and
    to additionally sign them to ensure source authentication (see
-   Section 6.2.1).  Typically, this pays off in large-scale groups,
-   where the introduced performance overhead is less than the one
-   experienced by rekeying the group in a point-to-point fashion (see
-   Section 6.1).
+   Section 6.2.1).
+
+   Compared to a group rekeying performed in a point-to-point fashion
+   (see Section 6.1), a one-to-many group rekeying typically pays off in
+   large-scale groups, due to the reduced time for completing the
+   rekeying, a more efficient utilization of network resources, and a
+   reduced performance overhead at the KDC.  To different extents, it
+   also requires individual group members to locally perform additional
+   operations, in order to handle the administrative keying material and
+   verify source authentication of rekeying messages.  Therefore, one-
+   to-many group rekeying schemes and their employment ought to ensure
+   that the experienced performance overhead on the group members
+   remains bearable also for resource-constrained devices.
 
    The exact set of rekeying messages to send, their content and format,
    the administrative keying material to use to protect them, as well as
