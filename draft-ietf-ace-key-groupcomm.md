@@ -800,7 +800,7 @@ Then, the handler performs the following actions.
 
   - The handler adds the retrieved Client's authentication credential to the stored list of authentication credentials stored for the group identified by GROUPNAME. If such list already includes an authentication credential for the Client, but a different authentication credential is specified in the 'client_cred' field, then the handler MUST replace the old authentication credential in the list with the one specified in the 'client_cred' field.
 
-* If the application requires backward security or if the used application profile prescribes so, the KDC MUST generate new group keying material and securely distribute it to the current group members (see {{sec-group-rekeying}}).
+* If backward security is prescribed by application policies installed at the KDC or by the used application profile of this specification, then the KDC MUST generate new group keying material and securely distribute it to the current group members (see {{sec-group-rekeying}}).
 
 * The handler returns a successful Join Response as defined below, containing the symmetric group keying material; the group policies; and the authentication credentials of the current members of the group, if the KDC manages those and the Client requested them.
 
@@ -1716,7 +1716,7 @@ In either case, the KDC performs the following actions.
 
       The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 5 ("Group membership terminated").
 
-* If the application requires forward security or the used application profile requires so, the KDC MUST generate new group keying material and securely distribute it to all the current group members except the leaving node (see {{sec-group-rekeying}}).
+* If forward security is prescribed by application policies installed at the KDC or by the used application profile of this specification, then the KDC MUST generate new group keying material and securely distribute it to all the current group members except the leaving node (see {{sec-group-rekeying}}).
 
 # Group Rekeying Process {#sec-group-rekeying}
 
