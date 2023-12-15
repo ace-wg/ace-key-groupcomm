@@ -2495,13 +2495,49 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 ## Version -17 to -18 ## {#sec-17-18}
 
-* Consistent use of leading slash in URI paths.
+* Provided more details when early introducing "backward security" and "forward security".
+
+* Clarified definition and semantics of "group name" and "node name".
+
+* Clarified definition of "individual keying material".
+
+* Clarified definition of "Dispatcher".
+
+* Enforced consistent use of leading slash in URI paths.
+
+* Fixed CDDL definitions and examples in CBOR diagnostic notation.
+
+* RFC 9290 is used instead of the custom format for error responses.
+
+* Clarified which operations are limited to group members and which are allowed also to non group members.
+
+* Improved examples of message exchange.
+
+* Added ASCII-art diagrams with examples of group rekeying.
+
+* Clarified for how long nonces are stored at the KDC.
+
+* Clarified that the KDC might not have to store the 'cnonce' from a Join Request.
 
 * Consistency fix: Clients always support the 'cnonce' parameter.
 
-* The KDC might not have to store the 'cnonce' from a Join Request.
+* Added new parameter 'exi' providing the residual lifetime of the current group keying material.
 
-* Fixes and editorial improvements.
+* Clarified text about the KDC knowledge of compromised nodes.
+
+* Clarified the impact on performance of a one-to-many group rekeying.
+
+* Mentioned explicit exceptions to a group rekeying at each group membership change.
+
+* Explained reasons for delaying a rekeying and halting communications.
+
+* Fixes in current IANA registrations.
+
+* Added integer abbreviation values for registrations in new IANA registries.
+
+* IANA registration of two CoRE if= values: "ace.group" and "ace.groups".
+
+* Editorial fixes and improvements.
 
 ## Version -16 to -17 ## {#sec-16-17}
 
