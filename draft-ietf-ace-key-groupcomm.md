@@ -780,7 +780,7 @@ If no authentication credential is included in the 'client_cred' field, the hand
 
 If an eligible authentication credential for the Client is neither present in the 'client_cred' field nor retrieved from the stored ones at the KDC, it is RECOMMENDED that the handler stops the processing and replies with a 4.00 (Bad Request) error response. Application profiles MAY define alternatives (OPT8).
 
-If, regardless of the reason, the KDC replies with a 4.00 (Bad Request) error response, this response MAY have Content-Format set to application/ace-groupcomm+cbor and have a CBOR map as payload. For instance, the CBOR map can include a 'sign_info' parameter formatted as 'sign_info_res' defined in {{sign-info}}, with the 'cred_fmt' element set to the CBOR simple value "null" (0xf6) if the Client sent its own authentication credential and the KDC is not set to store authentication credentials of the group members.
+If, regardless of the reason, the KDC replies with a 4.00 (Bad Request) error response, the payload of the response MAY be a CBOR map. For instance, the CBOR map can include a 'sign_info' parameter formatted as 'sign_info_res' defined in {{sign-info}}, with the 'cred_fmt' element set to the CBOR simple value "null" (0xf6) if the Client sent its own authentication credential and the KDC is not set to store authentication credentials of the group members. When the response payload is a CBOR map including such parameters, the error response has Content-Format set to application/ace-groupcomm+cbor.
 
 If all the verifications above succeed, the KDC proceeds as follows.
 
