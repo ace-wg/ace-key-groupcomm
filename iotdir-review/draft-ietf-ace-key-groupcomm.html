@@ -2400,7 +2400,7 @@ If the PoP evidence does not pass verification, the handler MUST reply with a 4.
               </ul>
 </li>
             <li class="normal" id="section-4.3.1-18.2">
-              <p id="section-4.3.1-18.2.1">If the application requires backward security or if the used application profile prescribes so, the KDC MUST generate new group keying material and securely distribute it to the current group members (see <a href="#sec-group-rekeying" class="auto internal xref">Section 6</a>).<a href="#section-4.3.1-18.2.1" class="pilcrow">¶</a></p>
+              <p id="section-4.3.1-18.2.1">If backward security is prescribed by application policies installed at the KDC or by the used application profile of this specification, then the KDC MUST generate new group keying material and securely distribute it to the current group members (see <a href="#sec-group-rekeying" class="auto internal xref">Section 6</a>).<a href="#section-4.3.1-18.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.3.1-18.3">
               <p id="section-4.3.1-18.3.1">The handler returns a successful Join Response as defined below, containing the symmetric group keying material; the group policies; and the authentication credentials of the current members of the group, if the KDC manages those and the Client requested them.<a href="#section-4.3.1-18.3.1" class="pilcrow">¶</a></p>
@@ -3593,7 +3593,7 @@ The response MUST have Content-Format set to application/ace-groupcomm+cbor and 
           </ul>
 </li>
         <li class="normal" id="section-5-4.5">
-          <p id="section-5-4.5.1">If the application requires forward security or the used application profile requires so, the KDC MUST generate new group keying material and securely distribute it to all the current group members except the leaving node (see <a href="#sec-group-rekeying" class="auto internal xref">Section 6</a>).<a href="#section-5-4.5.1" class="pilcrow">¶</a></p>
+          <p id="section-5-4.5.1">If forward security is prescribed by application policies installed at the KDC or by the used application profile of this specification, then the KDC MUST generate new group keying material and securely distribute it to all the current group members except the leaving node (see <a href="#sec-group-rekeying" class="auto internal xref">Section 6</a>).<a href="#section-5-4.5.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>

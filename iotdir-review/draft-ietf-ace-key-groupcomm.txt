@@ -1632,10 +1632,11 @@ Table of Contents
          authentication credential in the list with the one specified in
          the 'client_cred' field.
 
-   *  If the application requires backward security or if the used
-      application profile prescribes so, the KDC MUST generate new group
-      keying material and securely distribute it to the current group
-      members (see Section 6).
+   *  If backward security is prescribed by application policies
+      installed at the KDC or by the used application profile of this
+      specification, then the KDC MUST generate new group keying
+      material and securely distribute it to the current group members
+      (see Section 6).
 
    *  The handler returns a successful Join Response as defined below,
       containing the symmetric group keying material; the group
@@ -3210,10 +3211,11 @@ Table of Contents
          value of the 'error' field MUST be set to 5 ("Group membership
          terminated").
 
-   *  If the application requires forward security or the used
-      application profile requires so, the KDC MUST generate new group
-      keying material and securely distribute it to all the current
-      group members except the leaving node (see Section 6).
+   *  If forward security is prescribed by application policies
+      installed at the KDC or by the used application profile of this
+      specification, then the KDC MUST generate new group keying
+      material and securely distribute it to all the current group
+      members except the leaving node (see Section 6).
 
 6.  Group Rekeying Process
 
