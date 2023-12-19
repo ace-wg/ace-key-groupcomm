@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-17T01:16:46.129431+00:00",
+  "timestamp": "2023-12-19T01:11:42.051817+00:00",
   "repo": "ace-wg/ace-key-groupcomm",
   "labels": [
     {
@@ -3633,7 +3633,7 @@
       "labels": [],
       "body": "This PR addresses the review from Zaheduzzaman Sarker archived at https://mailarchive.ietf.org/arch/msg/ace/CYqJ6VR32qYslQphIyqm_2WCqLI/",
       "createdAt": "2023-12-13T12:03:52Z",
-      "updatedAt": "2023-12-13T12:04:01Z",
+      "updatedAt": "2023-12-18T16:46:07Z",
       "baseRepository": "ace-wg/ace-key-groupcomm",
       "baseRefName": "master",
       "baseRefOid": "924308ce5a573bd7a39d0a0be6ab27ae8c2f314f",
@@ -3644,7 +3644,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "zaheduzzaman",
+          "authorAssociation": "NONE",
+          "body": "LGTM, thanks",
+          "createdAt": "2023-12-18T16:46:06Z",
+          "updatedAt": "2023-12-18T16:46:06Z"
+        }
+      ],
       "reviews": []
     },
     {
