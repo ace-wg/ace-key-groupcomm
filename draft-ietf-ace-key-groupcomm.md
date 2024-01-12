@@ -158,13 +158,13 @@ A principal interested to participate in group communication as well as already 
 
 Furthermore, this document uses "names" or "identifiers" for groups and nodes. Their different meanings are summarized below.
 
-* Group name: The identifier of a group. Once established, it is invariant. It is used in the interactions between Client, AS, and RS to identify a group. A group name is always unique among the group names of the existing groups under the same KDC.
+* Group name: The identifier of a group, as a text string. Once established, it is invariant. It is used in the interactions between Client, AS, and RS to identify a group. A group name is always unique among the group names of the existing groups under the same KDC.
 
 * GROUPNAME: The text string used in URIs to identify a group. Once established, it is invariant. GROUPNAME uniquely maps to the group name of a group, although they do not necessarily coincide.
 
 * Group identifier: the identifier of the group keying material used in a group. Unlike group name and GROUPNAME, this identifier changes over time, when the group keying material is updated.
 
-* Node name: The identifier of a node. Once established, it is invariant. It is used in the interactions between Client and RS, as well as to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.
+* Node name: The identifier of a node, as a text string. Once established, it is invariant. It is used in the interactions between Client and RS, as well as to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.
 
 * NODENAME: The text string used in URIs to identify a member of a group. Once established, it is invariant. Its value coincides with the node name of the associated group member.
 
@@ -176,7 +176,7 @@ This document additionally uses the following terminology:
 
 * Authentication credential, as the set of information associated with an entity, including that entity's public key and parameters associated with the public key. Examples of authentication credentials are CBOR Web Tokens (CWTs) and CWT Claims Sets (CCSs) {{RFC8392}}, X.509 certificates {{RFC5280}}, and C509 certificates {{I-D.ietf-cose-cbor-encoded-cert}}.
 
-* Individual keying material: information exclusively pertaining to a group member, as associated with its group membership and related to other keying material and parameters used in the group. For example, this can be a member identifier that is unique within the group. The specific nature and format of individual keying material used in a group is defined in application profiles of this specification. The individual keying material of a group member is not related to the secure association between that group member and the KDC.
+* Individual keying material: information exclusively pertaining to a group member, as associated with its group membership and related to other keying material and parameters used in the group. For example, this can be an identifier that the secure communication protocol employs to uniquely identify a node as a group member (e.g., a cryptographic key identifier uniquely associated with the group member in question). The specific nature and format of individual keying material used in a group is defined in application profiles of this specification. The individual keying material of a group member is not related to the secure association between that group member and the KDC.
 
 Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
 
@@ -204,7 +204,7 @@ The following participants (see {{fig-roles}}) take part in the authorization an
 
 * Client (C): node that wants to join a group and take part in group communication with other group members. Within the group, the Client can have different roles.
 
-* Authorization Server (AS): as per the AS defined in the ACE Framework, it enforces access policies, and knows if a node is allowed to join a given group with write and/or read rights.
+* Authorization Server (AS): as per the AS defined in the ACE Framework {{RFC9200}}, it enforces access policies, and knows if a node is allowed to join a given group with write and/or read rights.
 
 * Key Distribution Center (KDC): maintains the keying material to protect group communications, and provides it to Clients authorized to join a given group. During the first part of the exchange ({{sec-auth}}), it takes the role of the RS in the ACE Framework. During the second part ({{key-distr}}), which is not based on the ACE Framework, it distributes the keying material. In addition, it provides the latest keying material to group members when requested or, if required by the application, when membership changes.
 
@@ -311,7 +311,7 @@ Client                                             AS    KDC
 
 The Authorization Request sent from the Client to the AS is defined in {{Section 5.8.1 of RFC9200}} and MAY contain the following parameters, which, if included, MUST have format and value as specified below.
 
-* 'scope', specifying the name of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.
+* 'scope', specifying the names of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.
 
    This parameter is encoded as a CBOR byte string, which wraps a CBOR array of one or more scope entries. All the scope entries are specified according to a same format, i.e., either the AIF format or the textual format defined below.
 
@@ -1769,7 +1769,7 @@ A Client identified by NODENAME may be removed from a group identified by GROUPN
 
 1. The Client explicitly asks to leave the group, as defined in {{ssec-group-leaving}}.
 
-2. The node has been found compromised or is suspected so.
+2. The node has been found compromised or is suspected so. The KDC is expected to determine that a group member has to be evicted either through its own means, or based on information that it obtains from a trusted source (e.g., an Intrusion Detection System, or an issuer of authentication credentials). Additional mechanics, protocols, and interfaces at the KDC that can support this are out of the scope of this document.
 
 3. The Client's authorization to be a group member with the current roles is not valid anymore, i.e., the access token has expired or has been revoked. If the AS provides token introspection (see {{Section 5.9 of RFC9200}}), the KDC can optionally use it and check whether the Client is still authorized.
 
@@ -1944,7 +1944,11 @@ After that, the KDC sends one rekeying message addressed individually to C4 and 
 
 When using a group rekeying scheme relying on one-to-many rekeying messages, the actual data content of each rekeying message is prepared according to what the rekeying scheme prescribes.
 
-Then, the KDC can protect the rekeying message as defined below. The used encryption algorithm SHOULD be the same one used to protect communications in the group. The method defined below assumes that the following holds for the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see {{gid-post}}).
+The following describes one possible method for the KDC to protect the rekeying messages.
+
+The method assumes that the following holds for the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see {{gid-post}}).
+
+* The encryption algorithm SHOULD be the same one used to protect communications in the group.
 
 * The included symmetric encryption keys are accompanied by a corresponding and unique key identifier assigned by the KDC.
 
@@ -2248,7 +2252,9 @@ The KDC can generate new group keying material and provide it to the group membe
 
 In particular, the KDC must renew the group keying material latest upon its expiration. Before then, the KDC may also renew the group keying material on a regular or periodical fashion.
 
-Unless otherwise defined by an application profile of this specification, the KDC SHOULD renew the group keying material upon a group membership change. In particular, since the minimum number of group members is one, the KDC SHOULD provide even a Client joining an empty group with new keying material never used before in that group. Similarly, the KDC SHOULD provide new group keying material also to a Client that remains the only member in the group after the leaving of other group members.
+Unless otherwise defined by an application profile of this specification, the KDC SHOULD renew the group keying material upon a group membership change. As a possible exception, the KDC may not rekey the group upon the joining of a new group member, if the application does not require backward security. As another possible exception discussed more in detail later in this section, the KDC may rely on a rekeying policy that reasonably take into account the expected rate of group membership changes and the duration of a group rekeying.
+
+Since the minimum number of group members is one, the KDC SHOULD provide even a Client joining an empty group with new keying material never used before in that group. Similarly, the KDC SHOULD provide new group keying material also to a Client that remains the only member in the group after the leaving of other group members.
 
 Note that the considerations in {{sec-cons-communication}} about dealing with replayed messages still hold, even in case the KDC rekeys the group upon every single joining of a new group member. However, if the KDC has renewed the group keying material upon a group member's joining, and the time interval between the end of the rekeying process and that member's joining is sufficiently small, then that group member is also on the safe side, since it would not accept replayed messages protected with the old group keying material previous to its joining.
 
@@ -2941,7 +2947,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 # Acknowledgments
 {: numbered="no"}
 
-The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Thomas Fossati}}}, {{{Vidhi Goel}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Henry Thompson}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
+The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}},  {{{Roman Danyliw}}}, {{{Thomas Fossati}}}, {{{Vidhi Goel}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Henry Thompson}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; by the H2020 project SIFIS-Home (Grant agreement 952652); and by the EIT-Digital High Impact Initiative ACTIVE.
 
