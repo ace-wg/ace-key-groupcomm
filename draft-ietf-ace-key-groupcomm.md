@@ -120,11 +120,13 @@ This document defines how to use the Authentication and Authorization for Constr
 
 This document builds on the Authentication and Authorization for Constrained Environments (ACE) framework and defines how to request, distribute, and renew keying material and configuration parameters to protect message exchanges in a group communication environment.
 
-Candidate group members acting as Clients and authorized to join a group can interact with the Key Distribution Center (KDC) acting as Resource Server and responsible for that group, in order to obtain the necessary keying material and parameters to communicate with other group members.
+Candidate group members acting as ACE Clients and authorized to join a group can interact with the Key Distribution Center (KDC) acting as ACE Resource Server and responsible for that group, in order to obtain the necessary keying material and parameters to communicate with other group members.
 
 In particular, this document defines the operations and interface available at the KDC, as well as general message formats for the interactions between Clients and KDC. At the same time, communications in the group can rely on different approaches, e.g., based on multicast {{I-D.ietf-core-groupcomm-bis}} or on publish-subscribe messaging {{I-D.ietf-core-coap-pubsub}}, and can be protected in different ways.
 
-Therefore, this document delegates details on the communication and security approaches used in a group to separate application profiles. These are specialized instances of this document, targeting a particular group communication approach and defining how communications in the group are protected, as well as the specific keying material and configuration parameters provided to group members. In order to ensure consistency and aid the development of such application profiles, this document defines a number of related compliance requirements (see {{req}}).
+Therefore, this document delegates details on the communication and security approaches used in a group to separate application profiles. These are specialized instances of this document, targeting a particular group communication approach and defining how communications in the group are protected, as well as the specific keying material and configuration parameters provided to group members.
+
+In order to ensure consistency and aid the development of such application profiles, {{req}} of this document defines a number of related compliance requirements. In particular, {{req-mandatory}} compiles the requirements that application profiles are REQUIRED to fulfill; these are referred to by an identifier that starts with "REQ". Instead, {{req-optional}} compiles the requirements that application profiles MAY fulfill; these are referred to by an identifier that starts with "OPT".
 
 New keying material is generated and distributed to the group upon membership changes (rekeying), if the application requires backward security (i.e., new group members must be prevented from accessing communications in the group prior to their joining) and forward security (i.e., former group members must be prevented from accessing communications in the group after their leaving).
 
@@ -206,7 +208,7 @@ The following participants (see {{fig-roles}}) take part in the authorization an
 
 * Key Distribution Center (KDC): maintains the keying material to protect group communications, and provides it to Clients authorized to join a given group. During the first part of the exchange ({{sec-auth}}), it takes the role of the RS in the ACE Framework. During the second part ({{key-distr}}), which is not based on the ACE Framework, it distributes the keying material. In addition, it provides the latest keying material to group members when requested or, if required by the application, when membership changes.
 
-* Dispatcher: entity through which the Clients communicate with the group, when sending a message intended to multiple group members. That is, the Dispatcher distributes such a one-to-many message to the group members as intended recipients. A single-recipient message intended to only one group member may be delivered by alternative means, with no assistance from the Dispatcher.
+* Dispatcher: entity through which the Clients communicate with the group when sending a message intended to multiple group members. That is, the Dispatcher distributes such a one-to-many message to the group members as intended recipients. The Dispatcher does not have access to the group keying material. A single-recipient message intended to only one group member may be delivered by alternative means, with no assistance from the Dispatcher.
 
    Examples of a Dispatcher are: the Broker in a pub-sub setting; a relayer for group communication that delivers group messages as multiple unicast messages to all group members; an implicit entity as in a multicast communication setting, where messages are transmitted to a multicast IP address and delivered on the transport channel.
 
@@ -1829,6 +1831,41 @@ When taking this approach in the group identified by GROUPNAME, the KDC can prac
 
 If the KDC has to send a rekeying message to a target group member, but this did not include the 'control_uri' parameter in the Join Request and is not a registered observer for the /ace-group/GROUPNAME resource, then that target group member would not be able to participate to the group rekeying. Later on, after having repeatedly failed to successfully exchange secure messages in the group, that group member can retrieve the current group keying material from the KDC, by sending a GET request to /ace-group/GROUPNAME or /ace-group/GROUPNAME/nodes/NODENAME (see {{gid-get}} and {{node-get}}, respectively).
 
+Figure {{fig-rekeying-example-1}} provides an example of point-to-point group rekeying. In particular, the example makes the following assumptions.
+
+* The group currently consists of four group members, namely C1, C2, C3, and C4.
+* Each group member, when joining the group, provided the KDC with a URI in the 'control_uri' parameter, with url-path "grp-rek".
+* Before the group rekeying is performed, the keying material used in the group has version number num=5.
+* The KDC performs the group rekeying in such a way to evict the group member C3, which has been found to be compromised.
+
+In the example, the KDC individually rekeys the group members intended to remain in the group (i.e., C1, C2, and C4), by means of one rekeying message each.
+
+~~~~~~~~~~~ aasvg
+
+    .----------------------------------------------------------------.
+    |                              KDC                               |
+    '----------------------------------------------------------------'
+          |                 |                                    |
+ Group    |        Group    |                           Group    |
+ keying   |        keying   |                           keying   |
+ material |        material |                           material |
+ (num=6)  |        (num=6)  |                           (num=6)  |
+          |                 |                                    |
+          |                 |                                    |
+          |                 |                                    |
+          v                 v                                    v
+
+      /grp-rek          /grp-rek          /grp-rek           /grp-rek
+     .--------.        .--------.        .--------.         .--------.
+     |   C1   |        |   C2   |        |   C3   |         |   C4   |
+     '--------'        '--------'        '--------'         '--------'
+                                       [TO BE EVICTED]
+     |                                                               |
+     \____________ Stored group keying material (num=5) _____________/
+
+~~~~~~~~~~~
+{: #fig-rekeying-example-1 title="Example of Message Exchanges for a Point-to-Point Group Rekeying" artwork-align="center"}
+
 ## One-to-Many Group Rekeying {#one-to-many-rekeying}
 
 This section provides high-level recommendations on how the KDC can rekey a group by means of a more efficient and scalable group rekeying scheme, e.g., {{RFC2093}}{{RFC2094}}{{RFC2627}}. That is, each rekeying message might be, and likely is, intended to multiple target group members, and thus can be delivered to the whole group, although possible to decrypt only for the actual target group members.
@@ -1860,6 +1897,48 @@ From a high level point of view, each group member stores only a subset of the o
 * Each rekeying message includes not only the new group keying material intended to all the rekeyed group members, but also any new administrative keys that: i) are pertaining to and supposed to be stored by the target group members; and ii) had to be updated since leaving group members store the previous version.
 
 Further details depend on the specific rekeying scheme used in the group.
+
+Figure {{fig-rekeying-example-2}} provides an example of one-to-many group rekeying over multicast. In particular, the example makes the following assumptions.
+
+* The group currently consists of four group members, namely C1, C2, C3, and C4.
+* Each group member, when joining the group, provided the KDC with a URI in the 'control_uri' parameter, with url-path "grp-rek".
+* Each group member, when joining the group, received from the KDC a URI in the 'control_group_uri' parameter, specifying the multicast address MULT_ADDR and url-path "grp-mrek".
+* Before the group rekeying is performed, the keying material used in the group has version number num=5.
+* The KDC performs the group rekeying in such a way to evict the group member C3, which has been found to be compromised.
+
+In the example, the KDC determines that the most convenient way to perform a group rekeying that evicts C3 is as follows.
+
+First, the KDC sends one rekeying message over multicast, to the multicast address MULT_ADDR and the url-path "grp-mrek". In the figure, the message is denoted with dashed lines. The message is protected with a non-compromised key from the administrative keying material that only C1 and C2 store. Therefore, even though all the group members receive this message, only C1 and C2 are able to decrypt it. The message includes: the new group keying material with version number num=6; and new keys from the administrative keying material to replace those stored by the group members C1, C2, and C3.
+
+After that, the KDC sends one rekeying message addressed individually to C4 and with url-path "grp-rek". In the figure, the message is denoted with a dotted line. The message is protected with the secure association shared between C4 and the KDC. The message includes: the new group keying material with version number num=6; and new keys from the administrative keying material to replace those stored by both C4 and C3.
+
+~~~~~~~~~~~ aasvg
+
+.---------------------------------------------------------------------.
+|                               KDC                                   |
+'---------------------------------------------------------------------'
+                                 |                                 :
+* Group keying material (num=6)  |       * Group keying            :
+* Updated administrative         |         material (num=6)        :
+  keying material for C1 and C2  |       * Updated administrative  :
+                                 |         keying material for C4  :
+                                 |                                 :
+                                 |                                 :
+      +------------+-------------+--------------+                  :
+      |            |             |              |                  :
+      |            |             |              |                  :
+      v            v             v              v                  v
+
+ /grp-mrek    /grp-mrek    /grp-mrek       /grp-mrek          /grp-rek
+.--------.   .--------.   .-----------.   .---------------------------.
+|   C1   |   |   C2   |   |     C3    |   |            C4             |
+'--------'   '--------'   '-----------'   '---------------------------'
+                         [TO BE EVICTED]
+|                                                                     |
+\_______________ Stored group keying material (num=5) ________________/
+
+~~~~~~~~~~~
+{: #fig-rekeying-example-2 title="Example of Message Exchanges for a One-to-Many Group Rekeying" artwork-align="center"}
 
 ### Protection of Rekeying Messages {#one-to-many-rekeying-protection}
 
@@ -2461,7 +2540,7 @@ Expert reviewers should take into consideration the following points:
 
 This section lists the requirements on application profiles of this specification, for the convenience of application profile designers.
 
-## Mandatory-to-Address Requirements
+## Mandatory-to-Address Requirements {#req-mandatory}
 
 * REQ1: Specify the format and encoding of 'scope'. This includes defining the set of possible roles and their identifiers, as well as the corresponding encoding to use in the scope entries according to the used scope format (see {{ssec-authorization-request}}).
 
@@ -2523,7 +2602,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ30: Define whether Clients must, should, or may support the conditional parameters defined in {{params}}, and under which circumstances.
 
-## Optional-to-Address Requirements
+## Optional-to-Address Requirements {#req-optional}
 
 * OPT1: Optionally, if the textual format of 'scope' is used, specify CBOR values to use for abbreviating the role identifiers in the group (see {{ssec-authorization-request}}).
 
@@ -2862,7 +2941,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 # Acknowledgments
 {: numbered="no"}
 
-The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Thomas Fossati}}}, {{{Vidhi Goel}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
+The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Thomas Fossati}}}, {{{Vidhi Goel}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Henry Thompson}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; by the H2020 project SIFIS-Home (Grant agreement 952652); and by the EIT-Digital High Impact Initiative ACTIVE.
 
