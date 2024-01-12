@@ -950,11 +950,9 @@ Table of Contents
 4.1.  Interface at the KDC
 
    The KDC provides its interface by hosting the following resources.
-   Note that the root url-path "/ace-group" used hereafter is a default
+   Note that the root url-path "ace-group" used hereafter is a default
    name; implementations are not required to use this name, and can
-   define their own instead.  The Interface Description (if=) Link
-   Target Attribute value "ace.group" is registered in Section 11.5 and
-   can be used to describe this interface.
+   define their own instead.
 
    If request messages sent to the KDC as well as success response
    messages from the KDC include a payload and specify a Content-Format,
@@ -962,7 +960,7 @@ Table of Contents
    groupcomm+cbor, defined in Section 11.2.  CBOR labels for the message
    parameters are defined in Section 8.
 
-   *  /ace-group : the path of this resource is invariant once the
+   *  /ace-group : the path of this root resource is invariant once the
       resource is established, and indicates that this specification is
       used.  If other applications run on a KDC implementing this
       specification and use this same path, those applications will
@@ -978,14 +976,63 @@ Table of Contents
       authorized to become group members (e.g., when authorized to be
       external signature verifiers).
 
+      The Interface Description (if=) Link Target Attribute value
+      "ace.groups" is registered in Section 11.5 and can be used to
+      describe the interface provided by this root resource.
+
+      The example below shows an exchange with a KDC with address
+      2001:db8::ab that hosts the resource /ace-group and returns a link
+      to such a resource in link-format [RFC6690].
+
+      Request:
+
+      Header: GET (Code=0.01)
+      Uri-Host: "kdc.example.com"
+      Uri-Path: ".well-known"
+      Uri-Path: "core"
+      Uri-Query: "if=ace.groups"
+
+      Response:
+
+      Header: Content (Code=2.05)
+      Content-Format: 40 (application/link-format)
+      Payload:
+        <coap://[2001:db8::ab]/ace-group>;if="ace.groups"
+
    *  /ace-group/GROUPNAME : one such sub-resource to /ace-group is
-      hosted for each group with name GROUPNAME that the KDC manages,
-      and contains the symmetric group keying material for that group.
+      hosted for each group with name GROUPNAME that the KDC manages.
+      In particular, it is the group-membership resource associated with
+      that group, of which it contains the symmetric group keying
+      material.
 
       A Client can access this resource in order to join the group with
       name GROUPNAME, or later as a group member to retrieve the current
       group keying material.  These operations are described in
       Section 4.3.1.1 and Section 4.3.2.1, respectively.
+
+      The Interface Description (if=) Link Target Attribute value
+      "ace.group" is registered in Section 11.5 and can be used to
+      describe the interface provided by a group-membership resource.
+
+      The example below shows an exchange with a KDC with address
+      2001:db8::ab that hosts the group-membership resource /ace-group/
+      gp1 and returns a link to such a resource in link-format
+      [RFC6690].
+
+      Request:
+
+      Header: GET (Code=0.01)
+      Uri-Host: "kdc.example.com"
+      Uri-Path: ".well-known"
+      Uri-Path: "core"
+      Uri-Query: "if=ace.group"
+
+      Response:
+
+      Header: Content (Code=2.05)
+      Content-Format: 40 (application/link-format)
+      Payload:
+        <coap://[2001:db8::ab]/ace-group/gp1>;if="ace.group"
 
       If the value of the GROUPNAME URI path and the group name in the
       access token scope ('gname' in Section 3.2) are not required to
@@ -1841,7 +1888,7 @@ Table of Contents
  | Number       |       |          | group members to     |            |
  | Synchroniza- |       |          | synchronize with     |            |
  | tion Method  |       |          | sequence numbers of  |            |
- |              |       |          | of sender group      |            |
+ |              |       |          | sender group         |            |
  |              |       |          | members. Its value   |            |
  |              |       |          | is taken from the    |            |
  |              |       |          | 'Value' column of    |            |
@@ -3753,7 +3800,7 @@ Table of Contents
     +-----------------------+------+---------------------+------------+
     | ace_groupcomm_profile | TBD  | int                 | [RFC-XXXX] |
     +-----------------------+------+---------------------+------------+
-    | exp                   | TBD  | int                 | [RFC-XXXX] |
+    | exp                   | TBD  | uint                | [RFC-XXXX] |
     +-----------------------+------+---------------------+------------+
     | creds                 | TBD  | array               | [RFC-XXXX] |
     +-----------------------+------+---------------------+------------+
@@ -4182,9 +4229,9 @@ Table of Contents
    IANA is asked to register the following entry to the "CoAP Content-
    Formats" registry within the "CoRE Parameters" registry group.
 
-   Media Type: application/ace-groupcomm+cbor
+   Content Type: application/ace-groupcomm+cbor
 
-   Encoding: -
+   Content Coding: -
 
    ID: TBD
 
@@ -4242,13 +4289,23 @@ Table of Contents
    Description (if=) Link Target Attribute Values" registry within the
    "CoRE Parameters" registry group.
 
-   *  Attribute Value: ace.group
+   *  Value: ace.groups
 
-   *  Description: The 'ace group' interface is used to provision keying
-      material and related information and policies to members of a
-      group using the ACE framework.
+   *  Description: The KDC interface at the parent resource of group-
+      membership resources is used to retrieve names of security groups
+      using the ACE framework.
 
-   *  Reference: [RFC-XXXX]
+   *  Reference: Section 4.1 of [RFC-XXXX]
+
+
+   *  Value: ace.group
+
+   *  Description: The KDC interface at a group-membership resource is
+      used to provision keying material and related information and
+      policies to members of the corresponding security group using the
+      ACE framework.
+
+   *  Reference: Section 4.1 of [RFC-XXXX]
 
 11.6.  Custom Problem Detail Keys Registry
 
@@ -4622,6 +4679,10 @@ Table of Contents
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC6690]  Shelby, Z., "Constrained RESTful Environments (CoRE) Link
+              Format", RFC 6690, DOI 10.17487/RFC6690, August 2012,
+              <https://www.rfc-editor.org/rfc/rfc6690>.
 
    [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
               RFC 6749, DOI 10.17487/RFC6749, October 2012,
