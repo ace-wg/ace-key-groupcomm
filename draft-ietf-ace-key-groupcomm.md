@@ -1797,7 +1797,7 @@ In either case, the KDC performs the following actions.
 
 A group rekeying is started and driven by the KDC. The KDC is not intended to accommodate explicit requests from group members to trigger a group rekeying. That is, the scheduling and execution of a group rekeying is an exclusive prerogative of the KDC. Reasons that can trigger a group rekeying are a change in the group membership, the current group keying material approaching its expiration time, or a regularly scheduled update of the group keying material.
 
-The KDC can perform a group rekeying before the current group keying material expires, unless it is acceptable or there are reasons to temporarily pause secure communications in the group, following the expiration of the current keying material.
+The KDC can perform a group rekeying before the current group keying material expires, unless it is acceptable or there are reasons to temporarily pause secure communications in the group, following the expiration of the current keying material. For example, a pause in the group communication might have been scheduled to start anyway when the group keying material expires, e.g., to allow maintenance operations on the group members. As another example, the KDC might be carrying out a verification that some group members are seemingly compromised and to be evicted, and this requires to be completed in order to appropriately define and schedule the exact rekeying process to perform. As a result, the KDC could delay the execution of the group rekeying.
 
 The KDC MUST increment the version number NUM of the current keying material, before distributing the newly generated keying material with version number NUM+1 to the group. Once completed the group rekeying, the KDC MUST delete the old keying material and SHOULD store the newly distributed keying material in persistent storage.
 
@@ -2947,7 +2947,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 # Acknowledgments
 {: numbered="no"}
 
-The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}},  {{{Roman Danyliw}}}, {{{Thomas Fossati}}}, {{{Vidhi Goel}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Henry Thompson}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
+The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}},  {{{Roman Danyliw}}}, {{{Thomas Fossati}}}, {{{Vidhi Goel}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Erik Kline}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Henry Thompson}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; by the H2020 project SIFIS-Home (Grant agreement 952652); and by the EIT-Digital High Impact Initiative ACTIVE.
 
