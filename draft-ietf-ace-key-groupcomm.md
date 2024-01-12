@@ -128,7 +128,7 @@ Therefore, this document delegates details on the communication and security app
 
 In order to ensure consistency and aid the development of such application profiles, {{req}} of this document defines a number of related compliance requirements. In particular, {{req-mandatory}} compiles the requirements that application profiles are REQUIRED to fulfill; these are referred to by an identifier that starts with "REQ". Instead, {{req-optional}} compiles the requirements that application profiles MAY fulfill; these are referred to by an identifier that starts with "OPT".
 
-New keying material is generated and distributed to the group upon membership changes (rekeying), if the application requires backward security (i.e., new group members must be prevented from accessing communications in the group prior to their joining) and forward security (i.e., former group members must be prevented from accessing communications in the group after their leaving).
+New keying material is intended to be generated and distributed to the group upon membership changes (rekeying). If the application requires backward security (i.e., new group members must be prevented from accessing communications in the group prior to their joining), then a rekeying has to occur every time new members join the group. If the application requires forward security (i.e., former group members must be prevented from accessing communications in the group after their leaving), then a rekeying has to occur every time current members leave the group or are evicted from the group.
 
 A group rekeying scheme performs the actual distribution of the new keying material, by rekeying the current group members when a new Client joins the group, and the remaining group members when a Client leaves the group. This can rely on different approaches, including efficient group rekeying schemes such as {{RFC2093}}, {{RFC2094}}, and {{RFC2627}}.
 
@@ -2947,7 +2947,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 # Acknowledgments
 {: numbered="no"}
 
-The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Roman Danyliw}}}, {{{Martin Duke}}}, {{{Thomas Fossati}}}, {{{Vidhi Goel}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Erik Kline}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Zaheduzzaman Sarker}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Henry Thompson}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
+The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Roman Danyliw}}}, {{{Martin Duke}}}, {{{Thomas Fossati}}}, {{{Vidhi Goel}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Erik Kline}}}, {{{Warren Kumari}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Zaheduzzaman Sarker}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Henry Thompson}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; by the H2020 project SIFIS-Home (Grant agreement 952652); and by the EIT-Digital High Impact Initiative ACTIVE.
 
