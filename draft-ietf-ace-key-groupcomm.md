@@ -942,7 +942,7 @@ Note to RFC Editor: In {{ace-groupcomm-profile-0}}, please replace "{{&SELF}}" w
 
    When receiving the authentication credential of a Client in the 'client_cred' parameter of a Join Request (see {{ssec-key-distribution-exchange}}) or of an Authentication Credential Update Request (see {{update-pub-key}}), the KDC is not expected to check that the authentication credential indicates the role(s) that the Client can have or has in the group in question. When preparing a Join Response, the KDC can decide about including or not the 'peer_roles' parameter depending on the specific set of authentication credentials specified in the 'creds' parameter of that Join Response.
 
-* 'peer\_identifiers', MUST be present if 'creds' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, with n the number of authentication credentials included in the 'creds' parameter (at most the number of members in the group). The i-th element of the array specifies the node identifier that the group member associated with the i-th authentication credential in 'creds' has in the group. In particular, the i-th array element is encoded as a CBOR byte string, with value the node identifier of the group member.
+* 'peer\_identifiers', MUST be present if 'creds' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, with n the number of authentication credentials included in the 'creds' parameter (at most the number of members in the group). The i-th element of the array specifies the node identifier that the group member associated with the i-th authentication credential in 'creds' has in the group. In particular, the i-th array element is encoded as a CBOR byte string, with value the node identifier of the group member. The specific format of node identifiers of group members is specified by the application profile (REQ25).
 
 * 'group\_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policies" registry. This specification defines the three elements "Sequence Number Synchronization Methods", "Key Update Check Interval", and "Expiration Delta", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format and default value of included map entries (REQ20).
 
@@ -2596,7 +2596,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ24: Specify how the communication is secured between Client and KDC. Optionally, specify transport profile of ACE {{RFC9200}} to use between Client and KDC (see {{ssec-key-distribution-exchange}}).
 
-* REQ25: Specify the format of the identifiers of group members (see {{gid-post}}).
+* REQ25: Specify the format of the identifiers of group members (see {{gid-post}} and {{pubkey-fetch}}).
 
 * REQ26: Specify policies at the KDC to handle ids that are not included in 'get_creds' (see {{pubkey-fetch}}).
 
@@ -2947,7 +2947,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 # Acknowledgments
 {: numbered="no"}
 
-The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}},  {{{Roman Danyliw}}}, {{{Thomas Fossati}}}, {{{Vidhi Goel}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Erik Kline}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Henry Thompson}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
+The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}},  {{{Roman Danyliw}}}, {{{Thomas Fossati}}}, {{{Vidhi Goel}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Erik Kline}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Zaheduzzaman Sarker}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Henry Thompson}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; by the H2020 project SIFIS-Home (Grant agreement 952652); and by the EIT-Digital High Impact Initiative ACTIVE.
 
