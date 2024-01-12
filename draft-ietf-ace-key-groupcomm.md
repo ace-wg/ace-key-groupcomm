@@ -960,7 +960,7 @@ Note to RFC Editor: In {{ace-groupcomm-profile-0}}, please replace "{{&SELF}}" w
 |     Name     | CBOR  |   CBOR   |     Description      | Reference  |
 |              | label |   type   |                      |            |
 +--------------+-------+----------+----------------------+------------+
-| Sequence     | TBD   | tstr/int | Method for recipient | [RFC-XXXX] |
+| Sequence     | 0     | tstr/int | Method for recipient | [RFC-XXXX] |
 | Number       |       |          | group members to     |            |
 | Synchroniza- |       |          | synchronize with     |            |
 | tion Method  |       |          | sequence numbers of  |            |
@@ -972,7 +972,7 @@ Note to RFC Editor: In {{ace-groupcomm-profile-0}}, please replace "{{&SELF}}" w
 |              |       |          | Synchronization      |            |
 |              |       |          | Method registry      |            |
 +--------------+-------+----------+----------------------+------------+
-| Key Update   | TBD   | int      | Polling interval in  | [RFC-XXXX] |
+| Key Update   | 1     | int      | Polling interval in  | [RFC-XXXX] |
 | Check        |       |          | seconds, for group   |            |
 | Interval     |       |          | members to check at  |            |
 |              |       |          | the KDC if the       |            |
@@ -980,7 +980,7 @@ Note to RFC Editor: In {{ace-groupcomm-profile-0}}, please replace "{{&SELF}}" w
 |              |       |          | material is the one  |            |
 |              |       |          | that they store      |            |
 +--------------+-------+----------+----------------------+------------+
-| Expiration   | TBD   | uint     | Number of seconds    | [RFC-XXXX] |
+| Expiration   | 2     | uint     | Number of seconds    | [RFC-XXXX] |
 | Delta        |       |          | from 'exp' until a   |            |
 |              |       |          | UTC date/time, after |            |
 |              |       |          | which group members  |            |
@@ -2097,64 +2097,64 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 | Name                  | CBOR | CBOR Type           | Reference  |
 |                       | Key  |                     |            |
 +-----------------------+------+---------------------+------------+
-| gid                   | TBD  | array               | [RFC-XXXX] |
+| gid                   | 0    | array               | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| gname                 | TBD  | array of tstr       | [RFC-XXXX] |
+| gname                 | 1    | array of tstr       | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| guri                  | TBD  | array of tstr       | [RFC-XXXX] |
+| guri                  | 2    | array of tstr       | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| scope                 | TBD  | bstr                | [RFC-XXXX] |
+| scope                 | 3    | bstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| get_creds             | TBD  | array /             | [RFC-XXXX] |
+| get_creds             | 4    | array /             | [RFC-XXXX] |
 |                       |      | Simple value "null" |            |
 +-----------------------+------+---------------------+------------+
-| client_cred           | TBD  | bstr                | [RFC-XXXX] |
+| client_cred           | 5    | bstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| cnonce                | TBD  | bstr                | [RFC-XXXX] |
+| cnonce                | 6    | bstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| client_cred_verify    | TBD  | bstr                | [RFC-XXXX] |
+| client_cred_verify    | 24   | bstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| creds_repo            | TBD  | tstr                | [RFC-XXXX] |
+| creds_repo            | 25   | tstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| control_uri           | TBD  | tstr                | [RFC-XXXX] |
+| control_uri           | 26   | tstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| gkty                  | TBD  | int / tstr          | [RFC-XXXX] |
+| gkty                  | 7    | int / tstr          | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| key                   | TBD  | See the "ACE        | [RFC-XXXX] |
+| key                   | 8    | See the "ACE        | [RFC-XXXX] |
 |                       |      | Groupcomm Key       |            |
 |                       |      | Types" registry     |            |
 +-----------------------+------+---------------------+------------+
-| num                   | TBD  | int                 | [RFC-XXXX] |
+| num                   | 9    | int                 | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| ace_groupcomm_profile | TBD  | int                 | [RFC-XXXX] |
+| ace_groupcomm_profile | 10   | int                 | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| exp                   | TBD  | uint                | [RFC-XXXX] |
+| exp                   | 11   | uint                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| exi                   | TBD  | uint                | [RFC-XXXX] |
+| exi                   | 12   | uint                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| creds                 | TBD  | array               | [RFC-XXXX] |
+| creds                 | 13   | array               | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| peer_roles            | TBD  | array               | [RFC-XXXX] |
+| peer_roles            | 14   | array               | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| peer_identifiers      | TBD  | array               | [RFC-XXXX] |
+| peer_identifiers      | 15   | array               | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| group_policies        | TBD  | map                 | [RFC-XXXX] |
+| group_policies        | 16   | map                 | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| kdc_cred              | TBD  | bstr                | [RFC-XXXX] |
+| kdc_cred              | 17   | bstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| kdc_nonce             | TBD  | bstr                | [RFC-XXXX] |
+| kdc_nonce             | 18   | bstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| kdc_cred_verify       | TBD  | bstr                | [RFC-XXXX] |
+| kdc_cred_verify       | 19   | bstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| rekeying_scheme       | TBD  | int                 | [RFC-XXXX] |
+| rekeying_scheme       | 20   | int                 | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| mgt_key_material      | TBD  | bstr                | [RFC-XXXX] |
+| mgt_key_material      | 27   | bstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| control_group_uri     | TBD  | tstr                | [RFC-XXXX] |
+| control_group_uri     | 28   | tstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| sign_info             | TBD  | array               | [RFC-XXXX] |
+| sign_info             | 29   | array               | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| kdcchallenge          | TBD  | bstr                | [RFC-XXXX] |
+| kdcchallenge          | 30   | bstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Parameters title="ACE Groupcomm Parameters" artwork-align="center"}
