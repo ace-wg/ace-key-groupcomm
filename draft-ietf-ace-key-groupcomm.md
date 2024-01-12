@@ -39,6 +39,7 @@ author:
 
 normative:
   RFC2119:
+  RFC6690:
   RFC6749:
   RFC6838:
   RFC8126:
@@ -52,6 +53,7 @@ normative:
   RFC9053:
   RFC9200:
   RFC9237:
+  RFC9290:
   RFC9338:
   I-D.ietf-core-oscore-groupcomm:
   COSE.Algorithms:
@@ -118,11 +120,13 @@ This document defines how to use the Authentication and Authorization for Constr
 
 This document builds on the Authentication and Authorization for Constrained Environments (ACE) framework and defines how to request, distribute, and renew keying material and configuration parameters to protect message exchanges in a group communication environment.
 
-Candidate group members acting as Clients and authorized to join a group can interact with the Key Distribution Center (KDC) acting as Resource Server and responsible for that group, in order to obtain the necessary keying material and parameters to communicate with other group members.
+Candidate group members acting as ACE Clients and authorized to join a group can interact with the Key Distribution Center (KDC) acting as ACE Resource Server and responsible for that group, in order to obtain the necessary keying material and parameters to communicate with other group members.
 
 In particular, this document defines the operations and interface available at the KDC, as well as general message formats for the interactions between Clients and KDC. At the same time, communications in the group can rely on different approaches, e.g., based on multicast {{I-D.ietf-core-groupcomm-bis}} or on publish-subscribe messaging {{I-D.ietf-core-coap-pubsub}}, and can be protected in different ways.
 
-Therefore, this document delegates details on the communication and security approaches used in a group to separate application profiles. These are specialized instances of this document, targeting a particular group communication approach and defining how communications in the group are protected, as well as the specific keying material and configuration parameters provided to group members. In order to ensure consistency and aid the development of such application profiles, this document defines a number of related compliance requirements (see {{req}}).
+Therefore, this document delegates details on the communication and security approaches used in a group to separate application profiles. These are specialized instances of this document, targeting a particular group communication approach and defining how communications in the group are protected, as well as the specific keying material and configuration parameters provided to group members.
+
+In order to ensure consistency and aid the development of such application profiles, {{req}} of this document defines a number of related compliance requirements. In particular, {{req-mandatory}} compiles the requirements that application profiles are REQUIRED to fulfill; these are referred to by an identifier that starts with "REQ". Instead, {{req-optional}} compiles the requirements that application profiles MAY fulfill; these are referred to by an identifier that starts with "OPT".
 
 New keying material is generated and distributed to the group upon membership changes (rekeying), if the application requires backward security (i.e., new group members must be prevented from accessing communications in the group prior to their joining) and forward security (i.e., former group members must be prevented from accessing communications in the group after their leaving).
 
@@ -140,7 +144,7 @@ Readers are expected to be familiar with:
 
 * The terms and concepts described in CoAP {{RFC7252}}. Unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol".
 
-* The terms and concepts described in CBOR {{RFC8949}} and COSE {{RFC9052}}{{RFC9053}}{{RFC9338}}.
+* The terms and concepts described in CDDL {{RFC8610}}, CBOR {{RFC8949}}, and COSE {{RFC9052}}{{RFC9053}}{{RFC9338}}.
 
 A principal interested to participate in group communication as well as already participating as a group member is interchangeably denoted as "Client" or "node".
 
@@ -154,15 +158,15 @@ A principal interested to participate in group communication as well as already 
 
 Furthermore, this document uses "names" or "identifiers" for groups and nodes. Their different meanings are summarized below.
 
-* Group name: the invariant once established identifier of a group. It is used in the interactions between Client, AS, and RS to identify a group. A group name is always unique among the group names of the existing groups under the same KDC.
+* Group name: The identifier of a group, as a text string. Once established, it is invariant. It is used in the interactions between Client, AS, and RS to identify a group. A group name is always unique among the group names of the existing groups under the same KDC.
 
-* GROUPNAME: the invariant once established text string used in URIs. GROUPNAME uniquely maps to the group name of a group, although they do not necessarily coincide.
+* GROUPNAME: The text string used in URIs to identify a group. Once established, it is invariant. GROUPNAME uniquely maps to the group name of a group, although they do not necessarily coincide.
 
 * Group identifier: the identifier of the group keying material used in a group. Unlike group name and GROUPNAME, this identifier changes over time, when the group keying material is updated.
 
-* Node name: the invariant once established identifier of a node. It is used in the interactions between Client and RS, as well as to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.
+* Node name: The identifier of a node, as a text string. Once established, it is invariant. It is used in the interactions between Client and RS, as well as to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.
 
-* NODENAME: the invariant once established text string used in URIs to identify a member of a group. Its value coincides with the node name of the associated group member.
+* NODENAME: The text string used in URIs to identify a member of a group. Once established, it is invariant. Its value coincides with the node name of the associated group member.
 
 This document additionally uses the following terminology:
 
@@ -172,7 +176,7 @@ This document additionally uses the following terminology:
 
 * Authentication credential, as the set of information associated with an entity, including that entity's public key and parameters associated with the public key. Examples of authentication credentials are CBOR Web Tokens (CWTs) and CWT Claims Sets (CCSs) {{RFC8392}}, X.509 certificates {{RFC5280}}, and C509 certificates {{I-D.ietf-cose-cbor-encoded-cert}}.
 
-* Individual keying material: information exclusively pertaining to a group member, as associated with its group membership and related to other keying material and parameters used in the group. For example, this can be a member identifier that is unique within the group. The specific nature and format of individual keying material used in a group is defined in application profiles of this specification. The individual keying material of a group member is not related to the secure association between that group member and the KDC.
+* Individual keying material: information exclusively pertaining to a group member, as associated with its group membership and related to other keying material and parameters used in the group. For example, this can be an identifier that the secure communication protocol employs to uniquely identify a node as a group member (e.g., a cryptographic key identifier uniquely associated with the group member in question). The specific nature and format of individual keying material used in a group is defined in application profiles of this specification. The individual keying material of a group member is not related to the secure association between that group member and the KDC.
 
 Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
 
@@ -200,11 +204,11 @@ The following participants (see {{fig-roles}}) take part in the authorization an
 
 * Client (C): node that wants to join a group and take part in group communication with other group members. Within the group, the Client can have different roles.
 
-* Authorization Server (AS): as per the AS defined in the ACE Framework, it enforces access policies, and knows if a node is allowed to join a given group with write and/or read rights.
+* Authorization Server (AS): as per the AS defined in the ACE Framework {{RFC9200}}, it enforces access policies, and knows if a node is allowed to join a given group with write and/or read rights.
 
 * Key Distribution Center (KDC): maintains the keying material to protect group communications, and provides it to Clients authorized to join a given group. During the first part of the exchange ({{sec-auth}}), it takes the role of the RS in the ACE Framework. During the second part ({{key-distr}}), which is not based on the ACE Framework, it distributes the keying material. In addition, it provides the latest keying material to group members when requested or, if required by the application, when membership changes.
 
-* Dispatcher: entity through which the Clients communicate with the group, when sending a message intended to multiple group members. That is, the Dispatcher distributes such a one-to-many message to the group members as intended recipients. A single-recipient message intended to only one group member may be delivered by alternative means, with no assistance from the Dispatcher.
+* Dispatcher: entity through which the Clients communicate with the group when sending a message intended to multiple group members. That is, the Dispatcher distributes such a one-to-many message to the group members as intended recipients. The Dispatcher does not have access to the group keying material. A single-recipient message intended to only one group member may be delivered by alternative means, with no assistance from the Dispatcher.
 
    Examples of a Dispatcher are: the Broker in a pub-sub setting; a relayer for group communication that delivers group messages as multiple unicast messages to all group members; an implicit entity as in a multicast communication setting, where messages are transmitted to a multicast IP address and delivered on the transport channel.
 
@@ -307,7 +311,7 @@ Client                                             AS    KDC
 
 The Authorization Request sent from the Client to the AS is defined in {{Section 5.8.1 of RFC9200}} and MAY contain the following parameters, which, if included, MUST have format and value as specified below.
 
-* 'scope', specifying the name of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.
+* 'scope', specifying the names of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.
 
    This parameter is encoded as a CBOR byte string, which wraps a CBOR array of one or more scope entries. All the scope entries are specified according to a same format, i.e., either the AIF format or the textual format defined below.
 
@@ -336,6 +340,8 @@ The Authorization Request sent from the Client to the AS is defined in {{Section
 As defined in {{RFC9200}}, other additional parameters can be included if necessary.
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
+;# include rfc9237
+
 gname = tstr
 
 permissions = uint .bits roles
@@ -347,9 +353,12 @@ roles = &(
    Verifier: 4
 )
 
-scope_entry = AIF_Generic<gname, permissions>
+scope_entry = AIF-Generic<gname, permissions>
 
-scope = << [ + scope_entry ] >>
+scope_entries = [ + scope_entry ]
+
+scope = bstr .cbor scope_entries
+
 ~~~~~~~~~~~~~~~~~~~~
 {: #cddl-ex-0 title="Example of scope using the AIF format"}
 
@@ -360,7 +369,9 @@ role = tstr
 
 scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 
-scope = << [ + scope_entry ] >>
+scope_entries = [ + scope_entry ]
+
+scope = bstr .cbor scope_entries
 ~~~~~~~~~~~~~~~~~~~~
 {: #cddl-ex title="Example of scope using the textual format, with the group name and role identifiers encoded as text strings"}
 
@@ -495,23 +506,67 @@ Later on as a group member, the Client can also rely on the interface at the KDC
 
 ## Interface at the KDC {#kdc-if}
 
-The KDC provides its interface by hosting the following resources. Note that the root url-path "/ace-group" used hereafter is a default name; implementations are not required to use this name, and can define their own instead. The Interface Description (if=) Link Target Attribute value "ace.group" is registered in {{if-ace-group}} and can be used to describe this interface.
+The KDC provides its interface by hosting the following resources. Note that the root url-path "ace-group" used hereafter is a default name; implementations are not required to use this name, and can define their own instead.
 
 If request messages sent to the KDC as well as success response messages from the KDC include a payload and specify a Content-Format, those messages MUST have Content-Format set to application/ace-groupcomm+cbor, defined in {{content-type}}. CBOR labels for the message parameters are defined in {{params}}.
 
-* /ace-group : the path of this resource is invariant once the resource is established, and indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same path, those applications will collide, and a mechanism will be needed to differentiate the endpoints.
+* /ace-group : the path of this root resource is invariant once the resource is established, and indicates that this specification is used. If other applications run on a KDC implementing this specification and use this same path, those applications will collide, and a mechanism will be needed to differentiate the endpoints.
 
   A Client can access this resource in order to retrieve a set of group names, each corresponding to one of the specified group identifiers. This operation is described in {{retrieval-gnames}}.
 
-* /ace-group/GROUPNAME : one such sub-resource to /ace-group is hosted for each group with name GROUPNAME that the KDC manages, and contains the symmetric group keying material for that group.
+  Clients may be authorized to access this resource even without being members of any group at the KDC, and even if they are not authorized to become group members (e.g., when authorized to be external signature verifiers).
+
+  The Interface Description (if=) Link Target Attribute value "ace.groups" is registered in {{if-ace-group}} and can be used to describe the interface provided by this root resource.
+
+  The example below shows an exchange with a KDC with address 2001:db8::ab that hosts the resource /ace-group and returns a link to such a resource in link-format {{RFC6690}}.
+
+  ~~~~~~~~~~~
+  Request:
+
+  Header: GET (Code=0.01)
+  Uri-Host: "kdc.example.com"
+  Uri-Path: ".well-known"
+  Uri-Path: "core"
+  Uri-Query: "if=ace.groups"
+
+  Response:
+
+  Header: Content (Code=2.05)
+  Content-Format: 40 (application/link-format)
+  Payload:
+    <coap://[2001:db8::ab]/ace-group>;if="ace.groups"
+  ~~~~~~~~~~~
+
+* /ace-group/GROUPNAME : one such sub-resource to /ace-group is hosted for each group with name GROUPNAME that the KDC manages. In particular, it is the group-membership resource associated with that group, of which it contains the symmetric group keying material.
 
   A Client can access this resource in order to join the group with name GROUPNAME, or later as a group member to retrieve the current group keying material. These operations are described in {{ssec-key-distribution-exchange}} and {{ssec-key-material-retrieval}}, respectively.
+
+  The Interface Description (if=) Link Target Attribute value "ace.group" is registered in {{if-ace-group}} and can be used to describe the interface provided by a group-membership resource.
+
+  The example below shows an exchange with a KDC with address 2001:db8::ab that hosts the group-membership resource /ace-group/gp1 and returns a link to such a resource in link-format {{RFC6690}}.
+
+  ~~~~~~~~~~~
+  Request:
+
+  Header: GET (Code=0.01)
+  Uri-Host: "kdc.example.com"
+  Uri-Path: ".well-known"
+  Uri-Path: "core"
+  Uri-Query: "if=ace.group"
+
+  Response:
+
+  Header: Content (Code=2.05)
+  Content-Format: 40 (application/link-format)
+  Payload:
+    <coap://[2001:db8::ab]/ace-group/gp1>;if="ace.group"
+  ~~~~~~~~~~~
 
   If the value of the GROUPNAME URI path and the group name in the access token scope ('gname' in {{ssec-authorization-response}}) are not required to coincide, the KDC MUST implement a mechanism to map the GROUPNAME value in the URI to the group name, in order to refer to the correct group (REQ7).
 
 * /ace-group/GROUPNAME/creds : the path of this resource is invariant once the resource is established. This resource contains the authentication credentials of all the members of the group with name GROUPNAME.
 
-  This resource is created only in case the KDC acts as repository of authentication credentials for group members.
+  This resource is created only in case the KDC acts as a repository of authentication credentials for group members.
 
   A Client can access this resource in order to retrieve the authentication credentials of other group members, in addition to when joining the group. That is, the Client can retrieve the authentication credentials of all the current group members, or a subset of them by specifying filter criteria. These operations are described in {{sec-key-retrieval-all}} and {{sec-key-retrieval}}, respectively.
 
@@ -593,15 +648,48 @@ If the request is not formatted correctly (e.g., required fields are not present
 
 If the request includes unknown or non-expected fields, the handler MUST silently ignore them and continue processing the request. Application profiles of this specification MAY define optional or mandatory payload formats for specific error cases (OPT4).
 
-Some error responses from the KDC can have Content-Format set to application/ace-groupcomm+cbor. In such a case, the payload of the response MUST be a CBOR map, which includes the following fields.
+Some error responses from the KDC can convey error-specific information according to the problem-details format defined in {{RFC9290}}. Such error responses MUST have Content-Format set to application/concise-problem-details+cbor. The payload of these error responses MUST be a CBOR map specifying a Concise Problem Details data item (see {{Section 2 of RFC9290}}). The CBOR map is formatted as follows.
 
-* 'error', with value a CBOR integer specifying the error occurred at the KDC. The value is taken from the "Value" column of the "ACE Groupcomm Errors" registry defined in {{iana-ace-groupcomm-errors}} of this specification. This field MUST be present.
+* It MUST include the Custom Problem Detail entry 'ace-groupcomm-error' registered in {{iana-custom-problem-details}} of this document.
 
-* 'error_description', with value a CBOR text string specifying a human-readable diagnostic description of the error occurred at the KDC, written in English. The diagnostic text is intended for software engineers as well as for device and network operators, in order to aid debugging and provide context for possible intervention. The diagnostic message SHOULD be logged by the KDC. This field MAY be present, and it is unlikely relevant in an unattended setup where human intervention is not expected.
+   This entry includes only one field, namely 'error-id'. The map key for 'error-id' is the CBOR unsigned integer with value 0. The value of 'error-id' is a CBOR integer specifying the error occurred at the KDC. This value is taken from the 'Value' column of the "ACE Groupcomm Errors" registry defined in {{iana-ace-groupcomm-errors}} of this document.
 
-The 'error' and 'error_description' fields are defined as OPTIONAL to support for Clients (see {{params}}). A Client supporting the 'error' parameter and able to understand the specified error may use that information to determine what actions to take next.
+   The CDDL notation {{RFC8610}} of the 'ace-groupcomm-error' entry is given below.
 
-{{error-types}} of this specification defines an initial set of error identifiers, as possible values for the 'error' field. Application profiles of this specification inherit this initial set of error identifiers and MAY define additional value (OPT5).
+~~~~~~~~~~~ CDDL
+   ace-groupcomm-error = {
+     &(error-id: 0) => int
+   }
+~~~~~~~~~~~
+
+* It MAY include further Standard Problem Detail entries or Custom Problem Detail entries (see {{RFC9290}}).
+
+   In particular, it can include the Standard Problem Detail entry 'detail' (map key -2), whose value is a CBOR text string that specifies a human-readable, diagnostic description of the error occurred at the KDC. The diagnostic text is intended for software engineers as well as for device and network operators, in order to aid debugging and provide context for possible intervention. The diagnostic message SHOULD be logged by the KDC. The 'detail' entry is unlikely relevant in an unattended setup where human intervention is not expected.
+
+An example of error response using the problem-details format is shown in {{fig-exapmle-error-response}}.
+
+~~~~~~~~~~~
+Response:
+
+Header: Service Unavailable (Code=5.03)
+Content-Format: application/concise-problem-details+cbor
+Payload:
+{
+  / title /                -1: "No available node identifiers",
+  / detail /               -2: "Things will change after a
+                                group rekeying; try later",
+  / ace-groupcomm-error /  TBD: {
+    / error-id /  0: 4 / "No available node identifiers" /,
+  }
+}
+~~~~~~~~~~~
+{: #fig-exapmle-error-response title="Example of Error Response with Problem Details"}
+
+Note to RFC Editor: In the figure above, please replace "TBD" with the unsigned integer assigned as key value to the Custom Problem Detail entry 'ace-groupcomm-error' (see {{iana-custom-problem-details}}). Then, please delete this paragraph.
+
+The problem-details format in general and the Custom Problem Detail entry 'ace-groupcomm-error' in particular are OPTIONAL to support for Clients. A Client supporting the entry 'ace-groupcomm-error' and able to understand the specified error may use that information to determine what actions to take next.
+
+{{error-types}} of this specification defines an initial set of error identifiers, as possible values for the 'error-id' field. Application profiles of this specification inherit this initial set of error identifiers and MAY define additional values (OPT5).
 
 ## /ace-group
 
@@ -631,7 +719,7 @@ Note that the KDC only verifies that the node is authorized by the AS to access 
 
 #### Retrieve Group Names {#retrieval-gnames}
 
-In case the joining node only knows the group identifier of the group it wishes to join or about which it wishes to get update information from the KDC, the node can contact the KDC to request the corresponding group name and group-membership resource URI. The node can request several group identifiers at once. It does so by sending a CoAP FETCH request to the /ace-group endpoint at the KDC formatted as defined in {{ace-group-fetch}}.
+In case the joining node only knows the group identifier of the group it wishes to join or about which it wishes to get updated information from the KDC, the node can contact the KDC to request the corresponding group name and group-membership resource URI. The node can request several group identifiers at once. It does so by sending a CoAP FETCH request to the /ace-group endpoint at the KDC formatted as defined in {{ace-group-fetch}}.
 
 {{fig-ace-group-fetch}} gives an overview of the exchanges described above, and {{fig-ace-group-fetch-2}} shows an example.
 
@@ -767,11 +855,11 @@ If the KDC manages the group members' authentication credentials, the handler ch
 
 * The KDC checks the authentication credential to be valid for the group identified by GROUPNAME. That is, it checks that the authentication credential has the format used in the group, is intended for the public key algorithm used in the group, and is aligned with the possible associated parameters used in the group.
 
-   If this verification fails, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 2 ("Authentication credential incompatible with the group configuration").
+   If this verification fails, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 2 ("Authentication credential incompatible with the group configuration").
 
 * The KDC verifies the PoP evidence contained in the 'client_cred_verify' field. Application profiles of this specification MUST specify the exact approaches used to verify the PoP evidence, and MUST specify which of those approaches is used in which case (REQ14).
 
-   If the PoP evidence does not pass verification, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 3 ("Invalid Proof-of-Possession evidence").
+   If the PoP evidence does not pass verification, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 3 ("Invalid Proof-of-Possession evidence").
 
 If no authentication credential is included in the 'client_cred' field, the handler checks if an authentication credential is already associated with the received access token and to the group identified by GROUPNAME (see also {{ssec-key-distribution-exchange}}). Note that the same joining node may use different authentication credentials in different groups, and all those authentication credentials would be associated with the same access token.
 
@@ -867,7 +955,7 @@ Note to RFC Editor: In {{ace-groupcomm-profile-0}}, please replace "{{&SELF}}" w
 | Number       |       |          | group members to     |            |
 | Synchroniza- |       |          | synchronize with     |            |
 | tion Method  |       |          | sequence numbers of  |            |
-|              |       |          | of sender group      |            |
+|              |       |          | sender group         |            |
 |              |       |          | members. Its value   |            |
 |              |       |          | is taken from the    |            |
 |              |       |          | 'Value' column of    |            |
@@ -1031,7 +1119,7 @@ The GET handler returns the symmetric group keying material for the group identi
 
 The handler expects a GET request.
 
-In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
+In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 0 ("Operation permitted only to group members").
 
 If all verifications succeed, the handler replies with a 2.05 (Content) response containing the symmetric group keying material. The payload of the response is formatted as a CBOR map which MUST contain the parameters 'gkty', 'key', and 'num' specified in {{gid-post}}.
 
@@ -1166,16 +1254,16 @@ Uri-Path: "g1"
 Uri-Path: "pub-key"
 Content-Format: "application/ace-groupcomm+cbor"
 Payload:
-  { "get_creds": [true, [], [ ID3 ]] }
+  { "get_creds": [true, [], [ ID2, ID3 ]] }
 
 Response:
 
 Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
-  { "creds": [ AUTH_CRED_3 ],
-    "peer_roles": [ "receiver" ],
-    "peer_identifiers": [ ID3 ] }
+  { "creds": [ AUTH_CRED_2, AUTH_CRED_3, ],
+    "peer_roles": [ ["sender", "receiver"], "receiver" ],
+    "peer_identifiers": [ ID2, ID3 ] }
 ~~~~~~~~~~~
 {: #fig-public-key-2 title="Example of Authentication Credential Request-Response to Obtain the Authentication Credentials of Specific Group Members"}
 
@@ -1324,7 +1412,7 @@ This resource implements the GET handler.
 
 The handler expects a GET request.
 
-In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
+In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 0 ("Operation permitted only to group members").
 
 If all verifications succeed, the handler replies with a 2.05 (Content) response containing the list of policies for the group identified by GROUPNAME. The payload of the response is formatted as a CBOR map including only the parameter 'group_policies' defined in {{gid-post}} and specifying the current policies in the group. If the KDC does not store any policy, the payload is formatted as a zero-length CBOR byte string.
 
@@ -1374,7 +1462,7 @@ This resource implements the GET handler.
 
 The handler expects a GET request.
 
-In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
+In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 0 ("Operation permitted only to group members").
 
 If all verifications succeed, the handler returns a 2.05 (Content) message containing an integer that represents the version number of the symmetric group keying material. This number is incremented on the KDC every time the KDC updates the symmetric group keying material, before the new keying material is distributed. This number is stored in persistent storage.
 
@@ -1422,7 +1510,7 @@ This resource implements the GET, PUT, and DELETE handlers.
 
 In addition to what is defined in {{kdc-if-errors}}, each of the handlers performs the following two verifications.
 
-* The handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
+* The handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 0 ("Operation permitted only to group members").
 
 * The handler verifies that the node name of the Client is equal to NODENAME used in the url-path. If the verification fails, the handler replies with a 4.03 (Forbidden) error response.
 
@@ -1501,9 +1589,9 @@ The PUT handler processes requests from a Client that asks for new individual ke
 
 The handler expects a PUT request with empty payload.
 
-In addition to what is defined in {{kdc-if-errors}} and at the beginning of {{node-subresource}}, the handler verifies that this operation is consistent with the set of roles that the Client has in the group (REQ11). If the verification fails, the KDC MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 1 ("Request inconsistent with the current roles").
+In addition to what is defined in {{kdc-if-errors}} and at the beginning of {{node-subresource}}, the handler verifies that this operation is consistent with the set of roles that the Client has in the group (REQ11). If the verification fails, the KDC MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 1 ("Request inconsistent with the current roles").
 
-If the KDC is currently not able to serve this request, i.e., to generate new individual keying material for the requesting Client, the KDC MUST reply with a 5.03 (Service Unavailable) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 4 ("No available node identifiers").
+If the KDC is currently not able to serve this request, i.e., to generate new individual keying material for the requesting Client, the KDC MUST reply with a 5.03 (Service Unavailable) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 4 ("No available node identifiers").
 
 If all verifications succeed, the handler replies with a 2.05 (Content) response containing newly generated, individual keying material for the Client. The payload of the response is formatted as a CBOR map. The specific format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ27) and registered in {{iana-reg}}.
 
@@ -1568,7 +1656,7 @@ The DELETE handler removes the node identified by NODENAME from the group identi
 
 The handler expects a DELETE request with empty payload.
 
-In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 0 ("Operation permitted only to group members").
+In addition to what is defined in {{kdc-if-errors}}, the handler verifies that the Client is a current member of the group. If the verification fails, the KDC MUST reply with a 4.03 (Forbidden) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 0 ("Operation permitted only to group members").
 
 If all verification succeeds, the handler performs the actions defined in {{sec-node-removal}} and replies with a 2.02 (Deleted) response with empty payload.
 
@@ -1594,13 +1682,13 @@ An example of PoP input to compute 'client_cred_verify' using CBOR encoding is g
 
 It is REQUIRED of the application profiles to define the specific formats of authentication credentials that are acceptable to use in the group (REQ6).
 
-In addition to what is defined in {{kdc-if-errors}} and at the beginning of {{node-subresource}}, the handler verifies that this operation is consistent with the set of roles that the node has in the group. If the verification fails, the KDC MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 1 ("Request inconsistent with the current roles").
+In addition to what is defined in {{kdc-if-errors}} and at the beginning of {{node-subresource}}, the handler verifies that this operation is consistent with the set of roles that the node has in the group. If the verification fails, the KDC MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 1 ("Request inconsistent with the current roles").
 
 If the KDC cannot retrieve the 'kdcchallenge' associated with this Client (see {{token-post}}), the KDC MUST reply with a 4.00 (Bad Request) error response, which MUST also have Content-Format application/ace-groupcomm+cbor. The payload of the error response is a CBOR map including a newly generated 'kdcchallenge' value. This is specified in the 'kdcchallenge' parameter. In such a case the KDC MUST store the newly generated value as the 'kdcchallenge' value associated with this Client, replacing the currently stored value (if any).
 
-Otherwise, the handler checks that the authentication credential specified in the 'client_cred' field is valid for the group identified by GROUPNAME. That is, the handler checks that the authentication credential is encoded according to the format used in the group, is intended for the public key algorithm used in the group, and is aligned with the possible associated parameters used in the group. If that cannot be successfully verified, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 2 ("Authentication Credential incompatible with the group configuration").
+Otherwise, the handler checks that the authentication credential specified in the 'client_cred' field is valid for the group identified by GROUPNAME. That is, the handler checks that the authentication credential is encoded according to the format used in the group, is intended for the public key algorithm used in the group, and is aligned with the possible associated parameters used in the group. If that cannot be successfully verified, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 2 ("Authentication credential incompatible with the group configuration").
 
-Otherwise, the handler verifies the PoP evidence contained in the 'client_cred_verify' field of the request, by using the authentication credential specified in the 'client_cred' field, as well as the same way considered in {{gid-post}} and defined by the specific application profile (REQ14). If the PoP evidence does not pass verification, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 3 ("Invalid Proof-of-Possession evidence").
+Otherwise, the handler verifies the PoP evidence contained in the 'client_cred_verify' field of the request, by using the authentication credential specified in the 'client_cred' field, as well as the same way considered in {{gid-post}} and defined by the specific application profile (REQ14). If the PoP evidence does not pass verification, the handler MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 3 ("Invalid Proof-of-Possession evidence").
 
 If all verifications succeed, the handler performs the following actions.
 
@@ -1681,7 +1769,7 @@ A Client identified by NODENAME may be removed from a group identified by GROUPN
 
 1. The Client explicitly asks to leave the group, as defined in {{ssec-group-leaving}}.
 
-2. The node has been found compromised or is suspected so.
+2. The node has been found compromised or is suspected so. The KDC is expected to determine that a group member has to be evicted either through its own means, or based on information that it obtains from a trusted source (e.g., an Intrusion Detection System, or an issuer of authentication credentials). Additional mechanics, protocols, and interfaces at the KDC that can support this are out of the scope of this document.
 
 3. The Client's authorization to be a group member with the current roles is not valid anymore, i.e., the access token has expired or has been revoked. If the AS provides token introspection (see {{Section 5.9 of RFC9200}}), the KDC can optionally use it and check whether the Client is still authorized.
 
@@ -1689,7 +1777,7 @@ In either case, the KDC performs the following actions.
 
 * The KDC removes the Client from the list of current members of the group.
 
-* In case of forced eviction, i.e., for cases 2 and 3 above, the KDC deletes the authentication credential of the removed Client, if it acts as repository of authentication credentials for group members.
+* In case of forced eviction, i.e., for cases 2 and 3 above, the KDC deletes the authentication credential of the removed Client, if it acts as a repository of authentication credentials for group members.
 
 * If the removed Client is registered as an observer of the group-membership resource at /ace-group/GROUPNAME, the KDC removes the Client from the list of observers of that resource.
 
@@ -1701,7 +1789,7 @@ In either case, the KDC performs the following actions.
 
    - If the evicted Client is observing its associated sub-resource at /ace-group/GROUPNAME/nodes/NODENAME (see {{node-get}}), the KDC sends an unsolicited 4.04 (Not Found) error response, which does not include the Observe option and indicates that the observed resource has been deleted (see {{Section 3.2 of RFC7641}}).
 
-      The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 5 ("Group membership terminated").
+      The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 5 ("Group membership terminated").
 
 * If the application requires forward security or the used application profile requires so, the KDC MUST generate new group keying material and securely distribute it to all the current group members except the leaving node (see {{sec-group-rekeying}}).
 
@@ -1717,7 +1805,7 @@ Distributing the new group keying material requires the KDC to send multiple rek
 
 Each rekeying message MUST have Content-Format set to application/ace-groupcomm+cbor and its payload formatted as a CBOR map, which MUST include at least the information specified in the Key Distribution Response message (see {{gid-get}}), i.e., the parameters 'gkty', 'key', and 'num' defined in {{gid-post}}. The CBOR map MAY include the parameter 'exp', as well as the parameter 'mgt_key_material' specifying new administrative keying material for the target group members, if relevant for the used rekeying scheme.
 
-A rekeying message may include additional information, depending on the rekeying scheme used in the group, the reason that has triggered the rekeying process, and the specific target group members. In particular, if the group rekeying is performed due to one or multiple Clients that have joined the group and the KDC acts as repository of authentication credentials of the group members, then a rekeying message MAY also include the authentication credentials that those Clients use in the group, together with the roles and node identifier that the corresponding Client has in the group. It is RECOMMENDED to specify this information by means of the parameters 'creds', 'peer_roles', and 'peer_identifiers', like done in the Join Response message (see {{gid-post}}).
+A rekeying message may include additional information, depending on the rekeying scheme used in the group, the reason that has triggered the rekeying process, and the specific target group members. In particular, if the group rekeying is performed due to one or multiple Clients that have joined the group and the KDC acts as a repository of authentication credentials of the group members, then a rekeying message MAY also include the authentication credentials that those Clients use in the group, together with the roles and node identifier that the corresponding Client has in the group. It is RECOMMENDED to specify this information by means of the parameters 'creds', 'peer_roles', and 'peer_identifiers', like done in the Join Response message (see {{gid-post}}).
 
 The complete format of a rekeying message, including the encoding and content of the 'mgt_key_material' parameter, has to be defined in separate specifications aimed at profiling the used rekeying scheme in the context of the used application profile of this specification. As a particular case, an application profile of this specification MAY define additional information to include in rekeying messages for the "Point-to-Point" group rekeying scheme in {{point-to-point-rekeying}} (OPT14).
 
@@ -1727,7 +1815,7 @@ The possible, temporary misalignment of the keying material stored by the differ
 
 ## Point-to-Point Group Rekeying {#point-to-point-rekeying}
 
-This approach consists in the KDC sending one individual rekeying message to each target group member. In particular, the rekeying message is protected by means of the security association between the KDC and the target group member in question, as per the used application profile of this specification and the used transport profile of ACE.
+A point-to-point group rekeying consists in the KDC sending one individual rekeying message to each target group member. In particular, the rekeying message is protected by means of the security association between the KDC and the target group member in question, as per the used application profile of this specification and the used transport profile of ACE.
 
 This is the approach taken by the basic "Point-to-Point" group rekeying scheme, that the KDC can explicitly signal in the Join Response (see {{gid-post}}), through the 'rekeying_scheme' parameter specifying the value 0.
 
@@ -1735,13 +1823,48 @@ When taking this approach in the group identified by GROUPNAME, the KDC can prac
 
 * The KDC SHOULD make the /ace-group/GROUPNAME resource Observable {{RFC7641}}. Thus, upon performing a group rekeying, the KDC can distribute the new group keying material through individual notification responses sent to the target group members that are also observing that resource.
 
-   In case the KDC deletes the group (and thus deletes the /ace-group/GROUPNAME resource), relying on CoAP Observe as discussed above also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination. The response MUST have Content-Format set to application/ace-groupcomm+cbor and is formatted as defined in {{key-distr}}. The value of the 'error' field MUST be set to 6 ("Group deleted").
+   In case the KDC deletes the group (and thus deletes the /ace-group/GROUPNAME resource), relying on CoAP Observe as discussed above also allows the KDC to send an unsolicited 4.04 (Not Found) response to each observer group member, as a notification of group termination. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in {{kdc-if-errors}}. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 6 ("Group deleted").
 
 * If a target group member specified a URI in the 'control_uri' parameter of the Join Request upon joining the group (see {{gid-post}}), the KDC can provide that group member with the new group keying material by sending a unicast POST request to that URI.
 
    A Client that does not plan to observe the /ace-group/GROUPNAME resource at the KDC SHOULD provide a URI in the 'control_uri' parameter of the Join Request upon joining the group.
 
 If the KDC has to send a rekeying message to a target group member, but this did not include the 'control_uri' parameter in the Join Request and is not a registered observer for the /ace-group/GROUPNAME resource, then that target group member would not be able to participate to the group rekeying. Later on, after having repeatedly failed to successfully exchange secure messages in the group, that group member can retrieve the current group keying material from the KDC, by sending a GET request to /ace-group/GROUPNAME or /ace-group/GROUPNAME/nodes/NODENAME (see {{gid-get}} and {{node-get}}, respectively).
+
+Figure {{fig-rekeying-example-1}} provides an example of point-to-point group rekeying. In particular, the example makes the following assumptions.
+
+* The group currently consists of four group members, namely C1, C2, C3, and C4.
+* Each group member, when joining the group, provided the KDC with a URI in the 'control_uri' parameter, with url-path "grp-rek".
+* Before the group rekeying is performed, the keying material used in the group has version number num=5.
+* The KDC performs the group rekeying in such a way to evict the group member C3, which has been found to be compromised.
+
+In the example, the KDC individually rekeys the group members intended to remain in the group (i.e., C1, C2, and C4), by means of one rekeying message each.
+
+~~~~~~~~~~~ aasvg
+
+    .----------------------------------------------------------------.
+    |                              KDC                               |
+    '----------------------------------------------------------------'
+          |                 |                                    |
+ Group    |        Group    |                           Group    |
+ keying   |        keying   |                           keying   |
+ material |        material |                           material |
+ (num=6)  |        (num=6)  |                           (num=6)  |
+          |                 |                                    |
+          |                 |                                    |
+          |                 |                                    |
+          v                 v                                    v
+
+      /grp-rek          /grp-rek          /grp-rek           /grp-rek
+     .--------.        .--------.        .--------.         .--------.
+     |   C1   |        |   C2   |        |   C3   |         |   C4   |
+     '--------'        '--------'        '--------'         '--------'
+                                       [TO BE EVICTED]
+     |                                                               |
+     \____________ Stored group keying material (num=5) _____________/
+
+~~~~~~~~~~~
+{: #fig-rekeying-example-1 title="Example of Message Exchanges for a Point-to-Point Group Rekeying" artwork-align="center"}
 
 ## One-to-Many Group Rekeying {#one-to-many-rekeying}
 
@@ -1759,7 +1882,7 @@ Rekeying messages can be protected at the application layer, by using COSE and t
 
    If a particular rekeying message is intended to a single target group member, the KDC may alternatively protect the message using the security association with that group member, and deliver the message like when using the "Point-to-Point" group rekeying scheme (see {{point-to-point-rekeying}}).
 
-* Through a pub-sub communication model - In this case, the KDC acts as publisher and publishes each rekeying message to a specific "rekeying topic", which is associated with the group and is hosted at a broker server. Following their group joining, the group members subscribe to the rekeying topic at the broker, thus receiving the group rekeying messages as they are published by the KDC.
+* Through a pub-sub communication model - In this case, the KDC acts as a publisher and publishes each rekeying message to a specific "rekeying topic", which is associated with the group and is hosted at a broker server. Following their group joining, the group members subscribe to the rekeying topic at the broker, thus receiving the group rekeying messages as they are published by the KDC.
 
    In order to make such message delivery more efficient, the rekeying topic associated with a group can be further organized into subtopics. For instance, the KDC can use a particular subtopic to address a particular set of target group members during the rekeying process, as possibly aligned to a similar organization of the administrative keying material (e.g., a key hierarchy).
 
@@ -1775,11 +1898,57 @@ From a high level point of view, each group member stores only a subset of the o
 
 Further details depend on the specific rekeying scheme used in the group.
 
+Figure {{fig-rekeying-example-2}} provides an example of one-to-many group rekeying over multicast. In particular, the example makes the following assumptions.
+
+* The group currently consists of four group members, namely C1, C2, C3, and C4.
+* Each group member, when joining the group, provided the KDC with a URI in the 'control_uri' parameter, with url-path "grp-rek".
+* Each group member, when joining the group, received from the KDC a URI in the 'control_group_uri' parameter, specifying the multicast address MULT_ADDR and url-path "grp-mrek".
+* Before the group rekeying is performed, the keying material used in the group has version number num=5.
+* The KDC performs the group rekeying in such a way to evict the group member C3, which has been found to be compromised.
+
+In the example, the KDC determines that the most convenient way to perform a group rekeying that evicts C3 is as follows.
+
+First, the KDC sends one rekeying message over multicast, to the multicast address MULT_ADDR and the url-path "grp-mrek". In the figure, the message is denoted with dashed lines. The message is protected with a non-compromised key from the administrative keying material that only C1 and C2 store. Therefore, even though all the group members receive this message, only C1 and C2 are able to decrypt it. The message includes: the new group keying material with version number num=6; and new keys from the administrative keying material to replace those stored by the group members C1, C2, and C3.
+
+After that, the KDC sends one rekeying message addressed individually to C4 and with url-path "grp-rek". In the figure, the message is denoted with a dotted line. The message is protected with the secure association shared between C4 and the KDC. The message includes: the new group keying material with version number num=6; and new keys from the administrative keying material to replace those stored by both C4 and C3.
+
+~~~~~~~~~~~ aasvg
+
+.---------------------------------------------------------------------.
+|                               KDC                                   |
+'---------------------------------------------------------------------'
+                                 |                                 :
+* Group keying material (num=6)  |       * Group keying            :
+* Updated administrative         |         material (num=6)        :
+  keying material for C1 and C2  |       * Updated administrative  :
+                                 |         keying material for C4  :
+                                 |                                 :
+                                 |                                 :
+      +------------+-------------+--------------+                  :
+      |            |             |              |                  :
+      |            |             |              |                  :
+      v            v             v              v                  v
+
+ /grp-mrek    /grp-mrek    /grp-mrek       /grp-mrek          /grp-rek
+.--------.   .--------.   .-----------.   .---------------------------.
+|   C1   |   |   C2   |   |     C3    |   |            C4             |
+'--------'   '--------'   '-----------'   '---------------------------'
+                         [TO BE EVICTED]
+|                                                                     |
+\_______________ Stored group keying material (num=5) ________________/
+
+~~~~~~~~~~~
+{: #fig-rekeying-example-2 title="Example of Message Exchanges for a One-to-Many Group Rekeying" artwork-align="center"}
+
 ### Protection of Rekeying Messages {#one-to-many-rekeying-protection}
 
 When using a group rekeying scheme relying on one-to-many rekeying messages, the actual data content of each rekeying message is prepared according to what the rekeying scheme prescribes.
 
-Then, the KDC can protect the rekeying message as defined below. The used encryption algorithm which SHOULD be the same one used to protect communications in the group. The method defined below assumes that the following holds for the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see {{gid-post}}).
+The following describes one possible method for the KDC to protect the rekeying messages.
+
+The method assumes that the following holds for the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see {{gid-post}}).
+
+* The encryption algorithm SHOULD be the same one used to protect communications in the group.
 
 * The included symmetric encryption keys are accompanied by a corresponding and unique key identifier assigned by the KDC.
 
@@ -1856,6 +2025,8 @@ The resulting tagged CBOR byte string is used as value of the 'scope' claim of t
 {{cddl-ex-0-ext}} and {{cddl-ex-ext}} build on the examples in {{ssec-authorization-response}}, and show the corresponding extended scopes.
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
+;# include rfc9237
+
 gname = tstr
 
 permissions = uint .bits roles
@@ -1867,9 +2038,11 @@ roles = &(
    Verifier: 4
 )
 
-scope_entry = AIF_Generic<gname, permissions>
+scope_entry = AIF-Generic<gname, permissions>
 
-scope = << [ + scope_entry ] >>
+scope_entries = [ + scope_entry ]
+
+scope = bstr .cbor scope_entries
 
 extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 ~~~~~~~~~~~~~~~~~~~~
@@ -1882,7 +2055,9 @@ role = tstr
 
 scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 
-scope = << [ + scope_entry ] >>
+scope_entries = [ + scope_entry ]
+
+scope = bstr .cbor scope_entries
 
 extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 ~~~~~~~~~~~~~~~~~~~~
@@ -1906,10 +2081,6 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 +-----------------------+------+---------------------+------------+
 | Name                  | CBOR | CBOR Type           | Reference  |
 |                       | Key  |                     |            |
-+-----------------------+------+---------------------+------------+
-| error                 | TBD  | int                 | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| error_description     | TBD  | tstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
 | gid                   | TBD  | array               | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
@@ -1942,7 +2113,7 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 +-----------------------+------+---------------------+------------+
 | ace_groupcomm_profile | TBD  | int                 | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| exp                   | TBD  | int                 | [RFC-XXXX] |
+| exp                   | TBD  | uint                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
 | creds                 | TBD  | array               | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
@@ -1987,10 +2158,6 @@ A Client SHOULD support the following parameter.
 
 * 'get_creds'. That is, not supporting this parameter would yield the inconvenient and undesirable behavior where: i) the Client does not ask for the other group members' authentication credentials upon joining the group (see {{ssec-key-distribution-exchange}}); and ii) later on as a group member, the Client only retrieves the authentication credentials of all group members (see {{sec-key-retrieval-all}}).
 
-A Client MAY support the following optional parameters. Application profiles of this specification MAY define that Clients must or should support these parameters instead (OPT15).
-
-* 'error', 'error_description'.
-
 The following conditional parameters are relevant only if specific conditions hold. It is REQUIRED of application profiles of this specification to define whether Clients must, should, or may support these parameters, and under which circumstances (REQ30).
 
 * 'client_cred' and 'client_cred_verify'. These parameters are relevant for a Client that has an authentication credential to use in a joined group.
@@ -2011,7 +2178,7 @@ The following conditional parameters are relevant only if specific conditions ho
 
 # ACE Groupcomm Error Identifiers {#error-types}
 
-This specification defines a number of values that the KDC can include as error identifiers, in the 'error' field of an error response with Content-Format application/ace-groupcomm+cbor.
+This specification defines a number of values that the KDC can use as error identifiers. These are used in error responses with Content-Format application/concise-problem-details+cbor, as values of the 'error-id' field within the Custom Problem Detail entry 'ace-groupcomm-error' (see {{kdc-if-errors}}).
 
 ~~~~~~~~~~~
 +-------+---------------------------------------------+
@@ -2035,7 +2202,7 @@ This specification defines a number of values that the KDC can include as error 
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Error-Identifiers title="ACE Groupcomm Error Identifiers" artwork-align="center"}
 
-A Client supporting the 'error' parameter (see {{kdc-if-errors}} and {{params}}) and able to understand the specified error may use that information to determine what actions to take next. If it is included in the error response and supported by the Client, the 'error_description' parameter may provide additional context.
+If a Client supports the problem-details format {{RFC9290}} and the Custom Problem Detail entry 'ace-groupcomm-error' defined in {{kdc-if-errors}}, and is able to understand the error specified in the 'error-id' field therein, then the Client may use that information to determine what actions to take next. If the Concise Problem Details data item specified in the error response includes the 'detail' entry and the Client supports it, such an entry may provide additional context.
 
 In particular, the following guidelines apply, and application profiles of this specification can define more detailed actions for the Client to take when learning that a specific error has occurred.
 
@@ -2057,13 +2224,15 @@ In particular, the following guidelines apply, and application profiles of this 
 
 Security considerations are inherited from the ACE framework {{RFC9200}}, and from the specific transport profile of ACE used between the Clients and the KDC, e.g., {{RFC9202}} and {{RFC9203}}.
 
+When using the problem-details format defined in {{RFC9290}} for error responses, then the privacy and security considerations from {{Sections 4 and 5 of RFC9290}} also apply.
+
 Furthermore, the following security considerations apply.
 
 ## Secure Communication in the Group {#sec-cons-communication}
 
 When a group member receives a message from a certain sender for the first time since joining the group, it needs to have a mechanism in place to avoid replayed messages and to assert their freshness, e.g., {{Section B.1.2 of RFC8613}} or {{Section 10 of I-D.ietf-core-oscore-groupcomm}}. Such a mechanism aids the recipient group member also in case it has rebooted and lost the security state used to protect previous group communications with that sender.
 
-By its nature, the KDC is invested with a large amount of trust, since it acts as generator and provider of the symmetric keying material used to protect communications in each of its groups. While details depend on the specific communication and security protocols used in the group, the KDC is in the position to decrypt messages exchanged in the group as if it was also a group member, as long as those are protected through commonly shared group keying material.
+By its nature, the KDC is invested with a large amount of trust, since it acts as a generator and provider of the symmetric keying material used to protect communications in each of its groups. While details depend on the specific communication and security protocols used in the group, the KDC is in the position to decrypt messages exchanged in the group as if it was also a group member, as long as those are protected through commonly shared group keying material.
 
 A compromised KDC would thus put the attacker in the same position, which also means that:
 
@@ -2083,7 +2252,9 @@ The KDC can generate new group keying material and provide it to the group membe
 
 In particular, the KDC must renew the group keying material latest upon its expiration. Before then, the KDC may also renew the group keying material on a regular or periodical fashion.
 
-Unless otherwise defined by an application profile of this specification, the KDC SHOULD renew the group keying material upon a group membership change. In particular, since the minimum number of group members is one, the KDC SHOULD provide even a Client joining an empty group with new keying material never used before in that group. Similarly, the KDC SHOULD provide new group keying material also to a Client that remains the only member in the group after the leaving of other group members.
+Unless otherwise defined by an application profile of this specification, the KDC SHOULD renew the group keying material upon a group membership change. As a possible exception, the KDC may not rekey the group upon the joining of a new group member, if the application does not require backward security. As another possible exception discussed more in detail later in this section, the KDC may rely on a rekeying policy that reasonably take into account the expected rate of group membership changes and the duration of a group rekeying.
+
+Since the minimum number of group members is one, the KDC SHOULD provide even a Client joining an empty group with new keying material never used before in that group. Similarly, the KDC SHOULD provide new group keying material also to a Client that remains the only member in the group after the leaving of other group members.
 
 Note that the considerations in {{sec-cons-communication}} about dealing with replayed messages still hold, even in case the KDC rekeys the group upon every single joining of a new group member. However, if the KDC has renewed the group keying material upon a group member's joining, and the time interval between the end of the rekeying process and that member's joining is sufficiently small, then that group member is also on the safe side, since it would not accept replayed messages protected with the old group keying material previous to its joining.
 
@@ -2159,9 +2330,9 @@ This specification registers the 'application/ace-groupcomm+cbor' media type for
 
 IANA is asked to register the following entry to the "CoAP Content-Formats" registry within the "CoRE Parameters" registry group.
 
-Media Type: application/ace-groupcomm+cbor
+Content Type: application/ace-groupcomm+cbor
 
-Encoding: -
+Content Coding: -
 
 ID: TBD
 
@@ -2204,11 +2375,29 @@ Mappings" registry following the procedure specified in {{Section 8.10 of RFC920
 
 IANA is asked to register the following entry in the "Interface Description (if=) Link Target Attribute Values" registry within the "CoRE Parameters" registry group.
 
-* Attribute Value: ace.group
+* Value: ace.groups
 
-* Description: The 'ace group' interface is used to provision keying material and related information and policies to members of a group using the ACE framework.
+* Description: The KDC interface at the parent resource of group-membership resources is used to retrieve names of security groups using the ACE framework.
 
-* Reference: {{&SELF}}
+* Reference: {{kdc-if}} of {{&SELF}}
+
+&nbsp;
+
+* Value: ace.group
+
+* Description: The KDC interface at a group-membership resource is used to provision keying material and related information and policies to members of the corresponding security group using the ACE framework.
+
+* Reference: {{kdc-if}} of {{&SELF}}
+
+## Custom Problem Detail Keys Registry {#iana-custom-problem-details}
+
+IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry within the "CoRE Parameters" registry group.
+
+* Key Value: TBD
+* Name: ace-groupcomm-error
+* Brief Description: Carry {{&SELF}} problem details in a Concise Problem Details data item.
+* Change Controller: IETF
+* Reference: {{kdc-if-errors}} of {{&SELF}}
 
 ## ACE Groupcomm Parameters {#iana-reg}
 
@@ -2357,7 +2546,7 @@ Expert reviewers should take into consideration the following points:
 
 This section lists the requirements on application profiles of this specification, for the convenience of application profile designers.
 
-## Mandatory-to-Address Requirements
+## Mandatory-to-Address Requirements {#req-mandatory}
 
 * REQ1: Specify the format and encoding of 'scope'. This includes defining the set of possible roles and their identifiers, as well as the corresponding encoding to use in the scope entries according to the used scope format (see {{ssec-authorization-request}}).
 
@@ -2419,7 +2608,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * REQ30: Define whether Clients must, should, or may support the conditional parameters defined in {{params}}, and under which circumstances.
 
-## Optional-to-Address Requirements
+## Optional-to-Address Requirements {#req-optional}
 
 * OPT1: Optionally, if the textual format of 'scope' is used, specify CBOR values to use for abbreviating the role identifiers in the group (see {{ssec-authorization-request}}).
 
@@ -2429,7 +2618,7 @@ This section lists the requirements on application profiles of this specificatio
 
 * OPT4: Optionally, specify possible or required payload formats for specific error cases.
 
-* OPT5: Optionally, specify additional identifiers of error types, as values of the 'error' field in an error response from the KDC.
+* OPT5: Optionally, specify additional identifiers of error types, as values of the 'error-id' field within the Custom Problem Detail entry 'ace-groupcomm-error' (see {{kdc-if-errors}}).
 
 * OPT6: Optionally, specify the encoding of 'creds\_repo' if the default is not used (see {{gid-post}}).
 
@@ -2448,8 +2637,6 @@ This section lists the requirements on application profiles of this specificatio
 * OPT13: Optionally, specify how the identifier of a group member's authentication credential is included in requests sent to other group members (see {{update-pub-key}}).
 
 * OPT14: Optionally, specify additional information to include in rekeying messages for the "Point-to-Point" group rekeying scheme (see {{sec-group-rekeying}}).
-
-* OPT15: Optionally, specify if Clients must or should support any of the parameters defined as optional in this specification (see {{params}}).
 
 # Extensibility for Future COSE Algorithms # {#sec-future-cose-algs}
 
@@ -2495,13 +2682,49 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 ## Version -17 to -18 ## {#sec-17-18}
 
-* Consistent use of leading slash in URI paths.
+* Provided more details when early introducing "backward security" and "forward security".
+
+* Clarified definition and semantics of "group name" and "node name".
+
+* Clarified definition of "individual keying material".
+
+* Clarified definition of "Dispatcher".
+
+* Enforced consistent use of leading slash in URI paths.
+
+* Fixed CDDL definitions and examples in CBOR diagnostic notation.
+
+* RFC 9290 is used instead of the custom format for error responses.
+
+* Clarified which operations are limited to group members and which are allowed also to non group members.
+
+* Improved examples of message exchange.
+
+* Added ASCII-art diagrams with examples of group rekeying.
+
+* Clarified for how long nonces are stored at the KDC.
+
+* Clarified that the KDC might not have to store the 'cnonce' from a Join Request.
 
 * Consistency fix: Clients always support the 'cnonce' parameter.
 
-* The KDC might not have to store the 'cnonce' from a Join Request.
+* Added new parameter 'exi' providing the residual lifetime of the current group keying material.
 
-* Fixes and editorial improvements.
+* Clarified text about the KDC knowledge of compromised nodes.
+
+* Clarified the impact on performance of a one-to-many group rekeying.
+
+* Mentioned explicit exceptions to a group rekeying at each group membership change.
+
+* Explained reasons for delaying a rekeying and halting communications.
+
+* Fixes in current IANA registrations.
+
+* Added integer abbreviation values for registrations in new IANA registries.
+
+* IANA registration of two CoRE if= values: "ace.group" and "ace.groups".
+
+* Editorial fixes and improvements.
 
 ## Version -16 to -17 ## {#sec-16-17}
 
@@ -2724,7 +2947,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 # Acknowledgments
 {: numbered="no"}
 
-The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Erik Kline}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
+The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}},  {{{Roman Danyliw}}}, {{{Thomas Fossati}}}, {{{Vidhi Goel}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Erik Kline}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Henry Thompson}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; by the H2020 project SIFIS-Home (Grant agreement 952652); and by the EIT-Digital High Impact Initiative ACTIVE.
 
