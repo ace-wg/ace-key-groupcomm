@@ -511,6 +511,8 @@ If request messages sent to the KDC as well as success response messages from th
 
   A Client can access this resource in order to retrieve a set of group names, each corresponding to one of the specified group identifiers. This operation is described in {{retrieval-gnames}}.
 
+  Clients may be authorized to access this resource even without being members of any group at the KDC, and even if they are not authorized to become group members (e.g., when authorized to be external signature verifiers).
+
 * /ace-group/GROUPNAME : one such sub-resource to /ace-group is hosted for each group with name GROUPNAME that the KDC manages, and contains the symmetric group keying material for that group.
 
   A Client can access this resource in order to join the group with name GROUPNAME, or later as a group member to retrieve the current group keying material. These operations are described in {{ssec-key-distribution-exchange}} and {{ssec-key-material-retrieval}}, respectively.
@@ -519,7 +521,7 @@ If request messages sent to the KDC as well as success response messages from th
 
 * /ace-group/GROUPNAME/creds : the path of this resource is invariant once the resource is established. This resource contains the authentication credentials of all the members of the group with name GROUPNAME.
 
-  This resource is created only in case the KDC acts as repository of authentication credentials for group members.
+  This resource is created only in case the KDC acts as a repository of authentication credentials for group members.
 
   A Client can access this resource in order to retrieve the authentication credentials of other group members, in addition to when joining the group. That is, the Client can retrieve the authentication credentials of all the current group members, or a subset of them by specifying filter criteria. These operations are described in {{sec-key-retrieval-all}} and {{sec-key-retrieval}}, respectively.
 
@@ -672,7 +674,7 @@ Note that the KDC only verifies that the node is authorized by the AS to access 
 
 #### Retrieve Group Names {#retrieval-gnames}
 
-In case the joining node only knows the group identifier of the group it wishes to join or about which it wishes to get update information from the KDC, the node can contact the KDC to request the corresponding group name and group-membership resource URI. The node can request several group identifiers at once. It does so by sending a CoAP FETCH request to the /ace-group endpoint at the KDC formatted as defined in {{ace-group-fetch}}.
+In case the joining node only knows the group identifier of the group it wishes to join or about which it wishes to get updated information from the KDC, the node can contact the KDC to request the corresponding group name and group-membership resource URI. The node can request several group identifiers at once. It does so by sending a CoAP FETCH request to the /ace-group endpoint at the KDC formatted as defined in {{ace-group-fetch}}.
 
 {{fig-ace-group-fetch}} gives an overview of the exchanges described above, and {{fig-ace-group-fetch-2}} shows an example.
 
@@ -1207,16 +1209,16 @@ Uri-Path: "g1"
 Uri-Path: "pub-key"
 Content-Format: "application/ace-groupcomm+cbor"
 Payload:
-  { "get_creds": [true, [], [ ID3 ]] }
+  { "get_creds": [true, [], [ ID2, ID3 ]] }
 
 Response:
 
 Header: Content (Code=2.05)
 Content-Format: "application/ace-groupcomm+cbor"
 Payload (in CBOR diagnostic notation):
-  { "creds": [ AUTH_CRED_3 ],
-    "peer_roles": [ "receiver" ],
-    "peer_identifiers": [ ID3 ] }
+  { "creds": [ AUTH_CRED_2, AUTH_CRED_3, ],
+    "peer_roles": [ ["sender", "receiver"], "receiver" ],
+    "peer_identifiers": [ ID2, ID3 ] }
 ~~~~~~~~~~~
 {: #fig-public-key-2 title="Example of Authentication Credential Request-Response to Obtain the Authentication Credentials of Specific Group Members"}
 
@@ -1730,7 +1732,7 @@ In either case, the KDC performs the following actions.
 
 * The KDC removes the Client from the list of current members of the group.
 
-* In case of forced eviction, i.e., for cases 2 and 3 above, the KDC deletes the authentication credential of the removed Client, if it acts as repository of authentication credentials for group members.
+* In case of forced eviction, i.e., for cases 2 and 3 above, the KDC deletes the authentication credential of the removed Client, if it acts as a repository of authentication credentials for group members.
 
 * If the removed Client is registered as an observer of the group-membership resource at /ace-group/GROUPNAME, the KDC removes the Client from the list of observers of that resource.
 
@@ -1758,7 +1760,7 @@ Distributing the new group keying material requires the KDC to send multiple rek
 
 Each rekeying message MUST have Content-Format set to application/ace-groupcomm+cbor and its payload formatted as a CBOR map, which MUST include at least the information specified in the Key Distribution Response message (see {{gid-get}}), i.e., the parameters 'gkty', 'key', and 'num' defined in {{gid-post}}. The CBOR map MAY include the parameter 'exp', as well as the parameter 'mgt_key_material' specifying new administrative keying material for the target group members, if relevant for the used rekeying scheme.
 
-A rekeying message may include additional information, depending on the rekeying scheme used in the group, the reason that has triggered the rekeying process, and the specific target group members. In particular, if the group rekeying is performed due to one or multiple Clients that have joined the group and the KDC acts as repository of authentication credentials of the group members, then a rekeying message MAY also include the authentication credentials that those Clients use in the group, together with the roles and node identifier that the corresponding Client has in the group. It is RECOMMENDED to specify this information by means of the parameters 'creds', 'peer_roles', and 'peer_identifiers', like done in the Join Response message (see {{gid-post}}).
+A rekeying message may include additional information, depending on the rekeying scheme used in the group, the reason that has triggered the rekeying process, and the specific target group members. In particular, if the group rekeying is performed due to one or multiple Clients that have joined the group and the KDC acts as a repository of authentication credentials of the group members, then a rekeying message MAY also include the authentication credentials that those Clients use in the group, together with the roles and node identifier that the corresponding Client has in the group. It is RECOMMENDED to specify this information by means of the parameters 'creds', 'peer_roles', and 'peer_identifiers', like done in the Join Response message (see {{gid-post}}).
 
 The complete format of a rekeying message, including the encoding and content of the 'mgt_key_material' parameter, has to be defined in separate specifications aimed at profiling the used rekeying scheme in the context of the used application profile of this specification. As a particular case, an application profile of this specification MAY define additional information to include in rekeying messages for the "Point-to-Point" group rekeying scheme in {{point-to-point-rekeying}} (OPT14).
 
@@ -1768,7 +1770,7 @@ The possible, temporary misalignment of the keying material stored by the differ
 
 ## Point-to-Point Group Rekeying {#point-to-point-rekeying}
 
-This approach consists in the KDC sending one individual rekeying message to each target group member. In particular, the rekeying message is protected by means of the security association between the KDC and the target group member in question, as per the used application profile of this specification and the used transport profile of ACE.
+A point-to-point group rekeying consists in the KDC sending one individual rekeying message to each target group member. In particular, the rekeying message is protected by means of the security association between the KDC and the target group member in question, as per the used application profile of this specification and the used transport profile of ACE.
 
 This is the approach taken by the basic "Point-to-Point" group rekeying scheme, that the KDC can explicitly signal in the Join Response (see {{gid-post}}), through the 'rekeying_scheme' parameter specifying the value 0.
 
@@ -1800,7 +1802,7 @@ Rekeying messages can be protected at the application layer, by using COSE and t
 
    If a particular rekeying message is intended to a single target group member, the KDC may alternatively protect the message using the security association with that group member, and deliver the message like when using the "Point-to-Point" group rekeying scheme (see {{point-to-point-rekeying}}).
 
-* Through a pub-sub communication model - In this case, the KDC acts as publisher and publishes each rekeying message to a specific "rekeying topic", which is associated with the group and is hosted at a broker server. Following their group joining, the group members subscribe to the rekeying topic at the broker, thus receiving the group rekeying messages as they are published by the KDC.
+* Through a pub-sub communication model - In this case, the KDC acts as a publisher and publishes each rekeying message to a specific "rekeying topic", which is associated with the group and is hosted at a broker server. Following their group joining, the group members subscribe to the rekeying topic at the broker, thus receiving the group rekeying messages as they are published by the KDC.
 
    In order to make such message delivery more efficient, the rekeying topic associated with a group can be further organized into subtopics. For instance, the KDC can use a particular subtopic to address a particular set of target group members during the rekeying process, as possibly aligned to a similar organization of the administrative keying material (e.g., a key hierarchy).
 
@@ -1820,7 +1822,7 @@ Further details depend on the specific rekeying scheme used in the group.
 
 When using a group rekeying scheme relying on one-to-many rekeying messages, the actual data content of each rekeying message is prepared according to what the rekeying scheme prescribes.
 
-Then, the KDC can protect the rekeying message as defined below. The used encryption algorithm which SHOULD be the same one used to protect communications in the group. The method defined below assumes that the following holds for the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see {{gid-post}}).
+Then, the KDC can protect the rekeying message as defined below. The used encryption algorithm SHOULD be the same one used to protect communications in the group. The method defined below assumes that the following holds for the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see {{gid-post}}).
 
 * The included symmetric encryption keys are accompanied by a corresponding and unique key identifier assigned by the KDC.
 
@@ -2104,7 +2106,7 @@ Furthermore, the following security considerations apply.
 
 When a group member receives a message from a certain sender for the first time since joining the group, it needs to have a mechanism in place to avoid replayed messages and to assert their freshness, e.g., {{Section B.1.2 of RFC8613}} or {{Section 10 of I-D.ietf-core-oscore-groupcomm}}. Such a mechanism aids the recipient group member also in case it has rebooted and lost the security state used to protect previous group communications with that sender.
 
-By its nature, the KDC is invested with a large amount of trust, since it acts as generator and provider of the symmetric keying material used to protect communications in each of its groups. While details depend on the specific communication and security protocols used in the group, the KDC is in the position to decrypt messages exchanged in the group as if it was also a group member, as long as those are protected through commonly shared group keying material.
+By its nature, the KDC is invested with a large amount of trust, since it acts as a generator and provider of the symmetric keying material used to protect communications in each of its groups. While details depend on the specific communication and security protocols used in the group, the KDC is in the position to decrypt messages exchanged in the group as if it was also a group member, as long as those are protected through commonly shared group keying material.
 
 A compromised KDC would thus put the attacker in the same position, which also means that:
 
@@ -2544,13 +2546,49 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 
 ## Version -17 to -18 ## {#sec-17-18}
 
-* Consistent use of leading slash in URI paths.
+* Provided more details when early introducing "backward security" and "forward security".
+
+* Clarified definition and semantics of "group name" and "node name".
+
+* Clarified definition of "individual keying material".
+
+* Clarified definition of "Dispatcher".
+
+* Enforced consistent use of leading slash in URI paths.
+
+* Fixed CDDL definitions and examples in CBOR diagnostic notation.
+
+* RFC 9290 is used instead of the custom format for error responses.
+
+* Clarified which operations are limited to group members and which are allowed also to non group members.
+
+* Improved examples of message exchange.
+
+* Added ASCII-art diagrams with examples of group rekeying.
+
+* Clarified for how long nonces are stored at the KDC.
+
+* Clarified that the KDC might not have to store the 'cnonce' from a Join Request.
 
 * Consistency fix: Clients always support the 'cnonce' parameter.
 
-* The KDC might not have to store the 'cnonce' from a Join Request.
+* Added new parameter 'exi' providing the residual lifetime of the current group keying material.
 
-* Fixes and editorial improvements.
+* Clarified text about the KDC knowledge of compromised nodes.
+
+* Clarified the impact on performance of a one-to-many group rekeying.
+
+* Mentioned explicit exceptions to a group rekeying at each group membership change.
+
+* Explained reasons for delaying a rekeying and halting communications.
+
+* Fixes in current IANA registrations.
+
+* Added integer abbreviation values for registrations in new IANA registries.
+
+* IANA registration of two CoRE if= values: "ace.group" and "ace.groups".
+
+* Editorial fixes and improvements.
 
 ## Version -16 to -17 ## {#sec-16-17}
 
@@ -2773,7 +2811,7 @@ RFC EDITOR: PLEASE REMOVE THIS SECTION.
 # Acknowledgments
 {: numbered="no"}
 
-The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Thomas Fossati}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
+The following individuals were helpful in shaping this document: {{{Christian Amsüss}}}, {{{Carsten Bormann}}}, {{{Thomas Fossati}}}, {{{Vidhi Goel}}}, {{{Rikard Höglund}}}, {{{Ben Kaduk}}}, {{{Watson Ladd}}}, {{{John Preuß Mattsson}}}, {{{Daniel Migault}}}, {{{Jim Schaad}}}, {{{Ludwig Seitz}}}, {{{Göran Selander}}}, {{{Cigdem Sengul}}}, {{{Peter van der Stok}}}, and {{{Paul Wouters}}}.
 
 The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; by the H2020 project SIFIS-Home (Grant agreement 952652); and by the EIT-Digital High Impact Initiative ACTIVE.
 
