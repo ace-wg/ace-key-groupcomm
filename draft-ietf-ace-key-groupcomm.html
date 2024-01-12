@@ -1528,7 +1528,7 @@ The same security group might be associated with multiple application groups. Al
 <p id="section-1.1-6">Furthermore, this document uses "names" or "identifiers" for groups and nodes. Their different meanings are summarized below.<a href="#section-1.1-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1.1-7.1">
-            <p id="section-1.1-7.1.1">Group name: The identifier of a group. Once established, it is invariant. It is used in the interactions between Client, AS, and RS to identify a group. A group name is always unique among the group names of the existing groups under the same KDC.<a href="#section-1.1-7.1.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-7.1.1">Group name: The identifier of a group, as a text string. Once established, it is invariant. It is used in the interactions between Client, AS, and RS to identify a group. A group name is always unique among the group names of the existing groups under the same KDC.<a href="#section-1.1-7.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.1-7.2">
             <p id="section-1.1-7.2.1">GROUPNAME: The text string used in URIs to identify a group. Once established, it is invariant. GROUPNAME uniquely maps to the group name of a group, although they do not necessarily coincide.<a href="#section-1.1-7.2.1" class="pilcrow">¶</a></p>
@@ -1537,7 +1537,7 @@ The same security group might be associated with multiple application groups. Al
             <p id="section-1.1-7.3.1">Group identifier: the identifier of the group keying material used in a group. Unlike group name and GROUPNAME, this identifier changes over time, when the group keying material is updated.<a href="#section-1.1-7.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.1-7.4">
-            <p id="section-1.1-7.4.1">Node name: The identifier of a node. Once established, it is invariant. It is used in the interactions between Client and RS, as well as to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.<a href="#section-1.1-7.4.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-7.4.1">Node name: The identifier of a node, as a text string. Once established, it is invariant. It is used in the interactions between Client and RS, as well as to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.<a href="#section-1.1-7.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.1-7.5">
             <p id="section-1.1-7.5.1">NODENAME: The text string used in URIs to identify a member of a group. Once established, it is invariant. Its value coincides with the node name of the associated group member.<a href="#section-1.1-7.5.1" class="pilcrow">¶</a></p>
@@ -1555,7 +1555,7 @@ The same security group might be associated with multiple application groups. Al
             <p id="section-1.1-9.3.1">Authentication credential, as the set of information associated with an entity, including that entity's public key and parameters associated with the public key. Examples of authentication credentials are CBOR Web Tokens (CWTs) and CWT Claims Sets (CCSs) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>, X.509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, and C509 certificates <span>[<a href="#I-D.ietf-cose-cbor-encoded-cert" class="cite xref">I-D.ietf-cose-cbor-encoded-cert</a>]</span>.<a href="#section-1.1-9.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.1-9.4">
-            <p id="section-1.1-9.4.1">Individual keying material: information exclusively pertaining to a group member, as associated with its group membership and related to other keying material and parameters used in the group. For example, this can be a member identifier that is unique within the group. The specific nature and format of individual keying material used in a group is defined in application profiles of this specification. The individual keying material of a group member is not related to the secure association between that group member and the KDC.<a href="#section-1.1-9.4.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-9.4.1">Individual keying material: information exclusively pertaining to a group member, as associated with its group membership and related to other keying material and parameters used in the group. For example, this can be an identifier that the secure communication protocol employs to uniquely identify a node as a group member (e.g., a cryptographic key identifier uniquely associated with the group member in question). The specific nature and format of individual keying material used in a group is defined in application profiles of this specification. The individual keying material of a group member is not related to the secure association between that group member and the KDC.<a href="#section-1.1-9.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-1.1-10">Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
@@ -1637,7 +1637,7 @@ The same security group might be associated with multiple application groups. Al
           <p id="section-2-4.1.1">Client (C): node that wants to join a group and take part in group communication with other group members. Within the group, the Client can have different roles.<a href="#section-2-4.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-4.2">
-          <p id="section-2-4.2.1">Authorization Server (AS): as per the AS defined in the ACE Framework, it enforces access policies, and knows if a node is allowed to join a given group with write and/or read rights.<a href="#section-2-4.2.1" class="pilcrow">¶</a></p>
+          <p id="section-2-4.2.1">Authorization Server (AS): as per the AS defined in the ACE Framework <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, it enforces access policies, and knows if a node is allowed to join a given group with write and/or read rights.<a href="#section-2-4.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-4.3">
           <p id="section-2-4.3.1">Key Distribution Center (KDC): maintains the keying material to protect group communications, and provides it to Clients authorized to join a given group. During the first part of the exchange (<a href="#sec-auth" class="auto internal xref">Section 3</a>), it takes the role of the RS in the ACE Framework. During the second part (<a href="#key-distr" class="auto internal xref">Section 4</a>), which is not based on the ACE Framework, it distributes the keying material. In addition, it provides the latest keying material to group members when requested or, if required by the application, when membership changes.<a href="#section-2-4.3.1" class="pilcrow">¶</a></p>
@@ -1775,7 +1775,7 @@ Client                                             AS    KDC
 <p id="section-3.1-1">The Authorization Request sent from the Client to the AS is defined in <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.1" class="relref">Section 5.8.1</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span> and MAY contain the following parameters, which, if included, MUST have format and value as specified below.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1-2.1">
-            <p id="section-3.1-2.1.1">'scope', specifying the name of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-2.1.1">'scope', specifying the names of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2.1.2">
 This parameter is encoded as a CBOR byte string, which wraps a CBOR array of one or more scope entries. All the scope entries are specified according to a same format, i.e., either the AIF format or the textual format defined below.<a href="#section-3.1-2.1.2" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -3648,7 +3648,7 @@ Payload: -
           <p id="section-5-2.1.1">The Client explicitly asks to leave the group, as defined in <a href="#ssec-group-leaving" class="auto internal xref">Section 4.8.3.1</a>.<a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.2">
-          <p id="section-5-2.2.1">The node has been found compromised or is suspected so.<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.2.1">The node has been found compromised or is suspected so. The KDC is expected to determine that a group member has to be evicted either through its own means, or based on information that it obtains from a trusted source (e.g., an Intrusion Detection System, or an issuer of authentication credentials). Additional mechanics, protocols, and interfaces at the KDC that can support this are out of the scope of this document.<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-5-2.3">
           <p id="section-5-2.3.1">The Client's authorization to be a group member with the current roles is not valid anymore, i.e., the access token has expired or has been revoked. If the AS provides token introspection (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.9" class="relref">Section 5.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), the KDC can optionally use it and check whether the Client is still authorized.<a href="#section-5-2.3.1" class="pilcrow">¶</a></p>
@@ -3980,80 +3980,84 @@ The setup of rekeying topics at the broker as well as the discovery of the topic
 <a href="#section-6.2.1" class="section-number selfRef">6.2.1. </a><a href="#name-protection-of-rekeying-mess" class="section-name selfRef">Protection of Rekeying Messages</a>
           </h4>
 <p id="section-6.2.1-1">When using a group rekeying scheme relying on one-to-many rekeying messages, the actual data content of each rekeying message is prepared according to what the rekeying scheme prescribes.<a href="#section-6.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-2">Then, the KDC can protect the rekeying message as defined below. The used encryption algorithm SHOULD be the same one used to protect communications in the group. The method defined below assumes that the following holds for the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>).<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-2">The following describes one possible method for the KDC to protect the rekeying messages.<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-3">The method assumes that the following holds for the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>).<a href="#section-6.2.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.2.1-3.1">
-              <p id="section-6.2.1-3.1.1">The included symmetric encryption keys are accompanied by a corresponding and unique key identifier assigned by the KDC.<a href="#section-6.2.1-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2.1-4.1">
+              <p id="section-6.2.1-4.1.1">The encryption algorithm SHOULD be the same one used to protect communications in the group.<a href="#section-6.2.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-3.2">
-              <p id="section-6.2.1-3.2.1">A Base IV is also included, with the same size of the AEAD nonce considered by the encryption algorithm to use.<a href="#section-6.2.1-3.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-4.2">
+              <p id="section-6.2.1-4.2.1">The included symmetric encryption keys are accompanied by a corresponding and unique key identifier assigned by the KDC.<a href="#section-6.2.1-4.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-6.2.1-4.3">
+              <p id="section-6.2.1-4.3.1">A Base IV is also included, with the same size of the AEAD nonce considered by the encryption algorithm to use.<a href="#section-6.2.1-4.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-6.2.1-4">First, the KDC computes a COSE_Encrypt0 object as follows.<a href="#section-6.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-5">First, the KDC computes a COSE_Encrypt0 object as follows.<a href="#section-6.2.1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.2.1-5.1">
-              <p id="section-6.2.1-5.1.1">The encryption key to use is selected from the administrative keying material, as defined by the rekeying scheme used in the group.<a href="#section-6.2.1-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2.1-6.1">
+              <p id="section-6.2.1-6.1.1">The encryption key to use is selected from the administrative keying material, as defined by the rekeying scheme used in the group.<a href="#section-6.2.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-5.2">
-              <p id="section-6.2.1-5.2.1">The plaintext is the actual data content of the rekeying message.<a href="#section-6.2.1-5.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-6.2">
+              <p id="section-6.2.1-6.2.1">The plaintext is the actual data content of the rekeying message.<a href="#section-6.2.1-6.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-5.3">
-              <p id="section-6.2.1-5.3.1">The Additional Authenticated Data (AAD) is empty, unless otherwise specified by separate documents profiling the use of the group rekeying scheme.<a href="#section-6.2.1-5.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-6.3">
+              <p id="section-6.2.1-6.3.1">The Additional Authenticated Data (AAD) is empty, unless otherwise specified by separate documents profiling the use of the group rekeying scheme.<a href="#section-6.2.1-6.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-5.4">
-              <p id="section-6.2.1-5.4.1">Since the KDC is the only sender of rekeying messages, the AEAD nonce can be computed as follows, where NONCE_SIZE is the size in bytes of the AEAD nonce. Separate documents profiling the use of the group rekeying scheme may define alternative ways to compute the AEAD nonce.<a href="#section-6.2.1-5.4.1" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-5.4.2">
-The KDC considers the following values.<a href="#section-6.2.1-5.4.2" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-6.4">
+              <p id="section-6.2.1-6.4.1">Since the KDC is the only sender of rekeying messages, the AEAD nonce can be computed as follows, where NONCE_SIZE is the size in bytes of the AEAD nonce. Separate documents profiling the use of the group rekeying scheme may define alternative ways to compute the AEAD nonce.<a href="#section-6.2.1-6.4.1" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-6.4.2">
+The KDC considers the following values.<a href="#section-6.2.1-6.4.2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.2.1-5.4.3.1">
-                  <p id="section-6.2.1-5.4.3.1.1">COUNT, as a 2-byte unsigned integer associated with the used encryption key. Its value is set to 0 when starting to perform a new group rekeying instance, and is incremented after each use of the encryption key.<a href="#section-6.2.1-5.4.3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2.1-6.4.3.1">
+                  <p id="section-6.2.1-6.4.3.1.1">COUNT, as a 2-byte unsigned integer associated with the used encryption key. Its value is set to 0 when starting to perform a new group rekeying instance, and is incremented after each use of the encryption key.<a href="#section-6.2.1-6.4.3.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-6.2.1-5.4.3.2">
-                  <p id="section-6.2.1-5.4.3.2.1">NEW_NUM, as the version number of the new group keying material to distribute in this rekeying instance, left-padded with zeros to exactly NONCE_SIZE - 2 bytes.<a href="#section-6.2.1-5.4.3.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-6.2.1-6.4.3.2">
+                  <p id="section-6.2.1-6.4.3.2.1">NEW_NUM, as the version number of the new group keying material to distribute in this rekeying instance, left-padded with zeros to exactly NONCE_SIZE - 2 bytes.<a href="#section-6.2.1-6.4.3.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
-<p id="section-6.2.1-5.4.4">
-Then, the KDC computes a Partial IV as the byte string concatenation of COUNT and NEW_NUM, in this order. Finally, the AEAD nonce is computed as the XOR between the Base IV and the Partial IV.<a href="#section-6.2.1-5.4.4" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-5.4.5">
-In order to comply with the security requirements of AEAD encryption algorithms, the KDC MUST NOT use the same pair (AEAD encryption key, AEAD nonce). For example, this includes not using the same encryption key from the administrative keying material more than 2^16 times during the same rekeying instance.<a href="#section-6.2.1-5.4.5" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-6.4.4">
+Then, the KDC computes a Partial IV as the byte string concatenation of COUNT and NEW_NUM, in this order. Finally, the AEAD nonce is computed as the XOR between the Base IV and the Partial IV.<a href="#section-6.2.1-6.4.4" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-6.4.5">
+In order to comply with the security requirements of AEAD encryption algorithms, the KDC MUST NOT use the same pair (AEAD encryption key, AEAD nonce). For example, this includes not using the same encryption key from the administrative keying material more than 2^16 times during the same rekeying instance.<a href="#section-6.2.1-6.4.5" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-5.5">
-              <p id="section-6.2.1-5.5.1">The protected header of the COSE_Encrypt0 object MUST include the following parameters.<a href="#section-6.2.1-5.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-6.5">
+              <p id="section-6.2.1-6.5.1">The protected header of the COSE_Encrypt0 object MUST include the following parameters.<a href="#section-6.2.1-6.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.2.1-5.5.2.1">
-                  <p id="section-6.2.1-5.5.2.1.1">'alg', specifying the used encryption algorithm.<a href="#section-6.2.1-5.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2.1-6.5.2.1">
+                  <p id="section-6.2.1-6.5.2.1.1">'alg', specifying the used encryption algorithm.<a href="#section-6.2.1-6.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-6.2.1-5.5.2.2">
-                  <p id="section-6.2.1-5.5.2.2.1">'kid', specifying the identifier of the encryption key from the administrative keying material used to protect this rekeying message.<a href="#section-6.2.1-5.5.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-6.2.1-6.5.2.2">
+                  <p id="section-6.2.1-6.5.2.2.1">'kid', specifying the identifier of the encryption key from the administrative keying material used to protect this rekeying message.<a href="#section-6.2.1-6.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
-            <li class="normal" id="section-6.2.1-5.6">
-              <p id="section-6.2.1-5.6.1">The unprotected header of the COSE_Encrypt0 object MUST include the 'Partial IV' parameter, with value the Partial IV computed above.<a href="#section-6.2.1-5.6.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-6.6">
+              <p id="section-6.2.1-6.6.1">The unprotected header of the COSE_Encrypt0 object MUST include the 'Partial IV' parameter, with value the Partial IV computed above.<a href="#section-6.2.1-6.6.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-6.2.1-6">In order to ensure source authentication, each rekeying message protected with the administrative keying material MUST be signed by the KDC. To this end, the KDC computes a countersignature of the COSE_Encrypt0 object, as described in Sections <a href="https://rfc-editor.org/rfc/rfc9338#section-3.2" class="relref">3.2</a> and <a href="https://rfc-editor.org/rfc/rfc9338#section-3.3" class="relref">3.3</a> of <span>[<a href="#RFC9338" class="cite xref">RFC9338</a>]</span>. In particular, the following applies when computing the countersignature.<a href="#section-6.2.1-6" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-7">In order to ensure source authentication, each rekeying message protected with the administrative keying material MUST be signed by the KDC. To this end, the KDC computes a countersignature of the COSE_Encrypt0 object, as described in Sections <a href="https://rfc-editor.org/rfc/rfc9338#section-3.2" class="relref">3.2</a> and <a href="https://rfc-editor.org/rfc/rfc9338#section-3.3" class="relref">3.3</a> of <span>[<a href="#RFC9338" class="cite xref">RFC9338</a>]</span>. In particular, the following applies when computing the countersignature.<a href="#section-6.2.1-7" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.2.1-7.1">
-              <p id="section-6.2.1-7.1.1">The Countersign_structure contains the context text string "CounterSignature0".<a href="#section-6.2.1-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2.1-8.1">
+              <p id="section-6.2.1-8.1.1">The Countersign_structure contains the context text string "CounterSignature0".<a href="#section-6.2.1-8.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-7.2">
-              <p id="section-6.2.1-7.2.1">The private key of the KDC is used as signing key.<a href="#section-6.2.1-7.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-8.2">
+              <p id="section-6.2.1-8.2.1">The private key of the KDC is used as signing key.<a href="#section-6.2.1-8.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-7.3">
-              <p id="section-6.2.1-7.3.1">The payload is the ciphertext of the COSE_Encrypt0 object.<a href="#section-6.2.1-7.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-8.3">
+              <p id="section-6.2.1-8.3.1">The payload is the ciphertext of the COSE_Encrypt0 object.<a href="#section-6.2.1-8.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-7.4">
-              <p id="section-6.2.1-7.4.1">The Additional Authenticated Data (AAD) is empty, unless otherwise specified by separate documents profiling the use of a group rekeying scheme.<a href="#section-6.2.1-7.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-8.4">
+              <p id="section-6.2.1-8.4.1">The Additional Authenticated Data (AAD) is empty, unless otherwise specified by separate documents profiling the use of a group rekeying scheme.<a href="#section-6.2.1-8.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.2.1-7.5">
-              <p id="section-6.2.1-7.5.1">The protected header of the signing object MUST include the parameter 'alg', specifying the used signature algorithm.<a href="#section-6.2.1-7.5.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.2.1-8.5">
+              <p id="section-6.2.1-8.5.1">The protected header of the signing object MUST include the parameter 'alg', specifying the used signature algorithm.<a href="#section-6.2.1-8.5.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-6.2.1-8">If source authentication of messages exchanged in the group is also ensured by means of signatures, then rekeying messages MUST be signed using the same signature algorithm and related parameters. Also, the KDC's authentication credential including the public key to use for signature verification MUST be provided in the Join Response through the 'kdc_cred' parameter, together with the corresponding proof-of-possession (PoP) evidence in the 'kdc_cred_verify' parameter.<a href="#section-6.2.1-8" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-9">If source authentication of messages exchanged in the group is not ensured by means of signatures, then the KDC MUST provide its authentication credential together with a corresponding PoP evidence as part of the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>). It is RECOMMENDED to specify this information by using the same format and encoding used for the parameters 'kdc_cred', 'kdc_nonce', and 'kdc_cred_verify' in the Join Response. It is up to separate documents profiling the use of the group rekeying scheme to specify such details.<a href="#section-6.2.1-9" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-10">After that, the KDC specifies the computed countersignature in the 'COSE_Countersignature0' header parameter of the COSE_Encrypt0 object.<a href="#section-6.2.1-10" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-11">Finally, the KDC specifies the COSE_Encrypt0 object as payload of a CoAP request, which is sent to the target group members as per the used message delivery method.<a href="#section-6.2.1-11" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-9">If source authentication of messages exchanged in the group is also ensured by means of signatures, then rekeying messages MUST be signed using the same signature algorithm and related parameters. Also, the KDC's authentication credential including the public key to use for signature verification MUST be provided in the Join Response through the 'kdc_cred' parameter, together with the corresponding proof-of-possession (PoP) evidence in the 'kdc_cred_verify' parameter.<a href="#section-6.2.1-9" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-10">If source authentication of messages exchanged in the group is not ensured by means of signatures, then the KDC MUST provide its authentication credential together with a corresponding PoP evidence as part of the management keying material specified in the 'mgt_key_material' parameter of the Join Response (see <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>). It is RECOMMENDED to specify this information by using the same format and encoding used for the parameters 'kdc_cred', 'kdc_nonce', and 'kdc_cred_verify' in the Join Response. It is up to separate documents profiling the use of the group rekeying scheme to specify such details.<a href="#section-6.2.1-10" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-11">After that, the KDC specifies the computed countersignature in the 'COSE_Countersignature0' header parameter of the COSE_Encrypt0 object.<a href="#section-6.2.1-11" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-12">Finally, the KDC specifies the COSE_Encrypt0 object as payload of a CoAP request, which is sent to the target group members as per the used message delivery method.<a href="#section-6.2.1-12" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -4360,24 +4364,25 @@ extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
         </h3>
 <p id="section-10.2-1">The KDC can generate new group keying material and provide it to the group members (rekeying) through the rekeying scheme used in the group, as discussed in <a href="#sec-group-rekeying" class="auto internal xref">Section 6</a>.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
 <p id="section-10.2-2">In particular, the KDC must renew the group keying material latest upon its expiration. Before then, the KDC may also renew the group keying material on a regular or periodical fashion.<a href="#section-10.2-2" class="pilcrow">¶</a></p>
-<p id="section-10.2-3">Unless otherwise defined by an application profile of this specification, the KDC SHOULD renew the group keying material upon a group membership change. In particular, since the minimum number of group members is one, the KDC SHOULD provide even a Client joining an empty group with new keying material never used before in that group. Similarly, the KDC SHOULD provide new group keying material also to a Client that remains the only member in the group after the leaving of other group members.<a href="#section-10.2-3" class="pilcrow">¶</a></p>
-<p id="section-10.2-4">Note that the considerations in <a href="#sec-cons-communication" class="auto internal xref">Section 10.1</a> about dealing with replayed messages still hold, even in case the KDC rekeys the group upon every single joining of a new group member. However, if the KDC has renewed the group keying material upon a group member's joining, and the time interval between the end of the rekeying process and that member's joining is sufficiently small, then that group member is also on the safe side, since it would not accept replayed messages protected with the old group keying material previous to its joining.<a href="#section-10.2-4" class="pilcrow">¶</a></p>
-<p id="section-10.2-5">Once a joining node has obtained the new, latest keying material through a Join Response from the KDC (see <a href="#ssec-key-distribution-exchange" class="auto internal xref">Section 4.3.1.1</a>), the joining node becomes able to read any message that was exchanged in the group and protected with that keying material. This is the case if the KDC provides the current group members with the new, latest keying material before completing the joining procedure. However, the joining node is not able to read messages exchanged in the group and protected with keying material older than the one provided in the Join Response, i.e., having a strictly lower version number NUM.<a href="#section-10.2-5" class="pilcrow">¶</a></p>
-<p id="section-10.2-6">A node that has left the group should not expect any of its outgoing messages to be successfully processed, if received by other nodes in the group after its leaving, due to a possible group rekeying occurred before the message reception.<a href="#section-10.2-6" class="pilcrow">¶</a></p>
-<p id="section-10.2-7">The KDC may enforce a rekeying policy that takes into account the overall time required to rekey the group, as well as the expected rate of changes in the group membership. That is, the KDC may not rekey the group at each and every group membership change, for instance if members' joining and leaving occur frequently and performing a group rekeying takes too long. Instead, the KDC might rekey the group after a minimum number of group members have joined or left within a given time interval, or after a maximum amount of time since the last group rekeying was completed, or yet during predictable network inactivity periods.<a href="#section-10.2-7" class="pilcrow">¶</a></p>
-<p id="section-10.2-8">However, this would result in the KDC not constantly preserving backward and forward security in the group. That is:<a href="#section-10.2-8" class="pilcrow">¶</a></p>
+<p id="section-10.2-3">Unless otherwise defined by an application profile of this specification, the KDC SHOULD renew the group keying material upon a group membership change. As a possible exception, the KDC may not rekey the group upon the joining of a new group member, if the application does not require backward security. As another possible exception discussed more in detail later in this section, the KDC may rely on a rekeying policy that reasonably take into account the expected rate of group membership changes and the duration of a group rekeying.<a href="#section-10.2-3" class="pilcrow">¶</a></p>
+<p id="section-10.2-4">Since the minimum number of group members is one, the KDC SHOULD provide even a Client joining an empty group with new keying material never used before in that group. Similarly, the KDC SHOULD provide new group keying material also to a Client that remains the only member in the group after the leaving of other group members.<a href="#section-10.2-4" class="pilcrow">¶</a></p>
+<p id="section-10.2-5">Note that the considerations in <a href="#sec-cons-communication" class="auto internal xref">Section 10.1</a> about dealing with replayed messages still hold, even in case the KDC rekeys the group upon every single joining of a new group member. However, if the KDC has renewed the group keying material upon a group member's joining, and the time interval between the end of the rekeying process and that member's joining is sufficiently small, then that group member is also on the safe side, since it would not accept replayed messages protected with the old group keying material previous to its joining.<a href="#section-10.2-5" class="pilcrow">¶</a></p>
+<p id="section-10.2-6">Once a joining node has obtained the new, latest keying material through a Join Response from the KDC (see <a href="#ssec-key-distribution-exchange" class="auto internal xref">Section 4.3.1.1</a>), the joining node becomes able to read any message that was exchanged in the group and protected with that keying material. This is the case if the KDC provides the current group members with the new, latest keying material before completing the joining procedure. However, the joining node is not able to read messages exchanged in the group and protected with keying material older than the one provided in the Join Response, i.e., having a strictly lower version number NUM.<a href="#section-10.2-6" class="pilcrow">¶</a></p>
+<p id="section-10.2-7">A node that has left the group should not expect any of its outgoing messages to be successfully processed, if received by other nodes in the group after its leaving, due to a possible group rekeying occurred before the message reception.<a href="#section-10.2-7" class="pilcrow">¶</a></p>
+<p id="section-10.2-8">The KDC may enforce a rekeying policy that takes into account the overall time required to rekey the group, as well as the expected rate of changes in the group membership. That is, the KDC may not rekey the group at each and every group membership change, for instance if members' joining and leaving occur frequently and performing a group rekeying takes too long. Instead, the KDC might rekey the group after a minimum number of group members have joined or left within a given time interval, or after a maximum amount of time since the last group rekeying was completed, or yet during predictable network inactivity periods.<a href="#section-10.2-8" class="pilcrow">¶</a></p>
+<p id="section-10.2-9">However, this would result in the KDC not constantly preserving backward and forward security in the group. That is:<a href="#section-10.2-9" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-10.2-9.1">
-            <p id="section-10.2-9.1.1">Newly joining group members would be able to access the keying material used before their joining, and thus they could access past group communications if they have recorded old exchanged messages. This might still be acceptable for some applications and in situations where the new group members are freshly deployed through strictly controlled procedures.<a href="#section-10.2-9.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-10.2-10.1">
+            <p id="section-10.2-10.1.1">Newly joining group members would be able to access the keying material used before their joining, and thus they could access past group communications if they have recorded old exchanged messages. This might still be acceptable for some applications and in situations where the new group members are freshly deployed through strictly controlled procedures.<a href="#section-10.2-10.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-10.2-9.2">
-            <p id="section-10.2-9.2.1">The leaving group members would remain able to access upcoming group communications, as protected with the current keying material that has not been updated. This is typically undesirable, especially if the leaving group member is compromised or suspected to be, and it might have an impact or compromise the security properties of the protocols used in the group to protect messages exchanged among the group members.<a href="#section-10.2-9.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-10.2-10.2">
+            <p id="section-10.2-10.2.1">The leaving group members would remain able to access upcoming group communications, as protected with the current keying material that has not been updated. This is typically undesirable, especially if the leaving group member is compromised or suspected to be, and it might have an impact or compromise the security properties of the protocols used in the group to protect messages exchanged among the group members.<a href="#section-10.2-10.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-10.2-10">The KDC should renew the group keying material in case it has rebooted, even if it stores the whole group keying material in persistent storage. This assumes that the secure associations with the current group members as well as any administrative keying material required to rekey the group are also stored in persistent storage.<a href="#section-10.2-10" class="pilcrow">¶</a></p>
-<p id="section-10.2-11">However, if the KDC relies on Observe notifications to distribute the new group keying material, the KDC would have lost all the current ongoing Observations with the group members after rebooting, and the group members would continue using the old group keying material. Therefore, the KDC will rather rely on each group member asking for the new group keying material (see <a href="#ssec-key-material-retrieval" class="auto internal xref">Section 4.3.2.1</a> and <a href="#update-keys" class="auto internal xref">Section 4.8.1.1</a>), or rather perform a group rekeying by actively sending rekeying messages to group members as discussed in <a href="#sec-group-rekeying" class="auto internal xref">Section 6</a>.<a href="#section-10.2-11" class="pilcrow">¶</a></p>
-<p id="section-10.2-12">The KDC needs to have a mechanism in place to detect DoS attacks from nodes repeatedly performing actions that might trigger a group rekeying. Such actions can include leaving and/or re-joining the group at high rates, or often asking the KDC for new indidivual keying material. Ultimately, the KDC can resort to removing these nodes from the group and (temporarily) preventing them from joining the group again.<a href="#section-10.2-12" class="pilcrow">¶</a></p>
-<p id="section-10.2-13">The KDC also needs to have a congestion control mechanism in place, in order to avoid network congestion upon distributing new group keying material. For example, CoAP and Observe give guidance on such mechanisms, see <span><a href="https://rfc-editor.org/rfc/rfc7252#section-4.7" class="relref">Section 4.7</a> of [<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc7641#section-4.5.1" class="relref">Section 4.5.1</a> of [<a href="#RFC7641" class="cite xref">RFC7641</a>]</span>.<a href="#section-10.2-13" class="pilcrow">¶</a></p>
+<p id="section-10.2-11">The KDC should renew the group keying material in case it has rebooted, even if it stores the whole group keying material in persistent storage. This assumes that the secure associations with the current group members as well as any administrative keying material required to rekey the group are also stored in persistent storage.<a href="#section-10.2-11" class="pilcrow">¶</a></p>
+<p id="section-10.2-12">However, if the KDC relies on Observe notifications to distribute the new group keying material, the KDC would have lost all the current ongoing Observations with the group members after rebooting, and the group members would continue using the old group keying material. Therefore, the KDC will rather rely on each group member asking for the new group keying material (see <a href="#ssec-key-material-retrieval" class="auto internal xref">Section 4.3.2.1</a> and <a href="#update-keys" class="auto internal xref">Section 4.8.1.1</a>), or rather perform a group rekeying by actively sending rekeying messages to group members as discussed in <a href="#sec-group-rekeying" class="auto internal xref">Section 6</a>.<a href="#section-10.2-12" class="pilcrow">¶</a></p>
+<p id="section-10.2-13">The KDC needs to have a mechanism in place to detect DoS attacks from nodes repeatedly performing actions that might trigger a group rekeying. Such actions can include leaving and/or re-joining the group at high rates, or often asking the KDC for new indidivual keying material. Ultimately, the KDC can resort to removing these nodes from the group and (temporarily) preventing them from joining the group again.<a href="#section-10.2-13" class="pilcrow">¶</a></p>
+<p id="section-10.2-14">The KDC also needs to have a congestion control mechanism in place, in order to avoid network congestion upon distributing new group keying material. For example, CoAP and Observe give guidance on such mechanisms, see <span><a href="https://rfc-editor.org/rfc/rfc7252#section-4.7" class="relref">Section 4.7</a> of [<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc7641#section-4.5.1" class="relref">Section 4.5.1</a> of [<a href="#RFC7641" class="cite xref">RFC7641</a>]</span>.<a href="#section-10.2-14" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="block-wise-considerations">
@@ -5641,7 +5646,7 @@ gname = tstr
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-D-1">The following individuals were helpful in shaping this document: <span class="contact-name">Christian Amsüss</span>, <span class="contact-name">Carsten Bormann</span>, <span class="contact-name">Thomas Fossati</span>, <span class="contact-name">Vidhi Goel</span>, <span class="contact-name">Rikard Höglund</span>, <span class="contact-name">Ben Kaduk</span>, <span class="contact-name">Watson Ladd</span>, <span class="contact-name">John Preuß Mattsson</span>, <span class="contact-name">Daniel Migault</span>, <span class="contact-name">Jim Schaad</span>, <span class="contact-name">Ludwig Seitz</span>, <span class="contact-name">Göran Selander</span>, <span class="contact-name">Cigdem Sengul</span>, <span class="contact-name">Henry Thompson</span>, <span class="contact-name">Peter van der Stok</span>, and <span class="contact-name">Paul Wouters</span>.<a href="#appendix-D-1" class="pilcrow">¶</a></p>
+<p id="appendix-D-1">The following individuals were helpful in shaping this document: <span class="contact-name">Christian Amsüss</span>, <span class="contact-name">Carsten Bormann</span>,  <span class="contact-name">Roman Danyliw</span>, <span class="contact-name">Thomas Fossati</span>, <span class="contact-name">Vidhi Goel</span>, <span class="contact-name">Rikard Höglund</span>, <span class="contact-name">Ben Kaduk</span>, <span class="contact-name">Watson Ladd</span>, <span class="contact-name">John Preuß Mattsson</span>, <span class="contact-name">Daniel Migault</span>, <span class="contact-name">Jim Schaad</span>, <span class="contact-name">Ludwig Seitz</span>, <span class="contact-name">Göran Selander</span>, <span class="contact-name">Cigdem Sengul</span>, <span class="contact-name">Henry Thompson</span>, <span class="contact-name">Peter van der Stok</span>, and <span class="contact-name">Paul Wouters</span>.<a href="#appendix-D-1" class="pilcrow">¶</a></p>
 <p id="appendix-D-2">The work on this document has been partly supported by VINNOVA and the Celtic-Next project CRITISEC; by the H2020 project SIFIS-Home (Grant agreement 952652); and by the EIT-Digital High Impact Initiative ACTIVE.<a href="#appendix-D-2" class="pilcrow">¶</a></p>
 </section>
 </div>
