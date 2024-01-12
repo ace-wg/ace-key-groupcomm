@@ -5,8 +5,8 @@
 ACE Working Group                                           F. Palombini
 Internet-Draft                                               Ericsson AB
 Intended status: Standards Track                               M. Tiloca
-Expires: 17 June 2024                                            RISE AB
-                                                        15 December 2023
+Expires: 15 July 2024                                            RISE AB
+                                                         12 January 2024
 
 
            Key Provisioning for Group Communication using ACE
@@ -51,11 +51,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 June 2024.
+   This Internet-Draft will expire on 15 July 2024.
 
 Copyright Notice
 
-   Copyright (c) 2023 IETF Trust and the persons identified as the
+   Copyright (c) 2024 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -966,6 +966,11 @@ Table of Contents
       group names, each corresponding to one of the specified group
       identifiers.  This operation is described in Section 4.2.1.1.
 
+      Clients may be authorized to access this resource even without
+      being members of any group at the KDC, and even if they are not
+      authorized to become group members (e.g., when authorized to be
+      external signature verifiers).
+
    *  /ace-group/GROUPNAME : one such sub-resource to /ace-group is
       hosted for each group with name GROUPNAME that the KDC manages,
       and contains the symmetric group keying material for that group.
@@ -986,7 +991,7 @@ Table of Contents
       contains the authentication credentials of all the members of the
       group with name GROUPNAME.
 
-      This resource is created only in case the KDC acts as repository
+      This resource is created only in case the KDC acts as a repository
       of authentication credentials for group members.
 
       A Client can access this resource in order to retrieve the
@@ -1271,7 +1276,7 @@ Table of Contents
 4.2.1.1.  Retrieve Group Names
 
    In case the joining node only knows the group identifier of the group
-   it wishes to join or about which it wishes to get update information
+   it wishes to join or about which it wishes to get updated information
    from the KDC, the node can contact the KDC to request the
    corresponding group name and group-membership resource URI.  The node
    can request several group identifiers at once.  It does so by sending
@@ -2299,16 +2304,16 @@ Table of Contents
    Uri-Path: "pub-key"
    Content-Format: "application/ace-groupcomm+cbor"
    Payload:
-     { "get_creds": [true, [], [ ID3 ]] }
+     { "get_creds": [true, [], [ ID2, ID3 ]] }
 
    Response:
 
    Header: Content (Code=2.05)
    Content-Format: "application/ace-groupcomm+cbor"
    Payload (in CBOR diagnostic notation):
-     { "creds": [ AUTH_CRED_3 ],
-       "peer_roles": [ "receiver" ],
-       "peer_identifiers": [ ID3 ] }
+     { "creds": [ AUTH_CRED_2, AUTH_CRED_3, ],
+       "peer_roles": [ ["sender", "receiver"], "receiver" ],
+       "peer_identifiers": [ ID2, ID3 ] }
 
       Figure 20: Example of Authentication Credential Request-Response
          to Obtain the Authentication Credentials of Specific Group
@@ -3117,7 +3122,7 @@ Table of Contents
 
    *  In case of forced eviction, i.e., for cases 2 and 3 above, the KDC
       deletes the authentication credential of the removed Client, if it
-      acts as repository of authentication credentials for group
+      acts as a repository of authentication credentials for group
       members.
 
    *  If the removed Client is registered as an observer of the group-
@@ -3195,8 +3200,8 @@ Table of Contents
    the rekeying scheme used in the group, the reason that has triggered
    the rekeying process, and the specific target group members.  In
    particular, if the group rekeying is performed due to one or multiple
-   Clients that have joined the group and the KDC acts as repository of
-   authentication credentials of the group members, then a rekeying
+   Clients that have joined the group and the KDC acts as a repository
+   of authentication credentials of the group members, then a rekeying
    message MAY also include the authentication credentials that those
    Clients use in the group, together with the roles and node identifier
    that the corresponding Client has in the group.  It is RECOMMENDED to
@@ -3223,12 +3228,12 @@ Table of Contents
 
 6.1.  Point-to-Point Group Rekeying
 
-   This approach consists in the KDC sending one individual rekeying
-   message to each target group member.  In particular, the rekeying
-   message is protected by means of the security association between the
-   KDC and the target group member in question, as per the used
-   application profile of this specification and the used transport
-   profile of ACE.
+   A point-to-point group rekeying consists in the KDC sending one
+   individual rekeying message to each target group member.  In
+   particular, the rekeying message is protected by means of the
+   security association between the KDC and the target group member in
+   question, as per the used application profile of this specification
+   and the used transport profile of ACE.
 
    This is the approach taken by the basic "Point-to-Point" group
    rekeying scheme, that the KDC can explicitly signal in the Join
@@ -3332,7 +3337,7 @@ Table of Contents
       (see Section 6.1).
 
    *  Through a pub-sub communication model - In this case, the KDC acts
-      as publisher and publishes each rekeying message to a specific
+      as a publisher and publishes each rekeying message to a specific
       "rekeying topic", which is associated with the group and is hosted
       at a broker server.  Following their group joining, the group
       members subscribe to the rekeying topic at the broker, thus
@@ -3390,11 +3395,11 @@ Table of Contents
    prepared according to what the rekeying scheme prescribes.
 
    Then, the KDC can protect the rekeying message as defined below.  The
-   used encryption algorithm which SHOULD be the same one used to
-   protect communications in the group.  The method defined below
-   assumes that the following holds for the management keying material
-   specified in the 'mgt_key_material' parameter of the Join Response
-   (see Section 4.3.1).
+   used encryption algorithm SHOULD be the same one used to protect
+   communications in the group.  The method defined below assumes that
+   the following holds for the management keying material specified in
+   the 'mgt_key_material' parameter of the Join Response (see
+   Section 4.3.1).
 
    *  The included symmetric encryption keys are accompanied by a
       corresponding and unique key identifier assigned by the KDC.
@@ -3900,7 +3905,7 @@ Table of Contents
    that sender.
 
    By its nature, the KDC is invested with a large amount of trust,
-   since it acts as generator and provider of the symmetric keying
+   since it acts as a generator and provider of the symmetric keying
    material used to protect communications in each of its groups.  While
    details depend on the specific communication and security protocols
    used in the group, the KDC is in the position to decrypt messages
@@ -5281,9 +5286,10 @@ C.11.  Version -00 to -01
 Acknowledgments
 
    The following individuals were helpful in shaping this document:
-   Christian Amsüss, Carsten Bormann, Rikard Höglund, Ben Kaduk, Watson
-   Ladd, John Preuß Mattsson, Daniel Migault, Jim Schaad, Ludwig Seitz,
-   Göran Selander, Cigdem Sengul, Peter van der Stok, and Paul Wouters.
+   Christian Amsüss, Carsten Bormann, Vidhi Goel, Rikard Höglund, Ben
+   Kaduk, Watson Ladd, John Preuß Mattsson, Daniel Migault, Jim Schaad,
+   Ludwig Seitz, Göran Selander, Cigdem Sengul, Peter van der Stok, and
+   Paul Wouters.
 
    The work on this document has been partly supported by VINNOVA and
    the Celtic-Next project CRITISEC; by the H2020 project SIFIS-Home
