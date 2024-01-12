@@ -135,14 +135,15 @@ Table of Contents
      11.3.  OAuth Parameters
      11.4.  OAuth Parameters CBOR Mappings
      11.5.  Interface Description (if=) Link Target Attribute Values
-     11.6.  ACE Groupcomm Parameters
-     11.7.  ACE Groupcomm Key Types
-     11.8.  ACE Groupcomm Profiles
-     11.9.  ACE Groupcomm Policies
-     11.10. Sequence Number Synchronization Methods
-     11.11. ACE Groupcomm Errors
-     11.12. ACE Groupcomm Rekeying Schemes
-     11.13. Expert Review Instructions
+     11.6.  Custom Problem Detail Keys Registry
+     11.7.  ACE Groupcomm Parameters
+     11.8.  ACE Groupcomm Key Types
+     11.9.  ACE Groupcomm Profiles
+     11.10. ACE Groupcomm Policies
+     11.11. Sequence Number Synchronization Methods
+     11.12. ACE Groupcomm Errors
+     11.13. ACE Groupcomm Rekeying Schemes
+     11.14. Expert Review Instructions
    12. References
      12.1.  Normative References
      12.2.  Informative References
@@ -240,8 +241,8 @@ Table of Contents
       document does not use the CoAP definition of "endpoint", which is
       "An entity participating in the CoAP protocol".
 
-   *  The terms and concepts described in CBOR [RFC8949] and COSE
-      [RFC9052][RFC9053][RFC9338].
+   *  The terms and concepts described in CDDL [RFC8610], CBOR
+      [RFC8949], and COSE [RFC9052][RFC9053][RFC9338].
 
    A principal interested to participate in group communication as well
    as already participating as a group member is interchangeably denoted
@@ -271,28 +272,28 @@ Table of Contents
    Furthermore, this document uses "names" or "identifiers" for groups
    and nodes.  Their different meanings are summarized below.
 
-   *  Group name: the invariant once established identifier of a group.
-      It is used in the interactions between Client, AS, and RS to
-      identify a group.  A group name is always unique among the group
-      names of the existing groups under the same KDC.
+   *  Group name: The identifier of a group.  Once established, it is
+      invariant.  It is used in the interactions between Client, AS, and
+      RS to identify a group.  A group name is always unique among the
+      group names of the existing groups under the same KDC.
 
-   *  GROUPNAME: the invariant once established text string used in
-      URIs.  GROUPNAME uniquely maps to the group name of a group,
-      although they do not necessarily coincide.
+   *  GROUPNAME: The text string used in URIs to identify a group.  Once
+      established, it is invariant.  GROUPNAME uniquely maps to the
+      group name of a group, although they do not necessarily coincide.
 
    *  Group identifier: the identifier of the group keying material used
       in a group.  Unlike group name and GROUPNAME, this identifier
       changes over time, when the group keying material is updated.
 
-   *  Node name: the invariant once established identifier of a node.
-      It is used in the interactions between Client and RS, as well as
-      to identify a member of a group.  Within the same group, a node
-      name is always unique among the node names of all the current
-      members of that group.
+   *  Node name: The identifier of a node.  Once established, it is
+      invariant.  It is used in the interactions between Client and RS,
+      as well as to identify a member of a group.  Within the same
+      group, a node name is always unique among the node names of all
+      the current members of that group.
 
-   *  NODENAME: the invariant once established text string used in URIs
-      to identify a member of a group.  Its value coincides with the
-      node name of the associated group member.
+   *  NODENAME: The text string used in URIs to identify a member of a
+      group.  Once established, it is invariant.  Its value coincides
+      with the node name of the associated group member.
 
    This document additionally uses the following terminology:
 
@@ -604,6 +605,8 @@ Table of Contents
    As defined in [RFC9200], other additional parameters can be included
    if necessary.
 
+   ;# include rfc9237
+
    gname = tstr
 
    permissions = uint .bits roles
@@ -615,9 +618,11 @@ Table of Contents
       Verifier: 4
    )
 
-   scope_entry = AIF_Generic<gname, permissions>
+   scope_entry = AIF-Generic<gname, permissions>
 
-   scope = << [ + scope_entry ] >>
+   scope_entries = [ + scope_entry ]
+
+   scope = bstr .cbor scope_entries
 
               Figure 4: Example of scope using the AIF format
 
@@ -627,7 +632,9 @@ Table of Contents
 
    scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 
-   scope = << [ + scope_entry ] >>
+   scope_entries = [ + scope_entry ]
+
+   scope = bstr .cbor scope_entries
 
        Figure 5: Example of scope using the textual format, with the
           group name and role identifiers encoded as text strings
@@ -1194,33 +1201,78 @@ Table of Contents
    Application profiles of this specification MAY define optional or
    mandatory payload formats for specific error cases (OPT4).
 
-   Some error responses from the KDC can have Content-Format set to
-   application/ace-groupcomm+cbor.  In such a case, the payload of the
-   response MUST be a CBOR map, which includes the following fields.
+   Some error responses from the KDC can convey error-specific
+   information according to the problem-details format defined in
+   [RFC9290].  Such error responses MUST have Content-Format set to
+   application/concise-problem-details+cbor.  The payload of these error
+   responses MUST be a CBOR map specifying a Concise Problem Details
+   data item (see Section 2 of [RFC9290]).  The CBOR map is formatted as
+   follows.
 
-   *  'error', with value a CBOR integer specifying the error occurred
-      at the KDC.  The value is taken from the "Value" column of the
-      "ACE Groupcomm Errors" registry defined in Section 11.11 of this
-      specification.  This field MUST be present.
+   *  It MUST include the Custom Problem Detail entry 'ace-groupcomm-
+      error' registered in Section 11.6 of this document.
 
-   *  'error_description', with value a CBOR text string specifying a
-      human-readable diagnostic description of the error occurred at the
-      KDC, written in English.  The diagnostic text is intended for
-      software engineers as well as for device and network operators, in
-      order to aid debugging and provide context for possible
-      intervention.  The diagnostic message SHOULD be logged by the KDC.
-      This field MAY be present, and it is unlikely relevant in an
-      unattended setup where human intervention is not expected.
+      This entry includes only one field, namely 'error-id'.  The map
+      key for 'error-id' is the CBOR unsigned integer with value 0.  The
+      value of 'error-id' is a CBOR integer specifying the error
+      occurred at the KDC.  This value is taken from the 'Value' column
+      of the "ACE Groupcomm Errors" registry defined in Section 11.12 of
+      this document.
 
-   The 'error' and 'error_description' fields are defined as OPTIONAL to
-   support for Clients (see Section 8).  A Client supporting the 'error'
-   parameter and able to understand the specified error may use that
-   information to determine what actions to take next.
+      The CDDL notation [RFC8610] of the 'ace-groupcomm-error' entry is
+      given below.
+
+      ace-groupcomm-error = {
+        &(error-id: 0) => int
+      }
+
+   *  It MAY include further Standard Problem Detail entries or Custom
+      Problem Detail entries (see [RFC9290]).
+
+      In particular, it can include the Standard Problem Detail entry
+      'detail' (map key -2), whose value is a CBOR text string that
+      specifies a human-readable, diagnostic description of the error
+      occurred at the KDC.  The diagnostic text is intended for software
+      engineers as well as for device and network operators, in order to
+      aid debugging and provide context for possible intervention.  The
+      diagnostic message SHOULD be logged by the KDC.  The 'detail'
+      entry is unlikely relevant in an unattended setup where human
+      intervention is not expected.
+
+   An example of error response using the problem-details format is
+   shown in Figure 6.
+
+   Response:
+
+   Header: Service Unavailable (Code=5.03)
+   Content-Format: application/concise-problem-details+cbor
+   Payload:
+   {
+     / title /                -1: "No available node identifiers",
+     / detail /               -2: "Things will change after a
+                                   group rekeying; try later",
+     / ace-groupcomm-error /  TBD: {
+       / error-id /  0: 4 / "No available node identifiers" /,
+     }
+   }
+
+          Figure 6: Example of Error Response with Problem Details
+
+   Note to RFC Editor: In the figure above, please replace "TBD" with
+   the unsigned integer assigned as key value to the Custom Problem
+   Detail entry 'ace-groupcomm-error' (see Section 11.6).  Then, please
+   delete this paragraph.
+
+   The problem-details format in general and the Custom Problem Detail
+   entry 'ace-groupcomm-error' in particular are OPTIONAL to support for
+   Clients.  A Client supporting the entry 'ace-groupcomm-error' and
+   able to understand the specified error may use that information to
+   determine what actions to take next.
 
    Section 9 of this specification defines an initial set of error
-   identifiers, as possible values for the 'error' field.  Application
-   profiles of this specification inherit this initial set of error
-   identifiers and MAY define additional value (OPT5).
+   identifiers, as possible values for the 'error-id' field.
+   Application profiles of this specification inherit this initial set
+   of error identifiers and MAY define additional values (OPT5).
 
 4.2.  /ace-group
 
@@ -1283,8 +1335,8 @@ Table of Contents
    a CoAP FETCH request to the /ace-group endpoint at the KDC formatted
    as defined in Section 4.2.1.
 
-   Figure 6 gives an overview of the exchanges described above, and
-   Figure 7 shows an example.
+   Figure 7 gives an overview of the exchanges described above, and
+   Figure 8 shows an example.
 
     Client                                                         KDC
        |                                                            |
@@ -1294,7 +1346,7 @@ Table of Contents
        |<-- Group Name and URI Retrieval Response: 2.05 (Content) --|
        |                                                            |
 
-      Figure 6: Message Flow of Group Name and URI Retrieval Request-
+      Figure 7: Message Flow of Group Name and URI Retrieval Request-
                                   Response
 
    Request:
@@ -1314,7 +1366,7 @@ Table of Contents
      { "gid": [01, 02], "gname": ["group1", "group2"],
        "guri": ["/ace-group/g1", "/ace-group/g2"] }
 
-     Figure 7: Example of Group Name and URI Retrieval Request-Response
+     Figure 8: Example of Group Name and URI Retrieval Request-Response
 
 4.3.  /ace-group/GROUPNAME
 
@@ -1392,7 +1444,7 @@ Table of Contents
          authentication credentials associated with specific group
          identifiers as defined in Section 4.4.1.1.
 
-      The CDDL definition [RFC8610] of 'get_creds' is given in Figure 8,
+      The CDDL definition [RFC8610] of 'get_creds' is given in Figure 9,
       using as example encoding: node identifier encoded as a CBOR byte
       string; role identifier encoded as a CBOR text string, and
       combination of roles encoded as a CBOR array of roles.
@@ -1414,7 +1466,7 @@ Table of Contents
 
    get_creds = null / [ inclusion_flag, role_filter, id_filter]
 
-       Figure 8: CDLL definition of get_creds, using as example node
+       Figure 9: CDLL definition of get_creds, using as example node
                 identifier encoded as bstr and role as tstr
 
    *  'client_cred', encoded as a CBOR byte string, with value the
@@ -1455,7 +1507,7 @@ Table of Contents
          'cnonce' parameter above, encoded as a CBOR byte string.
 
       An example of PoP input to compute 'client_cred_verify' using CBOR
-      encoding is given in Figure 9.
+      encoding is given in Figure 10.
 
       A possible type of PoP evidence is a signature that the Client
       computes by using its own private key, whose corresponding public
@@ -1512,7 +1564,7 @@ Table of Contents
      0x4f 826667726f7570316673656e646572
        48 018a278f7faab55a 48 25a8991cd700ac01
 
-       Figure 9: Example of PoP input to compute 'client_cred_verify'
+      Figure 10: Example of PoP input to compute 'client_cred_verify'
                             using CBOR encoding
 
    If the request does not include a 'scope' field, the KDC is expected
@@ -1552,10 +1604,11 @@ Table of Contents
 
       If this verification fails, the handler MUST reply with a 4.00
       (Bad Request) error response.  The response MUST have Content-
-      Format set to application/ace-groupcomm+cbor and is formatted as
-      defined in Section 4.  The value of the 'error' field MUST be set
-      to 2 ("Authentication credential incompatible with the group
-      configuration").
+      Format set to application/concise-problem-details+cbor and is
+      formatted as defined in Section 4.1.2.  Within the Custom Problem
+      Detail entry 'ace-groupcomm-error', the value of the 'error-id'
+      field MUST be set to 2 ("Authentication credential incompatible
+      with the group configuration").
 
    *  The KDC verifies the PoP evidence contained in the
       'client_cred_verify' field.  Application profiles of this
@@ -1565,9 +1618,11 @@ Table of Contents
 
       If the PoP evidence does not pass verification, the handler MUST
       reply with a 4.00 (Bad Request) error response.  The response MUST
-      have Content-Format set to application/ace-groupcomm+cbor and is
-      formatted as defined in Section 4.  The value of the 'error' field
-      MUST be set to 3 ("Invalid Proof-of-Possession evidence").
+      have Content-Format set to application/concise-problem-
+      details+cbor and is formatted as defined in Section 4.1.2.  Within
+      the Custom Problem Detail entry 'ace-groupcomm-error', the value
+      of the 'error-id' field MUST be set to 3 ("Invalid Proof-of-
+      Possession evidence").
 
    If no authentication credential is included in the 'client_cred'
    field, the handler checks if an authentication credential is already
@@ -1666,7 +1721,7 @@ Table of Contents
    of this specification (REQ17), as well as values of 'gkty' accepted
    by the application (REQ18).  Additionally, documents specifying the
    key format MUST register it in the "ACE Groupcomm Key Types" registry
-   defined in Section 11.7, including its name, type, and application
+   defined in Section 11.8, including its name, type, and application
    profile to be used with.
 
     +----------+----------------+---------+-------------+------------+
@@ -1676,9 +1731,9 @@ Table of Contents
     |          |                |         | is reserved |            |
     +----------+----------------+---------+-------------+------------+
 
-                     Figure 10: ACE Groupcomm Key Types
+                     Figure 11: ACE Groupcomm Key Types
 
-   Note to RFC Editor: In Figure 10, please replace "[RFC-XXXX]" with
+   Note to RFC Editor: In Figure 11, please replace "[RFC-XXXX]" with
    the RFC number of this specification and delete this paragraph.
 
    The response SHOULD contain the following parameter:
@@ -1707,9 +1762,9 @@ Table of Contents
       | Reserved | This value is reserved | 0          | [RFC-XXXX] |
       +----------+------------------------+------------+------------+
 
-                     Figure 11: ACE Groupcomm Profiles
+                     Figure 12: ACE Groupcomm Profiles
 
-   Note to RFC Editor: In Figure 11, please replace "[RFC-XXXX]" with
+   Note to RFC Editor: In Figure 12, please replace "[RFC-XXXX]" with
    the RFC number of this specification and delete this paragraph.
 
    *  'creds', MUST be present if 'get_creds' was present in the
@@ -1773,7 +1828,7 @@ Table of Contents
       registered in the "ACE Groupcomm Policies" registry.  This
       specification defines the three elements "Sequence Number
       Synchronization Methods", "Key Update Check Interval", and
-      "Expiration Delta", which are summarized in Figure 12.
+      "Expiration Delta", which are summarized in Figure 13.
       Application profiles that build on this document MUST specify the
       exact content format and default value of included map entries
       (REQ20).
@@ -1813,9 +1868,9 @@ Table of Contents
  |              |       |          | incoming messages    |            |
  +--------------+-------+----------|----------------------|------------+
 
-                   Figure 12: ACE Groupcomm Policies
+                   Figure 13: ACE Groupcomm Policies
 
-   Note to RFC Editor: In Figure 12, please replace all occurrences of
+   Note to RFC Editor: In Figure 13, please replace all occurrences of
    "[RFC-XXXX]" with the RFC number of this specification and delete
    this paragraph.
 
@@ -1853,7 +1908,7 @@ Table of Contents
          'kdc_nonce' parameter, encoded as a CBOR byte string.
 
       An example of PoP input to compute 'kdc_cred_verify' using CBOR
-      encoding is given in Figure 14.
+      encoding is given in Figure 15.
 
       A possible type of PoP evidence is a signature that the KDC
       computes by using its own private key, whose corresponding public
@@ -1867,7 +1922,7 @@ Table of Contents
       uses to provide new group keying meterial to the group members.
       This parameter is encoded as a CBOR integer, whose value is taken
       from the "Value" column of the "ACE Groupcomm Rekeying Schemes"
-      registry defined in Section 11.12 of this specification.
+      registry defined in Section 11.13 of this specification.
 
  +-------+----------------+-------------------------------+------------+
  | Value |      Name      |          Description          | Reference  |
@@ -1878,13 +1933,13 @@ Table of Contents
  |       |                | association with that node    |            |
  +-------+----------------+-------------------------------+------------+
 
-               Figure 13: ACE Groupcomm Rekeying Schemes
+               Figure 14: ACE Groupcomm Rekeying Schemes
 
    Application profiles of this specification MAY define a default group
    rekeying scheme, to refer to in case the 'rekeying_scheme' parameter
    is not included in the Join Response (OPT9).
 
-   Note to RFC Editor: In Figure 13, please replace "[RFC-XXXX]" with
+   Note to RFC Editor: In Figure 14, please replace "[RFC-XXXX]" with
    the RFC number of this specification and delete this paragraph.
 
    *  'mgt_key_material', encoded as a CBOR byte string and containing
@@ -1956,7 +2011,7 @@ Table of Contents
    PoP input:
      0x48 25a8991cd700ac01 48 cef04b2aa791bc6d
 
-        Figure 14: Example of PoP input to compute 'kdc_cred_verify'
+        Figure 15: Example of PoP input to compute 'kdc_cred_verify'
                             using CBOR encoding
 
    After sending the Join Response, if the KDC has an associated
@@ -1984,8 +2039,8 @@ Table of Contents
 
 4.3.1.1.  Join the Group
 
-   Figure 15 gives an overview of the join exchange between the Client
-   and the KDC, when the Client first joins a group, while Figure 16
+   Figure 16 gives an overview of the join exchange between the Client
+   and the KDC, when the Client first joins a group, while Figure 17
    shows an example.
 
       Client                                                     KDC
@@ -1995,7 +2050,7 @@ Table of Contents
          |<------------ Join Response: 2.01 (Created) ----------- |
          | Location-Path = "/ace-group/GROUPNAME/nodes/NODENAME"  |
 
-            Figure 15: Message Flow of the Join Request-Response
+            Figure 16: Message Flow of the Join Request-Response
 
  Request:
 
@@ -2025,7 +2080,7 @@ Table of Contents
      "peer_roles": ["sender", ["sender", "receiver"]],
      "peer_identifiers": [ ID1, ID2 ] }
 
-  Figure 16: Example of First Join Request-Response for Group Joining
+  Figure 17: Example of First Join Request-Response for Group Joining
 
    If not previously established, the Client and the KDC MUST first
    establish a pairwise secure communication channel (REQ24).  This can
@@ -2082,9 +2137,10 @@ Table of Contents
    that the Client is a current member of the group.  If the
    verification fails, the KDC MUST reply with a 4.03 (Forbidden) error
    response.  The response MUST have Content-Format set to application/
-   ace-groupcomm+cbor and is formatted as defined in Section 4.  The
-   value of the 'error' field MUST be set to 0 ("Operation permitted
-   only to group members").
+   concise-problem-details+cbor and is formatted as defined in
+   Section 4.1.2.  Within the Custom Problem Detail entry 'ace-
+   groupcomm-error', the value of the 'error-id' field MUST be set to 0
+   ("Operation permitted only to group members").
 
    If all verifications succeed, the handler replies with a 2.05
    (Content) response containing the symmetric group keying material.
@@ -2106,8 +2162,8 @@ Table of Contents
    keying material, by sending a CoAP GET request to the /ace-group/
    GROUPNAME endpoint at the KDC, where GROUPNAME is the group name.
 
-   Figure 17 gives an overview of the join exchange between the Client
-   and the KDC, when the Client first joins a group, while Figure 18
+   Figure 18 gives an overview of the join exchange between the Client
+   and the KDC, when the Client first joins a group, while Figure 19
    shows an example.
 
  Client                                                              KDC
@@ -2117,7 +2173,7 @@ Table of Contents
     |<----------- Key Distribution Response: 2.05 (Content) --------- |
     |                                                                 |
 
-      Figure 17: Message Flow of Key Distribution Request-Response
+      Figure 18: Message Flow of Key Distribution Request-Response
 
    Request:
 
@@ -2135,7 +2191,7 @@ Table of Contents
             with KEY being a CBOR byte strings):
      { "gkty": 13, "key": KEY, "num": 12 }
 
-          Figure 18: Example of Key Distribution Request-Response
+          Figure 19: Example of Key Distribution Request-Response
 
 4.4.  /ace-group/GROUPNAME/creds
 
@@ -2279,8 +2335,8 @@ Table of Contents
    the /ace-group/GROUPNAME/creds endpoint at the KDC, where GROUPNAME
    is the group name, and formatted as defined in Section 4.4.1.
 
-   Figure 19 gives an overview of the exchange mentioned above, while
-   Figure 20 shows an example of such an exchange.
+   Figure 20 gives an overview of the exchange mentioned above, while
+   Figure 21 shows an example of such an exchange.
 
       Client                                                      KDC
          |                                                         |
@@ -2291,7 +2347,7 @@ Table of Contents
          |<-- Authentication Credential Response: 2.05 (Created) --|
          |                                                         |
 
-       Figure 19: Message Flow of Authentication Credential Request-
+       Figure 20: Message Flow of Authentication Credential Request-
        Response to Obtain the Authentication Credentials of Specific
                                Group Members
 
@@ -2315,7 +2371,7 @@ Table of Contents
        "peer_roles": [ ["sender", "receiver"], "receiver" ],
        "peer_identifiers": [ ID2, ID3 ] }
 
-      Figure 20: Example of Authentication Credential Request-Response
+      Figure 21: Example of Authentication Credential Request-Response
          to Obtain the Authentication Credentials of Specific Group
                                   Members
 
@@ -2341,7 +2397,7 @@ Table of Contents
    request to the /ace-group/GROUPNAME/creds endpoint at the KDC, where
    GROUPNAME is the group name.
 
-   Figure 21 gives an overview of the message exchange, while Figure 22
+   Figure 22 gives an overview of the message exchange, while Figure 23
    shows an example of such an exchange.
 
       Client                                                      KDC
@@ -2353,7 +2409,7 @@ Table of Contents
          |<-- Authentication Credential Response: 2.05 (Content) --|
          |                                                         |
 
-       Figure 21: Message Flow of Authentication Credential Request-
+       Figure 22: Message Flow of Authentication Credential Request-
         Response to Obtain the Authentication Credentials of all the
                                Group Members
 
@@ -2376,7 +2432,7 @@ Table of Contents
        "peer_roles": ["sender", ["sender", "receiver"], "receiver"],
        "peer_identifiers": [ ID1, ID2, ID3 ] }
 
-      Figure 22: Example of Authentication Credential Request-Response
+      Figure 23: Example of Authentication Credential Request-Response
      to Obtain the Authentication Credentials of all the Group Members
 
 4.5.  /ace-group/GROUPNAME/kdc-cred
@@ -2416,7 +2472,7 @@ Table of Contents
          'kdc_nonce' parameter, encoded as a CBOR byte string.
 
       An example of PoP input to compute 'kdc_cred_verify' using CBOR
-      encoding is given in Figure 23.
+      encoding is given in Figure 24.
 
       The PoP evidence is computed by means of the same method used for
       computing the PoP evidence that was included in the Join Response
@@ -2439,7 +2495,7 @@ Table of Contents
    PoP input:
      0x48 25a8991cd700ac01 48 0b7db12aaff56da3
 
-        Figure 23: Example of PoP input to compute 'kdc_cred_verify'
+        Figure 24: Example of PoP input to compute 'kdc_cred_verify'
                             using CBOR encoding
 
 4.5.1.1.  Retrieve the KDC's Authentication Credential
@@ -2464,8 +2520,8 @@ Table of Contents
    by the Client to verify the PoP evidence in 'kdc_cred_verify', and
    MUST specify which of those approaches is used in which case (REQ21).
 
-   Figure 24 gives an overview of the exchange described above, while
-   Figure 25 shows an example.
+   Figure 25 gives an overview of the exchange described above, while
+   Figure 26 shows an example.
 
     Group
     Member                                                         KDC
@@ -2477,7 +2533,7 @@ Table of Contents
       |<-- KDC Authentication Credential Response: 2.05 (Content) --|
       |                                                             |
 
-     Figure 24: Message Flow of KDC Authentication Credential Request-
+     Figure 25: Message Flow of KDC Authentication Credential Request-
         Response to Obtain the Authentication Credential of the KDC
 
    Request:
@@ -2501,7 +2557,7 @@ Table of Contents
        "kdc_cred_verify": POP_EVIDENCE
      }
 
-        Figure 25: Example of KDC Authentication Credential Request-
+        Figure 26: Example of KDC Authentication Credential Request-
         Response to Obtain the Authentication Credential of the KDC
 
 4.6.  /ace-group/GROUPNAME/policies
@@ -2516,9 +2572,10 @@ Table of Contents
    that the Client is a current member of the group.  If the
    verification fails, the KDC MUST reply with a 4.03 (Forbidden) error
    response.  The response MUST have Content-Format set to application/
-   ace-groupcomm+cbor and is formatted as defined in Section 4.  The
-   value of the 'error' field MUST be set to 0 ("Operation permitted
-   only to group members").
+   concise-problem-details+cbor and is formatted as defined in
+   Section 4.1.2.  Within the Custom Problem Detail entry 'ace-
+   groupcomm-error', the value of the 'error-id' field MUST be set to 0
+   ("Operation permitted only to group members").
 
    If all verifications succeed, the handler replies with a 2.05
    (Content) response containing the list of policies for the group
@@ -2538,8 +2595,8 @@ Table of Contents
    policies endpoint at the KDC, where GROUPNAME is the group name, and
    formatted as defined in Section 4.6.1
 
-   Figure 26 gives an overview of the exchange described above, while
-   Figure 27 shows an example.
+   Figure 27 gives an overview of the exchange described above, while
+   Figure 28 shows an example.
 
      Client                                                       KDC
         |                                                          |
@@ -2548,7 +2605,7 @@ Table of Contents
         |<----------- Policies Response: 2.05 (Content) -----------|
         |                                                          |
 
-            Figure 26: Message Flow of Policies Request-Response
+            Figure 27: Message Flow of Policies Request-Response
 
    Request:
 
@@ -2566,7 +2623,7 @@ Table of Contents
    Payload(in CBOR diagnostic notation):
      { "group_policies": {"exp-delta": 120} }
 
-              Figure 27: Example of Policies Request-Response
+              Figure 28: Example of Policies Request-Response
 
 4.7.  /ace-group/GROUPNAME/num
 
@@ -2580,9 +2637,10 @@ Table of Contents
    that the Client is a current member of the group.  If the
    verification fails, the KDC MUST reply with a 4.03 (Forbidden) error
    response.  The response MUST have Content-Format set to application/
-   ace-groupcomm+cbor and is formatted as defined in Section 4.  The
-   value of the 'error' field MUST be set to 0 ("Operation permitted
-   only to group members").
+   concise-problem-details+cbor and is formatted as defined in
+   Section 4.1.2.  Within the Custom Problem Detail entry 'ace-
+   groupcomm-error', the value of the 'error-id' field MUST be set to 0
+   ("Operation permitted only to group members").
 
    If all verifications succeed, the handler returns a 2.05 (Content)
    message containing an integer that represents the version number of
@@ -2603,8 +2661,8 @@ Table of Contents
    every time the group keying material is renewed, before it's
    distributed to the group members.
 
-   Figure 28 gives an overview of the exchange described above, while
-   Figure 29 shows an example.
+   Figure 29 gives an overview of the exchange described above, while
+   Figure 30 shows an example.
 
       Client                                                     KDC
          |                                                        |
@@ -2613,7 +2671,7 @@ Table of Contents
          |<---------- Version Response: 2.05 (Content) -----------|
          |                                                        |
 
-            Figure 28: Message Flow of Version Request-Response
+            Figure 29: Message Flow of Version Request-Response
 
    Request:
 
@@ -2631,7 +2689,7 @@ Table of Contents
    Payload(in CBOR diagnostic notation):
      13
 
-               Figure 29: Example of Version Request-Response
+               Figure 30: Example of Version Request-Response
 
 4.8.  /ace-group/GROUPNAME/nodes/NODENAME
 
@@ -2643,9 +2701,10 @@ Table of Contents
    *  The handler verifies that the Client is a current member of the
       group.  If the verification fails, the KDC MUST reply with a 4.03
       (Forbidden) error response.  The response MUST have Content-Format
-      set to application/ace-groupcomm+cbor and is formatted as defined
-      in Section 4.  The value of the 'error' field MUST be set to 0
-      ("Operation permitted only to group members").
+      set to application/concise-problem-details+cbor and is formatted
+      as defined in Section 4.1.2.  Within the Custom Problem Detail
+      entry 'ace-groupcomm-error', the value of the 'error-id' field
+      MUST be set to 0 ("Operation permitted only to group members").
 
    *  The handler verifies that the node name of the Client is equal to
       NODENAME used in the url-path.  If the verification fails, the
@@ -2663,7 +2722,7 @@ Table of Contents
    defined in the response of Section 4.3.2.  The specific format of
    individual keying material for group members, or of the information
    to derive it, and corresponding CBOR label, MUST be specified in the
-   application profile (REQ27) and registered in Section 11.6.
+   application profile (REQ27) and registered in Section 11.7.
 
    Optionally, the KDC can make the sub-resource at /ace-
    group/GROUPNAME/nodes/NODENAME also Observable [RFC7641] for the
@@ -2742,8 +2801,8 @@ Table of Contents
    case, the Client will receive from the KDC the same group keying
    material it already stores.
 
-   Figure 30 gives an overview of the exchange described above, while
-   Figure 31 shows an example.
+   Figure 31 gives an overview of the exchange described above, while
+   Figure 32 shows an example.
 
     Client                                                          KDC
        |                                                             |
@@ -2753,7 +2812,7 @@ Table of Contents
        |<-------- Key Distribution Response: 2.05 (Content) ---------|
        |                                                             |
 
-        Figure 30: Message Flow of Key Distribution Request-Response
+        Figure 31: Message Flow of Key Distribution Request-Response
 
    Request:
 
@@ -2775,7 +2834,7 @@ Table of Contents
             for individual keying material):
      { "gkty": 13, "key": KEY, "num": 12, "ind-key": IND_KEY }
 
-          Figure 31: Example of Key Distribution Request-Response
+          Figure 32: Example of Key Distribution Request-Response
 
 4.8.2.  PUT Handler
 
@@ -2790,16 +2849,18 @@ Table of Contents
    consistent with the set of roles that the Client has in the group
    (REQ11).  If the verification fails, the KDC MUST reply with a 4.00
    (Bad Request) error response.  The response MUST have Content-Format
-   set to application/ace-groupcomm+cbor and is formatted as defined in
-   Section 4.  The value of the 'error' field MUST be set to 1 ("Request
-   inconsistent with the current roles").
+   set to application/concise-problem-details+cbor and is formatted as
+   defined in Section 4.1.2.  Within the Custom Problem Detail entry
+   'ace-groupcomm-error', the value of the 'error-id' field MUST be set
+   to 1 ("Request inconsistent with the current roles").
 
    If the KDC is currently not able to serve this request, i.e., to
    generate new individual keying material for the requesting Client,
    the KDC MUST reply with a 5.03 (Service Unavailable) error response.
-   The response MUST have Content-Format set to application/ace-
-   groupcomm+cbor and is formatted as defined in Section 4.  The value
-   of the 'error' field MUST be set to 4 ("No available node
+   The response MUST have Content-Format set to application/concise-
+   problem-details+cbor and is formatted as defined in Section 4.1.2.
+   Within the Custom Problem Detail entry 'ace-groupcomm-error', the
+   value of the 'error-id' field MUST be set to 4 ("No available node
    identifiers").
 
    If all verifications succeed, the handler replies with a 2.05
@@ -2808,7 +2869,7 @@ Table of Contents
    a CBOR map.  The specific format of newly-generated individual keying
    material for group members, or of the information to derive it, and
    corresponding CBOR label, MUST be specified in the application
-   profile (REQ27) and registered in Section 11.6.
+   profile (REQ27) and registered in Section 11.7.
 
    The typical successful outcome consists in replying with newly
    generated, individual keying material for the Client, as defined
@@ -2851,8 +2912,8 @@ Table of Contents
    is the group name and NODENAME is its node name, and formatted as
    defined in Section 4.8.1.
 
-   Figure 32 gives an overview of the exchange described above, while
-   Figure 33 shows an example.
+   Figure 33 gives an overview of the exchange described above, while
+   Figure 34 shows an example.
 
        Client                                                    KDC
           |                                                       |
@@ -2862,7 +2923,7 @@ Table of Contents
           |<-------- Key Renewal Response: 2.05 (Content) --------|
           |                                                       |
 
-          Figure 32: Message Flow of Key Renewal Request-Response
+          Figure 33: Message Flow of Key Renewal Request-Response
 
    Request:
 
@@ -2883,7 +2944,7 @@ Table of Contents
             label for individual keying material):
      { "ind-key": IND_KEY }
 
-             Figure 33: Example of Key Renewal Request-Response
+             Figure 34: Example of Key Renewal Request-Response
 
    Note that there is a difference between the Key Renewal Request in
    this section and the Key Distribution Request in Section 4.8.1.1.
@@ -2908,9 +2969,10 @@ Table of Contents
    that the Client is a current member of the group.  If the
    verification fails, the KDC MUST reply with a 4.03 (Forbidden) error
    response.  The response MUST have Content-Format set to application/
-   ace-groupcomm+cbor and is formatted as defined in Section 4.  The
-   value of the 'error' field MUST be set to 0 ("Operation permitted
-   only to group members").
+   concise-problem-details+cbor and is formatted as defined in
+   Section 4.1.2.  Within the Custom Problem Detail entry 'ace-
+   groupcomm-error', the value of the 'error-id' field MUST be set to 0
+   ("Operation permitted only to group members").
 
    If all verification succeeds, the handler performs the actions
    defined in Section 5 and replies with a 2.02 (Deleted) response with
@@ -2955,7 +3017,7 @@ Table of Contents
    Client and specified in the parameter 'client_cred' of this request.
 
    An example of PoP input to compute 'client_cred_verify' using CBOR
-   encoding is given in Figure 34.
+   encoding is given in Figure 35.
 
    It is REQUIRED of the application profiles to define the specific
    formats of authentication credentials that are acceptable to use in
@@ -2966,9 +3028,10 @@ Table of Contents
    consistent with the set of roles that the node has in the group.  If
    the verification fails, the KDC MUST reply with a 4.00 (Bad Request)
    error response.  The response MUST have Content-Format set to
-   application/ace-groupcomm+cbor and is formatted as defined in
-   Section 4.  The value of the 'error' field MUST be set to 1 ("Request
-   inconsistent with the current roles").
+   application/concise-problem-details+cbor and is formatted as defined
+   in Section 4.1.2.  Within the Custom Problem Detail entry 'ace-
+   groupcomm-error', the value of the 'error-id' field MUST be set to 1
+   ("Request inconsistent with the current roles").
 
    If the KDC cannot retrieve the 'kdcchallenge' associated with this
    Client (see Section 3.3), the KDC MUST reply with a 4.00 (Bad
@@ -2988,10 +3051,11 @@ Table of Contents
    group, and is aligned with the possible associated parameters used in
    the group.  If that cannot be successfully verified, the handler MUST
    reply with a 4.00 (Bad Request) error response.  The response MUST
-   have Content-Format set to application/ace-groupcomm+cbor and is
-   formatted as defined in Section 4.  The value of the 'error' field
-   MUST be set to 2 ("Authentication Credential incompatible with the
-   group configuration").
+   have Content-Format set to application/concise-problem-details+cbor
+   and is formatted as defined in Section 4.1.2.  Within the Custom
+   Problem Detail entry 'ace-groupcomm-error', the value of the 'error-
+   id' field MUST be set to 2 ("Authentication credential incompatible
+   with the group configuration").
 
    Otherwise, the handler verifies the PoP evidence contained in the
    'client_cred_verify' field of the request, by using the
@@ -3000,9 +3064,10 @@ Table of Contents
    specific application profile (REQ14).  If the PoP evidence does not
    pass verification, the handler MUST reply with a 4.00 (Bad Request)
    error response.  The response MUST have Content-Format set to
-   application/ace-groupcomm+cbor and is formatted as defined in
-   Section 4.  The value of the 'error' field MUST be set to 3 ("Invalid
-   Proof-of-Possession evidence").
+   application/concise-problem-details+cbor and is formatted as defined
+   in Section 4.1.2.  Within the Custom Problem Detail entry 'ace-
+   groupcomm-error', the value of the 'error-id' field MUST be set to 3
+   ("Invalid Proof-of-Possession evidence").
 
    If all verifications succeed, the handler performs the following
    actions.
@@ -3036,7 +3101,7 @@ Table of Contents
      0x4f 826667726f7570316673656e646572
        48 018a278f7faab55a 48 0446baefc56111bf
 
-      Figure 34: Example of PoP input to compute 'client_cred_verify'
+      Figure 35: Example of PoP input to compute 'client_cred_verify'
                             using CBOR encoding
 
 4.9.1.1.  Uploading a Authentication Credential Key
@@ -3054,8 +3119,8 @@ Table of Contents
 
    The request is formatted as specified in Section 4.9.1.
 
-   Figure Figure 35 gives an overview of the exchange described above,
-   while Figure 36 shows an example.
+   Figure Figure 36 gives an overview of the exchange described above,
+   while Figure 37 shows an example.
 
     Client                                                          KDC
     |                                                                |
@@ -3065,7 +3130,7 @@ Table of Contents
     |<-- Authentication Credential Update Response: 2.04 (Changed) --|
     |                                                                |
 
-        Figure 35: Message Flow of Authentication Credential Update
+        Figure 36: Message Flow of Authentication Credential Update
                               Request-Response
 
    Request:
@@ -3088,7 +3153,7 @@ Table of Contents
    Header: Changed (Code=2.04)
    Payload: -
 
-      Figure 36: Example of Authentication Credential Update Request-
+      Figure 37: Example of Authentication Credential Update Request-
                                   Response
 
    Additionally, after updating its own authentication credential, a
@@ -3148,10 +3213,11 @@ Table of Contents
          observed resource has been deleted (see Section 3.2 of
          [RFC7641]).
 
-         The response MUST have Content-Format set to application/ace-
-         groupcomm+cbor and is formatted as defined in Section 4.  The
-         value of the 'error' field MUST be set to 5 ("Group membership
-         terminated").
+         The response MUST have Content-Format set to application/
+         concise-problem-details+cbor and is formatted as defined in
+         Section 4.1.2.  Within the Custom Problem Detail entry 'ace-
+         groupcomm-error', the value of the 'error-id' field MUST be set
+         to 5 ("Group membership terminated").
 
    *  If the application requires forward security or the used
       application profile requires so, the KDC MUST generate new group
@@ -3255,9 +3321,10 @@ Table of Contents
       above also allows the KDC to send an unsolicited 4.04 (Not Found)
       response to each observer group member, as a notification of group
       termination.  The response MUST have Content-Format set to
-      application/ace-groupcomm+cbor and is formatted as defined in
-      Section 4.  The value of the 'error' field MUST be set to 6
-      ("Group deleted").
+      application/concise-problem-details+cbor and is formatted as
+      defined in Section 4.1.2.  Within the Custom Problem Detail entry
+      'ace-groupcomm-error', the value of the 'error-id' field MUST be
+      set to 6 ("Group deleted").
 
    *  If a target group member specified a URI in the 'control_uri'
       parameter of the Join Request upon joining the group (see
@@ -3573,8 +3640,10 @@ Table of Contents
    The resulting tagged CBOR byte string is used as value of the 'scope'
    claim of the access token.
 
-   Figure 37 and Figure 38 build on the examples in Section 3.2, and
+   Figure 38 and Figure 39 build on the examples in Section 3.2, and
    show the corresponding extended scopes.
+
+   ;# include rfc9237
 
    gname = tstr
 
@@ -3587,13 +3656,15 @@ Table of Contents
       Verifier: 4
    )
 
-   scope_entry = AIF_Generic<gname, permissions>
+   scope_entry = AIF-Generic<gname, permissions>
 
-   scope = << [ + scope_entry ] >>
+   scope_entries = [ + scope_entry ]
+
+   scope = bstr .cbor scope_entries
 
    extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 
-       Figure 37: Example CDLL definition of scope, using the default
+       Figure 38: Example CDLL definition of scope, using the default
                       Authorization Information Format
 
    gname = tstr
@@ -3602,11 +3673,13 @@ Table of Contents
 
    scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 
-   scope = << [ + scope_entry ] >>
+   scope_entries = [ + scope_entry ]
+
+   scope = bstr .cbor scope_entries
 
    extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 
-      Figure 38: CDLL definition of scope, using as example group name
+      Figure 39: CDLL definition of scope, using as example group name
                       encoded as tstr and role as tstr
 
    The usage of the extended scope format is not limited to application
@@ -3648,10 +3721,6 @@ Table of Contents
     +-----------------------+------+---------------------+------------+
     | Name                  | CBOR | CBOR Type           | Reference  |
     |                       | Key  |                     |            |
-    +-----------------------+------+---------------------+------------+
-    | error                 | TBD  | int                 | [RFC-XXXX] |
-    +-----------------------+------+---------------------+------------+
-    | error_description     | TBD  | tstr                | [RFC-XXXX] |
     +-----------------------+------+---------------------+------------+
     | gid                   | TBD  | array               | [RFC-XXXX] |
     +-----------------------+------+---------------------+------------+
@@ -3711,9 +3780,9 @@ Table of Contents
     | kdcchallenge          | TBD  | bstr                | [RFC-XXXX] |
     +-----------------------+------+---------------------+------------+
 
-                    Figure 39: ACE Groupcomm Parameters
+                    Figure 40: ACE Groupcomm Parameters
 
-   Note to RFC Editor: In Figure 39, please replace all occurrences of
+   Note to RFC Editor: In Figure 40, please replace all occurrences of
    "[RFC-XXXX]" with the RFC number of this specification and delete
    this paragraph.
 
@@ -3750,12 +3819,6 @@ Table of Contents
       later on as a group member, the Client only retrieves the
       authentication credentials of all group members (see
       Section 4.4.2.1).
-
-   A Client MAY support the following optional parameters.  Application
-   profiles of this specification MAY define that Clients must or should
-   support these parameters instead (OPT15).
-
-   *  'error', 'error_description'.
 
    The following conditional parameters are relevant only if specific
    conditions hold.  It is REQUIRED of application profiles of this
@@ -3808,9 +3871,11 @@ Table of Contents
 
 9.  ACE Groupcomm Error Identifiers
 
-   This specification defines a number of values that the KDC can
-   include as error identifiers, in the 'error' field of an error
-   response with Content-Format application/ace-groupcomm+cbor.
+   This specification defines a number of values that the KDC can use as
+   error identifiers.  These are used in error responses with Content-
+   Format application/concise-problem-details+cbor, as values of the
+   'error-id' field within the Custom Problem Detail entry 'ace-
+   groupcomm-error' (see Section 4.1.2).
 
           +-------+---------------------------------------------+
           | Value |                 Description                 |
@@ -3831,13 +3896,16 @@ Table of Contents
           |   6   | Group deleted                               |
           +-------+---------------------------------------------+
 
-                 Figure 40: ACE Groupcomm Error Identifiers
+                 Figure 41: ACE Groupcomm Error Identifiers
 
-   A Client supporting the 'error' parameter (see Section 4.1.2 and
-   Section 8) and able to understand the specified error may use that
-   information to determine what actions to take next.  If it is
-   included in the error response and supported by the Client, the
-   'error_description' parameter may provide additional context.
+   If a Client supports the problem-details format [RFC9290] and the
+   Custom Problem Detail entry 'ace-groupcomm-error' defined in
+   Section 4.1.2, and is able to understand the error specified in the
+   'error-id' field therein, then the Client may use that information to
+   determine what actions to take next.  If the Concise Problem Details
+   data item specified in the error response includes the 'detail' entry
+   and the Client supports it, such an entry may provide additional
+   context.
 
    In particular, the following guidelines apply, and application
    profiles of this specification can define more detailed actions for
@@ -3890,6 +3958,10 @@ Table of Contents
    Security considerations are inherited from the ACE framework
    [RFC9200], and from the specific transport profile of ACE used
    between the Clients and the KDC, e.g., [RFC9202] and [RFC9203].
+
+   When using the problem-details format defined in [RFC9290] for error
+   responses, then the privacy and security considerations from Sections
+   4 and 5 of [RFC9290] also apply.
 
    Furthermore, the following security considerations apply.
 
@@ -4178,7 +4250,23 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
-11.6.  ACE Groupcomm Parameters
+11.6.  Custom Problem Detail Keys Registry
+
+   IANA is asked to register the following entry in the "Custom Problem
+   Detail Keys" registry within the "CoRE Parameters" registry group.
+
+   *  Key Value: TBD
+
+   *  Name: ace-groupcomm-error
+
+   *  Brief Description: Carry [RFC-XXXX] problem details in a Concise
+      Problem Details data item.
+
+   *  Change Controller: IETF
+
+   *  Reference: Section 4.1.2 of [RFC-XXXX]
+
+11.7.  ACE Groupcomm Parameters
 
    This specification establishes the "ACE Groupcomm Parameters" IANA
    registry within the "Authentication and Authorization for Constrained
@@ -4186,7 +4274,7 @@ Table of Contents
 
    The registry has been created to use the "Expert Review" registration
    procedure [RFC8126].  Expert review guidelines are provided in
-   Section 11.13.  Values in this registry are covered by different
+   Section 11.14.  Values in this registry are covered by different
    registration policies as indicated.  It should be noted that, in
    addition to the expert review, some portions of the registry require
    a specification, potentially a Standards Track RFC, to be supplied as
@@ -4218,9 +4306,9 @@ Table of Contents
       the item.
 
    This registry has been initially populated with the values in
-   Figure 39.
+   Figure 40.
 
-11.7.  ACE Groupcomm Key Types
+11.8.  ACE Groupcomm Key Types
 
    This specification establishes the "ACE Groupcomm Key Types" IANA
    registry within the "Authentication and Authorization for Constrained
@@ -4228,7 +4316,7 @@ Table of Contents
 
    The registry has been created to use the "Expert Review" registration
    procedure [RFC8126].  Expert review guidelines are provided in
-   Section 11.13.  Values in this registry are covered by different
+   Section 11.14.  Values in this registry are covered by different
    registration policies as indicated.  It should be noted that, in
    addition to the expert review, some portions of the registry require
    a specification, potentially a Standards Track RFC, to be supplied as
@@ -4265,9 +4353,9 @@ Table of Contents
       the format of the keying material, if one exists.
 
    This registry has been initially populated with the value in
-   Figure 10.
+   Figure 11.
 
-11.8.  ACE Groupcomm Profiles
+11.9.  ACE Groupcomm Profiles
 
    This specification establishes the "ACE Groupcomm Profiles" IANA
    registry within the "Authentication and Authorization for Constrained
@@ -4275,7 +4363,7 @@ Table of Contents
 
    The registry has been created to use the "Expert Review" registration
    procedure [RFC8126].  Expert review guidelines are provided in
-   Section 11.13.  Values in this registry are covered by different
+   Section 11.14.  Values in this registry are covered by different
    registration policies as indicated.  It should be noted that, in
    addition to the expert review, some portions of the registry require
    a specification, potentially a Standards Track RFC, to be supplied as
@@ -4303,9 +4391,9 @@ Table of Contents
       the abbreviation for this application profile, if one exists.
 
    This registry has been initially populated with the value in
-   Figure 11.
+   Figure 12.
 
-11.9.  ACE Groupcomm Policies
+11.10.  ACE Groupcomm Policies
 
    This specification establishes the "ACE Groupcomm Policies" IANA
    registry within the "Authentication and Authorization for Constrained
@@ -4313,7 +4401,7 @@ Table of Contents
 
    The registry has been created to use the "Expert Review" registration
    procedure [RFC8126].  Expert review guidelines are provided in
-   Section 11.13.  Values in this registry are covered by different
+   Section 11.14.  Values in this registry are covered by different
    registration policies as indicated.  It should be noted that, in
    addition to the expert review, some portions of the registry require
    a specification, potentially a Standards Track RFC, to be supplied as
@@ -4347,9 +4435,9 @@ Table of Contents
       policy, if one exists.
 
    This registry has been initially populated with the values in
-   Figure 12.
+   Figure 13.
 
-11.10.  Sequence Number Synchronization Methods
+11.11.  Sequence Number Synchronization Methods
 
    This specification establishes the "Sequence Number Synchronization
    Methods" IANA registry within the "Authentication and Authorization
@@ -4357,7 +4445,7 @@ Table of Contents
 
    The registry has been created to use the "Expert Review" registration
    procedure [RFC8126].  Expert review guidelines are provided in
-   Section 11.13.  Values in this registry are covered by different
+   Section 11.14.  Values in this registry are covered by different
    registration policies as indicated.  It should be noted that, in
    addition to the expert review, some portions of the registry require
    a specification, potentially a Standards Track RFC, to be supplied as
@@ -4387,7 +4475,7 @@ Table of Contents
       specification describing the sequence number synchronization
       method.
 
-11.11.  ACE Groupcomm Errors
+11.12.  ACE Groupcomm Errors
 
    This specification establishes the "ACE Groupcomm Errors" IANA
    registry within the "Authentication and Authorization for Constrained
@@ -4395,7 +4483,7 @@ Table of Contents
 
    The registry has been created to use the "Expert Review" registration
    procedure [RFC8126].  Expert review guidelines are provided in
-   Section 11.13.  Values in this registry are covered by different
+   Section 11.14.  Values in this registry are covered by different
    registration policies as indicated.  It should be noted that, in
    addition to the expert review, some portions of the registry require
    a specification, potentially a Standards Track RFC, to be supplied as
@@ -4419,10 +4507,10 @@ Table of Contents
       specification defining the error, if one exists.
 
    This registry has been initially populated with the values in
-   Figure 40.  The Reference column for all of these entries refers to
+   Figure 41.  The Reference column for all of these entries refers to
    this document.
 
-11.12.  ACE Groupcomm Rekeying Schemes
+11.13.  ACE Groupcomm Rekeying Schemes
 
    This specification establishes the "ACE Groupcomm Rekeying Schemes"
    IANA registry within the "Authentication and Authorization for
@@ -4430,7 +4518,7 @@ Table of Contents
 
    The registry has been created to use the "Expert Review" registration
    procedure [RFC8126].  Expert review guidelines are provided in
-   Section 11.13.  Values in this registry are covered by different
+   Section 11.14.  Values in this registry are covered by different
    registration policies as indicated.  It should be noted that, in
    addition to the expert review, some portions of the registry require
    a specification, potentially a Standards Track RFC, to be supplied as
@@ -4457,9 +4545,9 @@ Table of Contents
       specification defining the group rekeying scheme, if one exists.
 
    This registry has been initially populated with the value in
-   Figure 13.
+   Figure 14.
 
-11.13.  Expert Review Instructions
+11.14.  Expert Review Instructions
 
    The IANA Registries established in this document are defined as
    expert review.  This section gives some general guidelines for what
@@ -4598,6 +4686,11 @@ Table of Contents
               for Authentication and Authorization for Constrained
               Environments (ACE)", RFC 9237, DOI 10.17487/RFC9237,
               August 2022, <https://www.rfc-editor.org/rfc/rfc9237>.
+
+   [RFC9290]  Fossati, T. and C. Bormann, "Concise Problem Details for
+              Constrained Application Protocol (CoAP) APIs", RFC 9290,
+              DOI 10.17487/RFC9290, October 2022,
+              <https://www.rfc-editor.org/rfc/rfc9290>.
 
    [RFC9338]  Schaad, J., "CBOR Object Signing and Encryption (COSE):
               Countersignatures", STD 96, RFC 9338,
@@ -4851,7 +4944,8 @@ A.2.  Optional-to-Address Requirements
       specific error cases.
 
    *  OPT5: Optionally, specify additional identifiers of error types,
-      as values of the 'error' field in an error response from the KDC.
+      as values of the 'error-id' field within the Custom Problem Detail
+      entry 'ace-groupcomm-error' (see Section 4.1.2).
 
    *  OPT6: Optionally, specify the encoding of 'creds_repo' if the
       default is not used (see Section 4.3.1).
@@ -4888,10 +4982,6 @@ A.2.  Optional-to-Address Requirements
    *  OPT14: Optionally, specify additional information to include in
       rekeying messages for the "Point-to-Point" group rekeying scheme
       (see Section 6).
-
-   *  OPT15: Optionally, specify if Clients must or should support any
-      of the parameters defined as optional in this specification (see
-      Section 8).
 
 Appendix B.  Extensibility for Future COSE Algorithms
 
@@ -4950,7 +5040,7 @@ B.1.  Format of 'sign_info_entry'
 
    gname = tstr
 
-              Figure 41: 'sign_info_entry' with general format
+              Figure 42: 'sign_info_entry' with general format
 
 Appendix C.  Document Updates
 
@@ -5286,10 +5376,10 @@ C.11.  Version -00 to -01
 Acknowledgments
 
    The following individuals were helpful in shaping this document:
-   Christian Amsüss, Carsten Bormann, Vidhi Goel, Rikard Höglund, Ben
-   Kaduk, Watson Ladd, John Preuß Mattsson, Daniel Migault, Jim Schaad,
-   Ludwig Seitz, Göran Selander, Cigdem Sengul, Peter van der Stok, and
-   Paul Wouters.
+   Christian Amsüss, Carsten Bormann, Thomas Fossati, Vidhi Goel, Rikard
+   Höglund, Ben Kaduk, Watson Ladd, John Preuß Mattsson, Daniel Migault,
+   Jim Schaad, Ludwig Seitz, Göran Selander, Cigdem Sengul, Peter van
+   der Stok, and Paul Wouters.
 
    The work on this document has been partly supported by VINNOVA and
    the Celtic-Next project CRITISEC; by the H2020 project SIFIS-Home
