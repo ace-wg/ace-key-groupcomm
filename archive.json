@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-11T01:13:20.491016+00:00",
+  "timestamp": "2024-01-14T01:18:30.250074+00:00",
   "repo": "ace-wg/ace-key-groupcomm",
   "labels": [
     {
@@ -3470,180 +3470,278 @@
       "id": "PR_kwDOCSfQR85d4r-_",
       "title": "TSVART review",
       "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/157",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "marco-tiloca-sics",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This PR addresses the IETF Last Call review from TSVART archived at https://mailarchive.ietf.org/arch/msg/last-call/c53Mo6VXqfECU_br-93OFySBEVQ/",
       "createdAt": "2023-10-26T15:58:19Z",
-      "updatedAt": "2023-10-26T15:58:30Z",
+      "updatedAt": "2024-01-12T09:38:40Z",
       "baseRepository": "ace-wg/ace-key-groupcomm",
       "baseRefName": "master",
       "baseRefOid": "924308ce5a573bd7a39d0a0be6ab27ae8c2f314f",
       "headRepository": "ace-wg/ace-key-groupcomm",
       "headRefName": "tsvart-review",
       "headRefOid": "7bbe27aebdbfd76b8ded27141803fff44b0d27e1",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2024-01-12T09:38:40Z",
+      "mergedAt": "2024-01-12T09:38:40Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "a90d205fb5f3d39ddf0785ee4fe93439b6bce44a"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVtwa",
+          "commit": {
+            "abbreviatedOid": "7bbe27a"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:18:14Z",
+          "updatedAt": "2024-01-12T08:18:14Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 158,
       "id": "PR_kwDOCSfQR85d9Eft",
       "title": "GENART review",
       "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/158",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "marco-tiloca-sics",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This PR addresses the IETF Last Call review from GENART archived at https://mailarchive.ietf.org/arch/msg/ace/GljJ5yj4BVylRYVQ96IieVqBrrg/",
       "createdAt": "2023-10-27T09:56:46Z",
-      "updatedAt": "2023-11-05T12:57:42Z",
+      "updatedAt": "2024-01-12T09:42:24Z",
       "baseRepository": "ace-wg/ace-key-groupcomm",
       "baseRefName": "master",
-      "baseRefOid": "924308ce5a573bd7a39d0a0be6ab27ae8c2f314f",
+      "baseRefOid": "a90d205fb5f3d39ddf0785ee4fe93439b6bce44a",
       "headRepository": "ace-wg/ace-key-groupcomm",
       "headRefName": "genart-review",
-      "headRefOid": "c220b92c9517f00fe59db1bf8d0ed2b5666d66ab",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "b37cce2018428c460a7c31e1757c5b990b0f35db",
+      "closedAt": "2024-01-12T09:42:24Z",
+      "mergedAt": "2024-01-12T09:42:24Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "9134b520c5161f61480ae3ba545937bae9df9edb"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVu7E",
+          "commit": {
+            "abbreviatedOid": "c220b92"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:21:16Z",
+          "updatedAt": "2024-01-12T08:21:16Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 159,
       "id": "PR_kwDOCSfQR85h0KKq",
       "title": "IANA reviews",
       "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/159",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "marco-tiloca-sics",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This PR addresses:\r\n\r\n* the review from IANA (see IANA ticket #1283402)\r\n\r\n* The reviews from the IANA Designated Experts",
       "createdAt": "2023-12-12T16:38:31Z",
-      "updatedAt": "2023-12-12T16:39:08Z",
+      "updatedAt": "2024-01-12T09:51:28Z",
       "baseRepository": "ace-wg/ace-key-groupcomm",
       "baseRefName": "master",
-      "baseRefOid": "924308ce5a573bd7a39d0a0be6ab27ae8c2f314f",
+      "baseRefOid": "9134b520c5161f61480ae3ba545937bae9df9edb",
       "headRepository": "ace-wg/ace-key-groupcomm",
       "headRefName": "iana-reviews",
-      "headRefOid": "b48810e9c8771b08d8eb226917f0e409b73601c6",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "7a5d0a24e5240832bf4847f807a5c32ea2a0543a",
+      "closedAt": "2024-01-12T09:51:27Z",
+      "mergedAt": "2024-01-12T09:51:27Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "df514e0a582840796417ed688d795228fbb37a57"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVxle",
+          "commit": {
+            "abbreviatedOid": "b48810e"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:28:19Z",
+          "updatedAt": "2024-01-12T08:28:19Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 160,
       "id": "PR_kwDOCSfQR85h4fO3",
       "title": "ARTART review",
       "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/160",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "marco-tiloca-sics",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This PR addresses the IETF Last Call review from ARTART archived at https://mailarchive.ietf.org/arch/msg/ace/TNmV6jNG5KTZtxD1nPV4enR24_0/",
       "createdAt": "2023-12-13T10:49:22Z",
-      "updatedAt": "2023-12-13T10:49:34Z",
+      "updatedAt": "2024-01-12T09:54:06Z",
       "baseRepository": "ace-wg/ace-key-groupcomm",
       "baseRefName": "master",
-      "baseRefOid": "924308ce5a573bd7a39d0a0be6ab27ae8c2f314f",
+      "baseRefOid": "df514e0a582840796417ed688d795228fbb37a57",
       "headRepository": "ace-wg/ace-key-groupcomm",
       "headRefName": "artart-review",
-      "headRefOid": "0b3dee21e56d53b28587db132fee33d41992ece9",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "bd143f37fee104b5f3070fef1cbcd613cc632f4b",
+      "closedAt": "2024-01-12T09:54:06Z",
+      "mergedAt": "2024-01-12T09:54:06Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "8db33f010a8b9a4c149859f626e26e1b1fe0b23d"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVyBW",
+          "commit": {
+            "abbreviatedOid": "0b3dee2"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:29:22Z",
+          "updatedAt": "2024-01-12T08:29:22Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 161,
       "id": "PR_kwDOCSfQR85h4uqM",
       "title": "Roman Danyliw review",
       "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/161",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "marco-tiloca-sics",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This PR addresses the review from Roman Danyliw archived at https://mailarchive.ietf.org/arch/msg/ace/K5us9nK6rN7k9WMSd2RdNIbhLY4/",
       "createdAt": "2023-12-13T11:27:36Z",
-      "updatedAt": "2023-12-13T11:27:44Z",
+      "updatedAt": "2024-01-12T10:03:15Z",
       "baseRepository": "ace-wg/ace-key-groupcomm",
       "baseRefName": "master",
-      "baseRefOid": "924308ce5a573bd7a39d0a0be6ab27ae8c2f314f",
+      "baseRefOid": "8db33f010a8b9a4c149859f626e26e1b1fe0b23d",
       "headRepository": "ace-wg/ace-key-groupcomm",
       "headRefName": "roman-danyliw-review",
-      "headRefOid": "6299e7b1c73fe15b526886972baca78a49ba5788",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "2272b2d20b575aff74e712b2788ca972d94287e2",
+      "closedAt": "2024-01-12T10:03:15Z",
+      "mergedAt": "2024-01-12T10:03:15Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "dc34fc522b4782a83e5f95ba6295f3eaef2686f7"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVyqO",
+          "commit": {
+            "abbreviatedOid": "6299e7b"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:31:09Z",
+          "updatedAt": "2024-01-12T08:31:09Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 162,
       "id": "PR_kwDOCSfQR85h41Eq",
       "title": "Erik Kline review",
       "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/162",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "marco-tiloca-sics",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This PR addresses the review from Erik Kline archived at https://mailarchive.ietf.org/arch/msg/ace/2_BAHkh8u5eVTi1JvuwKrE5OKY4/",
       "createdAt": "2023-12-13T11:45:55Z",
-      "updatedAt": "2023-12-13T11:47:11Z",
+      "updatedAt": "2024-01-12T10:06:05Z",
       "baseRepository": "ace-wg/ace-key-groupcomm",
       "baseRefName": "master",
-      "baseRefOid": "924308ce5a573bd7a39d0a0be6ab27ae8c2f314f",
+      "baseRefOid": "dc34fc522b4782a83e5f95ba6295f3eaef2686f7",
       "headRepository": "ace-wg/ace-key-groupcomm",
       "headRefName": "erik-kline-review",
-      "headRefOid": "0fe1047908eab9d29903835fd845e8ef66bbc11b",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "2629de5ecafb5d9797f8dd05fc690f9239bd4f25",
+      "closedAt": "2024-01-12T10:06:05Z",
+      "mergedAt": "2024-01-12T10:06:05Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "18908a5ded67a6ac9f4781de05f4491c1df3df8d"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVy85",
+          "commit": {
+            "abbreviatedOid": "0fe1047"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:31:57Z",
+          "updatedAt": "2024-01-12T08:31:57Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 163,
       "id": "PR_kwDOCSfQR85h47ne",
       "title": "Zaheduzzaman Sarker review",
       "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/163",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "marco-tiloca-sics",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This PR addresses the review from Zaheduzzaman Sarker archived at https://mailarchive.ietf.org/arch/msg/ace/CYqJ6VR32qYslQphIyqm_2WCqLI/",
       "createdAt": "2023-12-13T12:03:52Z",
-      "updatedAt": "2023-12-18T16:46:07Z",
+      "updatedAt": "2024-01-12T10:08:34Z",
       "baseRepository": "ace-wg/ace-key-groupcomm",
       "baseRefName": "master",
-      "baseRefOid": "924308ce5a573bd7a39d0a0be6ab27ae8c2f314f",
+      "baseRefOid": "18908a5ded67a6ac9f4781de05f4491c1df3df8d",
       "headRepository": "ace-wg/ace-key-groupcomm",
       "headRefName": "zaheduzzaman-sarker-review",
-      "headRefOid": "60d4ae5dbc20a2d235e66f05ab2e8b9ab076f68b",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "704b82c28a87d7e75cefc8337e9bf29ba63a87c2",
+      "closedAt": "2024-01-12T10:08:33Z",
+      "mergedAt": "2024-01-12T10:08:33Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "74ac36b257cb31357dbd02025cbe9e4c7de57cb8"
+      },
       "comments": [
         {
           "author": "zaheduzzaman",
@@ -3653,85 +3751,147 @@
           "updatedAt": "2023-12-18T16:46:06Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVzJb",
+          "commit": {
+            "abbreviatedOid": "60d4ae5"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:32:29Z",
+          "updatedAt": "2024-01-12T08:32:29Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 164,
       "id": "PR_kwDOCSfQR85h5jFG",
       "title": "Martin Duke review",
       "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/164",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "marco-tiloca-sics",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This PR addresses the review from Martin Duke archived at https://mailarchive.ietf.org/arch/msg/ace/rRlFKN9KRx1PGe3Mniyym6UbMz4/",
       "createdAt": "2023-12-13T13:46:14Z",
-      "updatedAt": "2023-12-13T13:46:23Z",
+      "updatedAt": "2024-01-12T10:15:27Z",
       "baseRepository": "ace-wg/ace-key-groupcomm",
       "baseRefName": "master",
-      "baseRefOid": "924308ce5a573bd7a39d0a0be6ab27ae8c2f314f",
+      "baseRefOid": "74ac36b257cb31357dbd02025cbe9e4c7de57cb8",
       "headRepository": "ace-wg/ace-key-groupcomm",
       "headRefName": "martin-duke-review",
-      "headRefOid": "825e2eca9898a33bf5073aed98386b6e4de0cfcb",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "12f49937c81a7206cdf27d5bde097d2635bd3667",
+      "closedAt": "2024-01-12T10:15:26Z",
+      "mergedAt": "2024-01-12T10:15:26Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "9ccdc1cfb57f21635a57b44874b519945ff094ef"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVzTq",
+          "commit": {
+            "abbreviatedOid": "825e2ec"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:32:58Z",
+          "updatedAt": "2024-01-12T08:32:58Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 165,
       "id": "PR_kwDOCSfQR85h5nHX",
       "title": "Warren Kumari review",
       "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/165",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "marco-tiloca-sics",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This PR addresses the review from Warren Kumari archived at https://mailarchive.ietf.org/arch/msg/ace/gRyQwnekrPLMn4hEENkBgrq43zk/",
       "createdAt": "2023-12-13T13:55:27Z",
-      "updatedAt": "2023-12-13T13:55:27Z",
+      "updatedAt": "2024-01-12T10:17:14Z",
       "baseRepository": "ace-wg/ace-key-groupcomm",
       "baseRefName": "master",
-      "baseRefOid": "924308ce5a573bd7a39d0a0be6ab27ae8c2f314f",
+      "baseRefOid": "9ccdc1cfb57f21635a57b44874b519945ff094ef",
       "headRepository": "ace-wg/ace-key-groupcomm",
       "headRefName": "warren-kumari-review",
-      "headRefOid": "1dddae5e825bfc9605a0f2e6f5c73126d6f03eb3",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "422fd05dff72fb8babf9a54e66a8cf8f62480657",
+      "closedAt": "2024-01-12T10:17:14Z",
+      "mergedAt": "2024-01-12T10:17:14Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "386ec0ac6a89e331de3d8f412cfb860c90808f01"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVzym",
+          "commit": {
+            "abbreviatedOid": "1dddae5"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:34:12Z",
+          "updatedAt": "2024-01-12T08:34:12Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 166,
       "id": "PR_kwDOCSfQR85iHt61",
       "title": "IOTDIR review",
       "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/166",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "marco-tiloca-sics",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This PR addresses the IETF Last Call review from IOTDIR archived at https://mailarchive.ietf.org/arch/msg/ace/bbxp3XTgrQg--tiAEhsr96FnPhg/",
       "createdAt": "2023-12-15T15:17:28Z",
-      "updatedAt": "2023-12-15T15:17:41Z",
+      "updatedAt": "2024-01-12T10:37:52Z",
       "baseRepository": "ace-wg/ace-key-groupcomm",
       "baseRefName": "master",
-      "baseRefOid": "924308ce5a573bd7a39d0a0be6ab27ae8c2f314f",
+      "baseRefOid": "386ec0ac6a89e331de3d8f412cfb860c90808f01",
       "headRepository": "ace-wg/ace-key-groupcomm",
       "headRefName": "iotdir-review",
-      "headRefOid": "1cb469a987b48cbd89c642fbc9279d4e0d289145",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "2955f8d1f2d758319e09e662c69fe0951e2a6ffa",
+      "closedAt": "2024-01-12T10:37:52Z",
+      "mergedAt": "2024-01-12T10:37:52Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "f3ab861c412dd16d16678cae7c044fb41a2b79f9"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sV0lW",
+          "commit": {
+            "abbreviatedOid": "1cb469a"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:36:21Z",
+          "updatedAt": "2024-01-12T08:36:21Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
