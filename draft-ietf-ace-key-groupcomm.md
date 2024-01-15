@@ -149,6 +149,8 @@ Readers are expected to be familiar with:
 
 A principal interested to participate in group communication as well as already participating as a group member is interchangeably denoted as "Client" or "node".
 
+This document also uses the following terms.
+
 * Group: a set of nodes that share common keying material and security parameters used to protect their communications with one another. That is, the term refers to a "security group".
 
    This term is not to be confused with an "application group", which has relevance at the application level and whose members share a common pool of resources or content. Examples of application groups are the set of all nodes deployed in a same physical room, or the set of nodes registered to a pub-sub topic.
@@ -173,11 +175,11 @@ Furthermore, this document uses "names" or "identifiers" for groups and nodes. T
 
 This document additionally uses the following terminology:
 
-* Transport profile, to indicate a profile of ACE as per {{Section 5.8.4.3 of RFC9200}}. A transport profile specifies the communication protocol and communication security protocol between an ACE Client and Resource Server, as well as proof-of-possession methods, if it supports proof-of-possession access tokens, etc. Transport profiles of ACE include, for instance, {{RFC9203}}, {{RFC9202}}, and {{RFC9431}}.
+* Transport profile: a profile of ACE as per {{Section 5.8.4.3 of RFC9200}}. A transport profile specifies the communication protocol and communication security protocol between an ACE Client and Resource Server, as well as proof-of-possession methods, if it supports proof-of-possession access tokens, etc. Transport profiles of ACE include, for instance, {{RFC9203}}, {{RFC9202}}, and {{RFC9431}}.
 
-* Application profile, that defines how applications enforce and use supporting security services they require. These services may include, for instance, provisioning, revocation, and distribution of keying material. An application profile may define specific procedures and message formats.
+* Application profile: a profile that defines how applications enforce and use supporting security services they require. These services may include, for instance, provisioning, revocation, and distribution of keying material. An application profile may define specific procedures and message formats.
 
-* Authentication credential, as the set of information associated with an entity, including that entity's public key and parameters associated with the public key. Examples of authentication credentials are CBOR Web Tokens (CWTs) and CWT Claims Sets (CCSs) {{RFC8392}}, X.509 certificates {{RFC5280}}, and C509 certificates {{I-D.ietf-cose-cbor-encoded-cert}}.
+* Authentication credential: the set of information associated with an entity, including that entity's public key and parameters associated with the public key. Examples of authentication credentials are CBOR Web Tokens (CWTs) and CWT Claims Sets (CCSs) {{RFC8392}}, X.509 certificates {{RFC5280}}, and C509 certificates {{I-D.ietf-cose-cbor-encoded-cert}}.
 
 * Individual keying material: information exclusively pertaining to a group member, as associated with its group membership and related to other keying material and parameters used in the group. For example, this can be an identifier that the secure communication protocol employs to uniquely identify a node as a group member (e.g., a cryptographic key identifier uniquely associated with the group member in question). The specific nature and format of individual keying material used in a group is defined in application profiles of this specification. The individual keying material of a group member is not related to the secure association between that group member and the KDC.
 
