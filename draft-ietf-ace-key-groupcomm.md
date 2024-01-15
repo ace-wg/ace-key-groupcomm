@@ -92,6 +92,7 @@ informative:
   RFC2093:
   RFC2094:
   RFC2627:
+  RFC3986:
   RFC5280:
   RFC7519:
   RFC7641:
@@ -169,7 +170,7 @@ Furthermore, this document uses "names" or "identifiers" for groups and nodes. T
 
 * Group identifier: the identifier of the group keying material used in a group. Unlike group name and GROUPNAME, this identifier changes over time, when the group keying material is updated.
 
-* Node name: The identifier of a node, as a text string encoded as UTF-8 {{RFC3629}}. Once established, it is invariant. It is used in the interactions between Client and RS, as well as to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.
+* Node name: The identifier of a node, as a text string encoded as UTF-8 {{RFC3629}} and consistent with the semantics of URI path segments (see {{Section 3.3 of RFC3986}}). Once established, it is invariant. It is used in the interactions between Client and RS, as well as to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.
 
 * NODENAME: The text string used in URIs to identify a member of a group. Once established, it is invariant. Its value coincides with the node name of the associated group member.
 
