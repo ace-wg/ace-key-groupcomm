@@ -210,9 +210,9 @@ The following participants (see {{fig-roles}}) take part in the authorization an
 
 * Client (C): node that wants to join a group and take part in group communication with other group members. Within the group, the Client can have different roles.
 
-* Authorization Server (AS): as per the AS defined in the ACE Framework {{RFC9200}}, it enforces access policies, and knows if a node is allowed to join a given group with write and/or read rights.
+* Authorization Server (AS): as per the AS defined in the ACE Framework {{RFC9200}}, it enforces access policies that prescribe whether a node is allowed to join a given group and with what roles and rights (e.g., write and/or read).
 
-* Key Distribution Center (KDC): maintains the keying material to protect group communications, and provides it to Clients authorized to join a given group. During the first part of the exchange ({{sec-auth}}), it takes the role of the RS in the ACE Framework. During the second part ({{key-distr}}), which is not based on the ACE Framework, it distributes the keying material. In addition, it provides the latest keying material to group members when requested or, if required by the application, when membership changes.
+* Key Distribution Center (KDC): entity that maintains the keying material to protect group communications, and provides it to Clients authorized to join a given group. During the first part of the exchange ({{sec-auth}}), the KDC takes the role of the RS in the ACE Framework. During the second part ({{key-distr}}), which is not based on the ACE Framework, the KDC distributes the keying material. In addition, the KDC provides the latest keying material to group members when requested or, if required by the application, when group membership changes.
 
 * Dispatcher: entity through which the Clients communicate with the group when sending a message intended for multiple group members. That is, the Dispatcher distributes such a one-to-many message to the group members as intended recipients. The Dispatcher does not have access to the group keying material. A single-recipient message intended for only one group member may be delivered by alternative means, with no assistance from the Dispatcher.
 
