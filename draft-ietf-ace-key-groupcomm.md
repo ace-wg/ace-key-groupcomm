@@ -319,9 +319,9 @@ The Authorization Request sent from the Client to the AS is defined in {{Section
 
 * 'scope', specifying the names of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.
 
-   This parameter is encoded as a CBOR byte string, which wraps a CBOR array of one or more scope entries. All the scope entries are specified according to a same format, i.e., either the AIF format or the textual format defined below.
+   This parameter is encoded as a CBOR byte string, which wraps a CBOR array of scope entries. All the scope entries are specified according to a same format, i.e., either the AIF format or the textual format defined below.
 
-   * If the AIF format is used, each scope entry is encoded as per {{RFC9237}}. If a scope entry expresses a set of roles to take in a group as per this document, the object identifier "Toid" specifies the group name and MUST be encoded as a CBOR text string, while the permission set "Tperm" specifies the roles that the Client wishes to take in the group.
+   * If the AIF format is used, each scope entry is encoded as per {{RFC9237}}, i.e., as a CBOR array \[Toid, Tperm\]. If a scope entry expresses a set of roles to take in a group as per this document, the object identifier "Toid" specifies the group name and MUST be encoded as a CBOR text string, while the permission set "Tperm" specifies the roles that the Client wishes to take in the group.
 
       The AIF format is the default format for application profiles of this specification, and is preferable for those that aim for a compact encoding of scope. This is desirable especially for application profiles defining several roles, with the Client possibly asking for multiple roles combined.
 
@@ -359,9 +359,7 @@ roles = &(
    Verifier: 4
 )
 
-scope_entry = AIF-Generic<gname, permissions>
-
-scope_entries = [ + scope_entry ]
+scope_entries = AIF-Generic<gname, permissions>
 
 scope = bstr .cbor scope_entries
 
@@ -375,7 +373,7 @@ role = tstr
 
 scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 
-scope_entries = [ + scope_entry ]
+scope_entries = [ * scope_entry ]
 
 scope = bstr .cbor scope_entries
 ~~~~~~~~~~~~~~~~~~~~
@@ -2056,9 +2054,7 @@ roles = &(
    Verifier: 4
 )
 
-scope_entry = AIF-Generic<gname, permissions>
-
-scope_entries = [ + scope_entry ]
+scope_entries = AIF-Generic<gname, permissions>
 
 scope = bstr .cbor scope_entries
 
@@ -2073,7 +2069,7 @@ role = tstr
 
 scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 
-scope_entries = [ + scope_entry ]
+scope_entries = [ * scope_entry ]
 
 scope = bstr .cbor scope_entries
 
