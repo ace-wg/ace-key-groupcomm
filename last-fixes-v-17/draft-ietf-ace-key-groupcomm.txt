@@ -2206,28 +2206,31 @@ Table of Contents
   Figure 17: Example of First Join Request-Response for Group Joining
 
    If not previously established, the Client and the KDC MUST first
-   establish a pairwise secure communication channel (REQ24).  This can
-   be achieved, for instance, by using a transport profile of ACE.  The
-   join exchange MUST occur over that secure channel.  The Client and
-   the KDC MAY use that same secure channel to protect further pairwise
-   communications that must be secured.
+   establish a pairwise secure communication association (REQ24).  This
+   can be achieved, for instance, by using a transport profile of ACE.
+   The join exchange MUST occur over that secure communication
+   association.  The Client and the KDC MAY use that same secure
+   communication association to protect further pairwise communications
+   that must be protected.
 
    The secure communication protocol is REQUIRED to establish the secure
-   channel between the Client and the KDC by using the proof-of-
-   possession key bound to the access token.  As a result, the proof-of-
-   possession to bind the access token to the Client is performed by
-   using the proof-of-possession key bound to the access token for
-   establishing secure communication between the Client and the KDC.
+   communication association between the Client and the KDC by using the
+   proof-of-possession key bound to the access token.  As a result, the
+   proof-of-possession to bind the access token to the Client is
+   performed by using the proof-of-possession key bound to the access
+   token for establishing secure communication between the Client and
+   the KDC.
 
    To join the group, the Client sends a CoAP POST request to the /ace-
-   group/GROUPNAME endpoint at the KDC, where GROUPNAME is the group
-   name of the group to join, formatted as specified in Section 4.3.1.
-   This group name is the same as in the scope entry corresponding to
-   that group, specified in the 'scope' parameter of the Authorization
-   Request/Response, or it can be retrieved from it.  Note that, in case
-   of successful joining, the Client will receive the URI to retrieve
-   individual keying material and to leave the group in the Location-
-   Path option of the response.
+   group/GROUPNAME endpoint at the KDC, where the group to join is
+   identified by GROUPNAME.  The group name is specified in the scope
+   entry conveyed by the 'scope' parameter of the request (if present),
+   formatted as specified in Section 4.3.1.  This group name is the same
+   as in the scope entry corresponding to that group, specified in the
+   'scope' parameter of the Authorization Request/Response, or it can be
+   retrieved from it.  Note that, in case of successful joining, the
+   Client will receive the URI to retrieve individual keying material
+   and to leave the group in the Location-Path option of the response.
 
    If the node is joining a group for the first time and the KDC
    maintains the authentication credentials of the group members, the
@@ -2287,11 +2290,12 @@ Table of Contents
 
    A node in the group can contact the KDC to retrieve the current group
    keying material, by sending a CoAP GET request to the /ace-group/
-   GROUPNAME endpoint at the KDC, where GROUPNAME is the group name.
+   GROUPNAME endpoint at the KDC, where the group is identified by
+   GROUPNAME.
 
-   Figure 18 gives an overview of the join exchange between the Client
-   and the KDC, when the Client first joins a group, while Figure 19
-   shows an example.
+   Figure 18 gives an overview of the key distribution exchange between
+   the Client and the KDC, when the Client first joins a group, while
+   Figure 19 shows an example.
 
  Client                                                              KDC
     |                                                                 |
@@ -2331,7 +2335,7 @@ Table of Contents
    such group members.
 
    The handler expects a request with payload formatted as a CBOR map,
-   that MUST contain the following field.
+   which MUST contain the following field.
 
    *  'get_creds', whose value is encoded as in Section 4.3.1 with the
       following modifications.
@@ -2350,7 +2354,7 @@ Table of Contents
          "true" (0xf5) if the third element 'id_filter' specifies an
          empty CBOR array, or if the Client wishes to receive the
          authentication credentials of the nodes having their node
-         identifier specified in 'id_filter' (i.e, selection by
+         identifier specified in 'id_filter' (i.e., selection by
          inclusive filtering).  Instead, this element encodes the CBOR
          simple value "false" (0xf4) if the Client wishes to receive the
          authentication credentials of the nodes not having the node
@@ -2391,15 +2395,16 @@ Table of Contents
    REQ25).
 
    The handler identifies the authentication credentials of the current
-   group members for which either:
+   group members for which either of the following holds:
 
    *  the role identifier matches with one of those indicated in the
-      request; note that the request can contain a "combination of
-      roles", where the handler select all group members who have all
-      roles included in the combination.
+      request; note that the request can specify a combination of roles,
+      in which case the handler selects only the group members that have
+      all the roles included in the combination.
 
    *  the node identifier matches with one of those indicated in the
-      request.
+      request, or does not match with any of those, consistent with the
+      value of the element 'inclusion_flag'.
 
    If all verifications succeed, the handler returns a 2.05 (Content)
    message response with payload formatted as a CBOR map, containing
@@ -2411,8 +2416,8 @@ Table of Contents
    *  'creds', which encodes the list of authentication credentials of
       the selected group members.
 
-   *  'peer_roles', which encodes the role (or CBOR array of roles) that
-      each of the selected group members has in the group.
+   *  'peer_roles', which encodes the role(s) that each of the selected
+      group members has in the group.
 
       This parameter SHOULD be present and it MAY be omitted, according
       to the same criteria defined for the Join Response (see
@@ -2459,8 +2464,9 @@ Table of Contents
    members, a node in the group can contact the KDC to request the
    authentication credentials, roles, and node identifiers of a
    specified subset of group members, by sending a CoAP FETCH request to
-   the /ace-group/GROUPNAME/creds endpoint at the KDC, where GROUPNAME
-   is the group name, and formatted as defined in Section 4.4.1.
+   the /ace-group/GROUPNAME/creds endpoint at the KDC, where the group
+   is identified by GROUPNAME, and formatted as defined in
+   Section 4.4.1.
 
    Figure 20 gives an overview of the exchange mentioned above, while
    Figure 21 shows an example of such an exchange.
@@ -2484,19 +2490,21 @@ Table of Contents
    Uri-Host: "kdc.example.com"
    Uri-Path: "ace-group"
    Uri-Path: "g1"
-   Uri-Path: "pub-key"
+   Uri-Path: "creds"
    Content-Format: "application/ace-groupcomm+cbor"
-   Payload:
-     { "get_creds": [true, [], [ ID2, ID3 ]] }
+   Payload (in CBOR diagnostic notation):
+     { "get_creds": [true, [], [ ID_2, ID_3 ]] }
 
    Response:
 
    Header: Content (Code=2.05)
    Content-Format: "application/ace-groupcomm+cbor"
-   Payload (in CBOR diagnostic notation):
+   Payload (in CBOR diagnostic notation,
+            with AUTH_CRED_2, AUTH_CRED_3,
+            ID_2, and ID_3 being CBOR byte strings):
      { "creds": [ AUTH_CRED_2, AUTH_CRED_3, ],
        "peer_roles": [ ["sender", "receiver"], "receiver" ],
-       "peer_identifiers": [ ID2, ID3 ] }
+       "peer_identifiers": [ ID_2, ID_3 ] }
 
       Figure 21: Example of Authentication Credential Request-Response
          to Obtain the Authentication Credentials of Specific Group
@@ -2522,7 +2530,7 @@ Table of Contents
    KDC to request the authentication credentials, roles, and node
    identifiers of all the current group members, by sending a CoAP GET
    request to the /ace-group/GROUPNAME/creds endpoint at the KDC, where
-   GROUPNAME is the group name.
+   the group is identified by GROUPNAME.
 
    Figure 22 gives an overview of the message exchange, while Figure 23
    shows an example of such an exchange.
@@ -2546,18 +2554,20 @@ Table of Contents
    Uri-Host: "kdc.example.com"
    Uri-Path: "ace-group"
    Uri-Path: "g1"
-   Uri-Path: "pub-key"
+   Uri-Path: "creds"
    Payload: -
 
    Response:
 
    Header: Content (Code=2.05)
    Content-Format: "application/ace-groupcomm+cbor"
-   Payload (in CBOR diagnostic notation):
+   Payload (in CBOR diagnostic notation,
+            with AUTH_CRED_1, AUTH_CRED_2, AUTH_CRED_3,
+            ID_1, ID_2, and ID_3 being CBOR byte strings):
      { "num": 5,
        "creds": [ AUTH_CRED_1, AUTH_CRED_2, AUTH_CRED_3 ],
        "peer_roles": ["sender", ["sender", "receiver"], "receiver"],
-       "peer_identifiers": [ ID1, ID2, ID3 ] }
+       "peer_identifiers": [ ID_1, ID_2, ID_3 ] }
 
       Figure 23: Example of Authentication Credential Request-Response
      to Obtain the Authentication Credentials of all the Group Members
@@ -2589,11 +2599,14 @@ Table of Contents
       (encoded as a CBOR byte string) concatenated with the nonce N_KDC
       (encoded as a CBOR byte string), where:
 
-      -  N_C is the nonce generated by the Client that was specified in
-         the 'cnonce' parameter of the Join Request, and that the KDC
-         stored as 'clientchallenge' value associated with this Client
-         after sending the corresponding Join Response (see
-         Section 4.3.1).  This nonce is encoded as a CBOR byte string.
+      -  N_C is the nonce generated by the Client group member such
+         that: i) the nonce was specified in the 'cnonce' parameter of
+         the latest Join Request that the Client sent to the KDC in
+         order to join the group identified by GROUPNAME; and ii) the
+         KDC stored the nonce as 'clientchallenge' value associated with
+         this Client as group member after sending the corresponding
+         Join Response (see Section 4.3.1).  This nonce is encoded as a
+         CBOR byte string.
 
       -  N_KDC is the nonce generated by the KDC and specified in the
          'kdc_nonce' parameter, encoded as a CBOR byte string.
@@ -2635,7 +2648,7 @@ Table of Contents
    group name.
 
    Upon receiving the 2.05 (Content) response, the Client retrieves the
-   KDC's authentication credential from the ’kdc_cred’ parameter, and
+   KDC's authentication credential from the 'kdc_cred' parameter, and
    MUST verify the proof-of-possession (PoP) evidence specified in the
    'kdc_cred_verify' parameter.  In case of successful verification of
    the PoP evidence, the Client MUST store the obtained KDC's
@@ -3278,7 +3291,7 @@ Table of Contents
    Uri-Path: "g1"
    Uri-Path: "nodes"
    Uri-Path: "c101"
-   Uri-Path: "pub-key"
+   Uri-Path: "cred"
    Content-Format: "application/ace-groupcomm+cbor"
    Payload (in CBOR diagnostic notation, with AUTH_CRED
             and POP_EVIDENCE being CBOR byte strings):
