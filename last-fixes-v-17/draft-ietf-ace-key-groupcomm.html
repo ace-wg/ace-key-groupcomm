@@ -1540,7 +1540,7 @@ The same security group might be associated with multiple application groups. Al
             <p id="section-1.1-8.3.1">Group identifier: the identifier of the group keying material used in a group. Unlike group name and GROUPNAME, this identifier changes over time, when the group keying material is updated.<a href="#section-1.1-8.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.1-8.4">
-            <p id="section-1.1-8.4.1">Node name: The identifier of a node, as a text string encoded as UTF-8 <span>[<a href="#RFC3629" class="cite xref">RFC3629</a>]</span>. Once established, it is invariant. It is used in the interactions between Client and RS, as well as to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.<a href="#section-1.1-8.4.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-8.4.1">Node name: The identifier of a node, as a text string encoded as UTF-8 <span>[<a href="#RFC3629" class="cite xref">RFC3629</a>]</span> and consistent with the semantics of URI path segments (see <span><a href="https://rfc-editor.org/rfc/rfc3986#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>). Once established, it is invariant. It is used in the interactions between Client and RS, as well as to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.<a href="#section-1.1-8.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.1-8.5">
             <p id="section-1.1-8.5.1">NODENAME: The text string used in URIs to identify a member of a group. Once established, it is invariant. Its value coincides with the node name of the associated group member.<a href="#section-1.1-8.5.1" class="pilcrow">¶</a></p>
@@ -4927,6 +4927,10 @@ This section gives some general guidelines for what the experts should be lookin
 <dt id="RFC2627">[RFC2627]</dt>
         <dd>
 <span class="refAuthor">Wallner, D.</span>, <span class="refAuthor">Harder, E.</span>, and <span class="refAuthor">R. Agee</span>, <span class="refTitle">"Key Management for Multicast: Issues and Architectures"</span>, <span class="seriesInfo">RFC 2627</span>, <span class="seriesInfo">DOI 10.17487/RFC2627</span>, <time datetime="1999-06" class="refDate">June 1999</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2627">https://www.rfc-editor.org/rfc/rfc2627</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3986">[RFC3986]</dt>
+        <dd>
+<span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC5280">[RFC5280]</dt>
         <dd>

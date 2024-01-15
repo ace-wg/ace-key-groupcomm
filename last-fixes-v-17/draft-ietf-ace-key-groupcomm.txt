@@ -306,11 +306,12 @@ Table of Contents
       changes over time, when the group keying material is updated.
 
    *  Node name: The identifier of a node, as a text string encoded as
-      UTF-8 [RFC3629].  Once established, it is invariant.  It is used
-      in the interactions between Client and RS, as well as to identify
-      a member of a group.  Within the same group, a node name is always
-      unique among the node names of all the current members of that
-      group.
+      UTF-8 [RFC3629] and consistent with the semantics of URI path
+      segments (see Section 3.3 of [RFC3986]).  Once established, it is
+      invariant.  It is used in the interactions between Client and RS,
+      as well as to identify a member of a group.  Within the same
+      group, a node name is always unique among the node names of all
+      the current members of that group.
 
    *  NODENAME: The text string used in URIs to identify a member of a
       group.  Once established, it is invariant.  Its value coincides
@@ -5040,6 +5041,11 @@ Table of Contents
               Multicast: Issues and Architectures", RFC 2627,
               DOI 10.17487/RFC2627, June 1999,
               <https://www.rfc-editor.org/rfc/rfc2627>.
+
+   [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66,
+              RFC 3986, DOI 10.17487/RFC3986, January 2005,
+              <https://www.rfc-editor.org/rfc/rfc3986>.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
