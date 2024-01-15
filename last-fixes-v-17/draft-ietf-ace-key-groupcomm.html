@@ -1780,10 +1780,10 @@ Client                                             AS    KDC
 <li class="normal" id="section-3.1-2.1">
             <p id="section-3.1-2.1.1">'scope', specifying the names of the groups that the Client requests to access, and optionally the roles that the Client requests to have in those groups.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2.1.2">
-This parameter is encoded as a CBOR byte string, which wraps a CBOR array of one or more scope entries. All the scope entries are specified according to a same format, i.e., either the AIF format or the textual format defined below.<a href="#section-3.1-2.1.2" class="pilcrow">¶</a></p>
+This parameter is encoded as a CBOR byte string, which wraps a CBOR array of scope entries. All the scope entries are specified according to a same format, i.e., either the AIF format or the textual format defined below.<a href="#section-3.1-2.1.2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1-2.1.3.1">
-                <p id="section-3.1-2.1.3.1.1">If the AIF format is used, each scope entry is encoded as per <span>[<a href="#RFC9237" class="cite xref">RFC9237</a>]</span>. If a scope entry expresses a set of roles to take in a group as per this document, the object identifier "Toid" specifies the group name and MUST be encoded as a CBOR text string, while the permission set "Tperm" specifies the roles that the Client wishes to take in the group.<a href="#section-3.1-2.1.3.1.1" class="pilcrow">¶</a></p>
+                <p id="section-3.1-2.1.3.1.1">If the AIF format is used, each scope entry is encoded as per <span>[<a href="#RFC9237" class="cite xref">RFC9237</a>]</span>, i.e., as a CBOR array [Toid, Tperm]. If a scope entry expresses a set of roles to take in a group as per this document, the object identifier "Toid" specifies the group name and MUST be encoded as a CBOR text string, while the permission set "Tperm" specifies the roles that the Client wishes to take in the group.<a href="#section-3.1-2.1.3.1.1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2.1.3.1.2">
 The AIF format is the default format for application profiles of this specification, and is preferable for those that aim for a compact encoding of scope. This is desirable especially for application profiles defining several roles, with the Client possibly asking for multiple roles combined.<a href="#section-3.1-2.1.3.1.2" class="pilcrow">¶</a></p>
 <p id="section-3.1-2.1.3.1.3"><a href="#cddl-ex-0" class="auto internal xref">Figure 4</a> shows an example in CDDL notation <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> where scope uses the AIF format.<a href="#section-3.1-2.1.3.1.3" class="pilcrow">¶</a></p>
@@ -1831,9 +1831,7 @@ roles = &amp;(
    Verifier: 4
 )
 
-scope_entry = AIF-Generic&lt;gname, permissions&gt;
-
-scope_entries = [ + scope_entry ]
+scope_entries = AIF-Generic&lt;gname, permissions&gt;
 
 scope = bstr .cbor scope_entries
 
@@ -1853,7 +1851,7 @@ role = tstr
 
 scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 
-scope_entries = [ + scope_entry ]
+scope_entries = [ * scope_entry ]
 
 scope = bstr .cbor scope_entries
 </pre>
@@ -4113,9 +4111,7 @@ roles = &amp;(
    Verifier: 4
 )
 
-scope_entry = AIF-Generic&lt;gname, permissions&gt;
-
-scope_entries = [ + scope_entry ]
+scope_entries = AIF-Generic&lt;gname, permissions&gt;
 
 scope = bstr .cbor scope_entries
 
@@ -4136,7 +4132,7 @@ role = tstr
 
 scope_entry = [ gname , ? ( role / [ 2*role ] ) ]
 
-scope_entries = [ + scope_entry ]
+scope_entries = [ * scope_entry ]
 
 scope = bstr .cbor scope_entries
 
