@@ -1782,8 +1782,9 @@ Table of Contents
    map, which MUST contain the following fields and values.
 
    *  'gkty', identifying the key type of the keying material specified
-      in the 'key' parameter.  The set of values can be found in the
-      "Key Type" column of the "ACE Groupcomm Key Types" registry.
+      in the 'key' parameter.  This parameter is encoded as a CBOR
+      integer or a CBOR text string.  The set of values can be found in
+      the "Key Type" column of the "ACE Groupcomm Key Types" registry.
       Implementations MUST verify that the key type matches the
       application profile being used, if present, as registered in the
       "ACE Groupcomm Key Types" registry.
@@ -1792,7 +1793,7 @@ Table of Contents
       or information required to derive it.
 
    *  'num', containing the version number of the keying material for
-      the group communication, formatted as an integer.  This is a
+      the group communication, formatted as a CBOR integer.  This is a
       strictly monotonic increasing field.  The application profile MUST
       define the initial version number (REQ16).
 
@@ -4071,7 +4072,8 @@ Table of Contents
     +-----------------------+------+---------------------+------------+
     | control_group_uri     | 28   | tstr                | [RFC-XXXX] |
     +-----------------------+------+---------------------+------------+
-    | sign_info             | 29   | array               | [RFC-XXXX] |
+    | sign_info             | 29   | array /             | [RFC-XXXX] |
+    |                       |      | Simple value "null" |            |
     +-----------------------+------+---------------------+------------+
     | kdcchallenge          | 30   | bstr                | [RFC-XXXX] |
     +-----------------------+------+---------------------+------------+

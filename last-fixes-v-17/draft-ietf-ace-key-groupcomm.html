@@ -2507,13 +2507,13 @@ If the PoP evidence does not pass verification, the handler MUST reply with a 4.
 <p id="section-4.3.1-21">The Join Response message MUST have Content-Format application/ace-groupcomm+cbor. The payload of the response is formatted as a CBOR map, which MUST contain the following fields and values.<a href="#section-4.3.1-21" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3.1-22.1">
-              <p id="section-4.3.1-22.1.1">'gkty', identifying the key type of the keying material specified in the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key Types" registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key Types" registry.<a href="#section-4.3.1-22.1.1" class="pilcrow">¶</a></p>
+              <p id="section-4.3.1-22.1.1">'gkty', identifying the key type of the keying material specified in the 'key' parameter. This parameter is encoded as a CBOR integer or a CBOR text string. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key Types" registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key Types" registry.<a href="#section-4.3.1-22.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.3.1-22.2">
               <p id="section-4.3.1-22.2.1">'key', containing the keying material for the group communication, or information required to derive it.<a href="#section-4.3.1-22.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.3.1-22.3">
-              <p id="section-4.3.1-22.3.1">'num', containing the version number of the keying material for the group communication, formatted as an integer. This is a strictly monotonic increasing field. The application profile MUST define the initial version number (REQ16).<a href="#section-4.3.1-22.3.1" class="pilcrow">¶</a></p>
+              <p id="section-4.3.1-22.3.1">'num', containing the version number of the keying material for the group communication, formatted as a CBOR integer. This is a strictly monotonic increasing field. The application profile MUST define the initial version number (REQ16).<a href="#section-4.3.1-22.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-4.3.1-23">The exact type of the keying material specified in the 'key' parameter MUST be defined in application profiles of this specification (REQ17), together with values of 'gkty' accepted by the application (REQ18). Additionally, documents specifying a type of keying material MUST register an entry in the "ACE Groupcomm Key Types" registry defined in <a href="#iana-key" class="auto internal xref">Section 11.8</a>, including its name, the corresponding value for the 'gkty parameter', and the application profile to be used with.<a href="#section-4.3.1-23" class="pilcrow">¶</a></p>
@@ -4225,7 +4225,8 @@ extended_scope = #6.TAG_FOR_THIS_SEMANTICS(scope)
 +-----------------------+------+---------------------+------------+
 | control_group_uri     | 28   | tstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| sign_info             | 29   | array               | [RFC-XXXX] |
+| sign_info             | 29   | array /             | [RFC-XXXX] |
+|                       |      | Simple value "null" |            |
 +-----------------------+------+---------------------+------------+
 | kdcchallenge          | 30   | bstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
