@@ -56,7 +56,6 @@ normative:
   RFC9237:
   RFC9290:
   RFC9338:
-  I-D.ietf-core-oscore-groupcomm:
   COSE.Algorithms:
     author:
       org: IANA
@@ -105,6 +104,7 @@ informative:
   RFC9277:
   RFC9431:
   I-D.ietf-core-groupcomm-bis:
+  I-D.ietf-core-oscore-groupcomm:
   I-D.ietf-core-coap-pubsub:
   I-D.ietf-cose-cbor-encoded-cert:
   I-D.tiloca-core-oscore-discovery:
