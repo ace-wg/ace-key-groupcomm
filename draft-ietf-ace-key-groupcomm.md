@@ -1357,6 +1357,8 @@ If all verifications succeed, the handler returns a 2.05 (Content) message conta
 
    Application profiles of this specification MUST specify the exact approaches used by the KDC to compute the PoP evidence to include in 'kdc_cred_verify', and MUST specify which of those approaches is used in which case (REQ21).
 
+   If an application profile supports the presence of external signature verifiers that send GET requests to this resource, then the application profile MUST specify how external signature verifiers provide the KDC with a self-generated nonce to use as N_C (REQ21).
+
 ~~~~~~~~~~~~~~~~~~~~
 N_C and N_KDC expressed in CBOR diagnostic notation:
   N_C   = h'25a8991cd700ac01'
@@ -2608,7 +2610,7 @@ This section lists the requirements for application profiles of this specificati
 
 * REQ20: If used, specify the format and content of 'group\_policies' and its entries. Specify the policies default values (see {{gid-post}}).
 
-* REQ21: Specify the approaches used to compute and verify the PoP evidence to include in 'kdc_cred_verify', and which of those approaches is used in which case (see {{gid-post}}).
+* REQ21: Specify the approaches used to compute and verify the PoP evidence to include in 'kdc_cred_verify', and which of those approaches is used in which case (see {{gid-post}} and {{kdc-pub-key-get}}). If external signature verifiers are supported, specify how those provide a nonce to the KDC to be used for computing the PoP evidence (see {{kdc-pub-key-get}}).
 
 * REQ22: Specify the communication protocol that the members of the group must use (e.g., CoAP for group communication).
 
