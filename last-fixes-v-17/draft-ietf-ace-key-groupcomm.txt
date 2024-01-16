@@ -2624,6 +2624,12 @@ Table of Contents
       in 'kdc_cred_verify', and MUST specify which of those approaches
       is used in which case (REQ21).
 
+      If an application profile supports the presence of external
+      signature verifiers that send GET requests to this resource, then
+      the application profile MUST specify how external signature
+      verifiers provide the KDC with a self-generated nonce to use as
+      N_C (REQ21).
+
    N_C and N_KDC expressed in CBOR diagnostic notation:
      N_C   = h'25a8991cd700ac01'
      N_KDC = h'0b7db12aaff56da3'
@@ -5221,7 +5227,10 @@ A.1.  Mandatory-to-Address Requirements
 
    *  REQ21: Specify the approaches used to compute and verify the PoP
       evidence to include in 'kdc_cred_verify', and which of those
-      approaches is used in which case (see Section 4.3.1).
+      approaches is used in which case (see Section 4.3.1 and
+      Section 4.5.1).  If external signature verifiers are supported,
+      specify how those provide a nonce to the KDC to be used for
+      computing the PoP evidence (see Section 4.5.1).
 
    *  REQ22: Specify the communication protocol that the members of the
       group must use (e.g., CoAP for group communication).
