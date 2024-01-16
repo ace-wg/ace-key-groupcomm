@@ -213,7 +213,7 @@ Table of Contents
    If the application requires forward security (i.e., former group
    members must be prevented from accessing communications in the group
    after their leaving), then a rekeying has to occur every time current
-   members leave the group or are evicted from the group.
+   members leave or are evicted from the group.
 
    A group rekeying scheme performs the actual distribution of the new
    keying material, by rekeying the current group members when a new
@@ -254,9 +254,9 @@ Table of Contents
    *  The terms and concepts described in CDDL [RFC8610], CBOR
       [RFC8949], and COSE [RFC9052][RFC9053][RFC9338].
 
-   A principal interested to participate in group communication as well
-   as already participating as a group member is interchangeably denoted
-   as "Client" or "node".
+   A node interested to participate in group communication as well as
+   already participating as a group member is interchangeably denoted as
+   "Client".
 
    This document also uses the following terms.
 
@@ -340,7 +340,7 @@ Table of Contents
       [RFC8392], X.509 certificates [RFC5280], and C509 certificates
       [I-D.ietf-cose-cbor-encoded-cert].
 
-   *  Individual keying material: information exclusively pertaining to
+   *  Individual keying material: information pertaining exclusively to
       a group member, as associated with its group membership and
       related to other keying material and parameters used in the group.
       For example, this can be an identifier that the secure
@@ -663,7 +663,7 @@ Table of Contents
    scope = bstr .cbor scope_entries
 
        Figure 5: Example of scope using the textual format, with the
-          group name and role identifiers encoded as text strings
+                  role identifiers encoded as text strings
 
 3.2.  Authorization Response
 
