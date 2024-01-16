@@ -1376,7 +1376,7 @@ PoP input:
 
 #### Retrieve the KDC's Authentication Credential # {#kdc-pub-key}
 
-In case the KDC has an associated authentication credential as required for the correct group operation, a group member or an external signature verifier can contact the KDC to request the KDC's authentication credential, by sending a CoAP GET request to the /ace-group/GROUPNAME/kdc-cred endpoint at the KDC, where GROUPNAME is the group name.
+In case the KDC has an associated authentication credential as required for the correct group operation, a group member or an external signature verifier can contact the KDC to request the KDC's authentication credential, by sending a CoAP GET request to the /ace-group/GROUPNAME/kdc-cred endpoint at the KDC, where GROUPNAME identifies the group.
 
 Upon receiving the 2.05 (Content) response, the Client retrieves the KDC's authentication credential from the 'kdc_cred' parameter, and MUST verify the proof-of-possession (PoP) evidence specified in the 'kdc_cred_verify' parameter. In case of successful verification of the PoP evidence, the Client MUST store the obtained KDC's authentication credential and replace the currently stored one.
 
