@@ -3443,7 +3443,7 @@ Table of Contents
    Clients use in the group, together with the roles and node identifier
    that the corresponding Client has in the group.  It is RECOMMENDED to
    specify this information by means of the parameters 'creds',
-   'peer_roles', and 'peer_identifiers', like is done in the Join
+   'peer_roles', and 'peer_identifiers', like it is done in the Join
    Response message (see Section 4.3.1).
 
    The complete format of a rekeying message, including the encoding and
@@ -3518,9 +3518,8 @@ Table of Contents
    group/GROUPNAME/nodes/NODENAME (see Section 4.3.2 and Section 4.8.1,
    respectively).
 
-   Figure Figure 38 provides an example of point-to-point group
-   rekeying.  In particular, the example makes the following
-   assumptions.
+   Figure 38 provides an example of point-to-point group rekeying.  In
+   particular, the example makes the following assumptions.
 
    *  The group currently consists of four group members, namely C1, C2,
       C3, and C4.
@@ -3605,9 +3604,10 @@ Table of Contents
    Join Response message (see Section 4.3.1).  In particular,
    'rekeying_scheme' identifies the rekeying scheme used in the group
    (if no default can be assumed); 'control_group_uri', if present,
-   specifies a URI with a multicast address where the KDC will send the
-   rekeying messages for that group; 'mgt_key_material' specifies a
-   subset of the administrative keying material intended for that
+   specifies a URI whose addressing information is, e.g., a multicast IP
+   address, and where the KDC will send the rekeying messages for that
+   group by reaching all the group members; 'mgt_key_material' specifies
+   a subset of the administrative keying material intended for that
    particular joining Client to have, as used to protect the rekeying
    messages sent to the group when intended also to that joining Client.
 
@@ -3618,8 +3618,8 @@ Table of Contents
    members can occur in different ways, such as the following ones.
 
    *  Over multicast - In this case, the KDC simply sends a rekeying
-      message as a CoAP request addressed to the multicast URI specified
-      in the 'control_group_uri' parameter of the Join Response (see
+      message as a CoAP request addressed to the URI specified in the
+      'control_group_uri' parameter of the Join Response (see
       Section 4.3.1).
 
       If a particular rekeying message is intended for a single target
@@ -3680,8 +3680,8 @@ Table of Contents
    Further details depend on the specific rekeying scheme used in the
    group.
 
-   Figure Figure 39 provides an example of one-to-many group rekeying
-   over multicast.  In particular, the example makes the following
+   Figure 39 provides an example of one-to-many group rekeying over
+   multicast.  In particular, the example makes the following
    assumptions.
 
    *  The group currently consists of four group members, namely C1, C2,
@@ -3754,11 +3754,11 @@ Table of Contents
    prepared according to what the rekeying scheme prescribes.
 
    The following describes one possible method for the KDC to protect
-   the rekeying messages.
+   the rekeying messages when using the administrative keying material.
 
-   The method assumes that the following holds for the management keying
-   material specified in the 'mgt_key_material' parameter of the Join
-   Response (see Section 4.3.1).
+   The method assumes that the following holds for the administrative
+   keying material specified in the 'mgt_key_material' parameter of the
+   Join Response (see Section 4.3.1).
 
    *  The encryption algorithm SHOULD be the same one used to protect
       communications in the group.
@@ -3852,15 +3852,16 @@ Table of Contents
    possession (PoP) evidence in the 'kdc_cred_verify' parameter.
 
    If source authentication of messages exchanged in the group is not
-   ensured by means of signatures, then the KDC MUST provide its
-   authentication credential together with a corresponding PoP evidence
-   as part of the management keying material specified in the
-   'mgt_key_material' parameter of the Join Response (see
-   Section 4.3.1).  It is RECOMMENDED to specify this information by
-   using the same format and encoding used for the parameters
-   'kdc_cred', 'kdc_nonce', and 'kdc_cred_verify' in the Join Response.
-   It is up to separate documents profiling the use of the group
-   rekeying scheme to specify such details.
+   ensured by means of signatures, then the administrative keying
+   material conveyed in the 'mgt_key_material' parameter of the Join
+   Response sent by KDC (see Section 4.3.1) MUST also comprise a KDC's
+   authentication credential including the public key to use for
+   signature verification, together with a corresponding PoP evidence.
+   Within the 'mgt_key_material' parameter, it is RECOMMENDED to specify
+   this information by using the same format and encoding used for the
+   parameters 'kdc_cred', 'kdc_nonce', and 'kdc_cred_verify' in the Join
+   Response.  It is up to separate documents profiling the use of the
+   group rekeying scheme to specify such details.
 
    After that, the KDC specifies the computed countersignature in the
    'COSE_Countersignature0' header parameter of the COSE_Encrypt0
