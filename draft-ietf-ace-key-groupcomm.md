@@ -899,11 +899,11 @@ The Join Response message MUST include the Location-Path CoAP option, specifying
 
 The Join Response message MUST have Content-Format application/ace-groupcomm+cbor. The payload of the response is formatted as a CBOR map, which MUST contain the following fields and values.
 
-* 'gkty', identifying the key type of the keying material specified in the 'key' parameter. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key Types" registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key Types" registry.
+* 'gkty', identifying the key type of the keying material specified in the 'key' parameter. This parameter is encoded as a CBOR integer or a CBOR text string. The set of values can be found in the "Key Type" column of the "ACE Groupcomm Key Types" registry. Implementations MUST verify that the key type matches the application profile being used, if present, as registered in the "ACE Groupcomm Key Types" registry.
 
 * 'key', containing the keying material for the group communication, or information required to derive it.
 
-* 'num', containing the version number of the keying material for the group communication, formatted as an integer. This is a strictly monotonic increasing field. The application profile MUST define the initial version number (REQ16).
+* 'num', containing the version number of the keying material for the group communication, formatted as a CBOR integer. This is a strictly monotonic increasing field. The application profile MUST define the initial version number (REQ16).
 
 The exact type of the keying material specified in the 'key' parameter MUST be defined in application profiles of this specification (REQ17), together with values of 'gkty' accepted by the application (REQ18). Additionally, documents specifying a type of keying material MUST register an entry in the "ACE Groupcomm Key Types" registry defined in {{iana-key}}, including its name, the corresponding value for the 'gkty parameter', and the application profile to be used with.
 
@@ -2157,7 +2157,8 @@ Note that the media type application/ace-groupcomm+cbor MUST be used when these 
 +-----------------------+------+---------------------+------------+
 | control_group_uri     | 28   | tstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
-| sign_info             | 29   | array               | [RFC-XXXX] |
+| sign_info             | 29   | array /             | [RFC-XXXX] |
+|                       |      | Simple value "null" |            |
 +-----------------------+------+---------------------+------------+
 | kdcchallenge          | 30   | bstr                | [RFC-XXXX] |
 +-----------------------+------+---------------------+------------+
