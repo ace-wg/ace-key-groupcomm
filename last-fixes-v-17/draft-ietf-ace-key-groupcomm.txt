@@ -2214,13 +2214,12 @@ Table of Contents
    communication association to protect further pairwise communications
    that must be protected.
 
-   The secure communication protocol is REQUIRED to establish the secure
-   communication association between the Client and the KDC by using the
-   proof-of-possession key bound to the access token.  As a result, the
-   proof-of-possession to bind the access token to the Client is
-   performed by using the proof-of-possession key bound to the access
-   token for establishing secure communication between the Client and
-   the KDC.
+   It is REQUIRED that the secure communication association between the
+   Client and the KDC is established by using the proof-of-possession
+   key bound to the access token.  As a result, the proof-of-possession
+   to bind the access token to the Client is performed by using the
+   proof-of-possession key bound to the access token for establishing
+   secure communication between the Client and the KDC.
 
    To join the group, the Client sends a CoAP POST request to the /ace-
    group/GROUPNAME endpoint at the KDC, where the group to join is
