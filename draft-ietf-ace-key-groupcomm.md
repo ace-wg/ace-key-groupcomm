@@ -170,7 +170,7 @@ Furthermore, this document uses "names" or "identifiers" for groups and nodes. T
 
 * Group identifier: the identifier of the group keying material used in a group. Unlike group name and GROUPNAME, this identifier changes over time, when the group keying material is updated.
 
-* Node name: The identifier of a node, as a text string encoded as UTF-8 {{RFC3629}} and consistent with the semantics of URI path segments (see {{Section 3.3 of RFC3986}}). Once established, it is invariant. It is used in the interactions between Client and RS, as well as to identify a member of a group. Within the same group, a node name is always unique among the node names of all the current members of that group.
+* Node name: The identifier of a node, as a text string encoded as UTF-8 {{RFC3629}} and consistent with the semantics of URI path segments (see {{Section 3.3 of RFC3986}}). Once established, it is invariant. It is used in the interactions between Client and RS, as well as to identify a member of a group. A node name is always unique among the node names of the current nodes within a group.
 
 * NODENAME: The text string used in URIs to identify a member of a group. Once established, it is invariant. Its value coincides with the node name of the associated group member.
 
@@ -453,9 +453,9 @@ This parameter allows the Client and the RS to exchange information about a sign
 
 In this specification and in application profiles building on it, this parameter is used to exchange information about the signature algorithm and about authentication credentials to be used with it, in the groups indicated by the transferred access token as per its 'scope' claim (see {{ssec-authorization-response}}).
 
-When used in the Token Transfer Request sent to the KDC (see {{token-post}}), the 'sign_info' parameter specifies the CBOR simple value "null" (0xf6). This is done to ask for information about the signature algorithm and about the authentication credentials used in the groups that the Client has been authorized to join - or with which it has been authorized to have a more restricted interaction as per its granted roles (e.g., the Client is an external signature verifier).
+When used in the Token Transfer Request sent to the KDC (see {{token-post}}), the 'sign_info' parameter specifies the CBOR simple value "null" (0xf6). This is done to ask for information about the signature algorithm and about the authentication credentials used in the groups that, as per the granted roles, the Client has been authorized to join or interact with (e.g., as an external signature verifier).
 
-When used in the following Token Transfer Response from the KDC (see {{token-post}}), the 'sign_info' parameter is a CBOR array of one or more elements. The number of elements is at most the number of groups that the Client has been authorized to join - or to have a more restricted interaction (see above). Each element contains information about signing parameters and about authentication credentials for one or more groups, and is formatted as follows.
+When used in the following Token Transfer Response from the KDC (see {{token-post}}), the 'sign_info' parameter is a CBOR array of one or more elements. The number of elements is at most the number of groups that the Client has been authorized to join or interact with. Each element contains information about signing parameters and about authentication credentials for one or more groups, and is formatted as follows.
 
 * The first element 'id' is a group name or a CBOR array of group names, associated with groups for which the next four elements apply. Each specified group name is a CBOR text string and is hereafter referred to as 'gname'.
 
@@ -566,13 +566,13 @@ If request messages sent to the KDC as well as success response messages from th
     <coap://[2001:db8::ab]/ace-group/gp1>;if="ace.group"
   ~~~~~~~~~~~
 
-  If the value of the GROUPNAME URI path and the group name in the access token scope ('gname' in {{ssec-authorization-response}}) are not required to coincide, the KDC MUST implement a mechanism to map the GROUPNAME value in the URI to the group name, in order to refer to the correct group (REQ7).
+  If it is not required that the value of the GROUPNAME URI path and the group name in the access token scope ('gname' in {{ssec-authorization-response}}) coincide, the KDC MUST implement a mechanism to map the GROUPNAME value in the URI to the group name, in order to refer to the correct group (REQ7).
 
 * /ace-group/GROUPNAME/creds : the path of this resource is invariant once the resource is established. This resource contains the authentication credentials of all the members of the group with name GROUPNAME.
 
   This resource is created only in case the KDC acts as a repository of authentication credentials for group members.
 
-  A Client can access this resource in order to retrieve the authentication credentials of other group members, in addition to when joining the group. That is, the Client can retrieve the authentication credentials of all the current group members, or a subset of them by specifying filter criteria. These operations are described in {{sec-key-retrieval-all}} and {{sec-key-retrieval}}, respectively.
+  As a group member, a Client can access this resource in order to retrieve the authentication credentials of other group members. That is, the Client can retrieve the authentication credentials of all the current group members, or a subset of them by specifying filter criteria. These operations are described in {{sec-key-retrieval-all}} and {{sec-key-retrieval}}, respectively.
 
   Clients may be authorized to access this resource even without being group members, e.g., if authorized to be external signature verifiers for the group.
 
@@ -580,7 +580,7 @@ If request messages sent to the KDC as well as success response messages from th
 
    This resource is created only in case the KDC has an associated authentication credential and this is required for the correct group operation. It is REQUIRED of application profiles to define whether the KDC has such an associated authentication credential (REQ8).
 
-   A Client can interact with this resource in order to retrieve the current authentication credential of the KDC, in addition to when joining the group.
+   As a group member, a Client can access this resource in order to retrieve the current authentication credential of the KDC.
 
    Clients may be authorized to access this resource even without being group members, e.g., if authorized to be external signature verifiers for the group.
 
@@ -624,11 +624,11 @@ It is expected that a Client minimally supports the following set of primary ope
 
 In addition, some Clients may rather not support the following set of secondary operations and corresponding interactions with the KDC. This can be specified, for instance, in compliance documents defining minimalistic Clients and their capabilities in specific deployments. In turn, these might also have to consider the used application profile of this specification.
 
-* GET request to /ace-group/GROUPNAME/kdc-cred , in order to retrieve the current authentication credential of the KDC, in addition to when joining the group. This is relevant only if the KDC has an associated authentication credential and this is required for the correct group operation.
+* GET request to /ace-group/GROUPNAME/kdc-cred , in order to retrieve the current authentication credential of the KDC. This is relevant only if the KDC has an associated authentication credential and this is required for the correct group operation.
 
-* GET request to /ace-group/GROUPNAME/policies , in order to retrieve the current group policies as a group member, in addition to when joining the group.
+* GET request to /ace-group/GROUPNAME/policies , in order to retrieve the current group policies as a group member.
 
-* GET request to /ace-group/GROUPNAME/nodes/NODENAME , in order to retrieve the current group keying material and individual keying material. The former can also be retrieved through a GET request to /ace-group/GROUPNAME/ (see above). The latter would not be possible to re-obtain as a group member.
+* GET request to /ace-group/GROUPNAME/nodes/NODENAME , in order to retrieve the current group keying material and individual keying material. The former can also be retrieved through a GET request to /ace-group/GROUPNAME/ (see above).
 
 * PUT request to /ace-group/GROUPNAME/nodes/NODENAME , in order to ask for new individual keying material. Alternatively, the Client could obtain new individual keying material by re-joining the group through a POST request to /ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group or on the application profile of this specification, the Client might simply not be associated with any individual keying material.
 
@@ -656,7 +656,7 @@ Some error responses from the KDC can convey error-specific information accordin
 
 * It MUST include the Custom Problem Detail entry 'ace-groupcomm-error' registered in {{iana-custom-problem-details}} of this document.
 
-   This entry includes only one field, namely 'error-id'. The map key for 'error-id' is the CBOR unsigned integer with value 0. The value of 'error-id' is a CBOR integer specifying the error occurred at the KDC. This value is taken from the 'Value' column of the "ACE Groupcomm Errors" registry defined in {{iana-ace-groupcomm-errors}} of this document.
+   This entry is formatted as a CBOR map including only one field, namely 'error-id'. The map key for 'error-id' is the CBOR unsigned integer with value 0. The value of 'error-id' is a CBOR integer specifying the error occurred at the KDC. This value is taken from the 'Value' column of the "ACE Groupcomm Errors" registry defined in {{iana-ace-groupcomm-errors}} of this document.
 
    The CDDL notation {{RFC8610}} of the 'ace-groupcomm-error' entry is given below.
 
