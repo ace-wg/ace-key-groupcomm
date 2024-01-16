@@ -604,7 +604,7 @@ If request messages sent to the KDC as well as success response messages from th
 
 The KDC is expected to fully provide the interface defined above. It is otherwise REQUIRED of the application profiles of this specification to indicate which resources are not hosted, i.e., which parts of the interface defined in this section are not supported by the KDC (REQ9). Application profiles of this specification MAY extend the KDC interface, by defining additional handlers, as well as defining additional resources and their handlers.
 
-It is REQUIRED of application profiles of this specification to register a Resource Type for the root url-path (REQ10). This Resource Type can be used to discover the correct URL to access at the KDC. This Resource Type can also be used at the GROUPNAME sub-resource, to indicate different application profiles for different groups.
+It is REQUIRED of application profiles of this specification to register a Resource Type for the group-membership resource (REQ10), i.e., the group-membership resource at /ace-group/GROUPNAME. This Resource Type can be used to discover the correct URL for sending a Join Request to the KDC. This Resource Type can also be used to indicate which specific application profile of this specification is used by a specific group-membership resource at the KDC.
 
 It is REQUIRED of application profiles of this specification to define what specific actions (e.g., CoAP methods) are allowed on each resource provided by the KDC interface, depending on whether the Client is a current group member; the roles that a Client is authorized to take as per the obtained access token (see {{ssec-authorization-request}}); and the roles that the Client has as current group member (REQ11).
 
@@ -2586,7 +2586,7 @@ This section lists the requirements for application profiles of this specificati
 
 * REQ9: Specify if any part of the KDC interface as defined in this document is not supported by the KDC (see {{kdc-if}}).
 
-* REQ10: Register a Resource Type for the root url-path, which is used to discover the correct URL to access at the KDC (see {{kdc-if}}).
+* REQ10: Register a Resource Type for the group-membership resource, which is used to discover the correct URL for sending a Join Request to the KDC (see {{kdc-if}}).
 
 * REQ11: Define what specific actions (e.g., CoAP methods) are allowed on each resource provided by the KDC interface, depending on whether the Client is a current group member; the roles that a Client is authorized to take as per the obtained access token (see {{ssec-authorization-request}}); and the roles that the Client has as current group member.
 
