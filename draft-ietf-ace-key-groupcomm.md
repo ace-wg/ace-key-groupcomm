@@ -1186,7 +1186,7 @@ The handler expects a request with payload formatted as a CBOR map, which MUST c
 
 * 'get_creds', whose value is encoded as in {{gid-post}} with the following modifications.
 
-  - The arrays 'role\_filter' and 'id\_filter' MUST NOT both be empty, i.e., in CBOR diagnostic notation: \[ bool, \[ \], \[ \] \]. If the 'get_creds' parameter has such a format, the request MUST be considered malformed, and the KDC MUST reply with a 4.00 (Bad Request) error response.
+  - The arrays 'role\_filter' and 'id\_filter' MUST NOT both be empty, i.e., in CDDL notation: \[ bool, \[ \], \[ \] \]. If the 'get_creds' parameter has such a format, the request MUST be considered malformed, and the KDC MUST reply with a 4.00 (Bad Request) error response.
 
      Note that a group member can retrieve the authentication credentials of all the current group members by sending a GET request to the same KDC resource instead (see {{sec-key-retrieval-all}}).
 
