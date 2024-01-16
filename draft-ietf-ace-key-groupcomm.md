@@ -457,7 +457,7 @@ When used in the Token Transfer Request sent to the KDC (see {{token-post}}), th
 
 When used in the following Token Transfer Response from the KDC (see {{token-post}}), the 'sign_info' parameter is a CBOR array of one or more elements. The number of elements is at most the number of groups that the Client has been authorized to join - or to have a more restricted interaction (see above). Each element contains information about signing parameters and about authentication credentials for one or more groups, and is formatted as follows.
 
-* The first element 'id' is a group name or an array of group names, associated with groups for which the next four elements apply. Each specified group name is a CBOR text string and is hereafter referred to as 'gname'.
+* The first element 'id' is a group name or a CBOR array of group names, associated with groups for which the next four elements apply. Each specified group name is a CBOR text string and is hereafter referred to as 'gname'.
 
 * The second element 'sign_alg' is a CBOR integer or a text string, indicating the signature algorithm used in the groups identified by the 'gname' values. It is REQUIRED of application profiles to define specific values that this parameter can take (REQ3), selected from the set of signing algorithms of the COSE Algorithms registry {{COSE.Algorithms}}.
 
