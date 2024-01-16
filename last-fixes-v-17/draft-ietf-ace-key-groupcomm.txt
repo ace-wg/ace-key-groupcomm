@@ -5,8 +5,8 @@
 ACE Working Group                                           F. Palombini
 Internet-Draft                                               Ericsson AB
 Intended status: Standards Track                               M. Tiloca
-Expires: 18 July 2024                                            RISE AB
-                                                         15 January 2024
+Expires: 19 July 2024                                            RISE AB
+                                                         16 January 2024
 
 
            Key Provisioning for Group Communication using ACE
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 July 2024.
+   This Internet-Draft will expire on 19 July 2024.
 
 Copyright Notice
 
@@ -115,7 +115,7 @@ Table of Contents
          4.8.3.1.  Leave the Group
      4.9.  /ace-group/GROUPNAME/nodes/NODENAME/cred
        4.9.1.  POST Handler
-         4.9.1.1.  Uploading an Authentication Credential Key
+         4.9.1.1.  Uploading an Authentication Credential
    5.  Removal of a Group Member
    6.  Group Rekeying Process
      6.1.  Point-to-Point Group Rekeying
@@ -2668,7 +2668,7 @@ Table of Contents
       |                                                             |
       |             KDC Authentication Credential Request           |
       |------------------------------------------------------------>|
-      |              GET /ace-group/GROUPNAME/gm-pub-key            |
+      |               GET /ace-group/GROUPNAME/kdc-cred             |
       |                                                             |
       |<-- KDC Authentication Credential Response: 2.05 (Content) --|
       |                                                             |
@@ -2682,7 +2682,7 @@ Table of Contents
    Uri-Host: "kdc.example.com"
    Uri-Path: "ace-group"
    Uri-Path: "g1"
-   Uri-Path: "kdc-pub-key"
+   Uri-Path: "kdc-cred"
    Payload: -
 
    Response:
@@ -2732,8 +2732,8 @@ Table of Contents
 
    A node in the group can contact the KDC to retrieve the current group
    policies, by sending a CoAP GET request to the /ace-group/GROUPNAME/
-   policies endpoint at the KDC, where GROUPNAME is the group name, and
-   formatted as defined in Section 4.6.1
+   policies endpoint at the KDC, where GROUPNAME identifies the group,
+   and formatted as defined in Section 4.6.1
 
    Figure 27 gives an overview of the exchange described above, while
    Figure 28 shows an example.
@@ -2796,9 +2796,9 @@ Table of Contents
    A node in the group can contact the KDC to request information about
    the version number of the symmetric group keying material, by sending
    a CoAP GET request to the /ace-group/GROUPNAME/num endpoint at the
-   KDC, where GROUPNAME is the group name, formatted as defined in
+   KDC, where GROUPNAME identifies the group, formatted as defined in
    Section 4.7.1.  In particular, the version is incremented by the KDC
-   every time the group keying material is renewed, before it's
+   every time the group keying material is renewed, before it is
    distributed to the group members.
 
    Figure 29 gives an overview of the exchange described above, while
@@ -2825,7 +2825,6 @@ Table of Contents
    Response:
 
    Header: Content (Code=2.05)
-   Content-Format: "application/ace-groupcomm+cbor"
    Payload(in CBOR diagnostic notation):
      13
 
@@ -3059,7 +3058,7 @@ Table of Contents
    To this end, the Client performs a Key Renewal Request-Response
    exchange with the KDC, i.e., it sends a CoAP PUT request to the /ace-
    group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME
-   is the group name and NODENAME is its node name, and formatted as
+   identifies the group and NODENAME is its node name, and formatted as
    defined in Section 4.8.1.
 
    Figure 33 gives an overview of the exchange described above, while
@@ -3132,8 +3131,8 @@ Table of Contents
 
    A Client can actively request to leave the group.  In this case, the
    Client sends a CoAP DELETE request to the endpoint /ace-
-   group/GROUPNAME/nodes/NODENAME at the KDC, where GROUPNAME is the
-   group name and NODENAME is its node name, formatted as defined in
+   group/GROUPNAME/nodes/NODENAME at the KDC, where GROUPNAME identifies
+   the group and NODENAME is its node name, formatted as defined in
    Section 4.8.3
 
    Note that, after having left the group, the Client may wish to join
@@ -3161,10 +3160,12 @@ Table of Contents
    The PoP evidence included in the 'client_cred_verify' parameter is
    computed in the same way considered in Section 4.3.1 and defined by
    the specific application profile (REQ14), by using the following to
-   build the PoP input: i) the same scope specified by the Client in the
-   'scope' parameter of the original Join Request; ii) the latest N_S
-   value stored by the Client; iii) a new N_C nonce generated by the
-   Client and specified in the parameter 'cnonce' of this request.
+   build the PoP input: i) the same scope entry specified by the Client
+   in the 'scope' parameter of the latest Join Request that the Client
+   sent to the KDC in order to join the group identified by GROUPNAME;
+   ii) the latest N_S value stored by the Client; iii) a new N_C nonce
+   generated by the Client and specified in the parameter 'cnonce' of
+   this request.
 
    An example of PoP input to compute 'client_cred_verify' using CBOR
    encoding is given in Figure 35.
@@ -3254,7 +3255,7 @@ Table of Contents
       Figure 35: Example of PoP input to compute 'client_cred_verify'
                             using CBOR encoding
 
-4.9.1.1.  Uploading an Authentication Credential Key
+4.9.1.1.  Uploading an Authentication Credential
 
    In case the KDC maintains the authentication credentials of group
    members, a node in the group can contact the KDC to upload a new
@@ -3264,8 +3265,8 @@ Table of Contents
    To this end, the Client performs an Authentication Credential Update
    Request-Response exchange with the KDC, i.e., it sends a CoAP POST
    request to the /ace-group/GROUPNAME/nodes/NODENAME/cred endpoint at
-   the KDC, where GROUPNAME is the group name and NODENAME is its node
-   name.
+   the KDC, where GROUPNAME identifies the group and NODENAME is its
+   node name.
 
    The request is formatted as specified in Section 4.9.1.
 
@@ -3307,11 +3308,11 @@ Table of Contents
                                   Response
 
    Additionally, after updating its own authentication credential, a
-   group member MAY send a number of requests including an identifier of
-   the updated authentication credential, to notify other group members
-   that they have to retrieve it.  How this is done depends on the group
-   communication protocol used, and therefore is application profile
-   specific (OPT13).
+   group member MAY send to the group a number of requests including an
+   identifier of the updated authentication credential, to notify other
+   group members that they have to retrieve it.  How this is done
+   depends on the group communication protocol used, and therefore is
+   application profile specific (OPT13).
 
 5.  Removal of a Group Member
 

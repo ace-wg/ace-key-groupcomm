@@ -1029,7 +1029,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Palombini &amp; Tiloca</td>
-<td class="center">Expires 18 July 2024</td>
+<td class="center">Expires 19 July 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1042,12 +1042,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-ace-key-groupcomm-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-01-15" class="published">15 January 2024</time>
+<time datetime="2024-01-16" class="published">16 January 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-07-18">18 July 2024</time></dd>
+<dd class="expires"><time datetime="2024-07-19">19 July 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1093,7 +1093,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 18 July 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 19 July 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1299,7 +1299,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.4.2.9.2.1.1"><a href="#section-4.9.1" class="auto internal xref">4.9.1</a>.  <a href="#name-post-handler-2" class="internal xref">POST Handler</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.9.2.1.2.1">
-                        <p id="section-toc.1-1.4.2.9.2.1.2.1.1"><a href="#section-4.9.1.1" class="auto internal xref">4.9.1.1</a>.  <a href="#name-uploading-an-authentication" class="internal xref">Uploading an Authentication Credential Key</a></p>
+                        <p id="section-toc.1-1.4.2.9.2.1.2.1.1"><a href="#section-4.9.1.1" class="auto internal xref">4.9.1.1</a>.  <a href="#name-uploading-an-authentication" class="internal xref">Uploading an Authentication Credential</a></p>
 </li>
                     </ul>
 </li>
@@ -3146,7 +3146,7 @@ Member                                                         KDC
   |                                                             |
   |             KDC Authentication Credential Request           |
   |------------------------------------------------------------&gt;|
-  |              GET /ace-group/GROUPNAME/gm-pub-key            |
+  |               GET /ace-group/GROUPNAME/kdc-cred             |
   |                                                             |
   |&lt;-- KDC Authentication Credential Response: 2.05 (Content) --|
   |                                                             |
@@ -3166,7 +3166,7 @@ Header: GET (Code=0.01)
 Uri-Host: "kdc.example.com"
 Uri-Path: "ace-group"
 Uri-Path: "g1"
-Uri-Path: "kdc-pub-key"
+Uri-Path: "kdc-cred"
 Payload: -
 
 Response:
@@ -3212,7 +3212,7 @@ Payload (in CBOR diagnostic notation, with AUTH_CRED_KDC
             <h5 id="name-retrieve-the-group-policies">
 <a href="#section-4.6.1.1" class="section-number selfRef">4.6.1.1. </a><a href="#name-retrieve-the-group-policies" class="section-name selfRef">Retrieve the Group Policies</a>
             </h5>
-<p id="section-4.6.1.1-1">A node in the group can contact the KDC to retrieve the current group policies, by sending a CoAP GET request to the /ace-group/GROUPNAME/policies endpoint at the KDC, where GROUPNAME is the group name, and formatted as defined in <a href="#policies-get" class="auto internal xref">Section 4.6.1</a><a href="#section-4.6.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.6.1.1-1">A node in the group can contact the KDC to retrieve the current group policies, by sending a CoAP GET request to the /ace-group/GROUPNAME/policies endpoint at the KDC, where GROUPNAME identifies the group, and formatted as defined in <a href="#policies-get" class="auto internal xref">Section 4.6.1</a><a href="#section-4.6.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.6.1.1-2"><a href="#fig-policies" class="auto internal xref">Figure 27</a> gives an overview of the exchange described above, while <a href="#fig-policies-2" class="auto internal xref">Figure 28</a> shows an example.<a href="#section-4.6.1.1-2" class="pilcrow">¶</a></p>
 <span id="name-message-flow-of-policies-re"></span><div id="fig-policies">
 <figure id="figure-27">
@@ -3281,7 +3281,7 @@ Payload(in CBOR diagnostic notation):
             <h5 id="name-retrieve-the-keying-materia">
 <a href="#section-4.7.1.1" class="section-number selfRef">4.7.1.1. </a><a href="#name-retrieve-the-keying-materia" class="section-name selfRef">Retrieve the Keying Material Version</a>
             </h5>
-<p id="section-4.7.1.1-1">A node in the group can contact the KDC to request information about the version number of the symmetric group keying material, by sending a CoAP GET request to the /ace-group/GROUPNAME/num endpoint at the KDC, where GROUPNAME is the group name, formatted as defined in <a href="#num-get" class="auto internal xref">Section 4.7.1</a>. In particular, the version is incremented by the KDC every time the group keying material is renewed, before it's distributed to the group members.<a href="#section-4.7.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.7.1.1-1">A node in the group can contact the KDC to request information about the version number of the symmetric group keying material, by sending a CoAP GET request to the /ace-group/GROUPNAME/num endpoint at the KDC, where GROUPNAME identifies the group, formatted as defined in <a href="#num-get" class="auto internal xref">Section 4.7.1</a>. In particular, the version is incremented by the KDC every time the group keying material is renewed, before it is distributed to the group members.<a href="#section-4.7.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.7.1.1-2"><a href="#fig-version" class="auto internal xref">Figure 29</a> gives an overview of the exchange described above, while <a href="#fig-version-2" class="auto internal xref">Figure 30</a> shows an example.<a href="#section-4.7.1.1-2" class="pilcrow">¶</a></p>
 <span id="name-message-flow-of-version-req"></span><div id="fig-version">
 <figure id="figure-29">
@@ -3315,7 +3315,6 @@ Payload: -
 Response:
 
 Header: Content (Code=2.05)
-Content-Format: "application/ace-groupcomm+cbor"
 Payload(in CBOR diagnostic notation):
   13
 </pre>
@@ -3457,7 +3456,7 @@ Payload (in CBOR diagnostic notation,
 <a href="#section-4.8.2.1" class="section-number selfRef">4.8.2.1. </a><a href="#name-request-to-change-individua" class="section-name selfRef">Request to Change Individual Keying Material</a>
             </h5>
 <p id="section-4.8.2.1-1">A Client may ask the KDC for new, individual keying material. For instance, this can be due to the expiration of such individual keying material, or to the exhaustion of AEAD nonces, if an AEAD encryption algorithm is used for protecting communications in the group. An example of individual keying material can simply be an individual encryption key associated with the Client. Hence, the Client may ask for a new individual encryption key, or for new input material to derive it.<a href="#section-4.8.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.8.2.1-2">To this end, the Client performs a Key Renewal Request-Response exchange with the KDC, i.e., it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group name and NODENAME is its node name, and formatted as defined in <a href="#node-get" class="auto internal xref">Section 4.8.1</a>.<a href="#section-4.8.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.8.2.1-2">To this end, the Client performs a Key Renewal Request-Response exchange with the KDC, i.e., it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME identifies the group and NODENAME is its node name, and formatted as defined in <a href="#node-get" class="auto internal xref">Section 4.8.1</a>.<a href="#section-4.8.2.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.8.2.1-3"><a href="#fig-renewal-req-resp" class="auto internal xref">Figure 33</a> gives an overview of the exchange described above, while <a href="#fig-renewal-req-resp-2" class="auto internal xref">Figure 34</a> shows an example.<a href="#section-4.8.2.1-3" class="pilcrow">¶</a></p>
 <span id="name-message-flow-of-key-renewal"></span><div id="fig-renewal-req-resp">
 <figure id="figure-33">
@@ -3524,7 +3523,7 @@ Payload (in CBOR diagnostic notation, with IND_KEY being a
             <h5 id="name-leave-the-group">
 <a href="#section-4.8.3.1" class="section-number selfRef">4.8.3.1. </a><a href="#name-leave-the-group" class="section-name selfRef">Leave the Group</a>
             </h5>
-<p id="section-4.8.3.1-1">A Client can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/GROUPNAME/nodes/NODENAME at the KDC, where GROUPNAME is the group name and NODENAME is its node name, formatted as defined in <a href="#node-delete" class="auto internal xref">Section 4.8.3</a><a href="#section-4.8.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.8.3.1-1">A Client can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/GROUPNAME/nodes/NODENAME at the KDC, where GROUPNAME identifies the group and NODENAME is its node name, formatted as defined in <a href="#node-delete" class="auto internal xref">Section 4.8.3</a><a href="#section-4.8.3.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.8.3.1-2">Note that, after having left the group, the Client may wish to join it again. Then, as long as the Client is still authorized to join the group, i.e., the associated access token is still valid, the Client can request to re-join the group directly to the KDC (see <a href="#ssec-key-distribution-exchange" class="auto internal xref">Section 4.3.1.1</a>), without having to retrieve a new access token from the AS.<a href="#section-4.8.3.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -3545,7 +3544,7 @@ Payload (in CBOR diagnostic notation, with IND_KEY being a
           </h4>
 <p id="section-4.9.1-1">The POST handler is used to replace the stored authentication credential of this Client (identified by NODENAME) with the one specified in the request at the KDC, for the group identified by GROUPNAME.<a href="#section-4.9.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.9.1-2">The handler expects a POST request with payload as specified in <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>, with the difference that it includes only the parameters 'client_cred', 'cnonce', and 'client_cred_verify'.<a href="#section-4.9.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.9.1-3">The PoP evidence included in the 'client_cred_verify' parameter is computed in the same way considered in <a href="#gid-post" class="auto internal xref">Section 4.3.1</a> and defined by the specific application profile (REQ14), by using the following to build the PoP input: i) the same scope specified by the Client in the 'scope' parameter of the original Join Request; ii) the latest N_S value stored by the Client; iii) a new N_C nonce generated by the Client and specified in the parameter 'cnonce' of this request.<a href="#section-4.9.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.9.1-3">The PoP evidence included in the 'client_cred_verify' parameter is computed in the same way considered in <a href="#gid-post" class="auto internal xref">Section 4.3.1</a> and defined by the specific application profile (REQ14), by using the following to build the PoP input: i) the same scope entry specified by the Client in the 'scope' parameter of the latest Join Request that the Client sent to the KDC in order to join the group identified by GROUPNAME; ii) the latest N_S value stored by the Client; iii) a new N_C nonce generated by the Client and specified in the parameter 'cnonce' of this request.<a href="#section-4.9.1-3" class="pilcrow">¶</a></p>
 <p id="section-4.9.1-4">An example of PoP input to compute 'client_cred_verify' using CBOR encoding is given in <a href="#fig-client-cred-input-2" class="auto internal xref">Figure 35</a>.<a href="#section-4.9.1-4" class="pilcrow">¶</a></p>
 <p id="section-4.9.1-5">It is REQUIRED of application profiles to define the specific formats of authentication credentials that are acceptable to use in the group (REQ6).<a href="#section-4.9.1-5" class="pilcrow">¶</a></p>
 <p id="section-4.9.1-6">In addition to what is defined in <a href="#kdc-if-errors" class="auto internal xref">Section 4.1.2</a> and at the beginning of <a href="#node-subresource" class="auto internal xref">Section 4.8</a>, the handler verifies that this operation is consistent with the set of roles that the node has in the group. If the verification fails, the KDC MUST reply with a 4.00 (Bad Request) error response. The response MUST have Content-Format set to application/concise-problem-details+cbor and is formatted as defined in <a href="#kdc-if-errors" class="auto internal xref">Section 4.1.2</a>. Within the Custom Problem Detail entry 'ace-groupcomm-error', the value of the 'error-id' field  MUST be set to 1 ("Request inconsistent with the current roles").<a href="#section-4.9.1-6" class="pilcrow">¶</a></p>
@@ -3589,10 +3588,10 @@ PoP input:
 <div id="update-pub-key">
 <section id="section-4.9.1.1">
             <h5 id="name-uploading-an-authentication">
-<a href="#section-4.9.1.1" class="section-number selfRef">4.9.1.1. </a><a href="#name-uploading-an-authentication" class="section-name selfRef">Uploading an Authentication Credential Key</a>
+<a href="#section-4.9.1.1" class="section-number selfRef">4.9.1.1. </a><a href="#name-uploading-an-authentication" class="section-name selfRef">Uploading an Authentication Credential</a>
             </h5>
 <p id="section-4.9.1.1-1">In case the KDC maintains the authentication credentials of group members, a node in the group can contact the KDC to upload a new authentication credential to use in the group, and to replace the currently stored one.<a href="#section-4.9.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.9.1.1-2">To this end, the Client performs an Authentication Credential Update Request-Response exchange with the KDC, i.e., it sends a CoAP POST request to the /ace-group/GROUPNAME/nodes/NODENAME/cred endpoint at the KDC, where GROUPNAME is the group name and NODENAME is its node name.<a href="#section-4.9.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.9.1.1-2">To this end, the Client performs an Authentication Credential Update Request-Response exchange with the KDC, i.e., it sends a CoAP POST request to the /ace-group/GROUPNAME/nodes/NODENAME/cred endpoint at the KDC, where GROUPNAME identifies the group and NODENAME is its node name.<a href="#section-4.9.1.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.9.1.1-3">The request is formatted as specified in <a href="#node-pub-key-post" class="auto internal xref">Section 4.9.1</a>.<a href="#section-4.9.1.1-3" class="pilcrow">¶</a></p>
 <p id="section-4.9.1.1-4"><a href="#fig-pub-key-update-req-resp" class="auto internal xref">Figure 36</a> gives an overview of the exchange described above, while <a href="#fig-pub-key-update-req-resp-2" class="auto internal xref">Figure 37</a> shows an example.<a href="#section-4.9.1.1-4" class="pilcrow">¶</a></p>
 <span id="name-message-flow-of-authenticatio"></span><div id="fig-pub-key-update-req-resp">
@@ -3641,7 +3640,7 @@ Payload: -
 <a href="#name-example-of-authentication-cre" class="selfRef">Example of Authentication Credential Update Request-Response</a>
               </figcaption></figure>
 </div>
-<p id="section-4.9.1.1-7">Additionally, after updating its own authentication credential, a group member MAY send a number of requests including an identifier of the updated authentication credential, to notify other group members that they have to retrieve it. How this is done depends on the group communication protocol used, and therefore is application profile specific (OPT13).<a href="#section-4.9.1.1-7" class="pilcrow">¶</a></p>
+<p id="section-4.9.1.1-7">Additionally, after updating its own authentication credential, a group member MAY send to the group a number of requests including an identifier of the updated authentication credential, to notify other group members that they have to retrieve it. How this is done depends on the group communication protocol used, and therefore is application profile specific (OPT13).<a href="#section-4.9.1.1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
