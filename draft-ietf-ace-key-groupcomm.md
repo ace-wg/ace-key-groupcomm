@@ -130,7 +130,7 @@ Therefore, this document delegates details on the communication and security app
 
 In order to ensure consistency and aid the development of such application profiles, {{req}} of this document defines a number of related compliance requirements. In particular, {{req-mandatory}} compiles the requirements that application profiles are REQUIRED to fulfill; these are referred to by an identifier that starts with "REQ". Instead, {{req-optional}} compiles the requirements that application profiles MAY fulfill; these are referred to by an identifier that starts with "OPT".
 
-New keying material is intended to be generated and distributed to the group upon membership changes (rekeying). If the application requires backward security (i.e., new group members must be prevented from accessing communications in the group prior to their joining), then a rekeying has to occur every time new members join the group. If the application requires forward security (i.e., former group members must be prevented from accessing communications in the group after their leaving), then a rekeying has to occur every time current members leave the group or are evicted from the group.
+New keying material is intended to be generated and distributed to the group upon membership changes (rekeying). If the application requires backward security (i.e., new group members must be prevented from accessing communications in the group prior to their joining), then a rekeying has to occur every time new members join the group. If the application requires forward security (i.e., former group members must be prevented from accessing communications in the group after their leaving), then a rekeying has to occur every time current members leave or are evicted from the group.
 
 A group rekeying scheme performs the actual distribution of the new keying material, by rekeying the current group members when a new Client joins the group, and the remaining group members when a Client leaves the group. This can rely on different approaches, including efficient group rekeying schemes such as {{RFC2093}}, {{RFC2094}}, and {{RFC2627}}.
 
@@ -148,7 +148,7 @@ Readers are expected to be familiar with:
 
 * The terms and concepts described in CDDL {{RFC8610}}, CBOR {{RFC8949}}, and COSE {{RFC9052}}{{RFC9053}}{{RFC9338}}.
 
-A principal interested to participate in group communication as well as already participating as a group member is interchangeably denoted as "Client" or "node".
+A node interested to participate in group communication as well as already participating as a group member is interchangeably denoted as "Client".
 
 This document also uses the following terms.
 
@@ -182,7 +182,7 @@ This document additionally uses the following terminology:
 
 * Authentication credential: the set of information associated with an entity, including that entity's public key and parameters associated with the public key. Examples of authentication credentials are CBOR Web Tokens (CWTs) and CWT Claims Sets (CCSs) {{RFC8392}}, X.509 certificates {{RFC5280}}, and C509 certificates {{I-D.ietf-cose-cbor-encoded-cert}}.
 
-* Individual keying material: information exclusively pertaining to a group member, as associated with its group membership and related to other keying material and parameters used in the group. For example, this can be an identifier that the secure communication protocol employs to uniquely identify a node as a group member (e.g., a cryptographic key identifier uniquely associated with the group member in question). The specific nature and format of individual keying material used in a group is defined in application profiles of this specification. The individual keying material of a group member is not related to the secure association between that group member and the KDC.
+* Individual keying material: information pertaining exclusively to a group member, as associated with its group membership and related to other keying material and parameters used in the group. For example, this can be an identifier that the secure communication protocol employs to uniquely identify a node as a group member (e.g., a cryptographic key identifier uniquely associated with the group member in question). The specific nature and format of individual keying material used in a group is defined in application profiles of this specification. The individual keying material of a group member is not related to the secure association between that group member and the KDC.
 
 Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
 
@@ -377,7 +377,7 @@ scope_entries = [ * scope_entry ]
 
 scope = bstr .cbor scope_entries
 ~~~~~~~~~~~~~~~~~~~~
-{: #cddl-ex title="Example of scope using the textual format, with the group name and role identifiers encoded as text strings"}
+{: #cddl-ex title="Example of scope using the textual format, with the role identifiers encoded as text strings"}
 
 ## Authorization Response {#ssec-authorization-response}
 
