@@ -602,7 +602,7 @@ If request messages sent to the KDC as well as success response messages from th
 
   This resource is not created if the group member does not have an authentication credential to use in the group, or if the KDC does not store the authentication credentials of group members.
 
-The KDC is expected to fully provide the interface defined above. It is otherwise REQUIRED of the application profiles of this specification to indicate which resources are not hosted, i.e., which parts of the interface defined in this section are not supported by the KDC (REQ9). Application profiles of this specification MAY extend the KDC interface, by defining additional resources and their handlers.
+The KDC is expected to fully provide the interface defined above. It is otherwise REQUIRED of the application profiles of this specification to indicate which resources are not hosted, i.e., which parts of the interface defined in this section are not supported by the KDC (REQ9). Application profiles of this specification MAY extend the KDC interface, by defining additional handlers, as well as defining additional resources and their handlers.
 
 It is REQUIRED of application profiles of this specification to register a Resource Type for the root url-path (REQ10). This Resource Type can be used to discover the correct URL to access at the KDC. This Resource Type can also be used at the GROUPNAME sub-resource, to indicate different application profiles for different groups.
 
