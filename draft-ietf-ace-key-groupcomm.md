@@ -2222,7 +2222,7 @@ This specification defines a number of values that the KDC can use as error iden
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Error-Identifiers title="ACE Groupcomm Error Identifiers" artwork-align="center"}
 
-If a Client supports the problem-details format {{RFC9290}} and the Custom Problem Detail entry 'ace-groupcomm-error' defined in {{kdc-if-errors}}, and is able to understand the error specified in the 'error-id' field therein, then the Client may use that information to determine what actions to take next. If the Concise Problem Details data item specified in the error response includes the 'detail' entry and the Client supports it, such an entry may provide additional context.
+If a Client supports the problem-details format {{RFC9290}} and the Custom Problem Detail entry 'ace-groupcomm-error' defined in {{kdc-if-errors}}, and is able to understand the error specified in the 'error-id' field therein, then the Client can use that information to determine what actions to take next. If the Concise Problem Details data item specified in the error response includes the 'detail' entry and the Client supports it, such an entry may provide additional context.
 
 In particular, the following guidelines apply, and application profiles of this specification can define more detailed actions for the Client to take when learning that a specific error has occurred.
 
