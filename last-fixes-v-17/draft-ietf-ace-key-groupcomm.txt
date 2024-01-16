@@ -1160,8 +1160,8 @@ Table of Contents
    specification to indicate which resources are not hosted, i.e., which
    parts of the interface defined in this section are not supported by
    the KDC (REQ9).  Application profiles of this specification MAY
-   extend the KDC interface, by defining additional resources and their
-   handlers.
+   extend the KDC interface, by defining additional handlers, as well as
+   defining additional resources and their handlers.
 
    It is REQUIRED of application profiles of this specification to
    register a Resource Type for the root url-path (REQ10).  This
