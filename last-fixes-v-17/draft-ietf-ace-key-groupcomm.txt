@@ -874,10 +874,10 @@ Table of Contents
    information about signing parameters and about authentication
    credentials for one or more groups, and is formatted as follows.
 
-   *  The first element 'id' is a group name or an array of group names,
-      associated with groups for which the next four elements apply.
-      Each specified group name is a CBOR text string and is hereafter
-      referred to as 'gname'.
+   *  The first element 'id' is a group name or a CBOR array of group
+      names, associated with groups for which the next four elements
+      apply.  Each specified group name is a CBOR text string and is
+      hereafter referred to as 'gname'.
 
    *  The second element 'sign_alg' is a CBOR integer or a text string,
       indicating the signature algorithm used in the groups identified
