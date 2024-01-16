@@ -3864,7 +3864,7 @@ Table of Contents
    group rekeying scheme to specify such details.
 
    After that, the KDC specifies the computed countersignature in the
-   'COSE_Countersignature0' header parameter of the COSE_Encrypt0
+   'Countersignature0 version 2' header parameter of the COSE_Encrypt0
    object.
 
    Finally, the KDC specifies the COSE_Encrypt0 object as payload of a
