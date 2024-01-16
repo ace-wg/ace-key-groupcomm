@@ -698,9 +698,9 @@ Table of Contents
       of [RFC9200] for CWT).
 
       This claim specifies the same access control information as in the
-      ’scope’ parameter of the Authorization Response, if the parameter
+      'scope' parameter of the Authorization Response, if the parameter
       is present in the message.  If the parameter is not present, the
-      claim specifies the access control information as in the ’scope’
+      claim specifies the access control information as in the 'scope'
       parameter of the Authorization Request, if present, or the default
       scope that the AS is granting the Client, if not present.
 
