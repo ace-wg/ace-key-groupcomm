@@ -3341,9 +3341,9 @@ Table of Contents
 
    *  The KDC removes the Client from the list of current members of the
       group.  When doing so, the KDC deletes the currently stored value
-      of N_C for that Client, which was specified in the Join Request
-      (see Section 4.3.1) or in the latest succesful Authentication
-      Credential Update Request (see Section 4.9.1) from that Client.
+      of 'clientchallenge' for that Client, which was specified in the
+      latest Join Request that the Client sent to the KDC in order to
+      join the group (see Section 4.3.1).
 
    *  In case of forced eviction, i.e., for cases 2 and 3 above, the KDC
       deletes the authentication credential of the removed Client, if it

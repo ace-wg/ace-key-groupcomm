@@ -3669,7 +3669,7 @@ Payload: -
 <p id="section-5-3">In either case, the KDC performs the following actions.<a href="#section-5-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5-4.1">
-          <p id="section-5-4.1.1">The KDC removes the Client from the list of current members of the group. When doing so, the KDC deletes the currently stored value of N_C for that Client, which was specified in the Join Request (see <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>) or in the latest succesful Authentication Credential Update Request (see <a href="#node-pub-key-post" class="auto internal xref">Section 4.9.1</a>) from that Client.<a href="#section-5-4.1.1" class="pilcrow">¶</a></p>
+          <p id="section-5-4.1.1">The KDC removes the Client from the list of current members of the group. When doing so, the KDC deletes the currently stored value of 'clientchallenge' for that Client, which was specified in the latest Join Request that the Client sent to the KDC in order to join the group (see <a href="#gid-post" class="auto internal xref">Section 4.3.1</a>).<a href="#section-5-4.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-4.2">
           <p id="section-5-4.2.1">In case of forced eviction, i.e., for cases 2 and 3 above, the KDC deletes the authentication credential of the removed Client, if it acts as a repository of authentication credentials for group members.<a href="#section-5-4.2.1" class="pilcrow">¶</a></p>
