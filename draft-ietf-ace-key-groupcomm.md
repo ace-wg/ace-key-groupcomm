@@ -1388,7 +1388,7 @@ Member                                                         KDC
   |                                                             |
   |             KDC Authentication Credential Request           |
   |------------------------------------------------------------>|
-  |              GET /ace-group/GROUPNAME/gm-pub-key            |
+  |               GET /ace-group/GROUPNAME/kdc-cred             |
   |                                                             |
   |<-- KDC Authentication Credential Response: 2.05 (Content) --|
   |                                                             |
@@ -1402,7 +1402,7 @@ Header: GET (Code=0.01)
 Uri-Host: "kdc.example.com"
 Uri-Path: "ace-group"
 Uri-Path: "g1"
-Uri-Path: "kdc-pub-key"
+Uri-Path: "kdc-cred"
 Payload: -
 
 Response:
@@ -1435,7 +1435,7 @@ The specific format and meaning of group policies MUST be specified in the appli
 
 #### Retrieve the Group Policies {#policies}
 
-A node in the group can contact the KDC to retrieve the current group policies, by sending a CoAP GET request to the /ace-group/GROUPNAME/policies endpoint at the KDC, where GROUPNAME is the group name, and formatted as defined in {{policies-get}}
+A node in the group can contact the KDC to retrieve the current group policies, by sending a CoAP GET request to the /ace-group/GROUPNAME/policies endpoint at the KDC, where GROUPNAME identifies the group, and formatted as defined in {{policies-get}}
 
 {{fig-policies}} gives an overview of the exchange described above, while {{fig-policies-2}} shows an example.
 
@@ -1485,7 +1485,7 @@ The payload of the response is formatted as a CBOR integer.
 
 #### Retrieve the Keying Material Version {#key-version}
 
-A node in the group can contact the KDC to request information about the version number of the symmetric group keying material, by sending a CoAP GET request to the /ace-group/GROUPNAME/num endpoint at the KDC, where GROUPNAME is the group name, formatted as defined in {{num-get}}. In particular, the version is incremented by the KDC every time the group keying material is renewed, before it's distributed to the group members.
+A node in the group can contact the KDC to request information about the version number of the symmetric group keying material, by sending a CoAP GET request to the /ace-group/GROUPNAME/num endpoint at the KDC, where GROUPNAME identifies the group, formatted as defined in {{num-get}}. In particular, the version is incremented by the KDC every time the group keying material is renewed, before it is distributed to the group members.
 
 {{fig-version}} gives an overview of the exchange described above, while {{fig-version-2}} shows an example.
 
@@ -1513,7 +1513,6 @@ Payload: -
 Response:
 
 Header: Content (Code=2.05)
-Content-Format: "application/ace-groupcomm+cbor"
 Payload(in CBOR diagnostic notation):
   13
 ~~~~~~~~~~~
@@ -1628,7 +1627,7 @@ Note that this handler is not intended to accommodate requests from a group memb
 
 A Client may ask the KDC for new, individual keying material. For instance, this can be due to the expiration of such individual keying material, or to the exhaustion of AEAD nonces, if an AEAD encryption algorithm is used for protecting communications in the group. An example of individual keying material can simply be an individual encryption key associated with the Client. Hence, the Client may ask for a new individual encryption key, or for new input material to derive it.
 
-To this end, the Client performs a Key Renewal Request-Response exchange with the KDC, i.e., it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME is the group name and NODENAME is its node name, and formatted as defined in {{node-get}}.
+To this end, the Client performs a Key Renewal Request-Response exchange with the KDC, i.e., it sends a CoAP PUT request to the /ace-group/GROUPNAME/nodes/NODENAME endpoint at the KDC, where GROUPNAME identifies the group and NODENAME is its node name, and formatted as defined in {{node-get}}.
 
 {{fig-renewal-req-resp}} gives an overview of the exchange described above, while {{fig-renewal-req-resp-2}} shows an example.
 
@@ -1681,7 +1680,7 @@ If all verification succeeds, the handler performs the actions defined in {{sec-
 
 #### Leave the Group ## {#ssec-group-leaving}
 
-A Client can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/GROUPNAME/nodes/NODENAME at the KDC, where GROUPNAME is the group name and NODENAME is its node name, formatted as defined in {{node-delete}}
+A Client can actively request to leave the group. In this case, the Client sends a CoAP DELETE request to the endpoint /ace-group/GROUPNAME/nodes/NODENAME at the KDC, where GROUPNAME identifies the group and NODENAME is its node name, formatted as defined in {{node-delete}}
 
 Note that, after having left the group, the Client may wish to join it again. Then, as long as the Client is still authorized to join the group, i.e., the associated access token is still valid, the Client can request to re-join the group directly to the KDC (see {{ssec-key-distribution-exchange}}), without having to retrieve a new access token from the AS.
 
@@ -1695,7 +1694,7 @@ The POST handler is used to replace the stored authentication credential of this
 
 The handler expects a POST request with payload as specified in {{gid-post}}, with the difference that it includes only the parameters 'client_cred', 'cnonce', and 'client_cred_verify'.
 
-The PoP evidence included in the 'client_cred_verify' parameter is computed in the same way considered in {{gid-post}} and defined by the specific application profile (REQ14), by using the following to build the PoP input: i) the same scope specified by the Client in the 'scope' parameter of the original Join Request; ii) the latest N_S value stored by the Client; iii) a new N_C nonce generated by the Client and specified in the parameter 'cnonce' of this request.
+The PoP evidence included in the 'client_cred_verify' parameter is computed in the same way considered in {{gid-post}} and defined by the specific application profile (REQ14), by using the following to build the PoP input: i) the same scope entry specified by the Client in the 'scope' parameter of the latest Join Request that the Client sent to the KDC in order to join the group identified by GROUPNAME; ii) the latest N_S value stored by the Client; iii) a new N_C nonce generated by the Client and specified in the parameter 'cnonce' of this request.
 
 An example of PoP input to compute 'client_cred_verify' using CBOR encoding is given in {{fig-client-cred-input-2}}.
 
@@ -1735,11 +1734,11 @@ PoP input:
 ~~~~~~~~~~~~~~~~~~~~
 {: #fig-client-cred-input-2 title="Example of PoP input to compute 'client_cred_verify' using CBOR encoding"}
 
-#### Uploading an Authentication Credential Key {#update-pub-key}
+#### Uploading an Authentication Credential {#update-pub-key}
 
 In case the KDC maintains the authentication credentials of group members, a node in the group can contact the KDC to upload a new authentication credential to use in the group, and to replace the currently stored one.
 
-To this end, the Client performs an Authentication Credential Update Request-Response exchange with the KDC, i.e., it sends a CoAP POST request to the /ace-group/GROUPNAME/nodes/NODENAME/cred endpoint at the KDC, where GROUPNAME is the group name and NODENAME is its node name.
+To this end, the Client performs an Authentication Credential Update Request-Response exchange with the KDC, i.e., it sends a CoAP POST request to the /ace-group/GROUPNAME/nodes/NODENAME/cred endpoint at the KDC, where GROUPNAME identifies the group and NODENAME is its node name.
 
 The request is formatted as specified in {{node-pub-key-post}}.
 
@@ -1780,7 +1779,7 @@ Payload: -
 ~~~~~~~~~~~
 {: #fig-pub-key-update-req-resp-2 title="Example of Authentication Credential Update Request-Response"}
 
-Additionally, after updating its own authentication credential, a group member MAY send a number of requests including an identifier of the updated authentication credential, to notify other group members that they have to retrieve it. How this is done depends on the group communication protocol used, and therefore is application profile specific (OPT13).
+Additionally, after updating its own authentication credential, a group member MAY send to the group a number of requests including an identifier of the updated authentication credential, to notify other group members that they have to retrieve it. How this is done depends on the group communication protocol used, and therefore is application profile specific (OPT13).
 
 # Removal of a Group Member {#sec-node-removal}
 
