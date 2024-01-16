@@ -2610,7 +2610,7 @@ This section lists the requirements for application profiles of this specificati
 
 * REQ21: Specify the approaches used to compute and verify the PoP evidence to include in 'kdc_cred_verify', and which of those approaches is used in which case (see {{gid-post}}).
 
-* REQ22: Specify the communication protocol the members of the group must use (e.g., multicast CoAP).
+* REQ22: Specify the communication protocol that the members of the group must use (e.g., CoAP for group communication).
 
 * REQ23: Specify the security protocol the group members must use to protect their communication (e.g., group OSCORE). This must provide encryption, integrity, and replay protection.
 
