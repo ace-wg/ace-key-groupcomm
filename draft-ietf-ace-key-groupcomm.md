@@ -630,9 +630,9 @@ In addition, some Clients may rather not support the following set of secondary 
 
 * GET request to /ace-group/GROUPNAME/nodes/NODENAME , in order to retrieve the current group keying material and individual keying material. The former can also be retrieved through a GET request to /ace-group/GROUPNAME/ (see above). The latter would not be possible to re-obtain as a group member.
 
-* PUT request to /ace-group/GROUPNAME/nodes/NODENAME , in order to ask for new individual keying material. The Client would have to alternatively re-join the group through a POST request to /ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group or on the application profile of this specification, the Client might simply not be associated with any individual keying material.
+* PUT request to /ace-group/GROUPNAME/nodes/NODENAME , in order to ask for new individual keying material. Alternatively, the Client could obtain new individual keying material by re-joining the group through a POST request to /ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group or on the application profile of this specification, the Client might simply not be associated with any individual keying material.
 
-* POST request to /ace-group/GROUPNAME/nodes/NODENAME/cred , in order to provide the KDC with a new authentication credential. The Client would have to alternatively re-join the group through a POST request to /ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group, the Client might simply not have an associated authentication credential to provide.
+* POST request to /ace-group/GROUPNAME/nodes/NODENAME/cred , in order to provide the KDC with a new authentication credential. Alternatively, the Client could provide a new authentication credential by re-joining the group through a POST request to /ace-group/GROUPNAME/ (see above). Furthermore, depending on its roles in the group, the Client might simply not have an associated authentication credential to provide.
 
 It is REQUIRED of application profiles of this specification to categorize possible newly defined operations for Clients into primary operations and secondary operations, and to provide accompanying considerations (REQ12).
 
