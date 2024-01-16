@@ -397,7 +397,7 @@ The proof-of-possession access token (in 'access_token' above) MUST contain the 
 
 * a scope claim (see, for example 'scope' registered in {{Section 8.14 of RFC9200}} for CWT).
 
-   This claim specifies the same access control information as in the ’scope’ parameter of the Authorization Response, if the parameter is present in the message. If the parameter is not present, the claim specifies the access control information as in the ’scope’ parameter of the Authorization Request, if present, or the default scope that the AS is granting the Client, if not present.
+   This claim specifies the same access control information as in the 'scope' parameter of the Authorization Response, if the parameter is present in the message. If the parameter is not present, the claim specifies the access control information as in the 'scope' parameter of the Authorization Request, if present, or the default scope that the AS is granting the Client, if not present.
 
    By default, this claim has the same encoding as the 'scope' parameter in the Authorization Request, defined in {{ssec-authorization-request}}.
 
