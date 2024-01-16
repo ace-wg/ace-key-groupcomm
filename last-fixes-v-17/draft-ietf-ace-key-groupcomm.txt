@@ -1227,19 +1227,20 @@ Table of Contents
       possible to re-obtain as a group member.
 
    *  PUT request to /ace-group/GROUPNAME/nodes/NODENAME , in order to
-      ask for new individual keying material.  The Client would have to
-      alternatively re-join the group through a POST request to /ace-
-      group/GROUPNAME/ (see above).  Furthermore, depending on its roles
-      in the group or on the application profile of this specification,
-      the Client might simply not be associated with any individual
-      keying material.
+      ask for new individual keying material.  Alternatively, the Client
+      could obtain new individual keying material by re-joining the
+      group through a POST request to /ace-group/GROUPNAME/ (see above).
+      Furthermore, depending on its roles in the group or on the
+      application profile of this specification, the Client might simply
+      not be associated with any individual keying material.
 
    *  POST request to /ace-group/GROUPNAME/nodes/NODENAME/cred , in
       order to provide the KDC with a new authentication credential.
-      The Client would have to alternatively re-join the group through a
-      POST request to /ace-group/GROUPNAME/ (see above).  Furthermore,
-      depending on its roles in the group, the Client might simply not
-      have an associated authentication credential to provide.
+      Alternatively, the Client could provide a new authentication
+      credential by re-joining the group through a POST request to /ace-
+      group/GROUPNAME/ (see above).  Furthermore, depending on its roles
+      in the group, the Client might simply not have an associated
+      authentication credential to provide.
 
    It is REQUIRED of application profiles of this specification to
    categorize possible newly defined operations for Clients into primary
