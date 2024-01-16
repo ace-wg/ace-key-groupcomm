@@ -309,9 +309,8 @@ Table of Contents
       UTF-8 [RFC3629] and consistent with the semantics of URI path
       segments (see Section 3.3 of [RFC3986]).  Once established, it is
       invariant.  It is used in the interactions between Client and RS,
-      as well as to identify a member of a group.  Within the same
-      group, a node name is always unique among the node names of all
-      the current members of that group.
+      as well as to identify a member of a group.  A node name is always
+      unique among the node names of the current nodes within a group.
 
    *  NODENAME: The text string used in URIs to identify a member of a
       group.  Once established, it is invariant.  Its value coincides
@@ -861,18 +860,17 @@ Table of Contents
    Section 3.3), the 'sign_info' parameter specifies the CBOR simple
    value "null" (0xf6).  This is done to ask for information about the
    signature algorithm and about the authentication credentials used in
-   the groups that the Client has been authorized to join - or with
-   which it has been authorized to have a more restricted interaction as
-   per its granted roles (e.g., the Client is an external signature
+   the groups that, as per the granted roles, the Client has been
+   authorized to join or interact with (e.g., as an external signature
    verifier).
 
    When used in the following Token Transfer Response from the KDC (see
    Section 3.3), the 'sign_info' parameter is a CBOR array of one or
    more elements.  The number of elements is at most the number of
-   groups that the Client has been authorized to join - or to have a
-   more restricted interaction (see above).  Each element contains
-   information about signing parameters and about authentication
-   credentials for one or more groups, and is formatted as follows.
+   groups that the Client has been authorized to join or interact with.
+   Each element contains information about signing parameters and about
+   authentication credentials for one or more groups, and is formatted
+   as follows.
 
    *  The first element 'id' is a group name or a CBOR array of group
       names, associated with groups for which the next four elements
@@ -1065,8 +1063,8 @@ Table of Contents
       Payload:
         <coap://[2001:db8::ab]/ace-group/gp1>;if="ace.group"
 
-      If the value of the GROUPNAME URI path and the group name in the
-      access token scope ('gname' in Section 3.2) are not required to
+      If it is not required that the value of the GROUPNAME URI path and
+      the group name in the access token scope ('gname' in Section 3.2)
       coincide, the KDC MUST implement a mechanism to map the GROUPNAME
       value in the URI to the group name, in order to refer to the
       correct group (REQ7).
@@ -1079,13 +1077,12 @@ Table of Contents
       This resource is created only in case the KDC acts as a repository
       of authentication credentials for group members.
 
-      A Client can access this resource in order to retrieve the
-      authentication credentials of other group members, in addition to
-      when joining the group.  That is, the Client can retrieve the
-      authentication credentials of all the current group members, or a
-      subset of them by specifying filter criteria.  These operations
-      are described in Section 4.4.2.1 and Section 4.4.1.1,
-      respectively.
+      As a group member, a Client can access this resource in order to
+      retrieve the authentication credentials of other group members.
+      That is, the Client can retrieve the authentication credentials of
+      all the current group members, or a subset of them by specifying
+      filter criteria.  These operations are described in
+      Section 4.4.2.1 and Section 4.4.1.1, respectively.
 
       Clients may be authorized to access this resource even without
       being group members, e.g., if authorized to be external signature
@@ -1102,9 +1099,8 @@ Table of Contents
       whether the KDC has such an associated authentication credential
       (REQ8).
 
-      A Client can interact with this resource in order to retrieve the
-      current authentication credential of the KDC, in addition to when
-      joining the group.
+      As a group member, a Client can access this resource in order to
+      retrieve the current authentication credential of the KDC.
 
       Clients may be authorized to access this resource even without
       being group members, e.g., if authorized to be external signature
@@ -1212,20 +1208,17 @@ Table of Contents
    profile of this specification.
 
    *  GET request to /ace-group/GROUPNAME/kdc-cred , in order to
-      retrieve the current authentication credential of the KDC, in
-      addition to when joining the group.  This is relevant only if the
-      KDC has an associated authentication credential and this is
-      required for the correct group operation.
+      retrieve the current authentication credential of the KDC.  This
+      is relevant only if the KDC has an associated authentication
+      credential and this is required for the correct group operation.
 
    *  GET request to /ace-group/GROUPNAME/policies , in order to
-      retrieve the current group policies as a group member, in addition
-      to when joining the group.
+      retrieve the current group policies as a group member.
 
    *  GET request to /ace-group/GROUPNAME/nodes/NODENAME , in order to
       retrieve the current group keying material and individual keying
       material.  The former can also be retrieved through a GET request
-      to /ace-group/GROUPNAME/ (see above).  The latter would not be
-      possible to re-obtain as a group member.
+      to /ace-group/GROUPNAME/ (see above).
 
    *  PUT request to /ace-group/GROUPNAME/nodes/NODENAME , in order to
       ask for new individual keying material.  Alternatively, the Client
@@ -1292,12 +1285,12 @@ Table of Contents
    *  It MUST include the Custom Problem Detail entry 'ace-groupcomm-
       error' registered in Section 11.6 of this document.
 
-      This entry includes only one field, namely 'error-id'.  The map
-      key for 'error-id' is the CBOR unsigned integer with value 0.  The
-      value of 'error-id' is a CBOR integer specifying the error
-      occurred at the KDC.  This value is taken from the 'Value' column
-      of the "ACE Groupcomm Errors" registry defined in Section 11.12 of
-      this document.
+      This entry is formatted as a CBOR map including only one field,
+      namely 'error-id'.  The map key for 'error-id' is the CBOR
+      unsigned integer with value 0.  The value of 'error-id' is a CBOR
+      integer specifying the error occurred at the KDC.  This value is
+      taken from the 'Value' column of the "ACE Groupcomm Errors"
+      registry defined in Section 11.12 of this document.
 
       The CDDL notation [RFC8610] of the 'ace-groupcomm-error' entry is
       given below.
