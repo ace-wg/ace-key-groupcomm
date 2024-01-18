@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-16T01:13:07.409576+00:00",
+  "timestamp": "2024-01-18T01:13:02.223908+00:00",
   "repo": "ace-wg/ace-key-groupcomm",
   "labels": [
     {
@@ -3892,6 +3892,34 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 167,
+      "id": "PR_kwDOCSfQR85kN0PG",
+      "title": "Last fixes v 17",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/167",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-01-16T16:14:57Z",
+      "updatedAt": "2024-01-16T16:15:08Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "a5399269aa64f9973ff0fed4f1e0007f71548f19",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "last-fixes-v-17",
+      "headRefOid": "82155d35251f6e701ca44b7979db42394cbb5371",
+      "closedAt": "2024-01-16T16:15:08Z",
+      "mergedAt": "2024-01-16T16:15:07Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "01735305314a7d5427e8f38d8c833d082d5d6156"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
