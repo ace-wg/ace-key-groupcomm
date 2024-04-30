@@ -957,40 +957,40 @@ Note to RFC Editor: In {{ace-groupcomm-profile-0}}, please replace "{{&SELF}}" w
 * 'group\_policies', with value a CBOR map, whose entries specify how the group handles specific management aspects. These include, for instance, approaches to achieve synchronization of sequence numbers among group members. The elements of this field are registered in the "ACE Groupcomm Policies" registry. This specification defines the three elements "Sequence Number Synchronization Methods", "Key Update Check Interval", and "Expiration Delta", which are summarized in {{fig-ACE-Groupcomm-Policies}}. Application profiles that build on this document MUST specify the exact content format and default value of included map entries (REQ20).
 
 ~~~~~~~~~~~
-+--------------+-------+----------+----------------------+------------+
-|     Name     | CBOR  |   CBOR   |     Description      | Reference  |
-|              | label |   type   |                      |            |
-+--------------+-------+----------+----------------------+------------+
-| Sequence     | 0     | tstr/int | Method for recipient | [RFC-XXXX] |
-| Number       |       |          | group members to     |            |
-| Synchroniza- |       |          | synchronize with     |            |
-| tion Method  |       |          | sequence numbers of  |            |
-|              |       |          | sender group         |            |
-|              |       |          | members. Its value   |            |
-|              |       |          | is taken from the    |            |
-|              |       |          | 'Value' column of    |            |
-|              |       |          | the Sequence Number  |            |
-|              |       |          | Synchronization      |            |
-|              |       |          | Method registry      |            |
-+--------------+-------+----------+----------------------+------------+
-| Key Update   | 1     | int      | Polling interval in  | [RFC-XXXX] |
-| Check        |       |          | seconds, for group   |            |
-| Interval     |       |          | members to check at  |            |
-|              |       |          | the KDC if the       |            |
-|              |       |          | latest group keying  |            |
-|              |       |          | material is the one  |            |
-|              |       |          | that they store      |            |
-+--------------+-------+----------+----------------------+------------+
-| Expiration   | 2     | uint     | Number of seconds    | [RFC-XXXX] |
-| Delta        |       |          | from 'exp' until a   |            |
-|              |       |          | UTC date/time, after |            |
-|              |       |          | which group members  |            |
-|              |       |          | MUST stop using the  |            |
-|              |       |          | group keying         |            |
-|              |       |          | material that they   |            |
-|              |       |          | store to decrypt     |            |
-|              |       |          | incoming messages    |            |
-+--------------+-------+----------|----------------------|------------+
++--------------+-------+--------+----------------------+------------+
+|     Name     | CBOR  |  CBOR  |     Description      | Reference  |
+|              | label |  type  |                      |            |
++--------------+-------+--------+----------------------+------------+
+| Sequence     | 0     | int or | Method for recipient | [RFC-XXXX] |
+| Number       |       | tstr   | group members to     |            |
+| Synchroniza- |       |        | synchronize with     |            |
+| tion Method  |       |        | sequence numbers of  |            |
+|              |       |        | sender group         |            |
+|              |       |        | members. Its value   |            |
+|              |       |        | is taken from the    |            |
+|              |       |        | 'Value' column of    |            |
+|              |       |        | the Sequence Number  |            |
+|              |       |        | Synchronization      |            |
+|              |       |        | Method registry      |            |
++--------------+-------+--------+----------------------+------------+
+| Key Update   | 1     | int    | Polling interval in  | [RFC-XXXX] |
+| Check        |       |        | seconds, for group   |            |
+| Interval     |       |        | members to check at  |            |
+|              |       |        | the KDC if the       |            |
+|              |       |        | latest group keying  |            |
+|              |       |        | material is the one  |            |
+|              |       |        | that they store      |            |
++--------------+-------+--------+----------------------+------------+
+| Expiration   | 2     | uint   | Number of seconds    | [RFC-XXXX] |
+| Delta        |       |        | from 'exp' until a   |            |
+|              |       |        | UTC date/time, after |            |
+|              |       |        | which group members  |            |
+|              |       |        | MUST stop using the  |            |
+|              |       |        | group keying         |            |
+|              |       |        | material that they   |            |
+|              |       |        | store to decrypt     |            |
+|              |       |        | incoming messages    |            |
++--------------+-------+--------+----------------------+------------+
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Policies title="ACE Groupcomm Policies" artwork-align="center"}
 
@@ -2098,70 +2098,68 @@ This specification defines a number of parameters used during the second part of
 Note that the media type application/ace-groupcomm+cbor MUST be used when these parameters are transported in the respective message fields.
 
 ~~~~~~~~~~~
-+-----------------------+------+---------------------+------------+
-| Name                  | CBOR | CBOR Type           | Reference  |
-|                       | Key  |                     |            |
-+-----------------------+------+---------------------+------------+
-| gid                   | 0    | array               | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| gname                 | 1    | array of tstr       | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| guri                  | 2    | array of tstr       | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| scope                 | 3    | bstr                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| get_creds             | 4    | array /             | [RFC-XXXX] |
-|                       |      | Simple value "null" |            |
-+-----------------------+------+---------------------+------------+
-| client_cred           | 5    | bstr                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| cnonce                | 6    | bstr                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| client_cred_verify    | 24   | bstr                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| creds_repo            | 25   | tstr                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| control_uri           | 26   | tstr                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| gkty                  | 7    | int / tstr          | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| key                   | 8    | See the "ACE        | [RFC-XXXX] |
-|                       |      | Groupcomm Key       |            |
-|                       |      | Types" registry     |            |
-+-----------------------+------+---------------------+------------+
-| num                   | 9    | int                 | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| ace_groupcomm_profile | 10   | int                 | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| exp                   | 11   | uint                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| exi                   | 12   | uint                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| creds                 | 13   | array               | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| peer_roles            | 14   | array               | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| peer_identifiers      | 15   | array               | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| group_policies        | 16   | map                 | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| kdc_cred              | 17   | bstr                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| kdc_nonce             | 18   | bstr                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| kdc_cred_verify       | 19   | bstr                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| rekeying_scheme       | 20   | int                 | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| mgt_key_material      | 27   | bstr                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| control_group_uri     | 28   | tstr                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
-| sign_info             | 29   | array /             | [RFC-XXXX] |
-|                       |      | Simple value "null" |            |
-+-----------------------+------+---------------------+------------+
-| kdcchallenge          | 30   | bstr                | [RFC-XXXX] |
-+-----------------------+------+---------------------+------------+
++-----------------------+------+-----------------+------------+
+| Name                  | CBOR | CBOR Type       | Reference  |
+|                       | Key  |                 |            |
++-----------------------+------+-----------------+------------+
+| gid                   | 0    | array           | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| gname                 | 1    | array of tstr   | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| guri                  | 2    | array of tstr   | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| scope                 | 3    | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| get_creds             | 4    | Null or array   | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| client_cred           | 5    | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| cnonce                | 6    | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| client_cred_verify    | 24   | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| creds_repo            | 25   | tstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| control_uri           | 26   | tstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| gkty                  | 7    | int or tstr     | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| key                   | 8    | See the "ACE    | [RFC-XXXX] |
+|                       |      | Groupcomm Key   |            |
+|                       |      | Types" registry |            |
++-----------------------+------+-----------------+------------+
+| num                   | 9    | int             | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| ace_groupcomm_profile | 10   | int             | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| exp                   | 11   | uint            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| exi                   | 12   | uint            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| creds                 | 13   | array           | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| peer_roles            | 14   | array           | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| peer_identifiers      | 15   | array           | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| group_policies        | 16   | map             | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| kdc_cred              | 17   | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| kdc_nonce             | 18   | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| kdc_cred_verify       | 19   | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| rekeying_scheme       | 20   | int             | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| mgt_key_material      | 27   | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| control_group_uri     | 28   | tstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| sign_info             | 29   | Null or array   | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
+| kdcchallenge          | 30   | bstr            | [RFC-XXXX] |
++-----------------------+------+-----------------+------------+
 ~~~~~~~~~~~
 {: #fig-ACE-Groupcomm-Parameters title="ACE Groupcomm Parameters" artwork-align="center"}
 
@@ -2384,14 +2382,14 @@ Mappings" registry following the procedure specified in {{Section 8.10 of RFC920
 
 * Name: sign_info
 * CBOR Key: TBD (range -256 to 255)
-* Value Type: Simple value "null" / array
+* Value Type: Null or array
 * Reference: {{&SELF}}
 
 &nbsp;
 
 * Name: kdcchallenge
 * CBOR Key: TBD (range -256 to 255)
-* Value Type: Byte string
+* Value Type: byte string
 * Reference: {{&SELF}}
 
 ## Interface Description (if=) Link Target Attribute Values {#if-ace-group}
@@ -2702,6 +2700,10 @@ gname = tstr
 # Document Updates # {#sec-document-updates}
 
 RFC EDITOR: PLEASE REMOVE THIS SECTION.
+
+## Version -18 to -19 ## {#sec-18-19}
+
+* IANA-related editorial fixes.
 
 ## Version -17 to -18 ## {#sec-17-18}
 
