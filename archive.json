@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-04-30T01:10:27.047388+00:00",
+  "timestamp": "2024-05-02T01:10:15.297539+00:00",
   "repo": "ace-wg/ace-key-groupcomm",
   "labels": [
     {
@@ -3926,26 +3926,42 @@
       "id": "PR_kwDOCSfQR85txe1n",
       "title": "IANA-related editorial fixes",
       "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/168",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "marco-tiloca-sics",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2024-04-25T20:48:39Z",
-      "updatedAt": "2024-04-25T20:48:39Z",
+      "updatedAt": "2024-04-30T15:41:08Z",
       "baseRepository": "ace-wg/ace-key-groupcomm",
       "baseRefName": "master",
       "baseRefOid": "01735305314a7d5427e8f38d8c833d082d5d6156",
       "headRepository": "ace-wg/ace-key-groupcomm",
       "headRefName": "iana-editorial-fixes",
       "headRefOid": "c6032facf8d0f934905c8d50d2947e6284512ed0",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2024-04-30T15:41:07Z",
+      "mergedAt": "2024-04-30T15:41:07Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "a6379891cdb7ed5c0cc718c6b1422f1b0ebd52c9"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR855GoGl",
+          "commit": {
+            "abbreviatedOid": "c6032fa"
+          },
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-04-30T15:34:43Z",
+          "updatedAt": "2024-04-30T15:34:43Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
