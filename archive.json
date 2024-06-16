@@ -1,0 +1,3967 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2024-06-16T01:21:47.296766+00:00",
+  "repo": "ace-wg/ace-key-groupcomm",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "The authors need more info (from the wg/issue creator) to understand and solve this issue",
+      "color": "d85817"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "The authors don't fully understand the issue, further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    },
+    {
+      "name": "editor done + wg review requested",
+      "description": "The authors consider this issue taken care of and request wg/issue creator review before closing it.",
+      "color": "73f95e"
+    },
+    {
+      "name": "ongoing",
+      "description": "The authors are working on the issue and have updates planned.",
+      "color": "5f95d8"
+    },
+    {
+      "name": "PR v-06",
+      "description": "This issue is/will be taken care of in PR#93.",
+      "color": "02becc"
+    },
+    {
+      "name": "PR v-10",
+      "description": "This issue is taken care of in PR#139.",
+      "color": "5319e7"
+    }
+  ],
+  "issues": [
+    {
+      "number": 5,
+      "id": "MDU6SXNzdWU0NDkyNDAzMTM=",
+      "title": "JSON encoding",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/5",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP1: add some note to say that using JSON is possible (conversion specified in Sections 4.1 and 4.2 of RFC 7049)",
+      "createdAt": "2019-05-28T12:27:48Z",
+      "updatedAt": "2019-06-14T12:05:48Z",
+      "closedAt": "2019-06-14T12:05:48Z",
+      "comments": []
+    },
+    {
+      "number": 6,
+      "id": "MDU6SXNzdWU0NDkyNDA1MTU=",
+      "title": "content-format",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/6",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP2: Clarify that where Ace is used (3 first messages), the content-format used is the one defined in ACE (application/ace+cbor and possibly application/cwt). In the last 2 messages (Key distribution Request and Response) the content-format is supposed to be application/cbor, as that is the type of the payload.",
+      "createdAt": "2019-05-28T12:28:15Z",
+      "updatedAt": "2019-06-14T12:06:00Z",
+      "closedAt": "2019-06-14T12:06:00Z",
+      "comments": []
+    },
+    {
+      "number": 7,
+      "id": "MDU6SXNzdWU0NDkyNDEwMjI=",
+      "title": "abbreviations",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/7",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP3: Create a new registry for parameters used, and re-use the same number as ACE as much as possible (for parameters that appear in both, such as \u2018profile\u2019, \u2018exp\u2019).",
+      "createdAt": "2019-05-28T12:29:20Z",
+      "updatedAt": "2019-07-01T12:06:11Z",
+      "closedAt": "2019-07-01T12:06:11Z",
+      "comments": []
+    },
+    {
+      "number": 8,
+      "id": "MDU6SXNzdWU0NDkyNDEyMjM=",
+      "title": "Ref to RFC7390",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/8",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP4: Replace references to RFC 7390 with references to RFC7390 and draft-dijk-core-groupcomm-bis.",
+      "createdAt": "2019-05-28T12:29:47Z",
+      "updatedAt": "2019-06-14T12:06:29Z",
+      "closedAt": "2019-06-14T12:06:29Z",
+      "comments": []
+    },
+    {
+      "number": 9,
+      "id": "MDU6SXNzdWU0NDkyNDEzNTU=",
+      "title": "Editorial",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/9",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP5: In Section 2, remove \"further\" from the last paragraph.",
+      "createdAt": "2019-05-28T12:30:04Z",
+      "updatedAt": "2019-06-14T12:07:53Z",
+      "closedAt": "2019-06-14T12:07:53Z",
+      "comments": []
+    },
+    {
+      "number": 10,
+      "id": "MDU6SXNzdWU0NDkyNDE1Njk=",
+      "title": "format of client_cred",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/10",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP7: CBOR bstr as data structure for 'client_cred'. That is the most general format. If for example COSE_Keys are used, they can be wrapped in a bstr.",
+      "createdAt": "2019-05-28T12:30:35Z",
+      "updatedAt": "2019-06-14T12:08:00Z",
+      "closedAt": "2019-06-14T12:08:00Z",
+      "comments": []
+    },
+    {
+      "number": 11,
+      "id": "MDU6SXNzdWU0NDkyNDI2MzY=",
+      "title": "format of pub_keys_repos",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/11",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP8: 'pub_keys_repos', as a CBOR array of tstr containing URIs.",
+      "createdAt": "2019-05-28T12:32:54Z",
+      "updatedAt": "2019-06-14T12:29:12Z",
+      "closedAt": "2019-06-14T12:29:12Z",
+      "comments": []
+    },
+    {
+      "number": 12,
+      "id": "MDU6SXNzdWU0NDkyNDI5MTM=",
+      "title": "exp definition",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/12",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP9: In Section 4.2, specify that 'exp' indicates a UNIX time, same as 'exp' defined in RFC7519.",
+      "createdAt": "2019-05-28T12:33:29Z",
+      "updatedAt": "2019-06-14T12:29:19Z",
+      "closedAt": "2019-06-14T12:29:19Z",
+      "comments": []
+    },
+    {
+      "number": 13,
+      "id": "MDU6SXNzdWU0NDkyNDMxODg=",
+      "title": "negotiation of pub keys type",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/13",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP10: (Section 4.2) Move the negotiation of public key type/parameter that is now defined in the ace-key-groupcomm-oscore (see for example 4.1 paragraph 2) to this document, to make it more general.",
+      "createdAt": "2019-05-28T12:34:04Z",
+      "updatedAt": "2019-07-04T10:30:40Z",
+      "closedAt": "2019-07-04T10:30:40Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "taken care of  in 7c9fd34fff557bf925597d9f62af4f8880e5eb08",
+          "createdAt": "2019-07-04T10:30:35Z",
+          "updatedAt": "2019-07-04T10:30:35Z"
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "id": "MDU6SXNzdWU0NDkyNDM0OTg=",
+      "title": "format of group_policies",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/14",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP11: 'group_policies' in Section 4.2 data format as CBOR map",
+      "createdAt": "2019-05-28T12:34:45Z",
+      "updatedAt": "2019-06-14T12:30:50Z",
+      "closedAt": "2019-06-14T12:30:50Z",
+      "comments": []
+    },
+    {
+      "number": 15,
+      "id": "MDU6SXNzdWU0NDkyNDM2OTI=",
+      "title": "Editorial",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/15",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP13: Move the last paragraph of Section 4.2 to the end of Section 4.",
+      "createdAt": "2019-05-28T12:35:11Z",
+      "updatedAt": "2019-06-14T12:43:29Z",
+      "closedAt": "2019-06-14T12:43:29Z",
+      "comments": []
+    },
+    {
+      "number": 16,
+      "id": "MDU6SXNzdWU0NDkyNDM5MDU=",
+      "title": "remove client_cred from leave request",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/16",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP15: Remove 'client_cred' from the leave request in Section 5.2.",
+      "createdAt": "2019-05-28T12:35:41Z",
+      "updatedAt": "2019-06-14T12:43:36Z",
+      "closedAt": "2019-06-14T12:43:36Z",
+      "comments": []
+    },
+    {
+      "number": 17,
+      "id": "MDU6SXNzdWU0NDkyNDQzMTc=",
+      "title": "Editorial",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/17",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP16: In Section 5.2, rephrase so that \"not formatted correctly\" means that the KDC cannot figure out what it is asked to do.",
+      "createdAt": "2019-05-28T12:36:45Z",
+      "updatedAt": "2019-06-14T12:43:41Z",
+      "closedAt": "2019-06-14T12:43:41Z",
+      "comments": []
+    },
+    {
+      "number": 18,
+      "id": "MDU6SXNzdWU0NDkyNDQ1NzM=",
+      "title": "exp parameters is mandatory",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/18",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP17: In Section 6.2, change the 'exp' parameter as one that MUST be included in the Key Distribution Response.",
+      "createdAt": "2019-05-28T12:37:14Z",
+      "updatedAt": "2019-06-14T12:43:48Z",
+      "closedAt": "2019-06-14T12:43:48Z",
+      "comments": []
+    },
+    {
+      "number": 19,
+      "id": "MDU6SXNzdWU0NDkyNDYxMDA=",
+      "title": "Clarification on updates",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/19",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP18: In Section 6, in the second paragraph it says that the problem is not\r\nbeing able to decrypt a message; clarify that the correct condition is not being able to find key material.  A corruption in the message should not require the entity to looking for a rekey event to be checked.  This is a bad DOS vector otherwise.",
+      "createdAt": "2019-05-28T12:40:21Z",
+      "updatedAt": "2019-06-14T12:43:57Z",
+      "closedAt": "2019-06-14T12:43:57Z",
+      "comments": []
+    },
+    {
+      "number": 20,
+      "id": "MDU6SXNzdWU0NDkyNDY0ODQ=",
+      "title": "How to deal with decryption failures",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/20",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP20: In Section 6, clarify that is it application dependent and pertaining to the particular message exchange (e.g. Group OSCORE) for a client to to keep decryption failures messages so that they can be decrypted after getting new key material, rather that just considering it a loss of message right away.",
+      "createdAt": "2019-05-28T12:41:10Z",
+      "updatedAt": "2019-06-14T12:44:04Z",
+      "closedAt": "2019-06-14T12:44:04Z",
+      "comments": []
+    },
+    {
+      "number": 21,
+      "id": "MDU6SXNzdWU0NDkyNDY3Mjk=",
+      "title": "Clarification on group rekeying",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/21",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP21: In Section 6, clarify that group rekeying is not about one single multicast message containing the new key. The point is exactly about using secure rekeying schemes that, by sending also multicast messages, are able to lock out the leaving node and effectively exclude it. + Add a reference to such a scheme",
+      "createdAt": "2019-05-28T12:41:42Z",
+      "updatedAt": "2019-06-18T22:08:02Z",
+      "closedAt": "2019-06-18T22:08:02Z",
+      "comments": []
+    },
+    {
+      "number": 22,
+      "id": "MDU6SXNzdWU0NDkyNDcyNDg=",
+      "title": "add type field to requests + registry",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/22",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP22: The proposal is to add a \u201cType\u201d field to requests, as we have enough types to motivate that (key distribution request, leave request, update key request, new key request). We will register the different types in a new IANA registry. The two new types are intended for current group members and are the following:\r\n\r\n* \u201cupdate\u201d: the node can send it to get updated keying material (might get back the same, if it didn't change).\r\n\r\n* \u201cnew\u201d: the node can send it to retrieve a *new* key id, if it needs new keying material (e.g. seq numbers have wrapped around, expiration, etc).\r\n\r\nWe will also remove the \u201cleave\u201d field as that is not needed anymore.",
+      "createdAt": "2019-05-28T12:42:48Z",
+      "updatedAt": "2019-07-01T12:50:45Z",
+      "closedAt": "2019-07-01T12:50:45Z",
+      "comments": []
+    },
+    {
+      "number": 23,
+      "id": "MDU6SXNzdWU0NDkyNDc1NzM=",
+      "title": "several app_profiles allowed for a kty",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/23",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP25: In Section 9.1, add some text about allowing several profiles in the 'profile' column.",
+      "createdAt": "2019-05-28T12:43:28Z",
+      "updatedAt": "2019-06-14T12:49:48Z",
+      "closedAt": "2019-06-14T12:49:48Z",
+      "comments": []
+    },
+    {
+      "number": 24,
+      "id": "MDU6SXNzdWU0NDkyNDc4NDk=",
+      "title": "Mandatory to cover for app profiles",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/24",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP26:  Add a new section describing all the items that a profile must cover in order to be used.",
+      "createdAt": "2019-05-28T12:44:02Z",
+      "updatedAt": "2019-07-02T15:20:50Z",
+      "closedAt": "2019-07-02T15:20:50Z",
+      "comments": []
+    },
+    {
+      "number": 25,
+      "id": "MDU6SXNzdWU0NDkyNDgzMDI=",
+      "title": "group policies registry",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/25",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP28: We propose to implement this mechanism as follow:\r\n\r\n* We will define the format of \u2018group_policies\u2019 as CBOR map.\r\n\r\n* We will define a new registry for \u2018group_policies\u2019.\r\n\r\n* In this registry, we will define a new parameter that contains the time as you describe. If you have ideas about the name, that would be very helpful.\r\n\r\nAnd since we define the registry, we can add the \u201csync seq number\u201d parameter in it as well, which is listed as an example right now. \r\n",
+      "createdAt": "2019-05-28T12:44:59Z",
+      "updatedAt": "2019-06-17T17:37:00Z",
+      "closedAt": "2019-06-17T17:37:00Z",
+      "comments": []
+    },
+    {
+      "number": 26,
+      "id": "MDU6SXNzdWU0NDkyNDg0NTI=",
+      "title": "align with MQTT doc",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/26",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP29:  look at the MQTT document which is allowing for multiple groups/topics (point 6) and see if alignment is needed.",
+      "createdAt": "2019-05-28T12:45:21Z",
+      "updatedAt": "2019-07-01T12:53:14Z",
+      "closedAt": "2019-07-01T12:53:14Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The MQTT document says the following: \r\n\r\n> Scope strings SHOULD be encoded as a permission, followed by an underscore, followed by a topic filter. Two permissions apply to topics: 'publish' and 'subscribe'. An example scope field may contain multiple such strings, space delimited, e.g., 'publish_topic1 subscribe_topic2/#'. Hence, this access token would give 'publish' permission to the 'topic1', 'subscribe' permission to all the subtopics of 'topic2'.\r\n\r\nThis is how MQTT encodes multiple topics and roles. I think that should not be a problem as long as all these use the same security keying material.",
+          "createdAt": "2019-07-01T11:55:49Z",
+          "updatedAt": "2019-07-01T12:52:56Z"
+        }
+      ]
+    },
+    {
+      "number": 27,
+      "id": "MDU6SXNzdWU0NDkyNDg2MTI=",
+      "title": "Editorial",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/27",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP30: Section 3.2 - The string \u201ccan simply replay with\u201d is what messed me up.  Better would be \u201cthe AS replies with an Authorization Response with a new access token.\u201d  The use of \u201ccan\u201d is not the same as \u201cwill\u201d.",
+      "createdAt": "2019-05-28T12:45:40Z",
+      "updatedAt": "2019-06-14T12:49:39Z",
+      "closedAt": "2019-06-14T12:49:39Z",
+      "comments": []
+    },
+    {
+      "number": 28,
+      "id": "MDU6SXNzdWU0NDkyNDg5OTM=",
+      "title": "PoP of pub key",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/28",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": " AP31: describe the following: sign the key distribution request together with a nonce that was sent from the KDC (for the sake of freshness),  using the private key paired to the public key sent in \u2018client_cred\u2019. ",
+      "createdAt": "2019-05-28T12:46:27Z",
+      "updatedAt": "2019-06-17T21:41:03Z",
+      "closedAt": "2019-06-17T21:41:03Z",
+      "comments": []
+    },
+    {
+      "number": 29,
+      "id": "MDU6SXNzdWU0NDkyNDk4NzM=",
+      "title": "Editorial",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/29",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP32: section 4.2: \u2018scope\u2019 received in the Key Distribution Request is <s>the same as</s> a subset of the \u2018scope\u2019 stored in the access token associated to this client.",
+      "createdAt": "2019-05-28T12:48:16Z",
+      "updatedAt": "2019-06-17T15:06:40Z",
+      "closedAt": "2019-06-17T15:06:40Z",
+      "comments": []
+    },
+    {
+      "number": 30,
+      "id": "MDU6SXNzdWU0NDkyNTAyNDc=",
+      "title": "transfer and application profiles",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/30",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP33: clarify in the text the difference between \u201ctransfer profiles\u201d (such as DTLS profile, OSCORE profile) and \u201capplication profiles\u201d (such as  ace-key-groupcomm-oscore or ace-coap-pubsub) ",
+      "createdAt": "2019-05-28T12:49:00Z",
+      "updatedAt": "2019-06-17T15:54:51Z",
+      "closedAt": "2019-06-17T15:54:51Z",
+      "comments": []
+    },
+    {
+      "number": 31,
+      "id": "MDU6SXNzdWU0NDkyNTA0MjI=",
+      "title": "Editorial",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/31",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP34: Section 4.2 - add text: the type of profile is CBOR int",
+      "createdAt": "2019-05-28T12:49:23Z",
+      "updatedAt": "2019-06-17T15:19:53Z",
+      "closedAt": "2019-06-17T15:19:53Z",
+      "comments": []
+    },
+    {
+      "number": 32,
+      "id": "MDU6SXNzdWU0NDk3MTMwNDM=",
+      "title": "Message processing after leaving the group",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/32",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP24: In Section 7.2, mention a possible policy at the KDC for keeping public keys of group members for a given amount of time after their leaving, before discarding them. it would also solve the issue if you decided that this is totally reasonable as A should not expect its message to be processed after it has left the group.",
+      "createdAt": "2019-05-29T10:00:30Z",
+      "updatedAt": "2019-06-17T16:17:27Z",
+      "closedAt": "2019-06-17T16:17:27Z",
+      "comments": []
+    },
+    {
+      "number": 33,
+      "id": "MDU6SXNzdWU0NDk3MTU2OTg=",
+      "title": "membership change rekeying considerations",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/33",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP27: membership change rekeying.  If you have 30 joins in the course of a minute, you might want to delay the rekey messages slightly or make the presumption that there is not traffic that needs to be protected on a backwards basis to the first join.  Similar issues will arise for leaves.\r\n",
+      "createdAt": "2019-05-29T10:05:56Z",
+      "updatedAt": "2019-06-18T22:34:30Z",
+      "closedAt": "2019-06-18T22:34:30Z",
+      "comments": []
+    },
+    {
+      "number": 34,
+      "id": "MDU6SXNzdWU0NDk3MjAzNjA=",
+      "title": "keeping old sec ctx",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/34",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP40: add considerations (see https://core-wg.github.io/oscore-groupcomm/draft-ietf-core-oscore-groupcomm.html#rfc.section.8.4 ) about keeping old security context for a while.",
+      "createdAt": "2019-05-29T10:15:44Z",
+      "updatedAt": "2019-07-01T12:57:27Z",
+      "closedAt": "2019-07-01T12:57:27Z",
+      "comments": []
+    },
+    {
+      "number": 35,
+      "id": "MDU6SXNzdWU0NDk3MjIxNjE=",
+      "title": "Blockwise considerations",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/35",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "AP42: sketch some considerations about Blockwise and old/new keys",
+      "createdAt": "2019-05-29T10:19:30Z",
+      "updatedAt": "2019-07-01T13:17:53Z",
+      "closedAt": "2019-07-01T13:17:53Z",
+      "comments": []
+    },
+    {
+      "number": 40,
+      "id": "MDU6SXNzdWU1NjAzMDM2ODU=",
+      "title": "Update the uppercase/lowercase URI segments at the KDC",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/40",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:15:45Z",
+      "updatedAt": "2020-02-19T16:51:13Z",
+      "closedAt": "2020-02-19T16:51:13Z",
+      "comments": []
+    },
+    {
+      "number": 41,
+      "id": "MDU6SXNzdWU1NjAzMDQwOTY=",
+      "title": "Add one method for a group member to upload its new public key.",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/41",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:16:29Z",
+      "updatedAt": "2020-02-21T09:47:17Z",
+      "closedAt": "2020-02-21T09:47:17Z",
+      "comments": []
+    },
+    {
+      "number": 42,
+      "id": "MDU6SXNzdWU1NjAzMDQzODA=",
+      "title": "Support multiple groups/topics through a single access token.",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/42",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:17:02Z",
+      "updatedAt": "2020-02-28T11:32:58Z",
+      "closedAt": "2020-02-28T11:32:58Z",
+      "comments": []
+    },
+    {
+      "number": 43,
+      "id": "MDU6SXNzdWU1NjAzMDUxMTY=",
+      "title": "Parameter in join request, with URI to send rekeying messages to",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/43",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:18:22Z",
+      "updatedAt": "2020-02-20T14:24:29Z",
+      "closedAt": "2020-02-20T14:24:29Z",
+      "comments": []
+    },
+    {
+      "number": 44,
+      "id": "MDU6SXNzdWU1NjAzMDU3NDg=",
+      "title": "Improve readability of last paragraph in Section 1.",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/44",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:19:32Z",
+      "updatedAt": "2020-02-20T09:46:48Z",
+      "closedAt": "2020-02-20T09:46:48Z",
+      "comments": []
+    },
+    {
+      "number": 45,
+      "id": "MDU6SXNzdWU1NjAzMDYwMjA=",
+      "title": "Replace references to 7390 with references to groupcomm-bis",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/45",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:20:02Z",
+      "updatedAt": "2020-02-19T16:57:48Z",
+      "closedAt": "2020-02-19T16:57:48Z",
+      "comments": []
+    },
+    {
+      "number": 46,
+      "id": "MDU6SXNzdWU1NjAzMDYzOTc=",
+      "title": "Section 3.1 - Scope format more aligned with MQTT and others",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/46",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:20:41Z",
+      "updatedAt": "2020-03-09T10:06:53Z",
+      "closedAt": "2020-03-09T10:06:53Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Scope covers now one or more groups + roles:\r\n\r\nscp = [ gid , role: / [ 2*role ] ]\r\n\r\nscope = << [ + scp ] >>\r\n\r\nIt also allows the use of MQTT specific wildcards, so I think this can be closed.",
+          "createdAt": "2020-03-09T10:06:53Z",
+          "updatedAt": "2020-03-09T10:06:53Z"
+        }
+      ]
+    },
+    {
+      "number": 47,
+      "id": "MDU6SXNzdWU1NjAzMDY2OTQ=",
+      "title": "Section 3.1 - Swap order of paragraphs about 'scope'",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/47",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:21:15Z",
+      "updatedAt": "2020-02-20T09:03:54Z",
+      "closedAt": "2020-02-20T09:03:54Z",
+      "comments": []
+    },
+    {
+      "number": 48,
+      "id": "MDU6SXNzdWU1NjAzMDY5Mjc=",
+      "title": "Section 3.2 - 'exp' --> 'exi'",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/48",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:21:44Z",
+      "updatedAt": "2020-02-20T09:00:17Z",
+      "closedAt": "2020-02-20T09:00:17Z",
+      "comments": []
+    },
+    {
+      "number": 49,
+      "id": "MDU6SXNzdWU1NjAzMDcxMzI=",
+      "title": "Section 3.2 - Remove repeated details about 'scope'",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/49",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:22:07Z",
+      "updatedAt": "2020-03-08T22:28:22Z",
+      "closedAt": "2020-03-08T22:28:22Z",
+      "comments": []
+    },
+    {
+      "number": 50,
+      "id": "MDU6SXNzdWU1NjAzMDcyOTM=",
+      "title": "Section 3.3 - Clarify the meaning of REQ3",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/50",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:22:27Z",
+      "updatedAt": "2020-03-08T22:28:33Z",
+      "closedAt": "2020-03-08T22:28:33Z",
+      "comments": []
+    },
+    {
+      "number": 51,
+      "id": "MDU6SXNzdWU1NjAzMDgwNDU=",
+      "title": "Section 4.1.2.1 - Use the word \"join\"",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/51",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:23:47Z",
+      "updatedAt": "2020-03-09T10:07:06Z",
+      "closedAt": "2020-03-09T10:07:06Z",
+      "comments": []
+    },
+    {
+      "number": 52,
+      "id": "MDU6SXNzdWU1NjAzMDgzOTk=",
+      "title": "Section 4.1 - Update path to per-node resources",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/52",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:24:33Z",
+      "updatedAt": "2020-02-20T09:18:10Z",
+      "closedAt": "2020-02-20T09:18:10Z",
+      "comments": [
+        {
+          "author": "marco-tiloca-sics",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "https://github.com/ace-wg/ace-key-groupcomm/commit/12054bcc3b6d4880931ec2b41e59ef1211aeae59",
+          "createdAt": "2020-02-20T09:18:10Z",
+          "updatedAt": "2020-02-20T09:18:10Z"
+        }
+      ]
+    },
+    {
+      "number": 53,
+      "id": "MDU6SXNzdWU1NjAzMDg3NDA=",
+      "title": "Section 4.1.3.1 - Format of get_pub_keys",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/53",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:25:12Z",
+      "updatedAt": "2020-03-09T10:01:06Z",
+      "closedAt": "2020-03-09T10:01:06Z",
+      "comments": []
+    },
+    {
+      "number": 54,
+      "id": "MDU6SXNzdWU1NjAzMDkyNjg=",
+      "title": "Section 4.3 - Clarify on stopping using old key material",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/54",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:26:14Z",
+      "updatedAt": "2020-02-20T10:05:25Z",
+      "closedAt": "2020-02-20T10:05:25Z",
+      "comments": []
+    },
+    {
+      "number": 55,
+      "id": "MDU6SXNzdWU1NjAzMDk2MTA=",
+      "title": "Section 4.3 - Different types of processing failures",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/55",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:26:54Z",
+      "updatedAt": "2020-02-20T10:43:37Z",
+      "closedAt": "2020-02-20T10:43:37Z",
+      "comments": []
+    },
+    {
+      "number": 56,
+      "id": "MDU6SXNzdWU1NjAzMTAyNDU=",
+      "title": "Section 4.4 - General rekeying or individual rekeying up to policies",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/56",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:28:06Z",
+      "updatedAt": "2020-02-20T10:54:55Z",
+      "closedAt": "2020-02-20T10:54:55Z",
+      "comments": []
+    },
+    {
+      "number": 57,
+      "id": "MDU6SXNzdWU1NjAzMTA0OTQ=",
+      "title": "Section 6 - 'gkty' should be a text string",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/57",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-02-05T11:28:35Z",
+      "updatedAt": "2020-02-19T17:04:12Z",
+      "closedAt": "2020-02-19T17:04:12Z",
+      "comments": []
+    },
+    {
+      "number": 58,
+      "id": "MDU6SXNzdWU1NzA3NzQwODU=",
+      "title": "Section 3.2 - exp incorrectly defined",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/58",
+      "state": "CLOSED",
+      "author": "jimsch",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "exp is expire at time, exi is number of sections",
+      "createdAt": "2020-02-25T19:14:12Z",
+      "updatedAt": "2020-03-09T10:00:11Z",
+      "closedAt": "2020-03-09T10:00:11Z",
+      "comments": [
+        {
+          "author": "marco-tiloca-sics",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Was fixed at: https://github.com/ace-wg/ace-key-groupcomm/commit/2033f8d41fa3f83ac911d78778475d27c12b2cac",
+          "createdAt": "2020-02-26T09:00:15Z",
+          "updatedAt": "2020-02-26T09:00:15Z"
+        }
+      ]
+    },
+    {
+      "number": 59,
+      "id": "MDU6SXNzdWU1NzQxNjM1Mzk=",
+      "title": "Multiple Joins - Does it rekey?",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/59",
+      "state": "CLOSED",
+      "author": "jimsch",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "The document does not suggest if the following is a situation where a KDC is supposed to do a key roll over or not.\r\n\r\n1.  Client C posts to the KDC to join GroupA.\r\n*** At this point a key rollover action is done\r\n*** Time passes\r\n2.  Client C posts to the KDC to join GroupA and it has not been removed for any reason.\r\n*** At this point a key rollover action is/is not done?\r\n",
+      "createdAt": "2020-03-02T18:30:30Z",
+      "updatedAt": "2020-04-17T12:07:08Z",
+      "closedAt": "2020-04-17T12:07:08Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think this should be covered by the following sentence in section 4.2:\r\n\r\n> If the application requires backward security, the KDC MUST generate new group keying material and securely distribute it to all the current group members, upon a new node's joining the group.\r\n\r\nThe key term being *new*. This would mean that in the scenario you describe above, the Client C is not a *new node* and key rollover is not initiated by KDC.\r\n\r\nIs this not clear enough? Do we need to add more text explaining what \"new\" means here?",
+          "createdAt": "2020-03-09T10:13:34Z",
+          "updatedAt": "2020-03-09T10:13:34Z"
+        },
+        {
+          "author": "jimsch",
+          "authorAssociation": "NONE",
+          "body": "Given that this becomes a specific test case for the group resource, I think that it should perhaps be highlighted.  I can easily argue that any time somebody does a join, they are by definition a new node joining the group.",
+          "createdAt": "2020-03-10T16:27:11Z",
+          "updatedAt": "2020-03-10T16:27:11Z"
+        },
+        {
+          "author": "jimsch",
+          "authorAssociation": "NONE",
+          "body": "I think that the language \"when the membership changes\" is much clearer than \"when a new node joins\".  ",
+          "createdAt": "2020-03-12T00:27:01Z",
+          "updatedAt": "2020-03-12T00:27:01Z"
+        }
+      ]
+    },
+    {
+      "number": 60,
+      "id": "MDU6SXNzdWU1NzQyODcxOTI=",
+      "title": "When are the public key  and proof of possession required to be present",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/60",
+      "state": "CLOSED",
+      "author": "jimsch",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "I believe that one needs to look at the following cases:\r\n\r\n1.  No public key with the right parameters has been associated with the token - in this case both the key and proof are required\r\n2.  One public key with the right parameters has been associated with the token - in this case the following would seem to be fine a) neither are present, b) just the key is present (proof already has been done), c) both are present\r\n3. Multiple public keys with the right parameters have been associated with the token - In this case the following would seem to be fine a) just the key is present (proof has already been done) or b) both are present\r\n\r\nSuch a change would seem to maximize the number of times that the public key can be omitted and an even greater number of times the proof can be omitted.  In the event that the proof is needed, the error would return a new server nonce to be used in the re-sent join message.",
+      "createdAt": "2020-03-02T22:21:23Z",
+      "updatedAt": "2020-05-11T15:04:23Z",
+      "closedAt": "2020-05-11T15:04:23Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "EDIT: this response is in preparation for Ace interim 15-04-2020\r\n\r\nMy main question is: what does this consideration applies to? It could apply to the joining process and to POST to pub-key (where the node post a new public key to the KDC). These are quite perpendicular though (1 -> joining, 2 -> pub-key, 3 -> not supported), so I am not sure what this adds\u2026 This could be covering the join \u2013 leave \u2013 rejoin with the same token process, that is not very well covered right now, is that something we need to expand on?\r\n\r\n> I believe that one needs to look at the following cases:\r\n\r\n> No public key with the right parameters has been associated with the token - in this case both the key and proof are required\r\n\r\nWhat we do say is that key and proof of possession are required during join process if KDC collects and distribute keys, and the client is a sender. So one key will always be associated with the token. 1 is a quite convoluted way to say: \u201calways at joining\u201d (which we already say\u2026) or is this supposed to cover another case?\r\n\r\n\r\n> One public key with the right parameters has been associated with the token - in this case the following would seem to be fine a) neither are present, b) just the key is present (proof already has been done), c) both are present\r\n\r\nAre we talking about after joining, posting a new pub key to the KDC? Then both are needed. Unless the key is the same\u2026in which case it is useless to repost the same to pub-key.\r\n\r\n> Multiple public keys with the right parameters have been associated with the token - In this case the following would seem to be fine a) just the key is present (proof has already been done) or b) both are present\r\n\r\nThe KDC only keeps one public key per node (see pub-key handler), this is not supported. In what case would the client want to associate more than one key? Is this something we want?\r\n\r\n\r\n> Such a change would seem to maximize the number of times that the public key can be omitted and an even greater number of times the proof can be omitted. In the event that the proof is needed, the error would return a new server nonce to be used in the re-sent join message.\r\n\r\nI think right now we already cover the case where the key and proof MUST be sent in each section. What are we missing?\r\n",
+          "createdAt": "2020-04-14T13:07:09Z",
+          "updatedAt": "2020-04-14T13:07:38Z"
+        },
+        {
+          "author": "jimsch",
+          "authorAssociation": "NONE",
+          "body": "If I have a token that allows access to multiple groups, once I have done the POP on the signing key for that token, that POP can be propagated forward to any other group join which uses the same token.  I might end up with multiple keys for the single token with different keys.  This POP could potentially be propagated forward as tokens are updated.",
+          "createdAt": "2020-04-14T13:44:45Z",
+          "updatedAt": "2020-04-14T13:44:45Z"
+        }
+      ]
+    },
+    {
+      "number": 62,
+      "id": "MDU6SXNzdWU1ODM4MTE1MTM=",
+      "title": "Figure 4:  Fix 'role' in the CDDL notation",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/62",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:28:59Z",
+      "updatedAt": "2020-04-17T11:39:55Z",
+      "closedAt": "2020-04-17T11:39:55Z",
+      "comments": []
+    },
+    {
+      "number": 63,
+      "id": "MDU6SXNzdWU1ODM4MTIwMzM=",
+      "title": "Section 3.2 - Fix third to last paragraph on the token content",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/63",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:29:45Z",
+      "updatedAt": "2020-04-17T11:40:11Z",
+      "closedAt": "2020-04-17T11:40:11Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@jimsch wrote: \r\n\r\n> * Section 3.2 - The third to last paragraph is incorrect, the token should\r\n> have the expires AT not the expires IN parameter.  There is a solid\r\n> assumption that in this case there is a common idea of a wall clock between\r\n> all of the servers and there for stating a hard expiration time is more\r\n> appropriate than an expires in moment.  Additionally, tokens will generally\r\n> not include the rs_cnf even if it is in the response message and will\r\n> include a cnf for an asymmetric key.  In short, this paragraph is just plain\r\n> wrong.\r\n\r\nThis was leftover text that never got fixed. We will explicitly state what MUST (and what MAY) be included in the token.",
+          "createdAt": "2020-03-24T13:11:20Z",
+          "updatedAt": "2020-03-24T13:11:20Z"
+        }
+      ]
+    },
+    {
+      "number": 64,
+      "id": "MDU6SXNzdWU1ODM4MTI3MDU=",
+      "title": "Section 3.2 - AS returning same vs. new access token",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/64",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:30:40Z",
+      "updatedAt": "2020-04-17T11:41:09Z",
+      "closedAt": "2020-04-17T11:41:09Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I have the feeling this might be leftovers, I don't see a reason now why the AS could not return the same access token (if it's still valid)... Whatever issues there could be about re-use of keying material MUST be dealt with by the application profile used (which OSCORE profile does with nonces, for example)",
+          "createdAt": "2020-03-24T14:09:59Z",
+          "updatedAt": "2020-03-24T14:09:59Z"
+        },
+        {
+          "author": "jimsch",
+          "authorAssociation": "NONE",
+          "body": "the AS **MAY reply** with",
+          "createdAt": "2020-04-14T16:23:02Z",
+          "updatedAt": "2020-04-14T16:23:02Z"
+        }
+      ]
+    },
+    {
+      "number": 65,
+      "id": "MDU6SXNzdWU1ODM4MTM1MjM=",
+      "title": "Section 3.3 - array of informative parameters, not assuming an order",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/65",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:31:52Z",
+      "updatedAt": "2020-04-17T11:41:35Z",
+      "closedAt": "2020-04-17T11:41:35Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@jimsch wrote: In Section 3.3 - As an input to your \"make it an array\" decisions,\r\nremember that the order of scope elements that the client gave to the AS are\r\nnot necessarily the same order as are in the token.  I think you might just\r\nneed to collapse all three arrays into a single value in the map.\r\n",
+          "createdAt": "2020-03-26T12:20:19Z",
+          "updatedAt": "2020-03-26T12:20:19Z"
+        },
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I am not sure what \"collapse all three arrays in a single value in the map\" means... \r\nBut yes we need to deal with this:\r\n\r\nMarco proposes the following:\r\n```\r\n\u201csign_info\u201d : [\r\n                        + [ gid,\r\n                          sign_alg,\r\n                          sign_parameters,\r\n                          sign_key_parameters\r\n                        ],\r\n                     ]\r\n\r\n\r\n\u201cpub_key_enc\u201d : [\r\n                               + [ gid,\r\n                                 pub_key_enc_per_group\r\n                               ]\r\n                            ]\r\n```\r\n\r\nI think this makes more sense:\r\n\r\n```\r\n\u201csign_info\u201d : [\r\n                        + [ gid,\r\n                          sign_alg,\r\n                          sign_parameters,\r\n                          sign_key_parameters,\r\n                          pub_key_enc\r\n                        ]\r\n                     ]\r\n```\r\n\r\nWe are not allowing more than one pub key encoding anyway per group. I'll implement this, but please comment if you don't agree.\r\n",
+          "createdAt": "2020-03-26T12:27:33Z",
+          "updatedAt": "2020-03-26T12:27:33Z"
+        },
+        {
+          "author": "jimsch",
+          "authorAssociation": "NONE",
+          "body": "Yes that was the type of thing I was thinking of.",
+          "createdAt": "2020-03-26T15:42:07Z",
+          "updatedAt": "2020-03-26T15:42:07Z"
+        }
+      ]
+    },
+    {
+      "number": 66,
+      "id": "MDU6SXNzdWU1ODM4MTM5MjY=",
+      "title": "Section 3.3 - Move the data structure of sign_info to section 3.3.1",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/66",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:32:29Z",
+      "updatedAt": "2020-04-17T11:42:22Z",
+      "closedAt": "2020-04-17T11:42:22Z",
+      "comments": []
+    },
+    {
+      "number": 67,
+      "id": "MDU6SXNzdWU1ODM4MTQyNzk=",
+      "title": "Section 3.3 - Move the data structure description of pub_key_enc to section 3.3.2",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/67",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:33:00Z",
+      "updatedAt": "2020-04-17T11:39:27Z",
+      "closedAt": "2020-04-17T11:39:27Z",
+      "comments": []
+    },
+    {
+      "number": 68,
+      "id": "MDU6SXNzdWU1ODM4MTQ3MDA=",
+      "title": "Section 3.3.3 - rename \"rsnonce\" to be more KDC-specific",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/68",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:33:38Z",
+      "updatedAt": "2020-04-17T11:46:56Z",
+      "closedAt": "2020-04-17T11:46:56Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@jimsch \r\n\r\nI don't agree with this comment as the goal of section 3.3.3. is to define a more general \"rsnonce\" ace parameter. The fact that it is used in this specification by the kdc (which acts as RS) does not mean that other specification will take the same terminology. I would keep as is.",
+          "createdAt": "2020-03-30T13:32:12Z",
+          "updatedAt": "2020-03-30T13:32:12Z"
+        },
+        {
+          "author": "jimsch",
+          "authorAssociation": "NONE",
+          "body": "So at the moment, I am saving the rs nonce value in two different locations, once for the OSCORE context creation and once for the KDC.  What I worry about is that I might need to keep the two values sync-ed together depending on if one gets updated by the KDC but not for the security layer.  As long as we don't believe that the two values are tied after they are received/generated the first time then this is not an issue.  If however, the KDC is generating new rsnonce values and that needs to be propigated elsewhere then that is a problem.",
+          "createdAt": "2020-03-30T17:47:16Z",
+          "updatedAt": "2020-03-30T17:47:16Z"
+        },
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@jimsch if you are talking about the nonce N2 sent by RS to C during the OSCORE profile (https://tools.ietf.org/html/draft-ietf-ace-oscore-profile-10#section-4.2.1) then yes, they are absolutely separate and should not be tied together.\r\nThe \"rsnonce\" defined here does not need to be propagated elsewhere.",
+          "createdAt": "2020-04-03T13:06:06Z",
+          "updatedAt": "2020-04-03T13:06:06Z"
+        },
+        {
+          "author": "jimsch",
+          "authorAssociation": "NONE",
+          "body": "Ok - so you are saying in this case there is not a problem, however if you are making this a general purpose rs nonce then if you have two applications that use this value the exact same situation is going to develop. ",
+          "createdAt": "2020-04-03T16:01:41Z",
+          "updatedAt": "2020-04-03T16:01:41Z"
+        },
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I had to think about this a bit (and go over it with Marco) but I see the problem now: the issue is not with the name itself, but with the *purpose* of the parameter. By defining a *general* parameter, we are opening up for interoperability issues between applications that use this same parameter in 2 different applications running at the same time. The problem is then how to differentiate between those 2 (which one is used with each application). It could be solved, but I guess it's not worth the headache. I will remove the generality (make it specialised to ace key groupcomm) and change the name to reflect that.\r\n\r\n(Just for record, the reason for wanting to register a more general rsnonce is that we are already registering client and server nonces with specific functions in the OSCORE profile, and the cnonce defined in ace also has a very specific function, so I was thinking let's register *one* parameter that can be used as rs nonce by the application and let the application decide how to use it, rather than keep registering nonces for specific functions).",
+          "createdAt": "2020-04-09T10:11:52Z",
+          "updatedAt": "2020-04-09T10:27:41Z"
+        },
+        {
+          "author": "jimsch",
+          "authorAssociation": "NONE",
+          "body": "I completely understand the impulse.  It is one that I have frequently and if this was not a nonce I would probably applaud the impulse.  The problem is the \"once\" piece.\r\n\r\nChange looked fine to me.",
+          "createdAt": "2020-04-09T15:48:44Z",
+          "updatedAt": "2020-04-09T15:48:44Z"
+        },
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "following the discussion at the interim, I changed it to \"kdcchallenge\" in 99d3076fc3.",
+          "createdAt": "2020-04-17T11:46:56Z",
+          "updatedAt": "2020-04-17T11:46:56Z"
+        }
+      ]
+    },
+    {
+      "number": 69,
+      "id": "MDU6SXNzdWU1ODM4MTU3NDU=",
+      "title": "Section 4.1 - ace-group/ , register an interface type and/or as well-known",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/69",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:35:13Z",
+      "updatedAt": "2020-04-22T08:25:37Z",
+      "closedAt": "2020-04-22T08:25:37Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@cabo as Interface Description (if=) Link Target Attribute Values Registry expert, does this registration for the Key Distribution Center interface look ok to you? (before I close the issue) 688d8dca52d",
+          "createdAt": "2020-04-17T11:56:52Z",
+          "updatedAt": "2020-04-17T11:56:52Z"
+        }
+      ]
+    },
+    {
+      "number": 70,
+      "id": "MDU6SXNzdWU1ODM4MTY3MjI=",
+      "title": "Section 4.1.2.1 - this \"cnonce\" has to refer to Section 6, not to ACE",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/70",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:36:37Z",
+      "updatedAt": "2020-04-17T11:57:15Z",
+      "closedAt": "2020-04-17T11:57:15Z",
+      "comments": []
+    },
+    {
+      "number": 71,
+      "id": "MDU6SXNzdWU1ODM4MTc4NzI=",
+      "title": "Section 4.1.2.1 - Forward pointer to usage of 'control_path'",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/71",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:38:22Z",
+      "updatedAt": "2020-04-17T11:58:39Z",
+      "closedAt": "2020-04-17T11:58:39Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Related to 'control_path', @jimsch asked: \r\n\r\n> \r\n> * In section 4.1.2.1 - What happens if a 'control_path' is provided but not\r\n> supported - does that mean a bad request?\r\n> \r\n\r\nWhat do you mean is provided but not supported? By the client? That should never happen, as the client will only set this field if it can support to host a resource at that URI.",
+          "createdAt": "2020-04-03T13:42:47Z",
+          "updatedAt": "2020-04-03T13:42:47Z"
+        },
+        {
+          "author": "jimsch",
+          "authorAssociation": "NONE",
+          "body": "No by the server - it is the client providing this to the server.",
+          "createdAt": "2020-04-03T16:02:16Z",
+          "updatedAt": "2020-04-03T16:02:16Z"
+        },
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Ah ok, you mean if the KDC does not support mechanism using that? Then it will just ignore that parameter I suppose... I will add a note about that.",
+          "createdAt": "2020-04-07T09:59:45Z",
+          "updatedAt": "2020-04-07T09:59:45Z"
+        }
+      ]
+    },
+    {
+      "number": 72,
+      "id": "MDU6SXNzdWU1ODM4MTk2ODU=",
+      "title": "Section 4.1.2.1 - clarify \"assigns a name NAME to the node\"",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/72",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:41:02Z",
+      "updatedAt": "2020-04-17T11:59:54Z",
+      "closedAt": "2020-04-17T11:59:54Z",
+      "comments": []
+    },
+    {
+      "number": 73,
+      "id": "MDU6SXNzdWU1ODM4MjAyNjY=",
+      "title": "Section 4.1.2.1 - 'exp' as integer only",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/73",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:41:38Z",
+      "updatedAt": "2020-04-17T12:00:14Z",
+      "closedAt": "2020-04-17T12:00:14Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@jimsch said:\r\n\r\n> * In section 4.1.2.1 - Unless you have a reason for allowing floating point\r\n> for 'exp', make it integer only.  \r\n> \r\n\r\nwe mirrored that from the Ace 'exp' parameter, which is defined to be either int or floating point number, see https://tools.ietf.org/html/draft-ietf-ace-oauth-authz-33#section-5.7.4 . Any specific reason why we would want something different for the ace-group parameter?",
+          "createdAt": "2020-04-03T13:52:05Z",
+          "updatedAt": "2020-04-03T13:52:05Z"
+        },
+        {
+          "author": "jimsch",
+          "authorAssociation": "NONE",
+          "body": "In retrospect, I think that allowing it to be a floating point is a general CWT error.  It was copied directly from CBOR but it means that all of the servers/clients now potentially need to have support for a floating point library to evaluate this field.  Making it only an integer means that is not an issue.  This has been raised as a RATS issue",
+          "createdAt": "2020-04-03T16:04:01Z",
+          "updatedAt": "2020-04-03T16:04:01Z"
+        },
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "That makes sense. I'll change it to only int. Maybe it can be \"fixed\" in the Ace framework (https://tools.ietf.org/html/draft-ietf-ace-oauth-authz-33#section-5.7.4) as well? By keeping the value integer or floating but adding a sentence saying that a constrained implementation might only use ints (which might be useful if the token use only int)?",
+          "createdAt": "2020-04-07T09:55:35Z",
+          "updatedAt": "2020-04-07T09:55:35Z"
+        }
+      ]
+    },
+    {
+      "number": 74,
+      "id": "MDU6SXNzdWU1ODM4MjE0MDA=",
+      "title": "Section 4.1.2.1 - fragment and parameters in 'control_path'",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/74",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:42:44Z",
+      "updatedAt": "2020-04-17T12:00:33Z",
+      "closedAt": "2020-04-17T12:00:33Z",
+      "comments": []
+    },
+    {
+      "number": 75,
+      "id": "MDU6SXNzdWU1ODM4MjE5MTg=",
+      "title": "Section 4.1.2.1 - Mismatch between NAME and NODENAME",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/75",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:43:12Z",
+      "updatedAt": "2020-04-17T12:01:32Z",
+      "closedAt": "2020-04-17T12:01:32Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This should fix it: e4148e5c58b",
+          "createdAt": "2020-04-03T14:28:58Z",
+          "updatedAt": "2020-04-03T14:28:58Z"
+        }
+      ]
+    },
+    {
+      "number": 76,
+      "id": "MDU6SXNzdWU1ODM4MjMzMDc=",
+      "title": "Section 4.1.2.2 - Return key material only to current group members",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/76",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:44:23Z",
+      "updatedAt": "2020-04-17T12:02:19Z",
+      "closedAt": "2020-04-17T12:02:19Z",
+      "comments": []
+    },
+    {
+      "number": 77,
+      "id": "MDU6SXNzdWU1ODM4MjM3NTc=",
+      "title": "Section 4.1.3.1 - FETCH of public keys based on node roles",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/77",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:44:58Z",
+      "updatedAt": "2020-05-11T15:04:24Z",
+      "closedAt": "2020-05-11T15:04:24Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@jimsch said:\r\n> * In section 4.1.3.1 - I would like to have the ability to do a fetch based\r\n> on the roles of the client associated with the public key.  That is I would\r\n> like to retrieve only those public keys associated with a requestor.\r\n\r\n",
+          "createdAt": "2020-04-07T12:58:08Z",
+          "updatedAt": "2020-04-07T12:58:08Z"
+        }
+      ]
+    },
+    {
+      "number": 78,
+      "id": "MDU6SXNzdWU1ODM4MjQxNTI=",
+      "title": "Section 4.1.4.1 - Return the group policies only to current group members",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/78",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:45:37Z",
+      "updatedAt": "2020-04-17T12:04:16Z",
+      "closedAt": "2020-04-17T12:04:16Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Fixed in 9dae680",
+          "createdAt": "2020-04-07T12:57:48Z",
+          "updatedAt": "2020-04-07T12:57:48Z"
+        }
+      ]
+    },
+    {
+      "number": 79,
+      "id": "MDU6SXNzdWU1ODM4MjQ3NjE=",
+      "title": "Section 4.1.5.1 - Return version number only to current group members",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/79",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:46:29Z",
+      "updatedAt": "2020-04-17T12:04:26Z",
+      "closedAt": "2020-04-17T12:04:26Z",
+      "comments": []
+    },
+    {
+      "number": 80,
+      "id": "MDU6SXNzdWU1ODM4MjUxMTE=",
+      "title": "Section 4.1.6.3 - The third paragraph is redundant",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/80",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:47:02Z",
+      "updatedAt": "2020-04-23T13:04:49Z",
+      "closedAt": "2020-04-23T13:04:49Z",
+      "comments": [
+        {
+          "author": "jimsch",
+          "authorAssociation": "NONE",
+          "body": "Not fixed.",
+          "createdAt": "2020-04-14T16:27:07Z",
+          "updatedAt": "2020-04-14T16:27:07Z"
+        },
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "better now? \r\n\r\nThe point is that 1st paragraph said: \"this request is only accepted if you are deleting your own resource (\"NODENAME\")\" and par 3 said \"this request is only accepted if the node is authorized for this group (\"GROUPNAME\")\". So it was 2 different things. Now I merged them, as they probably fit much better together in par 3...",
+          "createdAt": "2020-04-15T11:08:51Z",
+          "updatedAt": "2020-04-15T11:08:51Z"
+        }
+      ]
+    },
+    {
+      "number": 81,
+      "id": "MDU6SXNzdWU1ODM4MjU0MjQ=",
+      "title": "Section 4.1.6.3 - Fix the DELETE handler of the node resource",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/81",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:47:28Z",
+      "updatedAt": "2020-04-17T12:04:44Z",
+      "closedAt": "2020-04-17T12:04:44Z",
+      "comments": []
+    },
+    {
+      "number": 82,
+      "id": "MDU6SXNzdWU1ODM4Mjc1ODM=",
+      "title": "Section 4.1.6.1 - Request of new individual key material limited to correct node",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/82",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:50:45Z",
+      "updatedAt": "2020-04-17T12:06:14Z",
+      "closedAt": "2020-04-17T12:06:14Z",
+      "comments": []
+    },
+    {
+      "number": 83,
+      "id": "MDU6SXNzdWU1ODM4Mjg0NTQ=",
+      "title": "Section 4.1.7.1 - Group rekeying if a public key is replaced",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/83",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:52:01Z",
+      "updatedAt": "2020-05-11T15:04:24Z",
+      "closedAt": "2020-05-11T15:04:24Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@jimsch said:\r\n\r\n> * In section 4.1.7.1 - If a public key is replaced, does this constitute a\r\n> reason that a key roll over is going to be required?  Is this something that\r\n> needs to be distributed proactively if it is allowed by the server since\r\n> otherwise things may be really messed up?\r\n\r\nThe answer is not necessarily, but nothing stops the KDC to do a key rollover if it wants. \r\nI think this should be already clear, do we need any specific clarifications?",
+          "createdAt": "2020-04-07T14:43:53Z",
+          "updatedAt": "2020-04-07T14:43:53Z"
+        }
+      ]
+    },
+    {
+      "number": 84,
+      "id": "MDU6SXNzdWU1ODM4Mjg5ODI=",
+      "title": "Section 4.3 - Two expiration times for the key material",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/84",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:52:46Z",
+      "updatedAt": "2020-05-11T15:04:24Z",
+      "closedAt": "2020-05-11T15:04:24Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> * In section 4.3 - I don't know if this is worth while thinking about or\r\n> not.  There may want to be two different expiration values that are defined\r\n> in the system.  When you stop sending using the key material and when you\r\n> stop receiving using the keying material.  These values would need to be\r\n> contingent on a \"key revocation\" event as well.  The delta could be setup as\r\n> a new group parameter with a default value set by the document.\r\n> ",
+          "createdAt": "2020-04-07T14:47:19Z",
+          "updatedAt": "2020-04-07T14:47:19Z"
+        }
+      ]
+    },
+    {
+      "number": 85,
+      "id": "MDU6SXNzdWU1ODM4MjkyNzg=",
+      "title": "Section 4.5 - Fetch should return 2.05",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/85",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:53:12Z",
+      "updatedAt": "2020-04-17T12:04:57Z",
+      "closedAt": "2020-04-17T12:04:57Z",
+      "comments": []
+    },
+    {
+      "number": 86,
+      "id": "MDU6SXNzdWU1ODM4Mjk3OTA=",
+      "title": "Section 5 - Expand reasoning on not authorized (bullet 1 and 3)",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/86",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:53:57Z",
+      "updatedAt": "2020-04-17T12:12:07Z",
+      "closedAt": "2020-04-17T12:12:07Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> * In Section 5 - For bullet 1 of bullet 3 - I think that the reasoning\r\n> behind not authorized needs to be expanded.  For example it might say, the\r\n> node is no longer authorized for that group. \r\n> ",
+          "createdAt": "2020-04-07T17:42:53Z",
+          "updatedAt": "2020-04-07T17:42:53Z"
+        },
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I hope this is a good enough clarification..",
+          "createdAt": "2020-04-07T17:58:23Z",
+          "updatedAt": "2020-04-07T17:58:23Z"
+        }
+      ]
+    },
+    {
+      "number": 87,
+      "id": "MDU6SXNzdWU1ODM4MzA1OTQ=",
+      "title": "Section 5 - Fix token valid/expired (bullet 2 of bullet 3)",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/87",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:55:01Z",
+      "updatedAt": "2020-04-17T12:12:20Z",
+      "closedAt": "2020-04-17T12:12:20Z",
+      "comments": []
+    },
+    {
+      "number": 88,
+      "id": "MDU6SXNzdWU1ODM4MzEwNzE=",
+      "title": "Section 7 - Expand the first paragraph.",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/88",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:55:38Z",
+      "updatedAt": "2020-05-11T15:04:24Z",
+      "closedAt": "2020-05-11T15:04:24Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "So, the additional detail should cover:\r\n\r\n- A mechanism like Appendix B.2 of OSCORE are useful in case of lost of context and reboot, so that the recipient can be on the safe side.\r\n\r\n- If the group is rekeying, the time window between the end of the rekeying and a next loss of context is safe to go. A group rekeying puts the recipients on the safe side.\r\n\r\nIs that it?\r\n\r\n",
+          "createdAt": "2020-04-14T13:04:27Z",
+          "updatedAt": "2020-04-14T13:04:27Z"
+        }
+      ]
+    },
+    {
+      "number": 89,
+      "id": "MDU6SXNzdWU1ODM4MzE3MzI=",
+      "title": "Section 7.1 - 3rd paragraph, refer to more generic retransmissions",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/89",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-18T15:56:31Z",
+      "updatedAt": "2020-04-17T12:06:50Z",
+      "closedAt": "2020-04-17T12:06:50Z",
+      "comments": []
+    },
+    {
+      "number": 90,
+      "id": "MDU6SXNzdWU1ODM4MzI1NzE=",
+      "title": "Section 8 - Admit encoding in JSON",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/90",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-03-18T15:57:40Z",
+      "updatedAt": "2020-04-17T16:00:28Z",
+      "closedAt": "2020-04-17T16:00:27Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Following decision at the interim, we said we do not align with Ace framework on this as there is no point in defining for JSON, and wait for reaction from the IESG to see if we need to reconsider.",
+          "createdAt": "2020-04-17T16:00:27Z",
+          "updatedAt": "2020-04-17T16:00:27Z"
+        }
+      ]
+    },
+    {
+      "number": 91,
+      "id": "MDU6SXNzdWU1ODQ0ODEzMDY=",
+      "title": "Role/functionality of \"proxy signature checker\"",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/91",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "",
+      "createdAt": "2020-03-19T15:08:19Z",
+      "updatedAt": "2020-04-17T12:11:47Z",
+      "closedAt": "2020-04-17T12:11:47Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@jimsch said:\r\n> There is a missing role/functionality that needs to be added to the\r\n> document.  \"proxy signature checker\" has the ability to get the public keys\r\n> associated with the different members of the group but does not get any\r\n> access to the symmetric keying material\r\n> ",
+          "createdAt": "2020-04-07T18:04:18Z",
+          "updatedAt": "2020-04-07T18:04:18Z"
+        },
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Actually, you do not need to be a member of the group (i.e. having done the join process) to get the public keys, so there is no need to define such a role. As long as you get access to the pub-key resource (by getting authorized by the AS), you can request those.\r\n\r\nWill add some considerations about that in pub-key section.",
+          "createdAt": "2020-04-14T12:51:47Z",
+          "updatedAt": "2020-04-14T12:52:05Z"
+        },
+        {
+          "author": "jimsch",
+          "authorAssociation": "NONE",
+          "body": "But this is something that I might want to control in order to restrict who can determine who is in the group.  This would be determinable by looking at the public key. ",
+          "createdAt": "2020-04-14T13:39:17Z",
+          "updatedAt": "2020-04-14T13:39:17Z"
+        },
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Had agreement that it's fine at the interim (OSCORE profile does define the role for monitor).",
+          "createdAt": "2020-04-17T12:11:46Z",
+          "updatedAt": "2020-04-17T12:11:46Z"
+        }
+      ]
+    },
+    {
+      "number": 92,
+      "id": "MDU6SXNzdWU1OTU4NDQ2MTI=",
+      "title": "Fix bug empty request-empty response for join request",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/92",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested",
+        "PR v-06"
+      ],
+      "body": "Jim's review: \r\n\r\n* In Section 4.1.2.1 - I believe that the minimal content for a join request\r\nis an empty map.  I believe that the minimal content for a join response is\r\nan empty map.  The first makes sense as authorization comes from else where\r\nand so can the public key if it is needed.  I am not so sure that an empty\r\nresponse makes a great deal of sense for a response but it may be what you\r\nintended.\r\n",
+      "createdAt": "2020-04-07T12:51:41Z",
+      "updatedAt": "2020-04-17T12:06:32Z",
+      "closedAt": "2020-04-17T12:06:32Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This was an editorial bug, of course the response always MUST contain group keying material.",
+          "createdAt": "2020-04-07T12:54:01Z",
+          "updatedAt": "2020-04-07T12:54:01Z"
+        }
+      ]
+    },
+    {
+      "number": 94,
+      "id": "MDU6SXNzdWU1OTk0NDI4NzI=",
+      "title": "4.1.2.1 scope should be scope_entry",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/94",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "as a consequence of multiple scopes per access token. The joining is still done for one scope only.",
+      "createdAt": "2020-04-14T09:53:28Z",
+      "updatedAt": "2020-04-14T13:01:46Z",
+      "closedAt": "2020-04-14T13:01:46Z",
+      "comments": []
+    },
+    {
+      "number": 95,
+      "id": "MDU6SXNzdWU2MjM3NTQ5MTY=",
+      "title": "Reference RFC8152 is out of date",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/95",
+      "state": "CLOSED",
+      "author": "jimsch",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-05-23T22:38:49Z",
+      "updatedAt": "2020-06-12T14:49:17Z",
+      "closedAt": "2020-06-12T14:49:17Z",
+      "comments": [
+        {
+          "author": "marco-tiloca-sics",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Fixed in https://github.com/ace-wg/ace-key-groupcomm/commit/7a44b1eceb0f0b94e649776da4a68847f47044e9",
+          "createdAt": "2020-06-12T14:49:17Z",
+          "updatedAt": "2020-06-12T14:49:17Z"
+        }
+      ]
+    },
+    {
+      "number": 98,
+      "id": "MDU6SXNzdWU2NjUxNjQ3OTk=",
+      "title": "Section 2 - ref profiles rather than protocols",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/98",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "OLD:\r\n\u201cPossible ways to provide a secure communication association are DTLS [RFC6347] and OSCORE [RFC8613].\u201d\r\n\r\nNEW:\r\n\u201cPossible ways to provide a secure communication association are described in the DTLS transport profile [I-D.ietf-ace-dtls-authorize] and OSCORE transport profile [I-D.ietf-ace-oscore-profile] of ACE.\u201d",
+      "createdAt": "2020-07-24T13:21:11Z",
+      "updatedAt": "2020-09-04T12:44:58Z",
+      "closedAt": "2020-09-04T12:44:58Z",
+      "comments": []
+    },
+    {
+      "number": 99,
+      "id": "MDU6SXNzdWU2NjUxNjU1MTI=",
+      "title": "Section 3 - Content-Format depends on the profile",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/99",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "OLD:\r\nThe Content-Format\r\nused in the message is the one indicated by the used transport\r\nprofile of ACE. For example, ...\r\n\r\nNEW:\r\nThe Content-Format\r\nused in the message depends on the used transport\r\nprofile of ACE. For example, ...\r\n\r\n",
+      "createdAt": "2020-07-24T13:22:17Z",
+      "updatedAt": "2020-09-04T12:44:58Z",
+      "closedAt": "2020-09-04T12:44:58Z",
+      "comments": []
+    },
+    {
+      "number": 100,
+      "id": "MDU6SXNzdWU2NjUxNjU5MjM=",
+      "title": "Section 3.1 - example of scope",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/100",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "Add an example of scope that uses AIF\r\n\r\nport the example from the OSCORE application profile (the one in section 3 of https://tools.ietf.org/html/draft-ietf-ace-key-groupcomm-oscore-08 ).",
+      "createdAt": "2020-07-24T13:22:56Z",
+      "updatedAt": "2020-09-04T12:44:58Z",
+      "closedAt": "2020-09-04T12:44:58Z",
+      "comments": []
+    },
+    {
+      "number": 101,
+      "id": "MDU6SXNzdWU2NjUxNjY2NTk=",
+      "title": "specify group name MUST be tstr",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/101",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "instead of any - this simplifies the processing of getting the group name in the rd",
+      "createdAt": "2020-07-24T13:24:10Z",
+      "updatedAt": "2020-09-04T12:44:58Z",
+      "closedAt": "2020-09-04T12:44:58Z",
+      "comments": []
+    },
+    {
+      "number": 102,
+      "id": "MDU6SXNzdWU2NjUxNjcxMjE=",
+      "title": "Clarify that the KDC MUST be able to match GROUPNAME in URI to the group name",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/102",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "even if those 2 are different",
+      "createdAt": "2020-07-24T13:24:52Z",
+      "updatedAt": "2020-09-04T12:44:59Z",
+      "closedAt": "2020-09-04T12:44:59Z",
+      "comments": []
+    },
+    {
+      "number": 103,
+      "id": "MDU6SXNzdWU2NjUxNjc4MjE=",
+      "title": "Section 3.2 - clarification about scope",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/103",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "that if it\u2019s not present in the response the granted scope is the same as the requested one.",
+      "createdAt": "2020-07-24T13:26:02Z",
+      "updatedAt": "2020-09-04T12:44:59Z",
+      "closedAt": "2020-09-04T12:44:59Z",
+      "comments": []
+    },
+    {
+      "number": 104,
+      "id": "MDU6SXNzdWU2NjUxNjg2Mjc=",
+      "title": "Section 3.3 clarification about public keys",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/104",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "OLD:\r\nOptionally, the Client might want to request information concerning\r\nthe public keys in the group, as well as concerning the algorithm and\r\nrelated parameters for computing signatures in the group. In such a\r\ncase, the joining node MAY ask for that information to the KDC in\r\nthis same request. To this end, it sends the CoAP POST request to\r\nthe /authz-info endpoint using the Content-Format \"application/\r\nace+cbor\".\r\n\r\nNEW:\r\nOptionally, the Client might want to request encoding information about the public keys in the group, used for source authentication, as well as any other group parameters.  The joining node MAY ask for this information from the KDC in the same message as it uses to POST the token to the RS.",
+      "createdAt": "2020-07-24T13:27:20Z",
+      "updatedAt": "2020-09-04T12:44:59Z",
+      "closedAt": "2020-09-04T12:44:59Z",
+      "comments": []
+    },
+    {
+      "number": 105,
+      "id": "MDU6SXNzdWU2NjUxNzM3MjE=",
+      "title": "Section 3.3 rephrasing to avoid adding a requirement about token validation before response",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/105",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "OLD:\r\nAfter successful verification, the Client is authorized to receive\r\nthe group keying material from the KDC and join the group. In\r\nparticular, the KDC replies to the Client with a 2.01 (Created)\r\nresponse, using Content-Format \"application/ace+cbor\" defined in\r\nSection 8.14 of [I-D.ietf-ace-oauth-authz].\r\n\r\nNEW:\r\nAfter successful verification, the Client is authorized to receive\r\nthe group keying material from the KDC and join the group. \r\n\r\nThe KDC replies to the Client with a 2.01 (Created)\r\nresponse, using Content-Format \"application/ace+cbor\" defined in\r\nSection 8.14 of [I-D.ietf-ace-oauth-authz].\r\n\r\n",
+      "createdAt": "2020-07-24T13:35:38Z",
+      "updatedAt": "2020-09-04T12:44:59Z",
+      "closedAt": "2020-09-04T12:44:59Z",
+      "comments": []
+    },
+    {
+      "number": 106,
+      "id": "MDU6SXNzdWU2NjUxNzgwOTA=",
+      "title": "Section 3.3 - \"different key\" clarification",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/106",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "s/different key/different signing key",
+      "createdAt": "2020-07-24T13:42:58Z",
+      "updatedAt": "2020-09-04T12:45:00Z",
+      "closedAt": "2020-09-04T12:45:00Z",
+      "comments": []
+    },
+    {
+      "number": 107,
+      "id": "MDU6SXNzdWU2NjUxODExMDc=",
+      "title": "Section 3.3 - last paragraph editorial",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/107",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "s/applications/application profiles",
+      "createdAt": "2020-07-24T13:47:53Z",
+      "updatedAt": "2020-09-04T12:45:00Z",
+      "closedAt": "2020-09-04T12:45:00Z",
+      "comments": []
+    },
+    {
+      "number": 108,
+      "id": "MDU6SXNzdWU2NjUxODE2NDA=",
+      "title": "remove (re-)",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/108",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "",
+      "createdAt": "2020-07-24T13:48:43Z",
+      "updatedAt": "2020-09-04T12:45:00Z",
+      "closedAt": "2020-09-04T12:45:00Z",
+      "comments": []
+    },
+    {
+      "number": 109,
+      "id": "MDU6SXNzdWU2NjUxODIyMTQ=",
+      "title": "Section 4 - remove \"individual\" as it is unclear",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/109",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "OLD\r\n* The Client can retrieve a new individual key, or new input\r\nmaterial to derive it. This is described in Section 4.4.\r\n\r\nNEW\r\n* The Client can retrieve new keying material for itself.  This is described in Section 4.4",
+      "createdAt": "2020-07-24T13:49:41Z",
+      "updatedAt": "2020-09-04T12:45:00Z",
+      "closedAt": "2020-09-04T12:45:00Z",
+      "comments": []
+    },
+    {
+      "number": 110,
+      "id": "MDU6SXNzdWU2NjUxODM2NDI=",
+      "title": "Remove default URIs and OPT to have application profiles define their own",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/110",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "Remove that the root uris can be different for every profile. They all use the same and what specific application profile is used is per group (and that info is saved in each group).\r\n\r\n",
+      "createdAt": "2020-07-24T13:52:01Z",
+      "updatedAt": "2020-09-04T12:45:03Z",
+      "closedAt": "2020-09-04T12:45:03Z",
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@jimsch does it mean that we need to register a well-known URI for this document though? (only for this one and not for additional application profiles)",
+          "createdAt": "2020-07-24T14:04:56Z",
+          "updatedAt": "2020-07-24T14:04:56Z"
+        },
+        {
+          "author": "jimsch",
+          "authorAssociation": "NONE",
+          "body": "One of two things need to happen.  1) register a will-known URI or 2) document how this would be found if a server decides to use a different URI.  This is the rt and directory thing that the ace framework is doing.",
+          "createdAt": "2020-07-24T14:30:39Z",
+          "updatedAt": "2020-07-24T14:30:39Z"
+        },
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "i think being consistent with what the framework does is probably the right choice.",
+          "createdAt": "2020-07-26T11:37:03Z",
+          "updatedAt": "2020-07-26T11:37:03Z"
+        }
+      ]
+    },
+    {
+      "number": 111,
+      "id": "MDU6SXNzdWU2NjUxODQwNDY=",
+      "title": "Remove \"fixed\"",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/111",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "and use \"invariant once established\" instead",
+      "createdAt": "2020-07-24T13:52:40Z",
+      "updatedAt": "2020-09-04T12:45:00Z",
+      "closedAt": "2020-09-04T12:45:00Z",
+      "comments": []
+    },
+    {
+      "number": 112,
+      "id": "MDU6SXNzdWU2NjUxODQzOTk=",
+      "title": "Add NODENAME to terminology",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/112",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "high level",
+      "createdAt": "2020-07-24T13:53:14Z",
+      "updatedAt": "2020-09-04T12:45:01Z",
+      "closedAt": "2020-09-04T12:45:01Z",
+      "comments": []
+    },
+    {
+      "number": 113,
+      "id": "MDU6SXNzdWU2NjUxODUyMjY=",
+      "title": " 4.1.2.1 - 'cnonce'",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/113",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "repeat encoding and remove ref to framework",
+      "createdAt": "2020-07-24T13:54:38Z",
+      "updatedAt": "2020-09-04T12:45:01Z",
+      "closedAt": "2020-09-04T12:45:01Z",
+      "comments": []
+    },
+    {
+      "number": 114,
+      "id": "MDU6SXNzdWU2NjUxODU2MjE=",
+      "title": "Section 4.1.2.1 - Which scope is being used, the one in this message or the one in the token?",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/114",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "add following explanation:  The KDC extract the granted\r\n> scope from the Token, and checks this requested one against the token one. If\r\n> this join message does not have one we are in the case where the KDC\r\n> understands which group and role the Client is requesting (say there is only one\r\n> that the client has been granted).",
+      "createdAt": "2020-07-24T13:55:18Z",
+      "updatedAt": "2020-09-04T12:45:01Z",
+      "closedAt": "2020-09-04T12:45:01Z",
+      "comments": []
+    },
+    {
+      "number": 115,
+      "id": "MDU6SXNzdWU2NjUxODY3NDI=",
+      "title": "Section 4.1.2.1 - combine bullets about failed verification",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/115",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "",
+      "createdAt": "2020-07-24T13:57:04Z",
+      "updatedAt": "2020-09-04T12:45:02Z",
+      "closedAt": "2020-09-04T12:45:02Z",
+      "comments": []
+    },
+    {
+      "number": 116,
+      "id": "MDU6SXNzdWU2NjUxODgyODk=",
+      "title": "Section 4.1.6.3 - editorial",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/116",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "OLD\r\nThe handler only accepts a request from the node identified by\r\n\"NODENAME\" via the secure session, where NODENAME is used in Uri-\r\nPath, and that is part of the \"GROUPNAME\" group: the handler verifies\r\nthat the group name \"GROUPNAME\" is a subset of the 'scope' stored in\r\nthe access token associated to this client, and that this client is\r\nidentified by \"NODENAME\". If verification fails, the KDC MUST\r\nrespond with a 4.01 (Unauthorized) error message.\r\nNEW\r\nThe handler verifies that the group name of the /ace-group/GROUPNAME\r\npath is a subset of the 'scope' stored in the access token associated\r\nto this client, identified by \"NODENAME\". If verification fails, the\r\nKDC MUST respond with a 4.01 (Unauthorized) error message.\r\n",
+      "createdAt": "2020-07-24T13:59:34Z",
+      "updatedAt": "2020-09-04T12:45:02Z",
+      "closedAt": "2020-09-04T12:45:02Z",
+      "comments": []
+    },
+    {
+      "number": 117,
+      "id": "MDU6SXNzdWU2NjUxODg2MDA=",
+      "title": "Section 4.2 - \"retrieve individual or group keying material\"",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/117",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "remove individual",
+      "createdAt": "2020-07-24T14:00:04Z",
+      "updatedAt": "2020-09-04T12:45:03Z",
+      "closedAt": "2020-09-04T12:45:03Z",
+      "comments": []
+    },
+    {
+      "number": 118,
+      "id": "MDU6SXNzdWU2NjUxODg5MzQ=",
+      "title": "Section 4.3 - remove duplicate text about congestion",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/118",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "it's already in sec cons, revert.",
+      "createdAt": "2020-07-24T14:00:33Z",
+      "updatedAt": "2020-09-04T12:45:03Z",
+      "closedAt": "2020-09-04T12:45:03Z",
+      "comments": []
+    },
+    {
+      "number": 119,
+      "id": "MDU6SXNzdWU2NjUxODk1MDQ=",
+      "title": "Section 4.4 -  editorial",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/119",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "\u201cBeside possible expiration, the client may\r\nneed to communicate to the KDC its need for part of the keying material to be\r\nrenewed. \u201c\r\n\r\nRemove part of and put in text about why this is needed (i.e. AEAD integrity/confidentially limits) to motivate things better.",
+      "createdAt": "2020-07-24T14:01:23Z",
+      "updatedAt": "2020-09-04T12:45:04Z",
+      "closedAt": "2020-09-04T12:45:04Z",
+      "comments": []
+    },
+    {
+      "number": 120,
+      "id": "MDU6SXNzdWU2NjUxOTAyOTM=",
+      "title": "Section 4.4 title",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/120",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "not happy with Retrieval of New Individual Keying Material\r\n\r\nJim suggests:\r\n\r\n4.3 - Retrieval of keying material\r\n4.4 - Requesting a change of keying material\r\n\r\nFP: I would be against renaming section 4.4 so because it seems to imply a group rekey, while that is not what this exchange is. I think we still need something in the title with \u201cindividual\u201d, as opposed to \u201cgroup keying\u201d.\r\n\r\n[JLS] But section 4.4 could be about a group rekeying.  It is going to be profile based how this is responded to.   A profile for which identifiers are fixed is going to re-key the entire group.  One for which they are fluid can just change the identifier.\r\n\r\n ",
+      "createdAt": "2020-07-24T14:02:35Z",
+      "updatedAt": "2020-09-04T12:45:03Z",
+      "closedAt": "2020-09-04T12:45:03Z",
+      "comments": []
+    },
+    {
+      "number": 121,
+      "id": "MDU6SXNzdWU2NjUxOTEwMzA=",
+      "title": "Add root PUT handler ",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/121",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editor done + wg review requested"
+      ],
+      "body": "Add a handler to the root for requesting gids and getting group names and URIs back (we probably need to register a new parameter to send those URIs in the same map). Add group identifier terminology as identifier of group keying material.",
+      "createdAt": "2020-07-24T14:03:45Z",
+      "updatedAt": "2020-09-04T12:45:03Z",
+      "closedAt": "2020-09-04T12:45:03Z",
+      "comments": []
+    },
+    {
+      "number": 123,
+      "id": "MDU6SXNzdWU3MjYyNDUwODg=",
+      "title": "Add examples",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/123",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "of message exchange in 4.x\r\n\r\nhttps://mailarchive.ietf.org/arch/msg/ace/q03pyqFHFT4CpdsckLLlifPB3w0/",
+      "createdAt": "2020-10-21T08:09:00Z",
+      "updatedAt": "2020-11-02T14:07:35Z",
+      "closedAt": "2020-11-02T14:07:35Z",
+      "comments": []
+    },
+    {
+      "number": 124,
+      "id": "MDU6SXNzdWU3MjYyNTUwNTg=",
+      "title": "Remove duplicate text of ace from section 3",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/124",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "3.1\r\n\r\n   *  'req_cnf', as defined in Section 3.1 of\r\n      [I-D.ietf-ace-oauth-params], optionally containing the public key\r\n      or a reference to the public key of the Client, if it wishes to\r\n      communicate that to the AS.\r\n\r\n  As in [I-D.ietf-ace-oauth-authz], these parameters are included in\r\n   the payload, which is formatted as a CBOR map.  The Content-Format\r\n   \"application/ace+cbor\" defined in Section 8.14 of\r\n   [I-D.ietf-ace-oauth-authz] is used.\r\n\r\n---\r\n\r\n3.2\r\n\r\nOLD:\r\n\r\n   *  'access_token', containing the proof-of-possession access token.\r\n\r\n   *  'cnf' if symmetric keys are used, not present if asymmetric keys\r\n      are used.  This parameter is defined in Section 3.2 of\r\n      [I-D.ietf-ace-oauth-params] and contains the symmetric proof-of-\r\n      possession key that the Client is supposed to use with the KDC.\r\n\r\n   *  'rs_cnf' if asymmetric keys are used, not present if symmetric\r\n      keys are used.  This parameter is defined in Section 3.2 of\r\n      [I-D.ietf-ace-oauth-params] and contains information about the\r\n      public key of the KDC.\r\n\r\n   *  'expires_in', contains the lifetime in seconds of the access\r\n      token.  This parameter MAY be omitted if the application defines\r\n      how the expiration time is communicated to the Client via other\r\n      means, or if it establishes a default value.\r\n\r\n   Additionally, the Authorization Response MAY contain the following\r\n   parameters, which, if included, MUST have the corresponding values:\r\n\r\nNEW: \r\n\r\nNote that 'expires_in' MAY be omitted if the application defines\r\n      how the expiration time is communicated to the Client via other\r\n      means, or if it establishes a default value.\r\n\r\n\r\nOLD:\r\n\r\n'scope' containing the scope the AS grants access to.  This\r\n      parameter has the same format and encoding of 'scope' in the\r\n      Authorization Request, defined in Section 3.1.  If this parameter\r\n      is not present the granted scope is equal to the one requested in\r\n      Section 3.1}.\r\n\r\nNEW:\r\n\r\n'scope' has the same format and encoding of 'scope' in the\r\n      Authorization Request, defined in Section 3.1.  If this parameter\r\n      is not present the granted scope is equal to the one requested in\r\n      Section 3.1}.\r\n\r\n\r\nDEL:\r\n\r\n Other additional parameters as defined in [I-D.ietf-ace-oauth-authz],\r\n   if necessary.\r\n\r\n   As in [I-D.ietf-ace-oauth-authz], these parameters are included in\r\n   the payload, which is formatted as a CBOR map.  The Content-Format\r\n   \"application/ace+cbor\" is used.\r\n",
+      "createdAt": "2020-10-21T08:23:17Z",
+      "updatedAt": "2020-11-02T14:07:36Z",
+      "closedAt": "2020-11-02T14:07:36Z",
+      "comments": []
+    },
+    {
+      "number": 125,
+      "id": "MDU6SXNzdWU3MjYyNjUwMzg=",
+      "title": "Section 3.3",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/125",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "add motivation. Clarify what is different from a simple ace token post request response.",
+      "createdAt": "2020-10-21T08:37:00Z",
+      "updatedAt": "2020-11-02T14:07:36Z",
+      "closedAt": "2020-11-02T14:07:36Z",
+      "comments": []
+    },
+    {
+      "number": 126,
+      "id": "MDU6SXNzdWU3MjYyODg3ODI=",
+      "title": "4.1.2.2. error if not member",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/126",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "change from 4.00 to 4.01 (also in other sections)",
+      "createdAt": "2020-10-21T09:08:01Z",
+      "updatedAt": "2020-11-02T14:07:36Z",
+      "closedAt": "2020-11-02T14:07:36Z",
+      "comments": []
+    },
+    {
+      "number": 127,
+      "id": "MDU6SXNzdWU3MjYyOTc4OTg=",
+      "title": "Section 4 - add requirement",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/127",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "on application profiles to specify what operations/(resource + method) are allowed for each role.\r\n\r\nadd in each section that this is allowed for the specific role that the node has, checked against the table above.",
+      "createdAt": "2020-10-21T09:19:33Z",
+      "updatedAt": "2020-11-02T14:07:36Z",
+      "closedAt": "2020-11-02T14:07:36Z",
+      "comments": []
+    },
+    {
+      "number": 128,
+      "id": "MDU6SXNzdWU3MjYzMDI5MDg=",
+      "title": "simplify section 4.1.3.2",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/128",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "compare to 4.1.3.1. and delete duplicate text. \r\n\r\n\"GET requests are served just like FETCH requests but without any filtering\"\r\n",
+      "createdAt": "2020-10-21T09:26:16Z",
+      "updatedAt": "2020-11-02T14:07:37Z",
+      "closedAt": "2020-11-02T14:07:37Z",
+      "comments": []
+    },
+    {
+      "number": 129,
+      "id": "MDU6SXNzdWU3MjYzMDcwNjA=",
+      "title": "make the GROUPNAME resource observable rather than NODENAME",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/129",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "OLD:\r\n\r\n   *  Can make the ace-group/GROUPNAME/nodes/NODENAME resource\r\n      Observable [RFC7641], and send notifications to Clients when the\r\n      keying material is updated.\r\n\r\nNEW:\r\n\r\n   *  Can make the ace-group/GROUPNAME resource\r\n      Observable [RFC7641], and send notifications to Clients when the\r\n      keying material is updated.",
+      "createdAt": "2020-10-21T09:31:47Z",
+      "updatedAt": "2020-11-02T14:07:35Z",
+      "closedAt": "2020-11-02T14:07:35Z",
+      "comments": []
+    },
+    {
+      "number": 130,
+      "id": "MDU6SXNzdWU3MjYzMTE1MDA=",
+      "title": "Remove additional information",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/130",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "in the IANA Media Type registration",
+      "createdAt": "2020-10-21T09:37:31Z",
+      "updatedAt": "2020-11-02T14:07:35Z",
+      "closedAt": "2020-11-02T14:07:35Z",
+      "comments": []
+    },
+    {
+      "number": 131,
+      "id": "MDU6SXNzdWU3MjYzMTYwNjQ=",
+      "title": "Add a OPT2b to allow for optional parameters to be added",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/131",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "by application profiles in the Token POST request and response",
+      "createdAt": "2020-10-21T09:43:28Z",
+      "updatedAt": "2020-11-02T14:07:35Z",
+      "closedAt": "2020-11-02T14:07:35Z",
+      "comments": []
+    },
+    {
+      "number": 132,
+      "id": "MDU6SXNzdWU3MjYzMTcxNjI=",
+      "title": "Add \"node name\" definition in terminology",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/132",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "",
+      "createdAt": "2020-10-21T09:45:00Z",
+      "updatedAt": "2020-11-02T14:07:34Z",
+      "closedAt": "2020-11-02T14:07:34Z",
+      "comments": []
+    },
+    {
+      "number": 133,
+      "id": "MDU6SXNzdWU3MjYzMTg4MzI=",
+      "title": "Switch place fig 4 and 5",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/133",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "",
+      "createdAt": "2020-10-21T09:47:15Z",
+      "updatedAt": "2020-11-02T14:07:34Z",
+      "closedAt": "2020-11-02T14:07:34Z",
+      "comments": []
+    },
+    {
+      "number": 134,
+      "id": "MDU6SXNzdWU3MjYzMjA0MTE=",
+      "title": "Fix section ref",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/134",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "   OLD:\r\n   The 'kdcchallenge' parameter is an OPTIONAL parameter of the Token\r\nPost response message defined in Section 5.1.2. of\r\n[I-D.ietf-ace-oauth-authz].\r\n\r\n   NEW:\r\n   The 'kdcchallenge' parameter is an OPTIONAL parameter of the Token\r\nPost response message (see Section 5.8.1 of [I-D.ietf-ace-oauth-authz]).\r\n",
+      "createdAt": "2020-10-21T09:49:19Z",
+      "updatedAt": "2020-11-02T14:07:34Z",
+      "closedAt": "2020-11-02T14:07:34Z",
+      "comments": []
+    },
+    {
+      "number": 135,
+      "id": "MDU6SXNzdWU3MjYzMjU3OTU=",
+      "title": "clarify error response when checking granted scope",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/135",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "OLD:\r\n\r\n   The handler extracts the granted scope from the access token, and\r\n   checks the requested one against the token one.\r\n\r\nNEW:\r\n\r\n   The handler extracts the granted scope from the access token, and\r\n   checks the requested one against the token one. If the requested one is not a subset of the token one, the MUST respond with a 4.01 (Unauthorized) error message.\r\n ",
+      "createdAt": "2020-10-21T09:56:38Z",
+      "updatedAt": "2020-11-02T14:07:34Z",
+      "closedAt": "2020-11-02T14:07:34Z",
+      "comments": []
+    },
+    {
+      "number": 136,
+      "id": "MDU6SXNzdWU3MjYzMzA3NjQ=",
+      "title": "clarify how to calc client_cred_verify",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/136",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "OLD\r\n\r\n      -  scope is the byte string specified in the 'scope parameter\r\n         above'.\r\n\r\nNEW\r\n\r\n      -  scope is the byte string specified in the 'scope' parameter\r\n         above, if present, or the default scope if omitted.",
+      "createdAt": "2020-10-21T10:02:50Z",
+      "updatedAt": "2020-11-02T14:07:34Z",
+      "closedAt": "2020-11-02T14:07:34Z",
+      "comments": []
+    },
+    {
+      "number": 137,
+      "id": "MDU6SXNzdWU3MzEzMDgxNjY=",
+      "title": "register CBOR Tags for scope encodings",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/137",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "help wanted"
+      ],
+      "body": "for each application profiles\r\n\r\n(bring up at IETF 109)",
+      "createdAt": "2020-10-28T10:20:25Z",
+      "updatedAt": "2021-03-12T20:50:28Z",
+      "closedAt": "2021-03-12T20:50:27Z",
+      "comments": [
+        {
+          "author": "marco-tiloca-sics",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Addressed in Section 6 of v -11. Closed following the discussion at IETF 110.",
+          "createdAt": "2021-03-12T20:50:27Z",
+          "updatedAt": "2021-03-12T20:50:27Z"
+        }
+      ]
+    },
+    {
+      "number": 138,
+      "id": "MDU6SXNzdWU3MzIyODcwMTA=",
+      "title": "get_pub_keys",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/138",
+      "state": "CLOSED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "PR v-10"
+      ],
+      "body": "get_pub_keys is encoded as [ [\u00a0], [\u00a0] ], where the first array contains roles and second contains ids.\r\nright now section 4.1.2.1 says \"if the first array is empty, the node is requesting all pub keys. This makes sense for the joining exchange. But for the FETCH to get_pub_keys, it makes it so that it is impossible for a node to just request ids, without caring about roles... should we make it so that if get_pub_keys = null it's requesting for all pub keys, and if the first array is empty it means it's requesting for no role? @marco-tiloca-sics ",
+      "createdAt": "2020-10-29T12:51:22Z",
+      "updatedAt": "2020-11-02T14:07:35Z",
+      "closedAt": "2020-11-02T14:07:35Z",
+      "comments": []
+    },
+    {
+      "number": 140,
+      "id": "MDU6SXNzdWU3NDI2MTQzMjg=",
+      "title": "Idempotency of joining interface",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/140",
+      "state": "CLOSED",
+      "author": "chrysn",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "I didn't read the latest version, but there's a point that should be considered (and I can check it later if you want to assign it to me; then thisis a note-to-self):\r\n\r\nFor CoAP implementations it's convenient if resources are implementable in an idempotent way (preferably even being allowed to send the same response again) -- as this allows the server to forego request deduplication.\r\n\r\nNow for a joining resource, we can't provide that long-term (like we do with RD), as joining a group needs to always produce a new KID (because it allows the new member to zero-initialize all its replay windows, and to start with a sender sequence number of 0, both of which must only be done once).\r\n\r\nIt would still be nice to allow idempotent implementation for some (common) cases. This requires a mandate to the client that it only create a given GID/KID context once. The client can't provide that in the *general* case -- it might just be starting up, request the context, start using it, get powercycled, send request it again, use the response, and BOOM goes the crypto.\r\n\r\nHowever, when an ACE profile is used that has some forms of sessions (the nonces of ace-oscore-profile, or the ... well, sessions (epochs?) for DTLS), it may be permissible to allow idempotent implementations that send the same response just again, *if* clients can be required to not initialize a KID context twice from responses of the same session with the GM. That seems to be a reasonable thing to ask from the clients; it's probably more work specifying than implementing.\r\n\r\n---\r\n\r\nGranted, it's a small optimization, so feel free to turn this down if it sounds excessive. It may easily be that this is just the point where even stacks that previously got away with requiring resource idempotency just need deduplication.",
+      "createdAt": "2020-11-13T17:04:47Z",
+      "updatedAt": "2021-03-11T09:01:23Z",
+      "closedAt": "2021-03-11T09:01:23Z",
+      "comments": [
+        {
+          "author": "chrysn",
+          "authorAssociation": "NONE",
+          "body": "After a bit of live discussion: not worth it.\r\n\r\nAn implementation that does all those nitty gritty checking of the details (and coordinate them with the clients) may still manage do them, but making them required for every implementer to consider would be extraneous.",
+          "createdAt": "2021-03-11T09:01:23Z",
+          "updatedAt": "2021-03-11T09:01:23Z"
+        }
+      ]
+    },
+    {
+      "number": 144,
+      "id": "I_kwDOCSfQR85HMm0K",
+      "title": "ACE scope semantics: CBOR file-magic",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/144",
+      "state": "CLOSED",
+      "author": "chrysn",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Following up on IETF113 discussion, I think that the \"extended scope format\" can be vastly simplified by using [cbor-file-magic](https://datatracker.ietf.org/doc/draft-ietf-cbor-file-magic/):\r\n\r\nRather than specifying a new format and registry for scopes, the scopes within an audience that employs this mechanism would be disambiguated just like file formats. (They have common properties: Everybody assumes that their semantics are known from the context, but in the odd case they are not, eg. because an audience is used with different kinds of scopes).\r\n\r\nRather than becoming\r\n\r\n```\r\nextended_scope = #6.TBD_TAG(<< [semantics, scope] >>)\r\n```\r\n\r\nthe extended scope could just be\r\n```\r\nextended_scope = #6.TAG_FOR_THESE_SEMANTICS(scope)\r\n```\r\n\r\nwhich, if TAG_FOR_THESE_SEMANTICS is allocated following the recommendations of cbor-file-magic (I guess it'd forego using the self-describing tag `#6.55799()` around it) equivalent to prefixing the encoded scope with 5 bytes specific to that tag. In particular, if for the scopes' semantics a content format is allocated (and there is already 290 for AIF with the default `;Toid=URI-local-part;Tperm=REST-method-set`), the tag is even already allocated, and if other AIF generalizations allocate their own content format, they also get the tag automatically.\r\n\r\nThe only down side I see is that the scope claims might grow in size, depending on the precise numbers allocated. But for example, if a 1+1 tag were chosen for the current TBD_TAG, depending on the length of the inner encoding, this might already be just as good or even better.",
+      "createdAt": "2022-04-06T11:39:20Z",
+      "updatedAt": "2022-09-05T17:14:53Z",
+      "closedAt": "2022-09-05T17:14:53Z",
+      "comments": [
+        {
+          "author": "marco-tiloca-sics",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thanks for the good observation and input, I think it would be a good change!\r\n\r\nWhen the \"extended scope format\" was added to -ace-key-groupcomm, the registration of one tag only and of on-demand semantics integers ended up preferred, compared to opening for the registration of multiple CBOR tags. But on the other hand I think all you've mentioned was not around yet :-)\r\n\r\n> which, if TAG_FOR_THESE_SEMANTICS is allocated following the recommendations of cbor-file-magic (I guess it'd forego using the self-describing tag #6.55799() around it) equivalent to prefixing the encoded scope with 5 bytes specific to that tag.\r\n\r\nYes, TAG_FOR_THESE_SEMANTICS would be from the 4-byte range, and there is no need to further use the tag 55799.\r\n\r\n> In particular, if for the scopes' semantics a content format is allocated (and there is already 290 for AIF with the default ;Toid=URI-local-part;Tperm=REST-method-set), the tag is even already allocated,\r\n\r\nYes, if scope uses exactly Generic AIF, the value of  TAG_FOR_THESE_SEMANTICS is 1668546850=1668546560+290.\r\n\r\nSome guideline and pointer to -cbor-file-magic can be added for a more general case not relying on AIF.\r\n\r\n> and if other AIF generalizations allocate their own content format, they also get the tag automatically.\r\n\r\nYes, for example the document -ace-key-groupcomm-oscore is defining the new data model AIF-OSCORE-GROUPCOMM [0] and registering a corresponding content-format, so it would also automatically have the corresponding value for its TAG_FOR_THESE_SEMANTICS.\r\n\r\n> The only down side I see is that the scope claims might grow in size, depending on the precise numbers allocated. But for example, if a 1+1 tag were chosen for the current TBD_TAG, depending on the length of the inner encoding, this might already be just as good or even better.\r\n\r\nI think it's more likely to be even better.\r\n\r\n[0] As also discussed at IETF 113, that same data model would cover both the \"user\" scope entries defined in -ace-key-groupcomm-oscore and the \"admin\" scope entries defined in -ace-oscore-gm-admin, as possible to coexist in the same scope claim. The type of the different scope entries is distinguishable thanks to the least significant bit in their Tperm value, which would also have this meaning already from the revised definition of the data model.",
+          "createdAt": "2022-04-06T13:54:52Z",
+          "updatedAt": "2022-04-06T13:54:52Z"
+        }
+      ]
+    },
+    {
+      "number": 146,
+      "id": "I_kwDOCSfQR85TT5QL",
+      "title": "Possible omission of \"peer_roles\" in the Join Response",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/146",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "When defining the Join Response in [0], it is currently said that `peer_roles` MUST be present if `creds` is also present.\r\n\r\nAs discussed with @ciseng at the ACE interim meeting on 2022-09-12 [1] and further offline, it would be better for the Pub-Sub profile of ACE [2] to not necessarily include this parameter. That's because it would just be a repetitive and unnecessary source of overhead in the Join Response, where \"publisher\" would practically be the only role of the current group members to be indicated anyway.\r\n\r\nTherefore, the bullet point defining `peer_roles` in [0] can be changed as follows.\r\n\r\nOLD:\r\n> 'peer_roles', MUST be present if 'creds' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, with n the number of authentication credentials included in the 'creds' parameter (at most the number of members in the group).  The i-th element of the array specifies the role (or CBOR array of roles) that the group member associated with the i-th authentication credential in 'creds' has in the group. In particular, each array element is encoded as the role element of a scope entry, as defined in Section 3.1.\r\n\r\n\r\nNEW:\r\n> 'peer_roles', SHOULD be present if 'creds' is also present, otherwise it MUST NOT be present. This parameter is a CBOR array of n elements, with n the number of authentication credentials included in the 'creds' parameter (at most the number of members in the group). The i-th element of the array specifies the role (or CBOR array of roles) that the group member associated with the i-th authentication credential in 'creds' has in the group. In particular, each array element is encoded as the role element of a scope entry, as defined in Section 3.1.\r\n> \r\n>  This parameter MAY be omitted if all the group members associated with the authentication credentials specified in the 'creds' parameter have the same role in the group joined by the Client, and such a role can be unambiguously assumed by the Client (e.g., based on what is defined in the used application profile of this specification).\r\n\r\n\r\n[0] https://datatracker.ietf.org/doc/html/draft-ietf-ace-key-groupcomm-16#section-4.3.1\r\n\r\n[1] https://datatracker.ietf.org/meeting/interim-2022-ace-01/session/ace\r\n\r\n[2] https://datatracker.ietf.org/doc/draft-ietf-ace-pubsub-profile/",
+      "createdAt": "2022-10-05T12:35:58Z",
+      "updatedAt": "2023-09-27T11:39:15Z",
+      "closedAt": "2023-09-27T11:39:15Z",
+      "comments": [
+        {
+          "author": "chrysn",
+          "authorAssociation": "NONE",
+          "body": "**If** CCSes already need to encode the in their scope claim which role they take in the group, then let's please extend that exception to *any* situation in which the peer roles already follow from information that are available elsewhere (be it as a claim in the CCS or because there is only one value to them anyway).\r\n\r\nI'm putting that \"if\" in bold because it's an actual \"if\": I'd be just as happy with CCSes that are really just the RPK plus curve numbers, and then my point would be moot.\r\n\r\n(I don't care about doing the same on CWTs and [CX]509 credentials -- once they're around, the join response is already lugging around like 3x the amount of data it needs to, and while it may make sense in the interest of simplicity to be more general, it doesn't change much)\r\n\r\n\\<rant>oscore-groupcomm went through a [lot of trouble](https://eprint.iacr.org/2021/509) making sure we only need to transport and store 32 bytes instead of 64 bytes of data per peer. Any more per-peer data, in particularly signatures on non-CCS credentials, invalidate that effort.\\</rant>",
+          "createdAt": "2023-04-17T16:12:02Z",
+          "updatedAt": "2023-04-17T16:12:02Z"
+        }
+      ]
+    },
+    {
+      "number": 147,
+      "id": "I_kwDOCSfQR85qUjq0",
+      "title": "Guidelines to group members failing incoming message processing",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/147",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Section 4.8.1.1 \"Retrieve Group and Individual Keying Material\"\r\n\r\nTL;DR: Provide more guidelines for a group member that keeps failing to decrypt/verify incoming messages, even after having retrieved the latest keying material from the KDC. The group member can try to retrieve the authentication credentials of the message senders. If that still does not work, the group member can try to retrieve the authentication credential of the KDC.\r\n\r\n\r\nFollowing the multiple failed decryption and verification of an incoming message and the retrieval of the latest group keying material, the group member may retrieve the group keying material that it is already storing.\r\n\r\nIn such a case, the failed decryption might be due to the message sender and/or the KDC that has changed its authentication credential.\r\n\r\nHence, the group member can follow-up by retrieving the authentication credential of the message sender (see Section 4.4). If such an authentication credential has not changed compared to the currently stored one, then the group member can further follow-up by retrieving the authentication credential of the KDC (see Section 4.5).",
+      "createdAt": "2023-07-01T10:09:48Z",
+      "updatedAt": "2023-09-27T13:17:47Z",
+      "closedAt": "2023-09-27T13:17:47Z",
+      "comments": []
+    },
+    {
+      "number": 148,
+      "id": "I_kwDOCSfQR85qUj1M",
+      "title": "Editorial fixes",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/148",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "* The correct reference for X.509 certificates is not RFC 7925, but rather RFC 5280.\r\n\r\n* s/ace-groupcomm-profile/ace_groupcomm_profile\r\n\r\n   More generally, ensure that all the parameters use '_' as word separator, just like the ACE framework does in RFC 9200.\r\n\r\n\r\n* In CDDL examples\r\n\r\n   s/. bits/.bits\r\n   s/= int/: int\r\n\r\n\r\n* Section 4.9.1\r\n\r\n   OLD:\r\n   possibly replacing the currently stored value\r\n\r\n   NEW:\r\n   replacing the currently stored value (if any)\r\n\r\n\r\n* Section 6.2.1\r\n\r\n   s/MUST me provided/MUST be provided\r\n\r\n\r\n* Section 8 uses \"support and understand ...\".\r\n\r\n   The use of \"understand\" was intended to further stress the parameter support when handling a message conveying it, with consequent understanding for processing its value. We can simply say \"support\".",
+      "createdAt": "2023-07-01T10:10:55Z",
+      "updatedAt": "2023-09-27T13:31:56Z",
+      "closedAt": "2023-09-27T13:31:56Z",
+      "comments": []
+    },
+    {
+      "number": 149,
+      "id": "I_kwDOCSfQR85qUkko",
+      "title": "Fixes and more details in the IANA considerations",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/149",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Section 11 \"IANA Considerations\"\r\n\r\n\r\n* Section 11.6 \"ACE Groupcomm Parameters\"\r\n\r\nOLD\r\nThis specification establishes the \"ACE Groupcomm Parameters\" IANA registry.\r\n\r\nNEW\r\nThis specification establishes the \"ACE Groupcomm Parameters\" IANA registry within the \"Authentication and Authorization for Constrained Environments (ACE)\" registry group.\r\n\r\n---\r\n\r\n* Section 11.6 \"ACE Groupcomm Parameters\"\r\n\r\nOLD\r\nThis is the value used as CBOR key of the item. These values MUST be unique. The value can be a positive integer, a negative integer, or a string.\r\n\r\nNEW (EDITED)\r\nThis is the value used as CBOR key of the item. These values MUST be unique. The value can be a positive integer, a negative integer, or a text string. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 as well as text strings of length 1 are designated as \"Standards Action With Expert Review\". Integer values from -65536 to -257 and from 256 to 65535, as well as text strings of length 2 are designated as \"Specification Required\". Integer values greater than 65535 as well as text strings of length greater than 2 are designated as \"Expert Review\". Integer values less than -65536 are marked as \"Private Use\".\r\n\r\n---\r\n\r\n* Section 11.7 \"ACE Groupcomm Key Types\"\r\n\r\nOLD\r\nThis specification establishes the \"ACE Groupcomm Key Types\" IANA registry.\r\n\r\nNEW\r\nThis specification establishes the \"ACE Groupcomm Key Types\" IANA registry within the \"Authentication and Authorization for Constrained Environments (ACE)\" registry group.\r\n\r\n---\r\n\r\n* Section 11.7 \"ACE Groupcomm Key Types\"\r\n\r\nOLD\r\nThis is the value used to identify the keying material. These values MUST be unique. The value can be a positive integer, a negative integer, or a text string.\r\n\r\nNEW (EDITED)\r\nThis is the value used to identify the keying material. These values MUST be unique. The value can be a positive integer, a negative integer, or a text string. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 as well as text strings of length 1 are designated as \"Standards Action With Expert Review\". Integer values from -65536 to -257 and from 256 to 65535, as well as text strings of length 2 are designated as \"Specification Required\". Integer values greater than 65535 as well as text strings of length greater than 2 are designated as \"Expert Review\". Integer values less than -65536 are marked as \"Private Use\".\r\n\r\n---\r\n\r\n* Section 11.8 \"ACE Groupcomm Profiles\"\r\n\r\nOLD\r\nThis specification establishes the \"ACE Groupcomm Profiles\" IANA registry.\r\n\r\nNEW\r\nThis specification establishes the \"ACE Groupcomm Profiles\" IANA registry within the \"Authentication and Authorization for Constrained Environments (ACE)\" registry group.\r\n\r\n---\r\n\r\n* Section 11.8 \"ACE Groupcomm Profiles\"\r\n\r\nOLD\r\nCBOR abbreviation for the name of this application profile. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 are designated as Standards Action. Integer values from -65536 to -257 and from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as Expert Review. Integer values less than -65536 are marked as Private Use.\r\n\r\nNEW\r\nCBOR abbreviation for the name of this application profile. These values MUST be unique. The value can be a positive integer or a negative integer. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 are designated as \"Standards Action With Expert Review\". Integer values from -65536 to -257 and from 256 to 65535 are designated as \"Specification Required\". Integer values greater than 65535 are designated as \"Expert Review\". Integer values less than -65536 are marked as \"Private Use\".\r\n\r\n---\r\n\r\n* Section 11.9 \"ACE Groupcomm Policies\"\r\n\r\nOLD\r\nThis specification establishes the \"ACE Groupcomm Policies\" IANA registry.\r\n\r\nNEW\r\nThis specification establishes the \"ACE Groupcomm Policies\" IANA registry within the \"Authentication and Authorization for Constrained Environments (ACE)\" registry group.\r\n\r\n---\r\n\r\n* Section 11.9 \"ACE Groupcomm Policies\"\r\n\r\nOLD\r\nThe value to be used to identify this group communication policy. Key map labels MUST be unique. The label can be a positive integer, a negative integer or a string. Integer values between 0 and 255 and strings of length 1 are designated as Standards Track Document required. Integer values from 256 to 65535 and strings of length 2 are designated as Specification Required. Integer values greater than 65535 and strings of length greater than 2 are designated as expert review. Integer values less than -65536 are marked as private use.\r\n\r\nNEW (EDITED)\r\nThe value to be used to identify this group communication policy. These values MUST be unique. The value can be a positive integer, a negative integer, or a text string. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 as well as text strings of length 1 are designated as \"Standards Action With Expert Review\". Integer values from -65536 to -257 and from 256 to 65535, as well as text strings of length 2 are designated as \"Specification Required\". Integer values greater than 65535 as well as text strings of length greater than 2 are designated as \"Expert Review\". Integer values less than -65536 are marked as \"Private Use\".\r\n\r\n---\r\n\r\n* Section 11.10 \"Sequence Number Synchronization Methods\"\r\n\r\nOLD\r\nThis specification establishes the \"Sequence Number Synchronization Methods\" IANA registry.\r\n\r\nNEW\r\nThis specification establishes the \"Sequence Number Synchronization Methods\" IANA registry within the \"Authentication and Authorization for Constrained Environments (ACE)\" registry group.\r\n\r\n---\r\n\r\n* Section 11.10 \"Sequence Number Synchronization Methods\"\r\n\r\nOLD\r\nThe value to be used to identify this sequence number synchronization method.\r\n\r\nNEW\r\nThe value to be used to identify this sequence number synchronization method. These values MUST be unique. The value can be a positive integer, a negative integer, or a text string. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 as well as text strings of length 1 are designated as \"Standards Action With Expert Review\". Integer values from -65536 to -257 and from 256 to 65535, as well as text strings of length 2 are designated as \"Specification Required\". Integer values greater than 65535 as well as text strings of length greater than 2 are designated as \"Expert Review\". Integer values less than -65536 are marked as \"Private Use\".\r\n\r\n---\r\n\r\n* Section 11.11 \"ACE Groupcomm Errors\"\r\n\r\nOLD\r\nThis specification establishes the \"ACE Groupcomm Errors\" IANA registry.\r\n\r\nNEW\r\nThis specification establishes the \"ACE Groupcomm Errors\" IANA registry within the \"Authentication and Authorization for Constrained Environments (ACE)\" registry group.\r\n\r\n---\r\n\r\n* Section 11.11 \"ACE Groupcomm Errors\"\r\n\r\nOLD\r\nThe value to be used to identify the error. The value MUST be unique. The value can be a positive integer or a negative integer. Integer values between 0 and 255 are designated as Standards Track Document required. Integer values from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as expert review. Integer values less than -65536 are marked as private use.\r\n\r\nNEW\r\nThe value to be used to identify the error. These values MUST be unique. The value can be a positive integer or a negative integer. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 are designated as \"Standards Action With Expert Review\". Integer values from -65536 to -257 and from 256 to 65535 are designated as \"Specification Required\". Integer values greater than 65535 are designated as \"Expert Review\". Integer values less than -65536 are marked as \"Private Use\".\r\n\r\n---\r\n\r\n* Section 11.12 \"ACE Groupcomm Rekeying Schemes\"\r\n\r\nOLD\r\nThis specification establishes the \"ACE Groupcomm Rekeying Schemes\" IANA registry.\r\n\r\nNEW\r\nThis specification establishes the \"ACE Groupcomm Rekeying Schemes\" IANA registry within the \"Authentication and Authorization for Constrained Environments (ACE)\" registry group.\r\n\r\n---\r\n\r\n* Section 11.12 \"ACE Groupcomm Rekeying Schemes\"\r\n\r\nOLD\r\nThe value to be used to identify the group rekeying scheme. The value MUST be unique. The value can be a positive integer or a negative integer. Integer values between 0 and 255 are designated as Standards Track Document required. Integer values from 256 to 65535 are designated as Specification Required. Integer values greater than 65535 are designated as expert review. Integer values less than -65536 are marked as private use.\r\n\r\nNEW\r\nThe value to be used to identify the group rekeying scheme. These values MUST be unique. The value can be a positive integer or a negative integer. Different ranges of values use different registration policies [RFC8126]. Integer values from -256 to 255 are designated as \"Standards Action With Expert Review\". Integer values from -65536 to -257 and from 256 to 65535 are designated as \"Specification Required\". Integer values greater than 65535 are designated as \"Expert Review\". Integer values less than -65536 are marked as \"Private Use\".",
+      "createdAt": "2023-07-01T10:16:27Z",
+      "updatedAt": "2023-09-27T16:48:30Z",
+      "closedAt": "2023-09-27T16:48:30Z",
+      "comments": []
+    },
+    {
+      "number": 150,
+      "id": "I_kwDOCSfQR85sTAtm",
+      "title": "Clarify meaning of 'cred_fmt'",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/150",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Section 3.3.1 \"'sign_info' Parameter\" of version -16 says:\r\n\r\n`The fifth element 'cred_fmt' parameter is either a CBOR integer indicating the format of authentication credentials used in the groups identified by the 'gname' values, or has value the CBOR simple value \"null\" (0xf6) indicating that the KDC does not act as repository of authentication credentials for group members. Its acceptable integer values are taken from the 'Label' column of the \"COSE Header Parameters\" registry [COSE.Header.Parameters]. It is REQUIRED of the application profiles to define specific values to use for this parameter, consistently with the acceptable formats of authentication credentials (REQ6).`\r\n\r\nIt should better say:\r\n\r\nThe fifth element 'cred_fmt' parameter is either a CBOR integer indicating the format of authentication credentials used in the groups identified by the 'gname' values, or has value the CBOR simple value \"null\" (0xf6) indicating that the KDC does not act as repository of authentication credentials for group members. Its acceptable integer values are taken from the 'Label' column of the \"COSE Header Parameters\" registry [COSE.Header.Parameters]**, with some of those values also indicating the type of container to use for exchanging the authentication credentials with the KDC (e.g., a chain or bag of certificates)**. It is REQUIRED of the application profiles to define specific values to use for this parameter, consistently with the acceptable formats of authentication credentials (REQ6).\r\n",
+      "createdAt": "2023-07-22T23:23:19Z",
+      "updatedAt": "2023-09-27T13:40:11Z",
+      "closedAt": "2023-09-27T13:40:11Z",
+      "comments": []
+    },
+    {
+      "number": 151,
+      "id": "I_kwDOCSfQR85umevE",
+      "title": "Revise future-ready generalization of 'sign_info_entry'",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/151",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Appendix B.1 \"Format of 'sign_info_entry'\" of version -16 says:\r\n\r\n> The i-th array following 'sign_parameters', i.e., 'sign_capab_i' (i = 0, ..., N-1), is the array of COSE capabilities for the algorithm capability specified in 'sign_parameters'[i].\r\n\r\nIt should say:\r\n\r\n> The i-th array following 'sign_parameters', i.e., 'sign_capab_i' (i = 1, ..., N), is the array of COSE capabilities for the algorithm capability specified in 'sign_parameters'[i-1], i.e., alg_capab_i.\r\n\r\nEDIT: Following the revised CDDL definition of the generalized, future-ready format of 'sign_info_entry' (see issue #154), this issue has become more about updating and clarifying the description of each information element.",
+      "createdAt": "2023-08-17T19:29:46Z",
+      "updatedAt": "2023-09-27T14:31:58Z",
+      "closedAt": "2023-09-27T14:31:58Z",
+      "comments": []
+    },
+    {
+      "number": 152,
+      "id": "I_kwDOCSfQR85yGd21",
+      "title": "Fixes in the list of features in the document overview",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/152",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In Section 2 \"Overview\", the list of bullet points should be updated as follows.\r\n\r\nOLD\r\n> * Allowing a group member to retrieve group keying material (Section 4.8.1.1 and Section 4.8.2.1).\r\n> \r\n> ...\r\n>\r\n> * Allowing a group member to leave the group (Section 5).\r\n>\r\n> * Evicting a group member from the group (Section 5).\r\n> \r\n> * Renewing and re-distributing the group keying material (rekeying) upon a membership change in the group (Section 4.8.3.1 and Section 5).\r\n\r\nNEW\r\n> * Allowing a group member to retrieve group keying material (**Section 4.3.2.1 and Section 4.8.1.1**).\r\n> \r\n> ...\r\n>\r\n> * Allowing a group member to leave the group (**Section 4.8.3.1**).\r\n>\r\n> * Evicting a group member from the group (Section 5).\r\n> \r\n> * Renewing and re-distributing the group keying material (rekeying), **e.g., upon a membership change in the group (Section 6)**.\r\n",
+      "createdAt": "2023-09-26T20:59:54Z",
+      "updatedAt": "2023-09-26T21:40:19Z",
+      "closedAt": "2023-09-26T21:40:19Z",
+      "comments": []
+    },
+    {
+      "number": 153,
+      "id": "I_kwDOCSfQR85yGe0s",
+      "title": "Add \"Reserved\" entry to the new \"ACE Groupcomm Profiles\" IANA registry",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/153",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The \"ACE Groupcomm Profiles\" IANA registry defined in this document can also be initially populated with the following entry.\r\n\r\n* Name: Reserved\r\n* Description: This value is reserved\r\n* CBOR Value: 0\r\n* Reference: [RFC-XXXX]",
+      "createdAt": "2023-09-26T21:03:06Z",
+      "updatedAt": "2023-09-27T08:21:50Z",
+      "closedAt": "2023-09-27T08:21:50Z",
+      "comments": []
+    },
+    {
+      "number": 154,
+      "id": "I_kwDOCSfQR85yGgFd",
+      "title": "Fix the CDDL definition of 'sign_info_entry'",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/issues/154",
+      "state": "CLOSED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In version -16, Section 3.3.1 \"'sign_info' Parameter\" includes the definition\r\n\r\nOLD\r\n```\r\nsign_info_entry =\r\n[\r\n  id : gname / [ + gname ],\r\n  sign_alg : int / tstr,\r\n  sign_parameters : [ any ],\r\n  sign_key_parameters : [ any ],\r\n  cred_fmt = int / null\r\n]\r\n\r\ngname = tstr\r\n```\r\n\r\nInstead, it should be\r\n\r\nNEW\r\n```\r\nsign_info_entry =\r\n[\r\n  id : gname / [ + gname ],\r\n  sign_alg : int / tstr,\r\n  sign_parameters : [ any ],\r\n  sign_key_parameters : [ + parameter : any ],\r\n  cred_fmt : int / null\r\n]\r\n\r\n\r\ngname = tstr\r\n```\r\n\r\nAlso, Appendix B.1  \"Extensibility for Future COSE Algorithms\" includes the definition\r\n\r\nOLD\r\n```\r\nsign_info_entry =\r\n[\r\n  id : gname / [ + gname ],\r\n  sign_alg : int / tstr,\r\n  sign_parameters : [ alg_capab_1 : any,\r\n                      alg_capab_2 : any,\r\n                      ...,\r\n                      alg_capab_N : any],\r\n  sign_capab_1 : [ any ],\r\n  sign_capab_2 : [ any ],\r\n  ...,\r\n  sign_capab_N : [ any ],\r\n  cred_fmt = int / null\r\n]\r\n\r\ngname = tstr\r\n```\r\n\r\nInstead, it should be\r\n\r\nNEW\r\n```\r\nsign_info_entry =\r\n[\r\n  id : gname / [ + gname ],\r\n  sign_alg : int / tstr,\r\n  sign_parameters : [ * alg_capab : any ],\r\n  * sign_capab : [ * capab : any ],\r\n  cred_fmt : int / null\r\n]\r\n\r\n\r\ngname = tstr\r\n```\r\n",
+      "createdAt": "2023-09-26T21:07:34Z",
+      "updatedAt": "2023-09-26T21:47:39Z",
+      "closedAt": "2023-09-26T21:47:39Z",
+      "comments": []
+    }
+  ],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "MDExOlB1bGxSZXF1ZXN0MjI0NjY2MTk3",
+      "title": "Dev v02",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/1",
+      "state": "MERGED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Update for v-02",
+      "createdAt": "2018-10-22T12:35:04Z",
+      "updatedAt": "2018-12-03T13:04:48Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "66061e6976fbff87b3b104ad31dd574aed752d05",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "dev-v02",
+      "headRefOid": "21ff8c136eaed9e4252587e9d7ea21ba8920069d",
+      "closedAt": "2018-10-22T12:35:20Z",
+      "mergedAt": "2018-10-22T12:35:20Z",
+      "mergedBy": "fpalombini",
+      "mergeCommit": {
+        "oid": "6c43c5e81bfa052661eb4b052feb4db67f22ea40"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "MDExOlB1bGxSZXF1ZXN0MjM1NDU0MjM1",
+      "title": "Include Jim's review comments",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/2",
+      "state": "MERGED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Following https://mailarchive.ietf.org/arch/msg/ace/-Nd8aRs-yUIoIP4KVMifW9MUf3o and a chat at IETF103.",
+      "createdAt": "2018-12-03T13:51:58Z",
+      "updatedAt": "2019-07-08T14:41:07Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "986f32b336ab54a2591dd16f49c7b7cafb33b3af",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "fp-wip",
+      "headRefOid": "480be5c2aa2acc532d00f0476470ef3629e79853",
+      "closedAt": "2019-01-04T09:49:37Z",
+      "mergedAt": "2019-01-04T09:49:37Z",
+      "mergedBy": "fpalombini",
+      "mergeCommit": {
+        "oid": "480be5c2aa2acc532d00f0476470ef3629e79853"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3,
+      "id": "MDExOlB1bGxSZXF1ZXN0MjQyMjEzMzU4",
+      "title": "Adopted name",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/3",
+      "state": "MERGED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2019-01-04T09:36:58Z",
+      "updatedAt": "2019-01-04T09:50:24Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "986f32b336ab54a2591dd16f49c7b7cafb33b3af",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "adopted_name",
+      "headRefOid": "5e21f3f8d1f9cd43c21d30e919be83f190fb3179",
+      "closedAt": "2019-01-04T09:39:36Z",
+      "mergedAt": "2019-01-04T09:39:36Z",
+      "mergedBy": "fpalombini",
+      "mergeCommit": {
+        "oid": "4010dbcb33560661c0ac4707ae0170c675e9fd51"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 4,
+      "id": "MDExOlB1bGxSZXF1ZXN0MjU4ODIzNTQx",
+      "title": "V 01 wip",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/4",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2019-03-06T18:03:31Z",
+      "updatedAt": "2019-04-03T09:51:38Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "2dbc7ccab6b9d169bd2adc9fe840446d19b13089",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-01-WIP",
+      "headRefOid": "b2bf2505aecc189618d77682aa177e4319125db1",
+      "closedAt": "2019-04-03T09:51:34Z",
+      "mergedAt": "2019-04-03T09:51:34Z",
+      "mergedBy": "fpalombini",
+      "mergeCommit": {
+        "oid": "7cd021e8ae76ddeae8bbc6a3bdf4ec3ebb15e5a5"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 36,
+      "id": "MDExOlB1bGxSZXF1ZXN0Mjk0NTIyMTQw",
+      "title": "V-02 wip",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/36",
+      "state": "MERGED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2019-07-04T10:31:02Z",
+      "updatedAt": "2019-07-08T14:40:12Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "7cd021e8ae76ddeae8bbc6a3bdf4ec3ebb15e5a5",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-02-WIP",
+      "headRefOid": "76bda4b21d19fe26357685c7dba0cd589bbc4bfc",
+      "closedAt": "2019-07-08T14:40:08Z",
+      "mergedAt": "2019-07-08T14:40:08Z",
+      "mergedBy": "fpalombini",
+      "mergeCommit": {
+        "oid": "265ebf41d3df06b86795c12f3d6940219fee27c4"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 37,
+      "id": "MDExOlB1bGxSZXF1ZXN0MzMyNDQ4NTUz",
+      "title": "Restructuring",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/37",
+      "state": "MERGED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2019-10-25T10:34:26Z",
+      "updatedAt": "2019-10-25T10:46:24Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "v-03-WIP",
+      "baseRefOid": "d56793fefa065cb9d1e7d4808bd3f2da064e39b4",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "restruct",
+      "headRefOid": "dd2a5c00180bc8e22e7ec84d6c2b7374f4b8a9c5",
+      "closedAt": "2019-10-25T10:46:20Z",
+      "mergedAt": "2019-10-25T10:46:20Z",
+      "mergedBy": "fpalombini",
+      "mergeCommit": {
+        "oid": "7296946b26e64e9e10a00485a906371dabe287e4"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 38,
+      "id": "MDExOlB1bGxSZXF1ZXN0MzM1MzcxMTkx",
+      "title": "V 03 wip",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/38",
+      "state": "MERGED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2019-11-01T10:58:14Z",
+      "updatedAt": "2019-11-05T09:35:48Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "265ebf41d3df06b86795c12f3d6940219fee27c4",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-03-WIP",
+      "headRefOid": "958ed57c364067f407b0f8966297116fb3fdfbde",
+      "closedAt": "2019-11-04T15:10:28Z",
+      "mergedAt": "2019-11-04T15:10:27Z",
+      "mergedBy": "fpalombini",
+      "mergeCommit": {
+        "oid": "e19bf1bea1961abb3870194ca332881d3de34075"
+      },
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "There are a couple of TODOs but Im good leaving those in for now.",
+          "createdAt": "2019-11-01T10:58:36Z",
+          "updatedAt": "2019-11-01T10:58:36Z"
+        },
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm done with it and ready to submit! ",
+          "createdAt": "2019-11-04T09:31:32Z",
+          "updatedAt": "2019-11-04T09:31:32Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 39,
+      "id": "MDExOlB1bGxSZXF1ZXN0MzYxNTE2NDI5",
+      "title": "V-04",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/39",
+      "state": "MERGED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Includes all review comments from Jim, following discussion at IETF106.",
+      "createdAt": "2020-01-10T16:02:58Z",
+      "updatedAt": "2020-02-05T11:12:43Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "e19bf1bea1961abb3870194ca332881d3de34075",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-04",
+      "headRefOid": "231c4b545e2ef420c8557858bd5c07cc6f33aec3",
+      "closedAt": "2020-01-15T13:21:50Z",
+      "mergedAt": "2020-01-15T13:21:50Z",
+      "mergedBy": "fpalombini",
+      "mergeCommit": {
+        "oid": "20fafa051dcd0c913f2c628940cda641d43c5d93"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 61,
+      "id": "MDExOlB1bGxSZXF1ZXN0Mzg1NDc4MDM4",
+      "title": "V-05",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/61",
+      "state": "MERGED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-03-09T09:36:27Z",
+      "updatedAt": "2020-03-12T08:10:23Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "20fafa051dcd0c913f2c628940cda641d43c5d93",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-05",
+      "headRefOid": "f36721ccdbbcfb36465cdcccb14269bf8ae03bba",
+      "closedAt": "2020-03-10T18:41:28Z",
+      "mergedAt": "2020-03-10T18:41:28Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "2f9046a7b3e3d49a1a5760a3429633038a572a20"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 93,
+      "id": "MDExOlB1bGxSZXF1ZXN0NDAwNDIwMjQx",
+      "title": "V-06",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/93",
+      "state": "MERGED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-04-07T18:05:02Z",
+      "updatedAt": "2021-01-27T08:13:53Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "2f9046a7b3e3d49a1a5760a3429633038a572a20",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-06",
+      "headRefOid": "fc6e6bd11c6721b45b9420a4e4518b4f7586c003",
+      "closedAt": "2020-05-11T15:04:22Z",
+      "mergedAt": "2020-05-11T15:04:22Z",
+      "mergedBy": "fpalombini",
+      "mergeCommit": {
+        "oid": "babf16f969c9e2ae8f53f361d18d7923347a0f1f"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NDA5MjU5Njk5",
+          "commit": {
+            "abbreviatedOid": "fc6e6bd"
+          },
+          "author": "marco-tiloca-sics",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2020-05-11T15:03:54Z",
+          "updatedAt": "2020-05-11T15:03:54Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 96,
+      "id": "MDExOlB1bGxSZXF1ZXN0NDM2MzAyMTE1",
+      "title": "V-07",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/96",
+      "state": "MERGED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-06-18T08:07:30Z",
+      "updatedAt": "2021-01-27T08:13:51Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "babf16f969c9e2ae8f53f361d18d7923347a0f1f",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-07",
+      "headRefOid": "3e9d0d8d398425a23bdfb3dd7ff27fb7a6024a0c",
+      "closedAt": "2020-06-18T08:08:07Z",
+      "mergedAt": "2020-06-18T08:08:07Z",
+      "mergedBy": "fpalombini",
+      "mergeCommit": {
+        "oid": "f175280550797ab637bc626d7c98e7bc5899a68c"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 97,
+      "id": "MDExOlB1bGxSZXF1ZXN0NDQ4Mzc1NjI1",
+      "title": "V 08",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/97",
+      "state": "MERGED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Implements Jim's review: https://mailarchive.ietf.org/arch/msg/ace/zMoO7YHyy_bKYyISfypwyORV5ek/",
+      "createdAt": "2020-07-13T16:55:12Z",
+      "updatedAt": "2021-01-27T08:13:50Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "933dcc88c0226659e4cb711da94bda5f5130244e",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-08",
+      "headRefOid": "7e2bb391cdebf10798d46541da8ce6c880afc2fb",
+      "closedAt": "2020-07-13T16:55:27Z",
+      "mergedAt": "2020-07-13T16:55:27Z",
+      "mergedBy": "fpalombini",
+      "mergeCommit": {
+        "oid": "3ea005a5021afbaac54c73477d876766378242dc"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 122,
+      "id": "MDExOlB1bGxSZXF1ZXN0NDc4NjYzNjI0",
+      "title": "V-09",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/122",
+      "state": "MERGED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Jim's review, as agreed at IETF108.",
+      "createdAt": "2020-09-03T14:14:13Z",
+      "updatedAt": "2021-01-27T08:13:49Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "e496831b4fd8666a186a02f1f122c2251829b59e",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-09",
+      "headRefOid": "470a4fb91001d2f80bbea2e56c5ecee94643c162",
+      "closedAt": "2020-09-04T12:44:57Z",
+      "mergedAt": "2020-09-04T12:44:57Z",
+      "mergedBy": "fpalombini",
+      "mergeCommit": {
+        "oid": "a930664b86734c4a07c90bf7950f988998316972"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 139,
+      "id": "MDExOlB1bGxSZXF1ZXN0NTEyMzI4NTcz",
+      "title": "V 10",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/139",
+      "state": "MERGED",
+      "author": "fpalombini",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2020-10-29T14:45:13Z",
+      "updatedAt": "2020-11-02T14:07:36Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "a930664b86734c4a07c90bf7950f988998316972",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-10",
+      "headRefOid": "02161851e54c904a498467cd10931a64683b2f49",
+      "closedAt": "2020-11-02T14:07:33Z",
+      "mergedAt": "2020-11-02T14:07:33Z",
+      "mergedBy": "fpalombini",
+      "mergeCommit": {
+        "oid": "5a94e98a1ffe30baa11d134ead2622dd8c39585f"
+      },
+      "comments": [
+        {
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I don't agree, the text for GET ace-group/GROUPNAME/nodes/NODENAME specifically says:\r\n\r\n> The format for the group keying material is the same as defined in the response of Section 4.1.2.2. The specific format of individual keying material for group members, or of the information to derive it, and corresponding CBOR label, MUST be specified in the application profile (REQ15) and registered in Section 8.5.\r\n\r\nWhich means that IND KEY does not *have to* be in the KEY.. in this example I explicitly wanted to have it outside of key because it shows that it can happen (even if in OSCORE it does not).",
+          "createdAt": "2020-11-02T13:39:51Z",
+          "updatedAt": "2020-11-02T13:39:51Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NTIxMTUxNzY5",
+          "commit": {
+            "abbreviatedOid": "d1081a8"
+          },
+          "author": "marco-tiloca-sics",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2020-10-31T16:30:28Z",
+          "updatedAt": "2020-10-31T16:30:28Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 141,
+      "id": "MDExOlB1bGxSZXF1ZXN0NTc5MDgzMTQw",
+      "title": "V 11",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/141",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2021-02-24T07:47:31Z",
+      "updatedAt": "2021-02-24T07:49:09Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "5a94e98a1ffe30baa11d134ead2622dd8c39585f",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-11",
+      "headRefOid": "df5633486a9e8328549a12bd430ec8355899da85",
+      "closedAt": "2021-02-24T07:47:50Z",
+      "mergedAt": "2021-02-24T07:47:50Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "8c1a7f6933d2f4eddd3cb9013660c12d6062ae8c"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 142,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjQxNTk3ODI0",
+      "title": "New Appendix with general format of 'sign_info_entry', supporting fut\u2026",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/142",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\u2026ure registered COSE algorithms.",
+      "createdAt": "2021-05-11T19:52:20Z",
+      "updatedAt": "2021-05-11T19:55:04Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "8c1a7f6933d2f4eddd3cb9013660c12d6062ae8c",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-12",
+      "headRefOid": "025e37429b1bf628abc2e6d94892c8cb04846ad1",
+      "closedAt": "2021-05-11T19:52:27Z",
+      "mergedAt": "2021-05-11T19:52:27Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "c91294959ee78eaf5969ea9783ea3ff940ae7f88"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 143,
+      "id": "MDExOlB1bGxSZXF1ZXN0Njg5ODc5ODUx",
+      "title": "V 13",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/143",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2021-07-14T12:41:43Z",
+      "updatedAt": "2021-07-14T12:46:49Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "c91294959ee78eaf5969ea9783ea3ff940ae7f88",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-13",
+      "headRefOid": "30113118eed6dae6de5eb6bf1501badad0c4a61d",
+      "closedAt": "2021-07-14T12:42:40Z",
+      "mergedAt": "2021-07-14T12:42:40Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "df6569a4825fb180ca71c52ca6ae3b435f11f2ef"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 145,
+      "id": "PR_kwDOCSfQR84-Y7xP",
+      "title": "V 16 pending",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/145",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2022-09-05T17:26:21Z",
+      "updatedAt": "2022-09-06T06:43:56Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "c85a865050b4d12227c6f2a91452c4b9feff1393",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "v-16-pending",
+      "headRefOid": "a78bc7f323b0d303f674f93096508a8abd4abd57",
+      "closedAt": "2022-09-05T17:27:06Z",
+      "mergedAt": "2022-09-05T17:27:06Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "357a7d2a662e1d7ccd912b02df23bab28de909c1"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 155,
+      "id": "PR_kwDOCSfQR85bclQE",
+      "title": "AD Review",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/155",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses:\r\n\r\n* The AD Review of version -16\r\n   - https://mailarchive.ietf.org/arch/msg/ace/fRBQjDr2m4Q5kmGesUIP23ueYJo/\r\n\r\n* The following issues:\r\n   - https://github.com/ace-wg/ace-key-groupcomm/issues/146\r\n   - https://github.com/ace-wg/ace-key-groupcomm/issues/147\r\n   - https://github.com/ace-wg/ace-key-groupcomm/issues/148\r\n   - https://github.com/ace-wg/ace-key-groupcomm/issues/149\r\n   - https://github.com/ace-wg/ace-key-groupcomm/issues/150\r\n   - https://github.com/ace-wg/ace-key-groupcomm/issues/151\r\n   - https://github.com/ace-wg/ace-key-groupcomm/issues/152\r\n   - https://github.com/ace-wg/ace-key-groupcomm/issues/153\r\n   - https://github.com/ace-wg/ace-key-groupcomm/issues/154\r\n",
+      "createdAt": "2023-09-28T13:29:25Z",
+      "updatedAt": "2023-10-06T14:43:05Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "357a7d2a662e1d7ccd912b02df23bab28de909c1",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "ad-review",
+      "headRefOid": "af896ce75eac3423385f7fc49a4ce53ae6c8bbcd",
+      "closedAt": "2023-10-06T14:43:05Z",
+      "mergedAt": "2023-10-06T14:43:05Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "2a95eebb4761ecf7e1f30d4f67a8c1c29702cac6"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85i_I3x",
+          "commit": {
+            "abbreviatedOid": "af896ce"
+          },
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "looks good - not sure if you were waiting on my github approval so I flagged it - ignore if you are waiting for co-authors or WG :) ",
+          "createdAt": "2023-10-05T21:06:12Z",
+          "updatedAt": "2023-10-05T21:06:12Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOCSfQR85jC_qy",
+          "commit": {
+            "abbreviatedOid": "af896ce"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Looks good! ",
+          "createdAt": "2023-10-06T12:11:37Z",
+          "updatedAt": "2023-10-06T12:11:37Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 156,
+      "id": "PR_kwDOCSfQR85cu6No",
+      "title": "Editorial nits and a fancier diagram",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/156",
+      "state": "MERGED",
+      "author": "thomas-fossati",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "by-products of my Gen-ART review :-)",
+      "createdAt": "2023-10-13T12:13:29Z",
+      "updatedAt": "2023-10-26T09:54:03Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "2a95eebb4761ecf7e1f30d4f67a8c1c29702cac6",
+      "headRepository": "thomas-fossati/ace-key-groupcomm",
+      "headRefName": "master",
+      "headRefOid": "1b05deb0eca20284314bbf600b352f6195d86cb6",
+      "closedAt": "2023-10-26T09:54:03Z",
+      "mergedAt": "2023-10-26T09:54:03Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "7930707bed01b3a2036dfb6e1206b28bcc638087"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 157,
+      "id": "PR_kwDOCSfQR85d4r-_",
+      "title": "TSVART review",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/157",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the IETF Last Call review from TSVART archived at https://mailarchive.ietf.org/arch/msg/last-call/c53Mo6VXqfECU_br-93OFySBEVQ/",
+      "createdAt": "2023-10-26T15:58:19Z",
+      "updatedAt": "2024-01-12T09:38:40Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "924308ce5a573bd7a39d0a0be6ab27ae8c2f314f",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "tsvart-review",
+      "headRefOid": "7bbe27aebdbfd76b8ded27141803fff44b0d27e1",
+      "closedAt": "2024-01-12T09:38:40Z",
+      "mergedAt": "2024-01-12T09:38:40Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "a90d205fb5f3d39ddf0785ee4fe93439b6bce44a"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVtwa",
+          "commit": {
+            "abbreviatedOid": "7bbe27a"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:18:14Z",
+          "updatedAt": "2024-01-12T08:18:14Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 158,
+      "id": "PR_kwDOCSfQR85d9Eft",
+      "title": "GENART review",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/158",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the IETF Last Call review from GENART archived at https://mailarchive.ietf.org/arch/msg/ace/GljJ5yj4BVylRYVQ96IieVqBrrg/",
+      "createdAt": "2023-10-27T09:56:46Z",
+      "updatedAt": "2024-01-12T09:42:24Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "a90d205fb5f3d39ddf0785ee4fe93439b6bce44a",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "genart-review",
+      "headRefOid": "b37cce2018428c460a7c31e1757c5b990b0f35db",
+      "closedAt": "2024-01-12T09:42:24Z",
+      "mergedAt": "2024-01-12T09:42:24Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "9134b520c5161f61480ae3ba545937bae9df9edb"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVu7E",
+          "commit": {
+            "abbreviatedOid": "c220b92"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:21:16Z",
+          "updatedAt": "2024-01-12T08:21:16Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 159,
+      "id": "PR_kwDOCSfQR85h0KKq",
+      "title": "IANA reviews",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/159",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses:\r\n\r\n* the review from IANA (see IANA ticket #1283402)\r\n\r\n* The reviews from the IANA Designated Experts",
+      "createdAt": "2023-12-12T16:38:31Z",
+      "updatedAt": "2024-01-12T09:51:28Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "9134b520c5161f61480ae3ba545937bae9df9edb",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "iana-reviews",
+      "headRefOid": "7a5d0a24e5240832bf4847f807a5c32ea2a0543a",
+      "closedAt": "2024-01-12T09:51:27Z",
+      "mergedAt": "2024-01-12T09:51:27Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "df514e0a582840796417ed688d795228fbb37a57"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVxle",
+          "commit": {
+            "abbreviatedOid": "b48810e"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:28:19Z",
+          "updatedAt": "2024-01-12T08:28:19Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 160,
+      "id": "PR_kwDOCSfQR85h4fO3",
+      "title": "ARTART review",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/160",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the IETF Last Call review from ARTART archived at https://mailarchive.ietf.org/arch/msg/ace/TNmV6jNG5KTZtxD1nPV4enR24_0/",
+      "createdAt": "2023-12-13T10:49:22Z",
+      "updatedAt": "2024-01-12T09:54:06Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "df514e0a582840796417ed688d795228fbb37a57",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "artart-review",
+      "headRefOid": "bd143f37fee104b5f3070fef1cbcd613cc632f4b",
+      "closedAt": "2024-01-12T09:54:06Z",
+      "mergedAt": "2024-01-12T09:54:06Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "8db33f010a8b9a4c149859f626e26e1b1fe0b23d"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVyBW",
+          "commit": {
+            "abbreviatedOid": "0b3dee2"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:29:22Z",
+          "updatedAt": "2024-01-12T08:29:22Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 161,
+      "id": "PR_kwDOCSfQR85h4uqM",
+      "title": "Roman Danyliw review",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/161",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the review from Roman Danyliw archived at https://mailarchive.ietf.org/arch/msg/ace/K5us9nK6rN7k9WMSd2RdNIbhLY4/",
+      "createdAt": "2023-12-13T11:27:36Z",
+      "updatedAt": "2024-01-12T10:03:15Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "8db33f010a8b9a4c149859f626e26e1b1fe0b23d",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "roman-danyliw-review",
+      "headRefOid": "2272b2d20b575aff74e712b2788ca972d94287e2",
+      "closedAt": "2024-01-12T10:03:15Z",
+      "mergedAt": "2024-01-12T10:03:15Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "dc34fc522b4782a83e5f95ba6295f3eaef2686f7"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVyqO",
+          "commit": {
+            "abbreviatedOid": "6299e7b"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:31:09Z",
+          "updatedAt": "2024-01-12T08:31:09Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 162,
+      "id": "PR_kwDOCSfQR85h41Eq",
+      "title": "Erik Kline review",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/162",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the review from Erik Kline archived at https://mailarchive.ietf.org/arch/msg/ace/2_BAHkh8u5eVTi1JvuwKrE5OKY4/",
+      "createdAt": "2023-12-13T11:45:55Z",
+      "updatedAt": "2024-01-12T10:06:05Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "dc34fc522b4782a83e5f95ba6295f3eaef2686f7",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "erik-kline-review",
+      "headRefOid": "2629de5ecafb5d9797f8dd05fc690f9239bd4f25",
+      "closedAt": "2024-01-12T10:06:05Z",
+      "mergedAt": "2024-01-12T10:06:05Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "18908a5ded67a6ac9f4781de05f4491c1df3df8d"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVy85",
+          "commit": {
+            "abbreviatedOid": "0fe1047"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:31:57Z",
+          "updatedAt": "2024-01-12T08:31:57Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 163,
+      "id": "PR_kwDOCSfQR85h47ne",
+      "title": "Zaheduzzaman Sarker review",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/163",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the review from Zaheduzzaman Sarker archived at https://mailarchive.ietf.org/arch/msg/ace/CYqJ6VR32qYslQphIyqm_2WCqLI/",
+      "createdAt": "2023-12-13T12:03:52Z",
+      "updatedAt": "2024-01-12T10:08:34Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "18908a5ded67a6ac9f4781de05f4491c1df3df8d",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "zaheduzzaman-sarker-review",
+      "headRefOid": "704b82c28a87d7e75cefc8337e9bf29ba63a87c2",
+      "closedAt": "2024-01-12T10:08:33Z",
+      "mergedAt": "2024-01-12T10:08:33Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "74ac36b257cb31357dbd02025cbe9e4c7de57cb8"
+      },
+      "comments": [
+        {
+          "author": "zaheduzzaman",
+          "authorAssociation": "NONE",
+          "body": "LGTM, thanks",
+          "createdAt": "2023-12-18T16:46:06Z",
+          "updatedAt": "2023-12-18T16:46:06Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVzJb",
+          "commit": {
+            "abbreviatedOid": "60d4ae5"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:32:29Z",
+          "updatedAt": "2024-01-12T08:32:29Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 164,
+      "id": "PR_kwDOCSfQR85h5jFG",
+      "title": "Martin Duke review",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/164",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the review from Martin Duke archived at https://mailarchive.ietf.org/arch/msg/ace/rRlFKN9KRx1PGe3Mniyym6UbMz4/",
+      "createdAt": "2023-12-13T13:46:14Z",
+      "updatedAt": "2024-01-12T10:15:27Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "74ac36b257cb31357dbd02025cbe9e4c7de57cb8",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "martin-duke-review",
+      "headRefOid": "12f49937c81a7206cdf27d5bde097d2635bd3667",
+      "closedAt": "2024-01-12T10:15:26Z",
+      "mergedAt": "2024-01-12T10:15:26Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "9ccdc1cfb57f21635a57b44874b519945ff094ef"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVzTq",
+          "commit": {
+            "abbreviatedOid": "825e2ec"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:32:58Z",
+          "updatedAt": "2024-01-12T08:32:58Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 165,
+      "id": "PR_kwDOCSfQR85h5nHX",
+      "title": "Warren Kumari review",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/165",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the review from Warren Kumari archived at https://mailarchive.ietf.org/arch/msg/ace/gRyQwnekrPLMn4hEENkBgrq43zk/",
+      "createdAt": "2023-12-13T13:55:27Z",
+      "updatedAt": "2024-01-12T10:17:14Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "9ccdc1cfb57f21635a57b44874b519945ff094ef",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "warren-kumari-review",
+      "headRefOid": "422fd05dff72fb8babf9a54e66a8cf8f62480657",
+      "closedAt": "2024-01-12T10:17:14Z",
+      "mergedAt": "2024-01-12T10:17:14Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "386ec0ac6a89e331de3d8f412cfb860c90808f01"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sVzym",
+          "commit": {
+            "abbreviatedOid": "1dddae5"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:34:12Z",
+          "updatedAt": "2024-01-12T08:34:12Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 166,
+      "id": "PR_kwDOCSfQR85iHt61",
+      "title": "IOTDIR review",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/166",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR addresses the IETF Last Call review from IOTDIR archived at https://mailarchive.ietf.org/arch/msg/ace/bbxp3XTgrQg--tiAEhsr96FnPhg/",
+      "createdAt": "2023-12-15T15:17:28Z",
+      "updatedAt": "2024-01-12T10:37:52Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "386ec0ac6a89e331de3d8f412cfb860c90808f01",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "iotdir-review",
+      "headRefOid": "2955f8d1f2d758319e09e662c69fe0951e2a6ffa",
+      "closedAt": "2024-01-12T10:37:52Z",
+      "mergedAt": "2024-01-12T10:37:52Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "f3ab861c412dd16d16678cae7c044fb41a2b79f9"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR85sV0lW",
+          "commit": {
+            "abbreviatedOid": "1cb469a"
+          },
+          "author": "fpalombini",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-12T08:36:21Z",
+          "updatedAt": "2024-01-12T08:36:21Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 167,
+      "id": "PR_kwDOCSfQR85kN0PG",
+      "title": "Last fixes v 17",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/167",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-01-16T16:14:57Z",
+      "updatedAt": "2024-01-16T16:15:08Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "a5399269aa64f9973ff0fed4f1e0007f71548f19",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "last-fixes-v-17",
+      "headRefOid": "82155d35251f6e701ca44b7979db42394cbb5371",
+      "closedAt": "2024-01-16T16:15:08Z",
+      "mergedAt": "2024-01-16T16:15:07Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "01735305314a7d5427e8f38d8c833d082d5d6156"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 168,
+      "id": "PR_kwDOCSfQR85txe1n",
+      "title": "IANA-related editorial fixes",
+      "url": "https://github.com/ace-wg/ace-key-groupcomm/pull/168",
+      "state": "MERGED",
+      "author": "marco-tiloca-sics",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-04-25T20:48:39Z",
+      "updatedAt": "2024-04-30T15:41:08Z",
+      "baseRepository": "ace-wg/ace-key-groupcomm",
+      "baseRefName": "master",
+      "baseRefOid": "01735305314a7d5427e8f38d8c833d082d5d6156",
+      "headRepository": "ace-wg/ace-key-groupcomm",
+      "headRefName": "iana-editorial-fixes",
+      "headRefOid": "c6032facf8d0f934905c8d50d2947e6284512ed0",
+      "closedAt": "2024-04-30T15:41:07Z",
+      "mergedAt": "2024-04-30T15:41:07Z",
+      "mergedBy": "marco-tiloca-sics",
+      "mergeCommit": {
+        "oid": "a6379891cdb7ed5c0cc718c6b1422f1b0ebd52c9"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCSfQR855GoGl",
+          "commit": {
+            "abbreviatedOid": "c6032fa"
+          },
+          "author": "paulwouters",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-04-30T15:34:43Z",
+          "updatedAt": "2024-04-30T15:34:43Z",
+          "comments": []
+        }
+      ]
+    }
+  ]
+}
